@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBModels.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DBModelsStoreContainer">
+          <EntitySet Name="FaceBook" EntityType="DBModels.Store.FaceBook" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PostStatus" EntityType="DBModels.Store.PostStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Session" EntityType="DBModels.Store.Session" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="FaceBook">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="varchar" MaxLength="20" />
+          <Property Name="Login" Type="varchar" MaxLength="200" />
+          <Property Name="Pass" Type="varchar" MaxLength="50" />
+          <Property Name="Cookies" Type="image" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <EntityType Name="PostStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FaceBookID" Type="int" />
+          <Property Name="SessionID" Type="int" />
+          <Property Name="StatusContent" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBModels" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="DBContext" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="FaceBook" EntityType="DBModels.FaceBook" />
+          <EntitySet Name="PostStatus" EntityType="DBModels.PostStatus" />
+          <EntitySet Name="Session" EntityType="DBModels.Session" />
+        </EntityContainer>
+        <EntityType Name="FaceBook">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserID" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Login" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Pass" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Binary" Name="Cookies" MaxLength="Max" FixedLength="false" />
+          <Property Type="Int32" Name="Status" />
+        </EntityType>
+        <EntityType Name="PostStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="FaceBookID" />
+          <Property Type="Int32" Name="SessionID" />
+          <Property Type="String" Name="StatusContent" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="Date" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DBModelsStoreContainer" CdmEntityContainer="DBContext">
+          <EntitySetMapping Name="FaceBook">
+            <EntityTypeMapping TypeName="DBModels.FaceBook">
+              <MappingFragment StoreEntitySet="FaceBook">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Cookies" ColumnName="Cookies" />
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostStatus">
+            <EntityTypeMapping TypeName="DBModels.PostStatus">
+              <MappingFragment StoreEntitySet="PostStatus">
+                <ScalarProperty Name="StatusContent" ColumnName="StatusContent" />
+                <ScalarProperty Name="SessionID" ColumnName="SessionID" />
+                <ScalarProperty Name="FaceBookID" ColumnName="FaceBookID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Session">
+            <EntityTypeMapping TypeName="DBModels.Session">
+              <MappingFragment StoreEntitySet="Session">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="DBModels" >
+        <EntityTypeShape EntityType="DBModels.FaceBook" Width="1.5" PointX="0.75" PointY="0.75" Height="2.1725878906249996" />
+        <EntityTypeShape EntityType="DBModels.PostStatus" Width="1.5" PointX="2.75" PointY="0.75" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="DBModels.Session" Width="1.5" PointX="0.75" PointY="3.75" Height="1.4033821614583322" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

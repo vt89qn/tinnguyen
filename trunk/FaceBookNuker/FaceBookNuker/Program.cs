@@ -17,7 +17,7 @@ namespace FaceBookNuker
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new ForwardMailHostinger());
             //Application.Run(new SSCVN());
-            Application.Run(new Dropbox());
+            Application.Run(new SSCVN());
         }
     }
 }

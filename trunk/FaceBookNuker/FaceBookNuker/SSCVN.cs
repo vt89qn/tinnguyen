@@ -39,12 +39,20 @@ namespace FaceBookNuker
 
         void SSCVN_Load(object sender, EventArgs e)
         {
-            timecheckNumer = new Timer();
-            timecheckNumer.Enabled = false;
-            timecheckNumer.Interval = 1000;
+            //timecheckNumer = new Timer();
+            //timecheckNumer.Enabled = false;
+            //timecheckNumer.Interval = 1000;
             //timecheckNumer.Tick += new EventHandler(timecheckNumer_Tick);
-            timecheckNumer.Enabled = true;
+            //timecheckNumer.Enabled = true;
             account = DataProvider.SSCVNDB.M_Account.ToList();
+
+            foreach (M_Account m in account)
+            {
+                SSCVNController sscvn = new SSCVNController();
+                sscvn.Login(m);
+                sscvn.Comment(m);
+            }
+            
             //Utilities.SerializeObject("db.ssc", account);
             //object objaccount = Utilities.DeSerializeObject("db.ssc");
             //if (objaccount is List<M_Account>)
@@ -57,7 +65,7 @@ namespace FaceBookNuker
             //}
             //SSCVNController sscvn = new SSCVNController();
             //sscvn.GenName();
-            btnGenName_Click(null, null);
+            //btnGenName_Click(null, null);
         }
 
         void timecheckNumer_Tick(object sender, EventArgs e)

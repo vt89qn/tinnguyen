@@ -75,6 +75,23 @@ namespace FaceBookNuker
             return null;
         }
 
+        public static byte[] ConvertObjectToBlob(object objectToConvert)
+        {
+            if (objectToConvert == null) return null;
+            BinaryFormatter bf = new BinaryFormatter();
+            MemoryStream ms = new MemoryStream();
+            bf.Serialize(ms, objectToConvert);
+            return ms.ToArray();
+
+        }
+
+        public static object ConvertBlobToObject(byte[] blob)
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            MemoryStream ms = new MemoryStream(blob);
+            return bf.Deserialize(ms);
+        }
+
         public static string GenerationNewName(bool bMale)
         {
             using (WebClientEx client = new WebClientEx())

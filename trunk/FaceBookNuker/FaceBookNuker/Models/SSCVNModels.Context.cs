@@ -26,5 +26,6 @@ namespace FaceBookNuker.Models
         }
     
         public DbSet<M_Account> M_Account { get; set; }
+        public DbSet<M_Name> M_Name { get; set; }
     }
 }

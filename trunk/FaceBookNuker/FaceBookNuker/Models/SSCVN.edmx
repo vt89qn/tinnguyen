@@ -7,6 +7,7 @@
     <Schema Namespace="SSCVNModels.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="SSCVNModelsStoreContainer">
           <EntitySet Name="M_Account" EntityType="SSCVNModels.Store.M_Account" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="M_Name" EntityType="SSCVNModels.Store.M_Name" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <EntityType Name="M_Account">
           <Key>
@@ -17,12 +18,22 @@
           <Property Name="Pass" Type="varchar" MaxLength="250" />
           <Property Name="Email" Type="varchar" MaxLength="250" />
         </EntityType>
+        <EntityType Name="M_Name">
+          <Key>
+            <PropertyRef Name="Pid" />
+          </Key>
+          <Property Name="Pid" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Pass" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Cookie" Type="image" />
+        </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SSCVNModels" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="SSCVNContext" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="M_Account" EntityType="SSCVNModels.M_Account" />
+          <EntitySet Name="M_Name" EntityType="SSCVNModels.M_Name" />
         </EntityContainer>
         <EntityType Name="M_Account">
           <Key>
@@ -32,6 +43,15 @@
           <Property Type="String" Name="Name" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Pass" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Email" MaxLength="250" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="M_Name">
+          <Key>
+            <PropertyRef Name="Pid" />
+          </Key>
+          <Property Type="Int32" Name="Pid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Pass" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Binary" Name="Cookie" MaxLength="Max" FixedLength="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -43,6 +63,16 @@
             <EntityTypeMapping TypeName="SSCVNModels.M_Account">
               <MappingFragment StoreEntitySet="M_Account">
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Pid" ColumnName="Pid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_Name">
+            <EntityTypeMapping TypeName="SSCVNModels.M_Name">
+              <MappingFragment StoreEntitySet="M_Name">
+                <ScalarProperty Name="Cookie" ColumnName="Cookie" />
                 <ScalarProperty Name="Pass" ColumnName="Pass" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Pid" ColumnName="Pid" />
@@ -71,7 +101,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="SSCVN">
-        <EntityTypeShape EntityType="SSCVNModels.M_Account" Width="1.5" PointX="0.75" PointY="0.75" Height="1.7879850260416665" />
+        <EntityTypeShape EntityType="SSCVNModels.M_Account" Width="1.5" PointX="0.75" PointY="0.75" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="SSCVNModels.M_Name" Width="1.5" PointX="2.75" PointY="0.75" Height="1.7879850260416665" />
       </Diagram>
     </Diagrams>
   </Designer>

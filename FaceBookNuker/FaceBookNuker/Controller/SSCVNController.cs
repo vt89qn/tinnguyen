@@ -114,40 +114,37 @@ namespace FaceBookNuker.Controller
             catch { }
         }
 
-        public void Comment(object objaccount)
+        public void Comment(M_Account account)
         { 
             
         }
 
-        public void Login()
+        public bool Login(M_Account account)
         {
             Web = new WebClientEx();
             Web.DoGet("http://ssc.vn/forum.php");
 
-            //string s = Regex.Match(Web.ResponseText, "name=\"s\"[^\"]+value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
-            //string securitytoken = Regex.Match(Web.ResponseText, "name=\"securitytoken\"[^\"]+value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
-            //NameValueCollection param = new NameValueCollection();
-            //param.Add("username", account.Name);
-            //param.Add("password", string.Empty);
-            //param.Add("passwordconfirm", string.Empty);
-            //param.Add("email", account.Email);
-            //param.Add("emailconfirm", account.Email);
-            //param.Add("humanverify[input]", iNo1.ToString());
-            //param.Add("humanverify[hash]", humanverifyhash);
-            //param.Add("timezoneoffset", "7");
-            //param.Add("dst", "2");
-            //param.Add("agree", "1");
-            //param.Add("s", string.Empty);
-            //param.Add("securitytoken", securitytoken);
-            //param.Add("do", "addmember");
-            //param.Add("url", "forum.php");
-            //param.Add("password_md5", Utilities.GetMd5Hash(account.Pass));
-            //param.Add("passwordconfirm_md5", Utilities.GetMd5Hash(account.Pass));
-            //param.Add("day", string.Empty);
-            //param.Add("month", string.Empty);
-            //param.Add("year", string.Empty);
-            //Web.DoPost(param, "http://ssc.vn/dang@kySSC.php?do=addmember");
-
+            string s = Regex.Match(Web.ResponseText, "name=\"s\"[^\"]+value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
+            string securitytoken = Regex.Match(Web.ResponseText, "name=\"securitytoken\"[^\"]+value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("vb_login_username",account.Name);
+            param.Add("vb_login_password",string.Empty);
+            param.Add("vb_login_password_hint","Mật Khẩu");
+            param.Add("cookieuser","1");
+            param.Add("s", s);
+	        param.Add("securitytoken",securitytoken);
+            param.Add("do","login");
+            param.Add("vb_login_md5password",Utilities.GetMd5Hash(account.Pass));
+            param.Add("vb_login_md5password_utf", Utilities.GetMd5Hash(account.Pass));
+            Web.DoPost(param, string.Format("http://ssc.vn/login.php?s={0}&do=login", s));
+            if (Web.ResponseText.Contains(account.Name))
+            {
+                M_Name name = new M_Name { Name = account.Name, Pass = account.Pass, Cookie = Utilities.ConvertObjectToBlob(Web.CookieContainer) };
+                DataProvider.SSCVNDB.M_Name.Add(name);
+                DataProvider.SSCVNDB.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

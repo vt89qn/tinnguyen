@@ -592,114 +592,134 @@ public class Poker : INotifyPropertyChanged
                     }
                     this.Status = "Nhận Chip Thưởng Ký Tên Thành Công";
                 }
-                //Ky ten Bingo
                 if (string.IsNullOrEmpty(Apik.Trim()))
                 {
                     this.Status = "Account có vấn đề, cần check lại !";
                 }
-                this.Status = "Bắt Đầu Kí Tên Bingo";
-                List<string> listDay = new List<string>();
-                List<string> listSign = new List<string>();
-                List<string> listWeek = new List<string>();
-                List<string> listPerfect = new List<string>();
-
-                param = new NameValueCollection();
-                param.Add("apik", Apik);
-                client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=info");
-                listDay = Regex.Match(client.ResponseText, "\"daystr\":\"([^\"]+)").Groups[1].Value.Split(',').ToList();
-                listSign = Regex.Match(client.ResponseText, "\"signstr\":\"([^\"]+)").Groups[1].Value.Split(',').ToList();
-                listWeek = Regex.Match(client.ResponseText, "\"recstr\":\"(\\d,\\d,\\d,\\d,\\d)").Groups[1].Value.Split(',').ToList();
-                listPerfect = Regex.Match(client.ResponseText, "\"recstr\":\"\\d,\\d,\\d,\\d,\\d,(\\d,\\d,\\d,\\d,\\d,\\d)").Groups[1].Value.Split(',').ToList();
-                if (listDay.Count > 10 && listSign.Count > 10)
+                //Ky ten Bingo
                 {
-                    //Check sign today
-                    if (listDay.Contains(DateTime.Today.ToString("MMdd")) && listSign[listDay.IndexOf(DateTime.Today.ToString("MMdd"))] == "1")
+                    #region - Bingo -
+                    //this.Status = "Bắt Đầu Kí Tên Bingo";
+                    //List<string> listDay = new List<string>();
+                    //List<string> listSign = new List<string>();
+                    //List<string> listWeek = new List<string>();
+                    //List<string> listPerfect = new List<string>();
+
+                    //param = new NameValueCollection();
+                    //param.Add("apik", Apik);
+                    //client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=info");
+                    //listDay = Regex.Match(client.ResponseText, "\"daystr\":\"([^\"]+)").Groups[1].Value.Split(',').ToList();
+                    //listSign = Regex.Match(client.ResponseText, "\"signstr\":\"([^\"]+)").Groups[1].Value.Split(',').ToList();
+                    //listWeek = Regex.Match(client.ResponseText, "\"recstr\":\"(\\d,\\d,\\d,\\d,\\d)").Groups[1].Value.Split(',').ToList();
+                    //listPerfect = Regex.Match(client.ResponseText, "\"recstr\":\"\\d,\\d,\\d,\\d,\\d,(\\d,\\d,\\d,\\d,\\d,\\d)").Groups[1].Value.Split(',').ToList();
+                    //if (listDay.Count > 10 && listSign.Count > 10)
+                    //{
+                    //    //Check sign today
+                    //    if (listDay.Contains(DateTime.Today.ToString("MMdd")) && listSign[listDay.IndexOf(DateTime.Today.ToString("MMdd"))] == "1")
+                    //    {
+                    //        param = new NameValueCollection();
+                    //        param.Add("apik", Apik);
+                    //        strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=sign&date=" + DateTime.Today.ToString("MMdd"));
+                    //        listSign[listDay.IndexOf(DateTime.Today.ToString("MMdd"))] = "2";
+                    //        System.Threading.Thread.Sleep(2000);
+                    //    }
+                    //    //Sign missed day
+                    //    if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                    //    {
+                    //        for (int iIndex = 0; iIndex < 6; iIndex++)
+                    //        {
+                    //            if (listDay.Contains(DateTime.Today.AddDays(iIndex - 6).ToString("MMdd")) && listSign[listDay.IndexOf(DateTime.Today.AddDays(iIndex - 6).ToString("MMdd"))] != "2")
+                    //            {
+                    //                param = new NameValueCollection();
+                    //                param.Add("apik", Apik);
+                    //                client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=resign&date=" + DateTime.Today.AddDays(iIndex - 6).ToString("MMdd"));
+                    //                listSign[listDay.IndexOf(DateTime.Today.AddDays(iIndex - 6).ToString("MMdd"))] = "2";
+                    //                System.Threading.Thread.Sleep(2000);
+                    //                break;
+                    //            }
+                    //        }
+                    //    }
+                    //    //Check sign perfect Bingo
+                    //    //if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                    //    {
+                    //        //Check sign every day of week
+                    //        for (int iIndex = 0; iIndex < 5; iIndex++)
+                    //        {
+                    //            bool bCheckAllWeek = true;
+                    //            for (int iDay = iIndex * 5; iDay < (iIndex + 1) * 5; iDay++)
+                    //            {
+                    //                if (listSign[iDay] != "2")
+                    //                {
+                    //                    bCheckAllWeek = false;
+                    //                }
+                    //            }
+                    //            if (bCheckAllWeek && listWeek[iIndex] != "2")
+                    //            {
+                    //                param = new NameValueCollection();
+                    //                param.Add("apik", Apik);
+                    //                strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=award&type=" + iIndex);
+                    //                System.Threading.Thread.Sleep(2000);
+                    //                listWeek[iIndex] = "2";
+                    //            }
+                    //        }
+                    //        //Check sign day of month
+                    //        for (int iIndex = 0; iIndex < 5; iIndex++)
+                    //        {
+                    //            bool bCheckAll = true;
+                    //            for (int iDay = 0; iDay < 5; iDay++)
+                    //            {
+                    //                if (listSign[iDay * 5 + iIndex] != "2")
+                    //                {
+                    //                    bCheckAll = false;
+                    //                }
+                    //            }
+                    //            if (bCheckAll && listPerfect[iIndex] != "2")
+                    //            {
+                    //                param = new NameValueCollection();
+                    //                param.Add("apik", Apik);
+                    //                strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=award&type=" + (iIndex + 5));
+                    //                System.Threading.Thread.Sleep(2000);
+                    //                listPerfect[iIndex] = "2";
+                    //            }
+                    //        }
+                    //        //Check perfect total
+                    //        bool bPerfectBingo = true;
+                    //        for (int iIndex = 0; iIndex < listSign.Count; iIndex++)
+                    //        {
+                    //            if (listSign[iIndex] != "2")
+                    //            {
+                    //                bPerfectBingo = false;
+                    //                break;
+                    //            }
+                    //        }
+                    //        if (bPerfectBingo)
+                    //        {
+                    //            param = new NameValueCollection();
+                    //            param.Add("apik", Apik);
+                    //            strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=award&type=10");
+                    //            System.Threading.Thread.Sleep(2000);
+                    //        }
+                    //    }
+                    //}
+                    //this.Status = "Kí Tên Bingo Hoàn Thành";
+                    #endregion
+                }
+                //Ky ten WorldCup
+                {
+                    this.Status = "Bắt Đầu Kí Tên World Cup";
+                    param = new NameValueCollection();
+                    param.Add("cmd", "init");
+                    param.Add("apik", Apik);
+                    client.DoPost(param, "https://vntexas0.boyaagame.com/texas/act/648/ajax.php");
+                    if (client.ResponseText.Contains("hasSignToday\":false"))
                     {
                         param = new NameValueCollection();
+                        param.Add("cmd", "sign");
                         param.Add("apik", Apik);
-                        strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=sign&date=" + DateTime.Today.ToString("MMdd"));
-                        listSign[listDay.IndexOf(DateTime.Today.ToString("MMdd"))] = "2";
-                        System.Threading.Thread.Sleep(2000);
+                        client.DoPost(param, "https://vntexas0.boyaagame.com/texas/act/648/ajax.php");
                     }
-                    //Sign missed day
-                    if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        for (int iIndex = 0; iIndex < 6; iIndex++)
-                        {
-                            if (listDay.Contains(DateTime.Today.AddDays(iIndex - 6).ToString("MMdd")) && listSign[listDay.IndexOf(DateTime.Today.AddDays(iIndex - 6).ToString("MMdd"))] != "2")
-                            {
-                                param = new NameValueCollection();
-                                param.Add("apik", Apik);
-                                client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=resign&date=" + DateTime.Today.AddDays(iIndex - 6).ToString("MMdd"));
-                                listSign[listDay.IndexOf(DateTime.Today.AddDays(iIndex - 6).ToString("MMdd"))] = "2";
-                                System.Threading.Thread.Sleep(2000);
-                                break;
-                            }
-                        }
-                    }
-                    //Check sign perfect Bingo
-                    //if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        //Check sign every day of week
-                        for (int iIndex = 0; iIndex < 5; iIndex++)
-                        {
-                            bool bCheckAllWeek = true;
-                            for (int iDay = iIndex * 5; iDay < (iIndex + 1) * 5; iDay++)
-                            {
-                                if (listSign[iDay] != "2")
-                                {
-                                    bCheckAllWeek = false;
-                                }
-                            }
-                            if (bCheckAllWeek && listWeek[iIndex] != "2")
-                            {
-                                param = new NameValueCollection();
-                                param.Add("apik", Apik);
-                                strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=award&type=" + iIndex);
-                                System.Threading.Thread.Sleep(2000);
-                                listWeek[iIndex] = "2";
-                            }
-                        }
-                        //Check sign day of month
-                        for (int iIndex = 0; iIndex < 5; iIndex++)
-                        {
-                            bool bCheckAll = true;
-                            for (int iDay = 0; iDay < 5; iDay++)
-                            {
-                                if (listSign[iDay * 5 + iIndex] != "2")
-                                {
-                                    bCheckAll = false;
-                                }
-                            }
-                            if (bCheckAll && listPerfect[iIndex] != "2")
-                            {
-                                param = new NameValueCollection();
-                                param.Add("apik", Apik);
-                                strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=award&type=" + (iIndex + 5));
-                                System.Threading.Thread.Sleep(2000);
-                                listPerfect[iIndex] = "2";
-                            }
-                        }
-                        //Check perfect total
-                        bool bPerfectBingo = true;
-                        for (int iIndex = 0; iIndex < listSign.Count; iIndex++)
-                        {
-                            if (listSign[iIndex] != "2")
-                            {
-                                bPerfectBingo = false;
-                                break;
-                            }
-                        }
-                        if (bPerfectBingo)
-                        {
-                            param = new NameValueCollection();
-                            param.Add("apik", Apik);
-                            strResponse = client.DoPost(param, "http://vntexas0.boyaagame.com/texas/act/233/ajax.php?cmd=award&type=10");
-                            System.Threading.Thread.Sleep(2000);
-                        }
-                    }
+                    this.Status = "Kí Tên World Cup Hoàn Thành";
                 }
-                this.Status = "Kí Tên Bingo Hoàn Thành";
             }
             else
             {//Request Link Chip

@@ -376,14 +376,20 @@ namespace VuaThuThanh
             windowGhepManhTuong.Show();
             txtManhTuongDaChon.Text = string.Empty;
             Session["mt"] = new Dictionary<string, int>();
-            List<object> dataManhTuong = new List<object>();
+
+            Dictionary<string, string> dicManhTuong = new Dictionary<string, string>();
 
             foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
             {
                 if (owned_officer_soul["quantity"] > 0)
                 {
-                    dataManhTuong.Add(new { manhtuong_id = owned_officer_soul["id"], manhtuong_name = owned_officer_soul["officer_id"] + "(" + owned_officer_soul["quantity"] + ")" });
+                    dicManhTuong.Add(owned_officer_soul["id"], owned_officer_soul["officer_id"] + "(" + owned_officer_soul["quantity"] + ")");
                 }
+            }
+            List<object> dataManhTuong = new List<object>();
+            foreach (KeyValuePair<string, string> item in dicManhTuong.OrderBy(key => key.Value))
+            {
+                dataManhTuong.Add(new { manhtuong_id = item.Key, manhtuong_name = item.Value });
             }
             manhTuongStore.DataSource = dataManhTuong;
             manhTuongStore.DataBind();

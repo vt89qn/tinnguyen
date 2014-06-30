@@ -28,7 +28,7 @@ namespace VuaThuThanh
         {
 
         }
-
+        #region - Đăng nhập -
         protected void btnLogin_Click(object sender, DirectEventArgs e)
         {
             string strProfile = txtProfile.Value.ToString();
@@ -57,7 +57,9 @@ namespace VuaThuThanh
                 }
             }
         }
+        #endregion
 
+        #region - Thủ Thành -
         protected void btnChayQuanLenh_Click(object sender, DirectEventArgs e)
         {
             txtStatus.Text = string.Empty;
@@ -66,93 +68,6 @@ namespace VuaThuThanh
             defense_next_wave();
             writeCurrentInfo();
             setStatus("\nEND : Chạy quân lệnh");
-        }
-
-        protected void btnLeoThap_Click(object sender, DirectEventArgs e)
-        {
-            txtStatus.Text = string.Empty;
-            setStatus("START : Leo Tháp\n");
-            readSession();
-            bool bDone = false;
-            while (true)
-            {
-                client = new WebClientEx();
-                NameValueCollection param = new NameValueCollection();
-                param.Add("authentication_token", authentication_token);
-                client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/attack_next_tower_floor");
-                if (client.ResponseText != null)
-                {
-                    JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    dynamic rs = serializer.Deserialize<object>(client.ResponseText);
-
-                    client = new WebClientEx();
-                    param = new NameValueCollection();
-                    param.Add("authentication_token", authentication_token);
-                    param.Add("won_floor", bDone ? "0" : "1");
-                    param.Add("floor_npc_id", rs["floor_npc_id"]);
-                    param.Add("remaining_hp", bDone ? "0" : ("81." + (new Random().Next(1, 99))));
-                    client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/finish_attack_tower");
-                    if (client.ResponseText != null)
-                    {
-                        if (bDone) break;
-                        serializer = new JavaScriptSerializer();
-                        rs = serializer.Deserialize<object>(client.ResponseText);
-                        if (rs["tower_data"]["tower_achievement"] >= 200)
-                        {
-                            bDone = true;
-                        }
-                    }
-                }
-            }
-
-            writeCurrentInfo();
-            setStatus("\nEND : Leo Tháp");
-        }
-
-        protected void btnDuoiTuong_Click(object sender, DirectEventArgs e)
-        {
-            txtStatus.Text = string.Empty;
-            setStatus("START : Đuổi tướng\n");
-            readSession();
-
-            foreach (dynamic officer in data["owned_officers"])
-            {
-                bool bFire = false;
-                int iLevel = 50;
-                foreach (dynamic component in officer["components"])
-                {
-                    if (component.ContainsKey("level"))
-                    {
-                        iLevel = component["level"];
-                        if (iLevel > 1)
-                        {
-                            bFire = false;
-                            break;
-                        }
-                    }
-                    if (component.ContainsKey("rank") && component["rank"] <= 2)
-                    {
-                        bFire = true;
-                    }
-                }
-                if (bFire)
-                {
-                    for (int iIndex = 0; iIndex < 5; iIndex++)
-                    {
-                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(fire)).Start(officer["id"]);
-                    }
-                    System.Threading.Thread.Sleep(5000);
-                }
-            }
-
-            writeCurrentInfo();
-            setStatus("\nEND : Đuổi tướng");
-        }
-
-        private void fire(object id)
-        {
-            WebClientEx we = new WebClientEx();
-            we.DoGet("https://vtt-01.zoygame.com/owned_officers/" + id + "/fire?authentication_token=" + authentication_token);
         }
 
         private void defense_next_wave()
@@ -197,80 +112,52 @@ namespace VuaThuThanh
                 defense_next_wave();
             }
         }
+        #endregion
 
-        void readSession()
+        #region - Leo Tháp -
+        protected void btnLeoThap_Click(object sender, DirectEventArgs e)
         {
-            data = Session["data"];
-            authentication_token = data["authentication_token"];
-            current_defense_turn_count = data["current_defense_turn_count"];
-            current_wave = data["current_defense_battle"]["current_wave"] + 1;
-            star = data["current_defense_battle"]["star"];
-            total_wave_count = data["current_defense_battle"]["total_wave_count"];
-            attack_turn_count = data["attack_turn_count"];
-            id = data["id"];
-        }
-
-        void writeSession()
-        {
-            data = Session["data"];
-            data["authentication_token"] = authentication_token;
-            data["current_defense_turn_count"] = current_defense_turn_count;
-            data["current_defense_battle"]["current_wave"] = current_wave - 1;
-            data["current_defense_battle"]["star"] = star;
-            data["current_defense_battle"]["total_wave_count"] = total_wave_count;
-            data["attack_turn_count"] = attack_turn_count;
-            Session["data"] = data;
-        }
-
-        private void writeCurrentInfo()
-        {
-            data = Session["data"];
-            setStatus("Quân Lệnh : " + data["current_defense_turn_count"]);
-            setStatus("Cờ Chiến : " + data["attack_turn_count"]);
-            setStatus("Đợt : " + (data["current_defense_battle"]["current_wave"] + 1));
-            setStatus("-----Quân lệnh-----");
-            foreach (dynamic item in data["owned_items"])
+            txtStatus.Text = string.Empty;
+            setStatus("START : Leo Tháp\n");
+            readSession();
+            bool bDone = false;
+            while (true)
             {
-                if (item["name"] == "defense_turn_count_restore_00")
+                client = new WebClientEx();
+                NameValueCollection param = new NameValueCollection();
+                param.Add("authentication_token", authentication_token);
+                client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/attack_next_tower_floor");
+                if (client.ResponseText != null)
                 {
-                    setStatus("QL sơn trại : " + item["quantity"]);
-                }
-                else if (item["name"] == "defense_turn_count_restore_01")
-                {
-                    setStatus("QL sơ cấp : " + item["quantity"]);
-                }
-                else if (item["name"] == "defense_turn_count_restore_02")
-                {
-                    setStatus("QL trung cấp : " + item["quantity"]);
-                }
-                else if (item["name"] == "defense_turn_count_restore_03")
-                {
-                    setStatus("QL cao cấp : " + item["quantity"]);
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+                    dynamic rs = serializer.Deserialize<object>(client.ResponseText);
+
+                    client = new WebClientEx();
+                    param = new NameValueCollection();
+                    param.Add("authentication_token", authentication_token);
+                    param.Add("won_floor", bDone ? "0" : "1");
+                    param.Add("floor_npc_id", rs["floor_npc_id"]);
+                    param.Add("remaining_hp", bDone ? "0" : ("81." + (new Random().Next(1, 99))));
+                    client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/finish_attack_tower");
+                    if (client.ResponseText != null)
+                    {
+                        if (bDone) break;
+                        serializer = new JavaScriptSerializer();
+                        rs = serializer.Deserialize<object>(client.ResponseText);
+                        if (rs["tower_data"]["tower_achievement"] >= 200)
+                        {
+                            bDone = true;
+                        }
+                    }
                 }
             }
-            setStatus("-----Cờ chiến-----");
-            foreach (dynamic item in data["owned_items"])
-            {
-                if (item["name"] == "attack_turn_count_restore_01")
-                {
-                    setStatus("CC sơ cấp : " + item["quantity"]);
-                }
-                else if (item["name"] == "attack_turn_count_restore_02")
-                {
-                    setStatus("CC trung cấp : " + item["quantity"]);
-                }
-                else if (item["name"] == "attack_turn_count_restore_03")
-                {
-                    setStatus("CC cao cấp : " + item["quantity"]);
-                }
-            }
-        }
 
-        private void setStatus(string strStatus)
-        {
-            txtStatus.Text += "\n" + strStatus;
+            writeCurrentInfo();
+            setStatus("\nEND : Leo Tháp");
         }
+        #endregion
 
+        #region - Nuốt quân lệnh / Cờ chiến -
         protected void btnNuotQuanLenh_Click(object sender, DirectEventArgs e)
         {
             txtStatus.Text = string.Empty;
@@ -321,7 +208,9 @@ namespace VuaThuThanh
             }
             setStatus("\nEND : Nuốt quân lệnh / cờ chiến");
         }
+        #endregion
 
+        #region - Vượt ải -
         protected void btnVuotAi_Click(object sender, DirectEventArgs e)
         {
             readSession();
@@ -430,5 +319,279 @@ namespace VuaThuThanh
             setStatus("\nEND : Vượt ải");
         }
 
+        #endregion
+
+        #region - Đuổi tướng -
+        protected void btnDuoiTuong_Click(object sender, DirectEventArgs e)
+        {
+            txtStatus.Text = string.Empty;
+            setStatus("START : Đuổi tướng\n");
+            readSession();
+
+            foreach (dynamic officer in data["owned_officers"])
+            {
+                bool bFire = false;
+                int iLevel = 50;
+                foreach (dynamic component in officer["components"])
+                {
+                    if (component.ContainsKey("level"))
+                    {
+                        iLevel = component["level"];
+                        if (iLevel > 1)
+                        {
+                            bFire = false;
+                            break;
+                        }
+                    }
+                    if (component.ContainsKey("rank") && component["rank"] <= 2)
+                    {
+                        bFire = true;
+                    }
+                }
+                if (bFire)
+                {
+                    for (int iIndex = 0; iIndex < 7; iIndex++)
+                    {
+                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(fire)).Start(officer["id"]);
+                    }
+                    System.Threading.Thread.Sleep(5000);
+                }
+            }
+
+            writeCurrentInfo();
+            setStatus("\nEND : Đuổi tướng");
+        }
+
+        private void fire(object id)
+        {
+            WebClientEx we = new WebClientEx();
+            we.DoGet("https://vtt-01.zoygame.com/owned_officers/" + id + "/fire?authentication_token=" + authentication_token);
+        }
+        #endregion
+
+        #region - Ghép mảnh tướng -
+        protected void btnGhepManhTuong_Click(object sender, DirectEventArgs e)
+        {
+            readSession();
+            windowGhepManhTuong.Show();
+            txtManhTuongDaChon.Text = string.Empty;
+            Session["mt"] = new Dictionary<string, int>();
+            List<object> dataManhTuong = new List<object>();
+
+            foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
+            {
+                if (owned_officer_soul["quantity"] > 0)
+                {
+                    dataManhTuong.Add(new { manhtuong_id = owned_officer_soul["id"], manhtuong_name = owned_officer_soul["officer_id"] + "(" + owned_officer_soul["quantity"] + ")" });
+                }
+            }
+            manhTuongStore.DataSource = dataManhTuong;
+            manhTuongStore.DataBind();
+        }
+        protected void btnChonManhTuong_Click(object sender, DirectEventArgs e)
+        {
+            txtManhTuongDaChon.Text = string.Empty;
+            Dictionary<string, int> dicManhTuong = Session["mt"] as Dictionary<string, int>;
+            dicManhTuong.Add(txtChonManhTuong.Value.ToString(), int.Parse(txtSoLuongManhTuong.Text.Trim()));
+
+            foreach (KeyValuePair<string, int> item in dicManhTuong)
+            {
+                txtManhTuongDaChon.Text += item.Key + " : " + item.Value + "\r\n";
+            }
+        }
+        protected void btnGhepManhTuongHuy_Click(object sender, DirectEventArgs e)
+        {
+            windowGhepManhTuong.Hide();
+        }
+        protected void btnGhepManhTuongOK_Click(object sender, DirectEventArgs e)
+        {
+            readSession();
+            windowGhepManhTuong.Hide();
+            //check
+            int iTongManhTuong = 0;
+            foreach (KeyValuePair<string, int> item in Session["mt"] as Dictionary<string, int>)
+            {
+                iTongManhTuong += item.Value;
+
+                foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
+                {
+                    if (owned_officer_soul["id"] == item.Key)
+                    {
+                        if (owned_officer_soul["quantity"] < item.Value)
+                        {
+                            X.Msg.Alert("Vua thủ thành", "Mảnh tướng " + owned_officer_soul["officer_id"] + " éo đủ").Show();
+                            return;
+                        }
+                        else
+                        {
+                            owned_officer_soul["quantity"] = owned_officer_soul["quantity"] - item.Value;
+                        }
+                    }
+                }
+            }
+            if (iTongManhTuong != 5)
+            {
+                X.Msg.Alert("Vua thủ thành", "số lượng không hợp lệ").Show();
+                return;
+            }
+            string strURL = "https://vtt-01.zoygame.com/owned_officer_souls/merge?authentication_token=" + authentication_token;
+            foreach (KeyValuePair<string, int> item in Session["mt"] as Dictionary<string, int>)
+            {
+                for (int iIndex = 0; iIndex < item.Value; iIndex++)
+                {
+                    strURL += "&owned_officer_soul_ids%5B%5D=" + item.Key;
+                }
+            }
+
+            for (int iIndex = 0; iIndex < 7; iIndex++)
+            {
+                new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(merge)).Start(strURL);
+            }
+
+            writeSession();
+        }
+
+        private void merge(object url)
+        {
+            WebClientEx we = new WebClientEx();
+            we.DoGet(url.ToString());
+        }
+
+        #endregion
+
+        #region - Ghép vũ khí / linh thạch -
+        protected void btnGhepDo_Click(object sender, DirectEventArgs e)
+        {
+            txtStatus.Text = string.Empty;
+            setStatus("START : Ghép đồ\n");
+            readSession();
+
+            string item_id = string.Concat(cmbLoai.Value, "_", cmbCap.Value);
+            List<string> lstItems = new List<string>();
+            int soluong = Convert.ToInt16(cmbSoLuong.Value);
+            foreach (dynamic item in data["owned_items"])
+            {
+                if (item["item_id"] == item_id)
+                {
+                    lstItems.Add(item["id"]);
+
+                }
+            }
+            //send
+            if (lstItems.Count >= 3)
+            {
+                for (int i = 0; i < lstItems.Count - 3; i += 3)
+                {
+                    if (soluong != 0 && i >= soluong * 3)
+                    {
+                        setStatus(string.Concat("\nEND : Đã ghép xong ", cmbLoai.Text, " ", cmbCap.Text));
+                        setStatus("\nEND : Ghép đồ");
+                        return;
+                    }
+                    NameValueCollection param = new NameValueCollection();
+                    param.Add("authentication_token", authentication_token);
+                    param.Add("owned_item_count", "3");
+                    for (int t = 0; t < 3; t++)
+                    {
+                        param.Add(string.Concat("owned_item_id_", t), lstItems[i + t]);
+                    }
+
+                    for (int iIndex = 0; iIndex < 7; iIndex++)
+                    {
+                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(forge)).Start(param);
+                    }
+                    System.Threading.Thread.Sleep(5000);
+                }
+                setStatus(string.Concat("\nEND : Đã ghép xong ", cmbLoai.Text, " ", cmbCap.Text));
+            }
+            else
+            {
+                setStatus(string.Concat("\nEND : Không đủ ", cmbLoai.Text, " ", cmbCap.Text));
+            }
+
+            setStatus("\nEND : Ghép đồ");
+        }
+
+        private void forge(object param)
+        {
+            WebClientEx client = new WebClientEx();
+            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_items/forge");
+        }
+        #endregion
+
+        #region - Common -
+        void readSession()
+        {
+            data = Session["data"];
+            authentication_token = data["authentication_token"];
+            current_defense_turn_count = data["current_defense_turn_count"];
+            current_wave = data["current_defense_battle"]["current_wave"] + 1;
+            star = data["current_defense_battle"]["star"];
+            total_wave_count = data["current_defense_battle"]["total_wave_count"];
+            attack_turn_count = data["attack_turn_count"];
+            id = data["id"];
+        }
+
+        void writeSession()
+        {
+            data = Session["data"];
+            data["authentication_token"] = authentication_token;
+            data["current_defense_turn_count"] = current_defense_turn_count;
+            data["current_defense_battle"]["current_wave"] = current_wave - 1;
+            data["current_defense_battle"]["star"] = star;
+            data["current_defense_battle"]["total_wave_count"] = total_wave_count;
+            data["attack_turn_count"] = attack_turn_count;
+            Session["data"] = data;
+        }
+
+        private void writeCurrentInfo()
+        {
+            data = Session["data"];
+            setStatus("Quân Lệnh : " + data["current_defense_turn_count"]);
+            setStatus("Cờ Chiến : " + data["attack_turn_count"]);
+            setStatus("Đợt : " + (data["current_defense_battle"]["current_wave"] + 1));
+            setStatus("-----Quân lệnh-----");
+            foreach (dynamic item in data["owned_items"])
+            {
+                if (item["name"] == "defense_turn_count_restore_00")
+                {
+                    setStatus("QL sơn trại : " + item["quantity"]);
+                }
+                else if (item["name"] == "defense_turn_count_restore_01")
+                {
+                    setStatus("QL sơ cấp : " + item["quantity"]);
+                }
+                else if (item["name"] == "defense_turn_count_restore_02")
+                {
+                    setStatus("QL trung cấp : " + item["quantity"]);
+                }
+                else if (item["name"] == "defense_turn_count_restore_03")
+                {
+                    setStatus("QL cao cấp : " + item["quantity"]);
+                }
+            }
+            setStatus("-----Cờ chiến-----");
+            foreach (dynamic item in data["owned_items"])
+            {
+                if (item["name"] == "attack_turn_count_restore_01")
+                {
+                    setStatus("CC sơ cấp : " + item["quantity"]);
+                }
+                else if (item["name"] == "attack_turn_count_restore_02")
+                {
+                    setStatus("CC trung cấp : " + item["quantity"]);
+                }
+                else if (item["name"] == "attack_turn_count_restore_03")
+                {
+                    setStatus("CC cao cấp : " + item["quantity"]);
+                }
+            }
+        }
+
+        private void setStatus(string strStatus)
+        {
+            txtStatus.Text += "\n" + strStatus;
+        }
+        #endregion
     }
 }

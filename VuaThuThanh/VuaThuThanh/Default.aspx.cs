@@ -390,13 +390,21 @@ namespace VuaThuThanh
         }
         protected void btnChonManhTuong_Click(object sender, DirectEventArgs e)
         {
+            readSession();
             txtManhTuongDaChon.Text = string.Empty;
             Dictionary<string, int> dicManhTuong = Session["mt"] as Dictionary<string, int>;
             dicManhTuong.Add(txtChonManhTuong.Value.ToString(), int.Parse(txtSoLuongManhTuong.Text.Trim()));
 
             foreach (KeyValuePair<string, int> item in dicManhTuong)
             {
-                txtManhTuongDaChon.Text += item.Key + " : " + item.Value + "\r\n";
+                foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
+                {
+                    if (owned_officer_soul["id"] == item.Key)
+                    {
+                        txtManhTuongDaChon.Text += owned_officer_soul["officer_id"] + " : " + item.Value + "\r\n";
+                        break;
+                    }
+                }
             }
         }
         protected void btnGhepManhTuongHuy_Click(object sender, DirectEventArgs e)

@@ -14,7 +14,7 @@ namespace VuaThuThanh
     public partial class Default : System.Web.UI.Page
     {
         string profileJson = @"{'tin':{'access_token':'dm5pX3Rva2VuPTAuODE1NzM1MDAgMTQwMjM3NzkyMSsxNzk2NjIzMzgx','user_name':'vt89qn','user_id':'823493150','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vt89qn.png'}
-                              ,'thi':{}}";
+                              ,'thi':{'access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}}";
         WebClientEx client = new WebClientEx();
         string authentication_token = string.Empty;
         string id = string.Empty;
@@ -68,7 +68,7 @@ namespace VuaThuThanh
             setStatus("\nEND : Chạy quân lệnh");
         }
 
-        protected void btnLeoThaph_Click(object sender, DirectEventArgs e)
+        protected void btnLeoThap_Click(object sender, DirectEventArgs e)
         {
             txtStatus.Text = string.Empty;
             setStatus("START : Leo Tháp\n");
@@ -107,6 +107,52 @@ namespace VuaThuThanh
 
             writeCurrentInfo();
             setStatus("\nEND : Leo Tháp");
+        }
+
+        protected void btnDuoiTuong_Click(object sender, DirectEventArgs e)
+        {
+            txtStatus.Text = string.Empty;
+            setStatus("START : Đuổi tướng\n");
+            readSession();
+
+            foreach (dynamic officer in data["owned_officers"])
+            {
+                bool bFire = false;
+                int iLevel = 50;
+                foreach (dynamic component in officer["components"])
+                {
+                    if (component.ContainsKey("level"))
+                    {
+                        iLevel = component["level"];
+                        if (iLevel > 1)
+                        {
+                            bFire = false;
+                            break;
+                        }
+                    }
+                    if (component.ContainsKey("rank") && component["rank"] <= 2)
+                    {
+                        bFire = true;
+                    }
+                }
+                if (bFire)
+                {
+                    for (int iIndex = 0; iIndex < 5; iIndex++)
+                    {
+                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(fire)).Start(officer["id"]);
+                    }
+                    System.Threading.Thread.Sleep(5000);
+                }
+            }
+
+            writeCurrentInfo();
+            setStatus("\nEND : Đuổi tướng");
+        }
+
+        private void fire(object id)
+        {
+            WebClientEx we = new WebClientEx();
+            we.DoGet("https://vtt-01.zoygame.com/owned_officers/" + id + "/fire?authentication_token=" + authentication_token);
         }
 
         private void defense_next_wave()

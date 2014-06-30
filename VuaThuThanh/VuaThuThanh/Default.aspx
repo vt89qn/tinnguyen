@@ -23,7 +23,7 @@
                                     <ext:ListItem Text="Thi" Value="thi" />
                                 </Items>
                                 <SelectedItems>
-                                    <ext:ListItem Text="Tin" Value="tin" />
+                                    <ext:ListItem Text="Thi" Value="thi" />
                                 </SelectedItems>
                             </ext:ComboBox>
                         </Items>
@@ -54,8 +54,16 @@
                             <ext:Button ID="btnLeoThap" runat="server" Text="Leo Tháp" Icon="ApplicationGo" Height="35"
                                 Margins="0 0 5 0">
                                 <DirectEvents>
-                                    <Click OnEvent="btnLeoThaph_Click" Timeout="600000">
+                                    <Click OnEvent="btnLeoThap_Click" Timeout="600000">
                                         <EventMask ShowMask="true" Msg="Đang leo tháp" MinDelay="500" />
+                                    </Click>
+                                </DirectEvents>
+                            </ext:Button>
+                            <ext:Button ID="btnDuoiTuong" runat="server" Text="Đuổi Tướng" Icon="ApplicationGo"
+                                Height="35" Margins="0 0 5 0">
+                                <DirectEvents>
+                                    <Click OnEvent="btnDuoiTuong_Click" Timeout="600000">
+                                        <EventMask ShowMask="true" Msg="Đang đuổi tướng" MinDelay="500" />
                                     </Click>
                                 </DirectEvents>
                             </ext:Button>

@@ -85,6 +85,51 @@ namespace VuaThuThanh {
         protected global::Ext.Net.Button btnDuoiTuong;
         
         /// <summary>
+        /// btnGhepManhTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnGhepManhTuong;
+        
+        /// <summary>
+        /// cmbLoai control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.ComboBox cmbLoai;
+        
+        /// <summary>
+        /// cmbCap control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.ComboBox cmbCap;
+        
+        /// <summary>
+        /// cmbSoLuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.ComboBox cmbSoLuong;
+        
+        /// <summary>
+        /// btnGhepDo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnGhepDo;
+        
+        /// <summary>
         /// txtTenAi control.
         /// </summary>
         /// <remarks>
@@ -146,5 +191,59 @@ namespace VuaThuThanh {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Ext.Net.TextArea txtStatus;
+        
+        /// <summary>
+        /// windowGhepManhTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Window windowGhepManhTuong;
+        
+        /// <summary>
+        /// txtChonManhTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.ComboBox txtChonManhTuong;
+        
+        /// <summary>
+        /// manhTuongStore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Store manhTuongStore;
+        
+        /// <summary>
+        /// txtSoLuongManhTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.TextField txtSoLuongManhTuong;
+        
+        /// <summary>
+        /// btnChonManhTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnChonManhTuong;
+        
+        /// <summary>
+        /// txtManhTuongDaChon control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.TextArea txtManhTuongDaChon;
     }
 }

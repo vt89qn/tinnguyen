@@ -23,7 +23,7 @@
                                     <ext:ListItem Text="Thi" Value="thi" />
                                 </Items>
                                 <SelectedItems>
-                                    <ext:ListItem Text="Thi" Value="thi" />
+                                    <ext:ListItem Text="Tin" Value="tin" />
                                 </SelectedItems>
                             </ext:ComboBox>
                         </Items>
@@ -42,7 +42,7 @@
                         <LayoutConfig>
                             <ext:VBoxLayoutConfig Align="Stretch" />
                         </LayoutConfig>
-                        <Items>                            
+                        <Items>
                             <ext:Button ID="btnChayQuanLenh" runat="server" Text="Thủ Thành" Icon="ApplicationGo"
                                 Height="35" Margins="0 0 5 0">
                                 <DirectEvents>
@@ -78,9 +78,10 @@
                                     <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
                                 </Defaults>
                                 <Items>
-                                    <ext:ComboBox ID="cmbLoai" runat="server" Editable="false" FieldLabel="Tên đồ" LabelWidth="60" Flex="1" Height="35">
-                                        <Items>                                            
-                                            <ext:ListItem Text="Thạch Phong" Value="wind_stone" />                                            
+                                    <ext:ComboBox ID="cmbLoai" runat="server" Editable="false" FieldLabel="Tên đồ" LabelWidth="60"
+                                        Flex="1" Height="35">
+                                        <Items>
+                                            <ext:ListItem Text="Thạch Phong" Value="wind_stone" />
                                             <ext:ListItem Text="Thạch Lôi" Value="thunder_stone" />
                                             <ext:ListItem Text="Thạch Quang" Value="light_stone" />
                                             <ext:ListItem Text="Thạch Thủy" Value="water_stone" />
@@ -95,23 +96,24 @@
                                             <ext:ListItem Text="Thạch Phong" Value="wind_stone" />
                                         </SelectedItems>
                                     </ext:ComboBox>
-
-                                    <ext:ComboBox ID="cmbCap" runat="server" Editable="false" FieldLabel="Cấp" LabelWidth="60" Flex="1" Height="35">
+                                    <ext:ComboBox ID="cmbCap" runat="server" Editable="false" FieldLabel="Cấp" LabelWidth="60"
+                                        Flex="1" Height="35">
                                         <Items>
                                             <ext:ListItem Text="1" Value="01" />
                                             <ext:ListItem Text="2" Value="02" />
                                             <ext:ListItem Text="3" Value="03" />
                                             <ext:ListItem Text="4" Value="04" />
+                                            <ext:ListItem Text="5" Value="05" />
                                         </Items>
                                         <SelectedItems>
                                             <ext:ListItem Text="1" Value="01" />
                                         </SelectedItems>
                                     </ext:ComboBox>
-
-                                    <ext:ComboBox ID="cmbSoLuong" runat="server" Editable="false" FieldLabel="Số lượng" LabelWidth="60" Flex="1" Height="35">
+                                    <ext:ComboBox ID="cmbSoLuong" runat="server" Editable="false" FieldLabel="Số lượng"
+                                        LabelWidth="60" Flex="1" Height="35">
                                         <Items>
                                             <ext:ListItem Text="1" Value="1" />
-                                            <ext:ListItem Text="3" Value="=3" />
+                                            <ext:ListItem Text="3" Value="3" />
                                             <ext:ListItem Text="5" Value="5" />
                                             <ext:ListItem Text="10" Value="10" />
                                             <ext:ListItem Text="Hết" Value="0" />
@@ -120,9 +122,8 @@
                                             <ext:ListItem Text="Hết" Value="0" />
                                         </SelectedItems>
                                     </ext:ComboBox>
-
-                                    <ext:Button ID="btnGhepDo" runat="server" Text="Ghép đồ" Icon="ApplicationGo"
-                                        Height="35" Margins="0 0 5 0" Flex="1">
+                                    <ext:Button ID="btnGhepDo" runat="server" Text="Ghép đồ" Icon="ApplicationGo" Height="35"
+                                        Margins="0 0 5 0" Flex="1">
                                         <DirectEvents>
                                             <Click OnEvent="btnGhepDo_Click" Timeout="600000">
                                                 <EventMask ShowMask="true" Msg="Đang ghép đồ" MinDelay="500" />
@@ -130,7 +131,7 @@
                                         </DirectEvents>
                                     </ext:Button>
                                 </Items>
-                            </ext:Panel> 
+                            </ext:Panel>
                             <ext:Panel Layout="HBoxLayout" Border="false">
                                 <Defaults>
                                     <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
@@ -139,7 +140,13 @@
                                     <ext:ComboBox ID="txtTenAi" runat="server" Editable="false" FieldLabel="Tên Ải" LabelWidth="60"
                                         Flex="1" Height="35">
                                         <Items>
+                                            <ext:ListItem Text="Định Đào" Value="dinh_dao" />
+                                            <ext:ListItem Text="Hợp Phì" Value="hop_phi" />
+                                            <ext:ListItem Text="Hoa Dung" Value="hoa_dung" />
+                                            <ext:ListItem Text="Xích Bích" Value="xich_bich" />
+                                            <ext:ListItem Text="Ngưu Chữ" Value="nguu_chu" />
                                             <ext:ListItem Text="Hổ Lao Quan" Value="ho_lao_quan" />
+                                            <ext:ListItem Text="Dốc Bắc Vọng" Value="doc_bac_vong" />
                                             <ext:ListItem Text="Di Lăng" Value="di_lang" />
                                         </Items>
                                         <SelectedItems>
@@ -166,7 +173,7 @@
                                         </DirectEvents>
                                     </ext:Button>
                                 </Items>
-                            </ext:Panel>                                                
+                            </ext:Panel>
                             <ext:Panel Layout="HBoxLayout" Border="false">
                                 <Defaults>
                                     <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
@@ -204,7 +211,7 @@
                         <Items>
                             <ext:ComboBox ID="txtChonManhTuong" runat="server" Editable="false" EmptyText="Chọn mảnh tướng"
                                 TypeAhead="true" DisplayField="manhtuong_name" ValueField="manhtuong_id" Flex="1"
-                                Height="35" AnchorHorizontal="100%" >
+                                Height="35" AnchorHorizontal="100%" Margins="5 0 0 0">
                                 <Store>
                                     <ext:Store runat="server" ID="manhTuongStore">
                                         <Model>
@@ -217,26 +224,23 @@
                                         </Model>
                                     </ext:Store>
                                 </Store>
+                                <DirectEvents>
+                                    <Change OnEvent="txtChonManhTuong_Change" Timeout="600000" />
+                                </DirectEvents>
                             </ext:ComboBox>
                             <ext:TextField ID="txtSoLuongManhTuong" runat="server" EmptyText="Số lượng cần dùng"
-                                AnchorHorizontal="100%" />
+                                AnchorHorizontal="100%" Margins="5 0 0 0" />
                             <ext:Button ID="btnChonManhTuong" runat="server" Text="Chọn" Icon="ApplicationGo"
-                                AnchorHorizontal="100%" Margins="0 0 5 0">
+                                AnchorHorizontal="100%" Margins="5 0 0 0" Height="35">
                                 <DirectEvents>
                                     <Click OnEvent="btnChonManhTuong_Click" Timeout="600000" />
                                 </DirectEvents>
                             </ext:Button>
-                            <ext:TextArea ID="txtManhTuongDaChon" runat="server" ReadOnly="true">
+                            <ext:TextArea ID="txtManhTuongDaChon" runat="server" ReadOnly="true" Margins="5 0 0 0"
+                                AnchorHorizontal="100%" Height="100">
                             </ext:TextArea>
                         </Items>
                         <Buttons>
-                            <ext:Button runat="server" Icon="Accept" Text="Ghép">
-                                <DirectEvents>
-                                    <Click OnEvent="btnGhepManhTuongOK_Click" Timeout="600000">
-                                        <EventMask ShowMask="true" Msg="Đang ghép" MinDelay="500" />
-                                    </Click>
-                                </DirectEvents>
-                            </ext:Button>
                             <ext:Button runat="server" Icon="Cancel" Text="Hủy">
                                 <DirectEvents>
                                     <Click OnEvent="btnGhepManhTuongHuy_Click" />

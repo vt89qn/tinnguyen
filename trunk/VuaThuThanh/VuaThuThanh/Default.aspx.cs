@@ -402,23 +402,46 @@ namespace VuaThuThanh
             manhTuongStore.DataSource = dataManhTuong;
             manhTuongStore.DataBind();
         }
+        protected void txtChonManhTuong_Change(object sender, DirectEventArgs e)
+        {
+            readSession();
+            Dictionary<string, int> dicManhTuong = Session["mt"] as Dictionary<string, int>;
+            int iTongSoManhTuong = 0;
+            foreach (KeyValuePair<string, int> item in dicManhTuong)
+            {
+                iTongSoManhTuong += item.Value;
+            }
+            foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
+            {
+                if (owned_officer_soul["id"] == txtChonManhTuong.Value.ToString())
+                {
+                    txtSoLuongManhTuong.Text = ((owned_officer_soul["quantity"] <= 5 - iTongSoManhTuong ? owned_officer_soul["quantity"] : (5 - iTongSoManhTuong))).ToString();
+                    break;
+                }
+            }
+        }
         protected void btnChonManhTuong_Click(object sender, DirectEventArgs e)
         {
             readSession();
             txtManhTuongDaChon.Text = string.Empty;
             Dictionary<string, int> dicManhTuong = Session["mt"] as Dictionary<string, int>;
             dicManhTuong.Add(txtChonManhTuong.Value.ToString(), int.Parse(txtSoLuongManhTuong.Text.Trim()));
-
+            int iTotal = 0;
             foreach (KeyValuePair<string, int> item in dicManhTuong)
             {
                 foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
                 {
                     if (owned_officer_soul["id"] == item.Key)
                     {
+                        iTotal += item.Value;
                         txtManhTuongDaChon.Text += owned_officer_soul["officer_id"] + " : " + item.Value + "\r\n";
                         break;
                     }
                 }
+            }
+            if (iTotal == 5)
+            {
+                btnGhepManhTuongOK_Click(sender, e);
             }
         }
         protected void btnGhepManhTuongHuy_Click(object sender, DirectEventArgs e)
@@ -522,7 +545,7 @@ namespace VuaThuThanh
                     {
                         new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(forge)).Start(param);
                     }
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(2000);
                 }
                 setStatus(string.Concat("\nEND : Đã ghép xong ", cmbLoai.Text, " ", cmbCap.Text));
             }

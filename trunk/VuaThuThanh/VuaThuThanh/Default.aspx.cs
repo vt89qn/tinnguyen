@@ -621,13 +621,13 @@ namespace VuaThuThanh
             else
             {
                 // Create a timer with a one second interval.
-                aTimer = new System.Timers.Timer(1000);
+                aTimer = new System.Timers.Timer(se * 1000);
 
                 // Hook up the Elapsed event for the timer.
                 aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
 
                 // Set the Interval
-                aTimer.Interval = se * 1000;
+                //aTimer.Interval = se * 1000;
                 aTimer.Enabled = true;
             }
         }

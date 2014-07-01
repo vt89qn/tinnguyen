@@ -494,7 +494,7 @@ namespace VuaThuThanh
             //send
             if (lstItems.Count >= 3)
             {
-                for (int i = 0; i < lstItems.Count - 3; i += 3)
+                for (int i = 0; i <= lstItems.Count - 3; i += 3)
                 {
                     if (soluong != 0 && i >= soluong * 3)
                     {

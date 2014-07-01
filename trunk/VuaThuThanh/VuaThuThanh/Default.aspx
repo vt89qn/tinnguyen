@@ -23,7 +23,7 @@
                                     <ext:ListItem Text="Thi" Value="thi" />
                                 </Items>
                                 <SelectedItems>
-                                    <ext:ListItem Text="Tin" Value="tin" />
+                                    <ext:ListItem Text="Thi" Value="thi" />
                                 </SelectedItems>
                             </ext:ComboBox>
                         </Items>
@@ -42,7 +42,7 @@
                         <LayoutConfig>
                             <ext:VBoxLayoutConfig Align="Stretch" />
                         </LayoutConfig>
-                        <Items>
+                        <Items>                            
                             <ext:Button ID="btnChayQuanLenh" runat="server" Text="Thủ Thành" Icon="ApplicationGo"
                                 Height="35" Margins="0 0 5 0">
                                 <DirectEvents>
@@ -166,7 +166,7 @@
                                         </DirectEvents>
                                     </ext:Button>
                                 </Items>
-                            </ext:Panel>
+                            </ext:Panel>                                                
                             <ext:Panel Layout="HBoxLayout" Border="false">
                                 <Defaults>
                                     <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />

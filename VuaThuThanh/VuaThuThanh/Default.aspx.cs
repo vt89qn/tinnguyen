@@ -9,6 +9,8 @@ using System.Web.Script.Serialization;
 using System.Collections.Specialized;
 using System.Web.Services;
 using System.Timers;
+using System.Data;
+using System.IO;
 
 namespace VuaThuThanh
 {
@@ -28,7 +30,7 @@ namespace VuaThuThanh
         static System.Timers.Timer aTimer;
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
         }
         #region - Đăng nhập -
         protected void btnLogin_Click(object sender, DirectEventArgs e)
@@ -42,8 +44,9 @@ namespace VuaThuThanh
             dynamic dataProfile = serializer.Deserialize<dynamic>(profileJson);
             if (dataProfile[strProfile] != null)
             {
-                client = new WebClientEx();
+                WebClientEx client = new WebClientEx();
                 NameValueCollection param = new NameValueCollection();
+                param.Clear();
                 param.Add("access_token", dataProfile[strProfile]["access_token"]);
                 param.Add("user_name", dataProfile[strProfile]["user_name"]);
                 param.Add("user_id", dataProfile[strProfile]["user_id"]);
@@ -62,8 +65,46 @@ namespace VuaThuThanh
 
                 }
             }
-
+            writeFileTxt();
             setTimeLevelUp();
+        }
+
+        private void writeFileTxt()
+        {
+            DataTable tblHeroes = GetDataTableFromCSV();
+            if (tblHeroes.Rows.Count > 0)
+            {
+                readSession();
+                string newHeroes = string.Empty;
+                foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
+                {                    
+                    DataRow[] rowCheck = tblHeroes.Select(string.Format("name = '{0}'", owned_officer_soul["officer_id"]));
+                    if (rowCheck.Length == 0)
+                    {
+                        newHeroes = string.Concat(newHeroes, Environment.NewLine, string.Format("{0},{1},{2}", owned_officer_soul["officer_id"], "0", "0"));
+                    }
+                }
+                if (newHeroes != string.Empty)
+                {
+                    string path = HttpContext.Current.Server.MapPath("heroes.txt");
+                    //new
+                    if (!File.Exists(path))
+                    {
+                        // Create a file to write to. 
+                        using (StreamWriter sw = File.CreateText(path))
+                        {
+                            sw.WriteLine(newHeroes);
+                            sw.Close();
+                        }
+                    }
+                    //modify
+                    using (StreamWriter sw = File.AppendText(path))
+                    {
+                        sw.WriteLine(newHeroes);
+                        sw.Close();
+                    }
+                }
+            }
         }
         #endregion
 
@@ -378,8 +419,132 @@ namespace VuaThuThanh
         #endregion
 
         #region - Ghép mảnh tướng -
-        protected void btnGhepManhTuong_Click(object sender, DirectEventArgs e)
+        public static DataTable GetDataTableFromCSV()
         {
+            try
+            {
+                string strFileName = HttpContext.Current.Server.MapPath("heroes.txt");
+                DataTable tbl = new DataTable();
+                StreamReader sr = new StreamReader(strFileName);
+                string strline = "";
+                string[] values = null;
+                int d = 0;
+                bool creatColumns = true;
+                while (!sr.EndOfStream)
+                {
+                    d++;
+                    strline = sr.ReadLine();
+                    values = strline.Split(',');
+                    //insert rows for table
+                    if (creatColumns == false)
+                    {
+                        //if (values[1].ToString().Equals("1") || values[1].ToString().Equals("5")) continue;
+                        DataRow row = tbl.NewRow();
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            row[i] = values[i].ToString().Replace("\"", "");
+                        }
+                        tbl.Rows.Add(row);
+                    }
+                    //creat columns for table
+                    else if (creatColumns == true)
+                    {
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            tbl.Columns.Add(values[i].ToString().Replace("\"", ""));
+                        }
+                        creatColumns = false;
+                    }
+                }
+                sr.Close();
+                /*
+                System.Data.OleDb.OleDbConnection conn = new System.Data.OleDb.OleDbConnection("Provider=Microsoft.Jet.OleDb.4.0; Data Source = " + System.IO.Path.GetDirectoryName(strFileName) + "; Extended Properties = \"Text;HDR=YES;FMT=Delimited\"");
+                conn.Open();
+                string strQuery = "SELECT * FROM [" + System.IO.Path.GetFileName(strFileName) + "]";
+                System.Data.OleDb.OleDbDataAdapter adapter = new System.Data.OleDb.OleDbDataAdapter(strQuery, conn);
+                System.Data.DataSet ds = new System.Data.DataSet("CSV File");
+                adapter.Fill(ds);
+                 */
+                return tbl;
+            }
+            catch
+            {
+                System.Data.DataTable tbl = new System.Data.DataTable();
+                return tbl;
+            }
+        }        
+
+        private Dictionary<string, int> layDanhSachManhTuong(int rank)
+        {
+            DataTable tblHeroes = GetDataTableFromCSV();
+            Dictionary<string, int> dicManhTuong = new Dictionary<string, int>();
+            if (tblHeroes.Rows.Count > 0)
+            {
+                readSession();
+                foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
+                {
+                    if (owned_officer_soul["quantity"] > 0 && tblHeroes.Select(string.Format("name = '{0}' and rank = '{1}'", owned_officer_soul["officer_id"], rank)).Length > 0)
+                    {
+                        dicManhTuong.Add(owned_officer_soul["id"], owned_officer_soul["quantity"]);
+                    }
+                }
+            }
+            return dicManhTuong;
+        }
+
+        private void ghepManhTuong()
+        {
+            for (int i = 2; i <= 3; i++)
+            {
+                Dictionary<string, int> dicManhTuong = layDanhSachManhTuong(i);
+
+                int iManhTuong = 5;
+                while (iManhTuong == 5)
+                {
+                    iManhTuong = 0;
+                    string strURL = "https://vtt-01.zoygame.com/owned_officer_souls/merge?authentication_token=" + authentication_token;
+                    Dictionary<string, int> dicMT = new Dictionary<string, int>();
+
+
+                    foreach (KeyValuePair<string, int> item in dicManhTuong)
+                    {
+                        if (item.Value > 0)
+                        {
+                            int iGetMT = 0;
+                            iGetMT += (item.Value < 5 - iManhTuong ? item.Value : 5 - iManhTuong);
+                            iManhTuong += iGetMT;
+                            dicMT.Add(item.Key, iGetMT);
+                            for (int iIndex = 0; iIndex < iGetMT; iIndex++)
+                            {
+                                strURL += "&owned_officer_soul_ids%5B%5D=" + item.Key;
+                            }
+                        }
+                        if (iManhTuong == 5)
+                        {
+                            for (int iIndex = 0; iIndex < 7; iIndex++)
+                            {
+                                new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(merge)).Start(strURL);
+                            }
+                            System.Threading.Thread.Sleep(2000);
+                            foreach (KeyValuePair<string, int> idicMT in dicMT)
+                            {
+                                dicManhTuong[idicMT.Key] -= idicMT.Value;
+                            }
+                            break;
+                        }
+                    }
+                }
+                login();
+            }
+        }
+
+
+        protected void btnGhepManhTuongTuDong_Click(object sender, DirectEventArgs e)
+        {
+            ghepManhTuong();
+        }
+        protected void btnGhepManhTuong_Click(object sender, DirectEventArgs e)
+        {                        
             readSession();
             windowGhepManhTuong.Show();
             txtManhTuongDaChon.Text = string.Empty;
@@ -564,7 +729,7 @@ namespace VuaThuThanh
         }
         #endregion
 
-        #region - Tự động nâng cấp tướng -        
+        #region - Tự động nâng cấp tướng -
         // Specify what you want to happen when the Elapsed event is  
         // raised.         
         protected void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -602,7 +767,7 @@ namespace VuaThuThanh
                                 dt = DateTime.Now;
                             }
                             else
-                            {                                
+                            {
                                 double leveled_up_at = Convert.ToDouble(component["leveled_up_at"]);
                                 if (dtNearLevelUp.Year == 1989)
                                 {

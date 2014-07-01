@@ -391,7 +391,7 @@ namespace VuaThuThanh
                             break;
                         }
                     }
-                    if (component.ContainsKey("rank") && component["rank"] <= 2)
+                    if (component.ContainsKey("rank") && component["rank"] <= 3)
                     {
                         bFire = true;
                     }
@@ -540,7 +540,10 @@ namespace VuaThuThanh
 
         protected void btnGhepManhTuongTuDong_Click(object sender, DirectEventArgs e)
         {
+            txtStatus.Text = string.Empty;
+            setStatus("START : Ghép mảnh tướng\n");
             ghepManhTuong();
+            setStatus("END : Ghép mảnh tướng\n");
         }
         protected void btnGhepManhTuong_Click(object sender, DirectEventArgs e)
         {                        

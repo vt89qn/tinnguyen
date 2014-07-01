@@ -76,7 +76,9 @@
                             <ext:Button ID="btnGhepManhTuongTuDong" runat="server" Text="Ghép Mảnh Tướng Tự Động" Icon="ApplicationGo"
                                 Height="35" Margins="0 0 5 0">
                                 <DirectEvents>
-                                    <Click OnEvent="btnGhepManhTuongTuDong_Click" Timeout="600000" />
+                                    <Click OnEvent="btnGhepManhTuongTuDong_Click" Timeout="600000">
+                                        <EventMask ShowMask="true" Msg="Đang ghép mảnh tướng" MinDelay="500" />
+                                    </Click>
                                 </DirectEvents>
                             </ext:Button>
                             <ext:Panel Layout="HBoxLayout" Border="false">

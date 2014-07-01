@@ -8,6 +8,7 @@ using Ext.Net;
 using System.Web.Script.Serialization;
 using System.Collections.Specialized;
 using System.Web.Services;
+using System.Timers;
 
 namespace VuaThuThanh
 {
@@ -24,12 +25,17 @@ namespace VuaThuThanh
         int star = 3;
         int total_wave_count = 60;
         dynamic data;
+        static System.Timers.Timer aTimer;
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
         }
         #region - Đăng nhập -
         protected void btnLogin_Click(object sender, DirectEventArgs e)
+        {
+            login();
+        }
+        protected void login()
         {
             string strProfile = txtProfile.Value.ToString();
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -56,6 +62,8 @@ namespace VuaThuThanh
 
                 }
             }
+
+            setTimeLevelUp();
         }
         #endregion
 
@@ -530,6 +538,106 @@ namespace VuaThuThanh
         {
             WebClientEx client = new WebClientEx();
             client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_items/forge");
+        }
+        #endregion
+
+        #region - Tự động nâng cấp tướng -        
+        // Specify what you want to happen when the Elapsed event is  
+        // raised.         
+        protected void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            //re-login and level up
+            login();
+        }
+
+        private void setTimeLevelUp()
+        {
+            readSession();
+            //config
+            int fromlevel = 2;
+            int fromrank = 3;
+            //read owned_officers
+            Dictionary<object, object> dicOfficers = new Dictionary<object, object>();
+            DateTime dtNearLevelUp = new DateTime(1989, 2, 8);
+            foreach (dynamic officer in data["owned_officers"])
+            {
+                bool allowUp = true;
+                DateTime dt = new DateTime();
+                foreach (dynamic component in officer["components"])
+                {
+                    if (component.ContainsKey("level") && component.ContainsKey("leveled_up_at"))
+                    {
+                        if (component["level"] < fromlevel)
+                        {
+                            allowUp = false;
+                            break;
+                        }
+                        else
+                        {
+                            if (component["level"] == 1)
+                            {
+                                dt = DateTime.Now;
+                            }
+                            else
+                            {                                
+                                double leveled_up_at = Convert.ToDouble(component["leveled_up_at"]);
+                                if (dtNearLevelUp.Year == 1989)
+                                {
+                                    dtNearLevelUp = new DateTime(1970, 1, 1).AddSeconds(leveled_up_at).AddHours(7).AddSeconds(Convert.ToDouble(component["cooldown_time_to_next_level"]));
+                                }
+                                dt = new DateTime(1970, 1, 1).AddSeconds(leveled_up_at).AddHours(7).AddSeconds(Convert.ToDouble(component["cooldown_time_to_next_level"]));
+                                if (dt.Subtract(dtNearLevelUp).TotalSeconds <= 0)
+                                {
+                                    dtNearLevelUp = dt;
+                                }
+                            }
+                        }
+                    }
+                    if (component.ContainsKey("rank") && component["rank"] < fromrank)
+                    {
+                        allowUp = false;
+                        break;
+                    }
+                }
+                if (allowUp)
+                {
+                    dicOfficers.Add(officer["id"], dt);
+                }
+            }
+            double se = dtNearLevelUp.Subtract(DateTime.Now).TotalSeconds;
+            if (se <= 0)
+            {
+                //auto level up                
+                foreach (KeyValuePair<object, object> item in dicOfficers)
+                {
+                    if (Convert.ToDateTime(item.Value).Subtract(DateTime.Now).TotalSeconds <= 0)
+                    {
+                        levelup(item.Key);
+                    }
+                }
+                //re-login
+                login();
+            }
+            else
+            {
+                // Create a timer with a one second interval.
+                aTimer = new System.Timers.Timer(1000);
+
+                // Hook up the Elapsed event for the timer.
+                aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+
+                // Set the Interval
+                aTimer.Interval = se * 1000;
+                aTimer.Enabled = true;
+            }
+        }
+
+        private void levelup(object id)
+        {
+            WebClientEx client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", authentication_token);
+            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_officers/" + id + "/level_up");
         }
         #endregion
 

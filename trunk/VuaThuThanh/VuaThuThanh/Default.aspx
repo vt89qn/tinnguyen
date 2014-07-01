@@ -66,11 +66,17 @@
                                         <EventMask ShowMask="true" Msg="Đang đuổi tướng" MinDelay="500" />
                                     </Click>
                                 </DirectEvents>
-                            </ext:Button>
+                            </ext:Button>                            
                             <ext:Button ID="btnGhepManhTuong" runat="server" Text="Ghép Mảnh Tướng" Icon="ApplicationGo"
                                 Height="35" Margins="0 0 5 0">
                                 <DirectEvents>
                                     <Click OnEvent="btnGhepManhTuong_Click" Timeout="600000" />
+                                </DirectEvents>
+                            </ext:Button>
+                            <ext:Button ID="btnGhepManhTuongTuDong" runat="server" Text="Ghép Mảnh Tướng Tự Động" Icon="ApplicationGo"
+                                Height="35" Margins="0 0 5 0">
+                                <DirectEvents>
+                                    <Click OnEvent="btnGhepManhTuongTuDong_Click" Timeout="600000" />
                                 </DirectEvents>
                             </ext:Button>
                             <ext:Panel Layout="HBoxLayout" Border="false">

@@ -94,6 +94,15 @@ namespace VuaThuThanh {
         protected global::Ext.Net.Button btnGhepManhTuong;
         
         /// <summary>
+        /// btnGhepManhTuongTuDong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnGhepManhTuongTuDong;
+        
+        /// <summary>
         /// cmbLoai control.
         /// </summary>
         /// <remarks>

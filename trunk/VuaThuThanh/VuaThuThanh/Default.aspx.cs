@@ -36,6 +36,9 @@ namespace VuaThuThanh
         protected void btnLogin_Click(object sender, DirectEventArgs e)
         {
             login();
+            writeCurrentInfo();
+            WindowLogin.Hide();
+            WindowWorking.Show();
         }
         protected void login()
         {
@@ -58,15 +61,11 @@ namespace VuaThuThanh
                 {
                     serializer = new JavaScriptSerializer();
                     dynamic rs = serializer.Deserialize<dynamic>(client.ResponseText);
-                    Session["data"] = rs;
-                    writeCurrentInfo();
-                    WindowLogin.Hide();
-                    WindowWorking.Show();
-
+                    Session["data"] = rs;                    
                 }
             }
             writeFileTxt();
-            setTimeLevelUp();
+            //setTimeLevelUp();
         }
 
         private void writeFileTxt()
@@ -81,7 +80,7 @@ namespace VuaThuThanh
                     DataRow[] rowCheck = tblHeroes.Select(string.Format("name = '{0}'", owned_officer_soul["officer_id"]));
                     if (rowCheck.Length == 0)
                     {
-                        newHeroes = string.Concat(newHeroes, Environment.NewLine, string.Format("{0},{1},{2}", owned_officer_soul["officer_id"], "0", "0"));
+                        newHeroes = string.Concat(newHeroes, Environment.NewLine, string.Format("{0},{1},{2},{3}", owned_officer_soul["officer_id"], "0", "0", ""));
                     }
                 }
                 if (newHeroes != string.Empty)
@@ -483,7 +482,7 @@ namespace VuaThuThanh
                 readSession();
                 foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
                 {
-                    if (owned_officer_soul["quantity"] > 0 && tblHeroes.Select(string.Format("name = '{0}' and rank = '{1}'", owned_officer_soul["officer_id"], rank)).Length > 0)
+                    if (owned_officer_soul["quantity"] > 0 && tblHeroes.Select(string.Format("name = '{0}' and rank = '{1}' and ISNULL(merge,'') <> '1'", owned_officer_soul["officer_id"], rank)).Length > 0)
                     {
                         dicManhTuong.Add(owned_officer_soul["id"], owned_officer_soul["quantity"]);
                     }

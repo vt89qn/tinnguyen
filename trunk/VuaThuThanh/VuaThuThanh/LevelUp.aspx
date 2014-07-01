@@ -29,15 +29,30 @@
                             </ext:ComboBox>
                         </Items>
                         <Buttons>
-                            <ext:Button ID="Button1" runat="server" Text="Login" Icon="Accept">
+                            <ext:Button ID="btnCheckLevelUp" runat="server" Text="Check" Icon="Accept">
                                 <DirectEvents>
-                                    <Click OnEvent="btnLogin_Click">
-                                        <EventMask ShowMask="true" Msg="Đang đăng nhập" MinDelay="500" />
+                                    <Click OnEvent="btnCheckLevelUp_Click" Timeout="0">
                                     </Click>
                                 </DirectEvents>
                             </ext:Button>
                         </Buttons>
                     </ext:Window>
+                    <ext:Panel ID="WindowWorking" runat="server" Title="Vua Thủ Thành" Layout="VBoxLayout"
+                        BodyPadding="15" Hidden="true">
+                        <LayoutConfig>
+                            <ext:VBoxLayoutConfig Align="Stretch" />
+                        </LayoutConfig>
+                        <Items>
+                            <ext:Button ID="btnTrangThai" runat="server" Text="Trạng Thái" Icon="ApplicationGo"
+                                Height="35" Margins="0 0 5 0">
+                                <DirectEvents>
+                                    <Click OnEvent="btnTrangThai_Click" Timeout="0">
+                                        <EventMask ShowMask="true" Msg="Đang thay đổi trạng thái " MinDelay="500" />
+                                    </Click>
+                                </DirectEvents>
+                            </ext:Button>
+                        </Items>
+                    </ext:Panel>
                 </Items>
             </ext:Panel>
         </Items>

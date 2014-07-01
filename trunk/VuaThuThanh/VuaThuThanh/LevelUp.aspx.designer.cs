@@ -76,12 +76,30 @@ namespace VuaThuThanh {
         protected global::Ext.Net.ComboBox txtProfile;
         
         /// <summary>
-        /// Button1 control.
+        /// btnCheckLevelUp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button Button1;
+        protected global::Ext.Net.Button btnCheckLevelUp;
+        
+        /// <summary>
+        /// WindowWorking control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Panel WindowWorking;
+        
+        /// <summary>
+        /// btnTrangThai control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnTrangThai;
     }
 }

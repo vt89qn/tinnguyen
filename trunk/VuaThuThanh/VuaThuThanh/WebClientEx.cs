@@ -17,7 +17,7 @@ public class WebClientEx : WebClient
     public WebResponse Response { get; set; }
     public string ResponseText { get; set; }
     public Image ResponseImage { get; set; }
-    private string strUserAgent = ConfigurationSettings.AppSettings["UserAgent"];
+    private string strUserAgent = "ah3q-appstore/1.26 (iPhone; iOS 7.1.1; Scale/2.00)";
     #endregion
     #region - METHOD -
     public WebClientEx()
@@ -66,7 +66,7 @@ public class WebClientEx : WebClient
             ResponseText = null;
             this.Headers.Clear();
             this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
-            this.Headers.Add(HttpRequestHeader.UserAgent, "ah3q-appstore/1.26 (iPhone; iOS 6.1; Scale/2.00)");
+            this.Headers.Add(HttpRequestHeader.UserAgent, strUserAgent);
             this.Headers.Add(HttpRequestHeader.Accept, "*/*");
             this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi, en, en-us;q=0.8");
             if (additionHeader != null)

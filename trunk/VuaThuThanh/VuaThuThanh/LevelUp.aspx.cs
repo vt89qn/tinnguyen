@@ -8,6 +8,7 @@ using Ext.Net;
 using System.Web.Script.Serialization;
 using System.Collections.Specialized;
 using System.Timers;
+using System.IO;
 
 namespace VuaThuThanh
 {
@@ -21,6 +22,10 @@ namespace VuaThuThanh
         private const string LoginData = "LoginData";
         private const string data = "data";
         private const string Profile = "Profile";
+        //private const string ServerPath = @"C:\Inetpub\vhosts\tinphuong.me\vtt.tinphuong.com\";
+        private const string ServerPath = @"D:\Tinnv Data\Project\VuaThuThanh\VuaThuThanh\";
+        private string strProfile = "tin";
+        private string authentication_token = string.Empty;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -31,9 +36,7 @@ namespace VuaThuThanh
             WindowWorking.Show();
             btnTrangThai.Text = "Đang dừng, bấm để chạy";
 
-            string strProfile = txtProfile.Value.ToString().Trim();
-            Session[Profile] = strProfile;
-            dynamic data = Utilities.DeSerializeObject(HttpContext.Current.Server.MapPath(strProfile + ".data"));
+            dynamic data = Utilities.DeSerializeObject(ServerPath + strProfile + ".data");
             if (data is Dictionary<string, object>)
             {
                 if (data[Run])
@@ -42,10 +45,21 @@ namespace VuaThuThanh
                     btnTrangThai.Icon = Icon.Stop;
                 }
             }
+            else
+            {
+                if (File.Exists(ServerPath + strProfile + ".data"))
+                {
+                    try
+                    {
+                        File.Delete(ServerPath + strProfile + ".data");
+                    }
+                    catch { }
+                }
+            }
         }
         protected void btnTrangThai_Click(object sender, DirectEventArgs e)
         {
-            dynamic data = Utilities.DeSerializeObject(HttpContext.Current.Server.MapPath(Session[Profile].ToString() + ".data"));
+            dynamic data = Utilities.DeSerializeObject(ServerPath + strProfile + ".data");
             bool bRun = false;
             if (data is Dictionary<string, object>)
             {
@@ -57,7 +71,7 @@ namespace VuaThuThanh
             if (bRun)
             {//Stop
                 data[Run] = false;
-                Utilities.SerializeObject(HttpContext.Current.Server.MapPath(Session[Profile].ToString() + ".data"), data);
+                Utilities.SerializeObject(ServerPath + strProfile + ".data", data);
                 btnTrangThai.Text = "Đang dừng, bấm để chạy";
                 btnTrangThai.Icon = Icon.ApplicationGo;
             }
@@ -75,24 +89,25 @@ namespace VuaThuThanh
         protected void timerTask_Elapsed(object source, ElapsedEventArgs e)
         {
             System.Timers.Timer timerTask = (System.Timers.Timer)source;
-            timerTask.Interval = 300000;
-            dynamic Data = Utilities.DeSerializeObject(this.Server.MapPath("tin.data"));
+            timerTask.Interval = 60000;
+            dynamic Data = Utilities.DeSerializeObject(ServerPath + strProfile + ".data");
             if (Data is Dictionary<string, object>)
             {
                 if (!Data[Run])
                 {//Stop
                     timerTask.Enabled = false;
                     timerTask.Dispose();
+                    return;
                 }
             }
 
             if (!(Data is Dictionary<string, object>))
             {
-                login();
+                var t = login();
                 Data = new Dictionary<string, object>();
                 Data.Add(Run, true);
-                Data.Add(LoginData, Session[data]);
-                Utilities.SerializeObject("tin.data", Data);
+                Data.Add(LoginData, t);
+                Utilities.SerializeObject(ServerPath + strProfile + ".data", Data);
             }
             //Tinh thoi gian up tuong
             List<string> listTuongUp = new List<string>();
@@ -112,8 +127,13 @@ namespace VuaThuThanh
             }
             if (listTuongUp.Count > 0)
             {
-                login();
+                dynamic t = login();
+                authentication_token = t["authentication_token"];
                 listTuongUp.ForEach(x => new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(levelup)).Start(x));
+                System.Threading.Thread.Sleep(2000);
+                t = login();
+                Data[LoginData] = t;
+                Utilities.SerializeObject(ServerPath + strProfile + ".data", Data);
             }
         }
 
@@ -121,13 +141,12 @@ namespace VuaThuThanh
         {
             WebClientEx client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
-            param.Add("authentication_token", ((dynamic)Session[data])["authentication_token"]);
+            param.Add("authentication_token", authentication_token);
             client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_officers/" + id + "/level_up");
         }
 
-        private void login()
+        private dynamic login()
         {
-            string strProfile = Session[Profile].ToString();
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             dynamic dataProfile = serializer.Deserialize<dynamic>(profileJson);
             if (dataProfile[strProfile] != null)
@@ -145,9 +164,10 @@ namespace VuaThuThanh
                 {
                     serializer = new JavaScriptSerializer();
                     dynamic rs = serializer.Deserialize<dynamic>(client.ResponseText);
-                    Session[data] = rs;
+                    return rs;
                 }
             }
+            return false;
         }
 
     }

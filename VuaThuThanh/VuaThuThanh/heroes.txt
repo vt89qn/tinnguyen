@@ -106,3 +106,12 @@ QuanBinh,3,4,
 ThachBao,4,1,
 ThaiCong,3,0,
 QuachMa,4,0,1
+
+TranNguyen,0,0,
+VienDieu,0,0,
+CaoNhu,0,0,
+LuuTuyen,0,0,
+ThaiTrung,0,0,
+HoBan,0,0,
+HoBan,0,0,
+TuTac,0,0,

@@ -75,7 +75,7 @@ namespace VuaThuThanh
         protected void timerTask_Elapsed(object source, ElapsedEventArgs e)
         {
             System.Timers.Timer timerTask = (System.Timers.Timer)source;
-            timerTask.Interval = 60000;
+            timerTask.Interval = 300000;
             dynamic Data = Utilities.DeSerializeObject(this.Server.MapPath("tin.data"));
             if (Data is Dictionary<string, object>)
             {

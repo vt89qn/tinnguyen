@@ -211,6 +211,24 @@
                                     </ext:Button>
                                 </Items>
                             </ext:Panel>
+
+                            <ext:Panel Layout="HBoxLayout" Border="false">
+                                <Defaults>
+                                    <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
+                                </Defaults>
+                                <Items>                                    
+                                    <ext:TextField ID="txtAuthenticationToken" runat="server" Text="" EmptyText="authentication_token"
+                                        Flex="1" Height="35" />
+                                    <ext:Button ID="btnAutoLevelUp" runat="server" Text="Tự động nâng cấp tướng"
+                                        Icon="ApplicationGo" AnchorHorizontal="100%" Height="35" Margins="0 0 5 0" Flex="2">
+                                        <DirectEvents>
+                                            <Click OnEvent="btnAutoLevelUp_Click" Timeout="600000">
+                                            </Click>
+                                        </DirectEvents>
+                                    </ext:Button>
+                                </Items>
+                            </ext:Panel>
+
                             <ext:TextArea Flex="1" runat="server" ReadOnly="true" ID="txtStatus" />
                         </Items>
                     </ext:Panel>

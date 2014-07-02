@@ -193,6 +193,24 @@ namespace VuaThuThanh {
         protected global::Ext.Net.Button btnNuotQuanLenh;
         
         /// <summary>
+        /// txtAuthenticationToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.TextField txtAuthenticationToken;
+        
+        /// <summary>
+        /// btnAutoLevelUp control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnAutoLevelUp;
+        
+        /// <summary>
         /// txtStatus control.
         /// </summary>
         /// <remarks>

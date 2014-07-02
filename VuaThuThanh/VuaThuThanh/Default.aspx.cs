@@ -25,6 +25,7 @@ namespace VuaThuThanh
         int attack_turn_count = 1;
         int current_defense_turn_count = 30;
         int star = 3;
+        string city_id = string.Empty;
         int total_wave_count = 60;
         dynamic data;
         static System.Timers.Timer aTimer;
@@ -110,6 +111,11 @@ namespace VuaThuThanh
         #region - Thủ Thành -
         protected void btnChayQuanLenh_Click(object sender, DirectEventArgs e)
         {
+            chayQuanLenh();
+        }
+
+        private void chayQuanLenh()
+        {
             txtStatus.Text = string.Empty;
             setStatus("START : Chạy quân lệnh\n");
             readSession();
@@ -121,7 +127,14 @@ namespace VuaThuThanh
         private void defense_next_wave()
         {
             writeSession();
-            if (current_wave >= total_wave_count) { setStatus("Đánh xong thành"); return; };
+            if (current_wave == total_wave_count)
+            {
+                setStatus("Đánh xong thành");
+                //leave_defense_city();
+                //defense_city(city_id, star.ToString());
+                return;
+            }
+
             if (current_defense_turn_count < star) { setStatus("Hết quân lệnh"); return; };
 
             client = new WebClientEx();
@@ -158,6 +171,29 @@ namespace VuaThuThanh
 
                 System.Threading.Thread.Sleep(500);
                 defense_next_wave();
+            }
+        }
+
+        private void leave_defense_city()
+        {
+            client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", authentication_token);
+            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/leave_defense_city");            
+        }
+
+        private void defense_city(string city_id, string star)
+        {
+            client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", authentication_token);
+            param.Add("city_id", city_id);
+            param.Add("star", star);
+            param.Add("is_retrying", "0");
+            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/defense_city");
+            if (client.ResponseText != null)
+            {
+                chayQuanLenh();
             }
         }
         #endregion
@@ -732,12 +768,43 @@ namespace VuaThuThanh
         #endregion
 
         #region - Tự động nâng cấp tướng -
+        List<string> lstHeroes = new List<string>();
+        protected void btnAutoLevelUp_Click(object sender, DirectEventArgs e)
+        {
+            lstHeroes.Add("539686ea7376724a6fbb0800");
+            lstHeroes.Add("5396875c7376724a2c720800");
+            lstHeroes.Add("539a7f697376726291355300");
+            lstHeroes.Add("539e9c417376727926c92d01");
+            lstHeroes.Add("53a277fe73767250e7554c00");
+            lstHeroes.Add("53a2781873767250490c4c00");
+            lstHeroes.Add("53ae7cde73767271bd930700");
+            lstHeroes.Add("53b13eea7376727461551a00");
+            lstHeroes.Add("53b1433673767274bf281b00");
+            lstHeroes.Add("53b1434473767274bf301b00");
+            lstHeroes.Add("53b19c1c737672742b014100");
+            lstHeroes.Add("53b1a18d73767274bf344300");
+            lstHeroes.Add("53b2baa97376726ecf642700");
+            lstHeroes.Add("53b28de67376726e37361b00");
+            lstHeroes.Add("53b35eb97376726e37b34c00");
+
+            // Create a timer with a one second interval.
+            aTimer = new System.Timers.Timer(120 * 1000);
+
+            // Hook up the Elapsed event for the timer.
+            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+
+            // Set the Interval
+            //aTimer.Interval = se * 1000;
+            aTimer.Enabled = true;
+        }
         // Specify what you want to happen when the Elapsed event is  
         // raised.         
         protected void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            //re-login and level up
-            login();
+            foreach (string id in lstHeroes)
+            {
+                levelup(id);
+            }
         }
 
         private void setTimeLevelUp()
@@ -826,7 +893,7 @@ namespace VuaThuThanh
         {
             WebClientEx client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
-            param.Add("authentication_token", authentication_token);
+            param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
             client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_officers/" + id + "/level_up");
         }
         #endregion
@@ -839,6 +906,7 @@ namespace VuaThuThanh
             current_defense_turn_count = data["current_defense_turn_count"];
             current_wave = data["current_defense_battle"]["current_wave"] + 1;
             star = data["current_defense_battle"]["star"];
+            city_id = data["current_defense_battle"]["city_id"];
             total_wave_count = data["current_defense_battle"]["total_wave_count"];
             attack_turn_count = data["attack_turn_count"];
             id = data["id"];
@@ -851,6 +919,7 @@ namespace VuaThuThanh
             data["current_defense_turn_count"] = current_defense_turn_count;
             data["current_defense_battle"]["current_wave"] = current_wave - 1;
             data["current_defense_battle"]["star"] = star;
+            data["current_defense_battle"]["city_id"] = city_id;
             data["current_defense_battle"]["total_wave_count"] = total_wave_count;
             data["attack_turn_count"] = attack_turn_count;
             Session["data"] = data;
@@ -859,6 +928,7 @@ namespace VuaThuThanh
         private void writeCurrentInfo()
         {
             data = Session["data"];
+            txtAuthenticationToken.Text = authentication_token;
             setStatus("Quân Lệnh : " + data["current_defense_turn_count"]);
             setStatus("Cờ Chiến : " + data["attack_turn_count"]);
             setStatus("Đợt : " + (data["current_defense_battle"]["current_wave"] + 1));

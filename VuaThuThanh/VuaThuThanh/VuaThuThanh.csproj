@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="heroes.txt" />
     <Content Include="LevelUp.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

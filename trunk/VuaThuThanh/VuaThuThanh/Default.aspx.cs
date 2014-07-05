@@ -62,7 +62,7 @@ namespace VuaThuThanh
                 {
                     serializer = new JavaScriptSerializer();
                     dynamic rs = serializer.Deserialize<dynamic>(client.ResponseText);
-                    Session["data"] = rs;                    
+                    Session["data"] = rs;
                 }
             }
             writeFileTxt();
@@ -77,7 +77,7 @@ namespace VuaThuThanh
                 readSession();
                 string newHeroes = string.Empty;
                 foreach (dynamic owned_officer_soul in data["owned_officer_souls"])
-                {                    
+                {
                     DataRow[] rowCheck = tblHeroes.Select(string.Format("name = '{0}'", owned_officer_soul["officer_id"]));
                     if (rowCheck.Length == 0)
                     {
@@ -155,22 +155,33 @@ namespace VuaThuThanh
 
         private void finish_wave()
         {
-            client = new WebClientEx();
+
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", authentication_token);
             param.Add("killed_city_officer", current_wave == total_wave_count ? "1" : "0");
             param.Add("escaped_enemies_count", "0");
             param.Add("killed_animal", current_wave == total_wave_count ? "0" : "1");
-            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/finish_wave");
+
+            for (int iIndex = 0; iIndex < 5; iIndex++)
+            {
+                new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(finish_wave)).Start(param);
+            }
+
+            System.Threading.Thread.Sleep(1500);
+
+            defense_next_wave();
+        }
+
+        private void finish_wave(object param)
+        {
+            client = new WebClientEx();
+            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/players/" + id + "/finish_wave");
             if (client.ResponseText != null)
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 dynamic rs = serializer.Deserialize<object>(client.ResponseText);
 
                 current_wave = rs["player"]["current_defense_battle"]["current_wave"] + 1;
-
-                System.Threading.Thread.Sleep(500);
-                defense_next_wave();
             }
         }
 
@@ -179,7 +190,7 @@ namespace VuaThuThanh
             client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", authentication_token);
-            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/leave_defense_city");            
+            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/leave_defense_city");
         }
 
         private void defense_city(string city_id, string star)
@@ -234,6 +245,7 @@ namespace VuaThuThanh
                         }
                     }
                 }
+                else { setStatus("Leo chua xong,login leo tiep"); break; }
             }
 
             writeCurrentInfo();
@@ -507,7 +519,7 @@ namespace VuaThuThanh
                 System.Data.DataTable tbl = new System.Data.DataTable();
                 return tbl;
             }
-        }        
+        }
 
         private Dictionary<string, int> layDanhSachManhTuong(int rank)
         {
@@ -582,7 +594,7 @@ namespace VuaThuThanh
             setStatus("END : Ghép mảnh tướng\n");
         }
         protected void btnGhepManhTuong_Click(object sender, DirectEventArgs e)
-        {                        
+        {
             readSession();
             windowGhepManhTuong.Show();
             txtManhTuongDaChon.Text = string.Empty;

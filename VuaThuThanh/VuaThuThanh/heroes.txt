@@ -8,7 +8,7 @@ TanLang,4,1,
 ThanhBao,4,1,
 TaoHoa,4,1,
 KhiemHoang,3,1,
-TangBa,3,1,
+TangBa,3,1,1
 TaoNgang,3,1,
 VuongKinh,3,1,
 DangTrung,2,1,
@@ -45,7 +45,7 @@ TonThuongHuong,4,3,1
 TruongChieu,4,3,1
 BoXien,3,3,
 NguyMac,3,3,
-TieuKieu,3,3,
+TieuKieu,3,3,1
 ChuTri,2,3,
 GiaCatTinh,2,3,
 TonBa,2,3,
@@ -81,9 +81,9 @@ LuuHuan,3,4,
 NghiemCuong,3,4,
 NgoCu,3,4,
 ThamDoanh,3,4,
-ThiSoc,3,4,
+ThiSoc,3,4,1
 TiDien,3,4,
-TruongBao,3,4,
+TruongBao,3,4,1
 TruongKhai,3,4,
 VuongDon,3,4,
 LuuTuan1,2,4,

@@ -109,21 +109,37 @@ namespace VuaThuThanh
                 Data.Add(LoginData, t);
                 Utilities.SerializeObject(ServerPath + strProfile + ".data", Data);
             }
+
             //Tinh thoi gian up tuong
             List<string> listTuongUp = new List<string>();
             foreach (dynamic officer in Data[LoginData]["owned_officers"])
             {
+                DateTime timeLevelup = DateTime.MaxValue;
+                int iLevel = 60;
+                int iRank = 3;
                 foreach (dynamic component in officer["components"])
                 {
-                    if (component.ContainsKey("level") && component.ContainsKey("leveled_up_at"))
+                    if (component.ContainsKey("leveled_up_at"))
                     {
-                        DateTime timeLevelup = new DateTime(1970, 1, 1).AddSeconds(Convert.ToDouble(component["leveled_up_at"])).AddHours(7).AddSeconds(Convert.ToDouble(component["cooldown_time_to_next_level"]));
-                        if (DateTime.Now > timeLevelup)
-                        {
-                            listTuongUp.Add(officer["id"]);
-                        }
+                        timeLevelup = new DateTime(1970, 1, 1).AddSeconds(Convert.ToDouble(component["leveled_up_at"])).AddHours(7).AddSeconds(Convert.ToDouble(component["cooldown_time_to_next_level"]));
+                    }
+                    if (component.ContainsKey("level"))
+                    {
+                        iLevel = component["level"];
+                    }
+                    if (component.ContainsKey("rank"))
+                    {
+                        iRank = component["rank"];
                     }
                 }
+                if (DateTime.Now < timeLevelup || (iLevel < 50 && iRank < 3))
+                {
+                }
+                else
+                {
+                    listTuongUp.Add(officer["id"]);
+                }
+
             }
             if (listTuongUp.Count > 0)
             {

@@ -60,7 +60,7 @@ namespace VuaThuThanh
 
                 if (client.ResponseText != null)
                 {
-                    serializer = new JavaScriptSerializer();
+                    serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
                     dynamic rs = serializer.Deserialize<dynamic>(client.ResponseText);
                     Session["data"] = rs;
                 }
@@ -720,8 +720,42 @@ namespace VuaThuThanh
         #endregion
 
         #region - Ghép vũ khí / linh thạch -
+
+        private void banDo()
+        {
+
+            txtStatus.Text = string.Empty;
+            setStatus("START : Ghép đồ\n");
+            readSession();
+
+            string item_id = string.Concat(cmbLoai.Value, "_", cmbCap.Value);
+            List<string> lstItems = new List<string>();
+            int soluong = Convert.ToInt16(cmbSoLuong.Value);
+            foreach (dynamic item in data["owned_items"])
+            {
+                if (item["item_id"] == item_id)
+                {
+                    lstItems.Add(item["id"]);
+                }
+            }
+            //send
+            if (lstItems.Count >= 0)
+            {
+                string strData = "authentication_token=" + authentication_token;
+
+                foreach (string id in lstItems)
+                {
+                    strData += "&owned_item_ids%5B%5D=" + id;
+                }
+                client = new WebClientEx();
+                client.DoPost(strData, "https://vtt-01.zoygame.com/owned_items/sell");
+            }
+        }
+
         protected void btnGhepDo_Click(object sender, DirectEventArgs e)
         {
+            //banDo();
+            //return;
             txtStatus.Text = string.Empty;
             setStatus("START : Ghép đồ\n");
             readSession();
@@ -756,11 +790,11 @@ namespace VuaThuThanh
                         param.Add(string.Concat("owned_item_id_", t), lstItems[i + t]);
                     }
 
-                    for (int iIndex = 0; iIndex < 7; iIndex++)
+                    for (int iIndex = 0; iIndex < 5; iIndex++)
                     {
                         new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(forge)).Start(param);
                     }
-                    System.Threading.Thread.Sleep(2000);
+                    System.Threading.Thread.Sleep(1000);
                 }
                 setStatus(string.Concat("\nEND : Đã ghép xong ", cmbLoai.Text, " ", cmbCap.Text));
             }

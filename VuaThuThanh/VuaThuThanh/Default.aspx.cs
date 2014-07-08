@@ -838,22 +838,48 @@ namespace VuaThuThanh
         List<string> lstHeroes = new List<string>();
         protected void btnAutoLevelUp_Click(object sender, DirectEventArgs e)
         {
-            lstHeroes.Add("539686ea7376724a6fbb0800");
-            lstHeroes.Add("5396875c7376724a2c720800");
-            lstHeroes.Add("539a7f697376726291355300");
-            lstHeroes.Add("539e9c417376727926c92d01");
-            lstHeroes.Add("53a277fe73767250e7554c00");
-            lstHeroes.Add("53a2781873767250490c4c00");
-            lstHeroes.Add("53ae7cde73767271bd930700");
-            lstHeroes.Add("53b13eea7376727461551a00");
-            lstHeroes.Add("53b1433673767274bf281b00");
-            lstHeroes.Add("53b1434473767274bf301b00");
-            lstHeroes.Add("53b19c1c737672742b014100");
-            lstHeroes.Add("53b1a18d73767274bf344300");
-            lstHeroes.Add("53b2baa97376726ecf642700");
-            lstHeroes.Add("53b28de67376726e37361b00");
-            lstHeroes.Add("53b35eb97376726e37b34c00");
-
+            //lstHeroes.Add("539686ea7376724a6fbb0800");
+            //lstHeroes.Add("5396875c7376724a2c720800");
+            //lstHeroes.Add("539a7f697376726291355300");
+            //lstHeroes.Add("539e9c417376727926c92d01");
+            //lstHeroes.Add("53a277fe73767250e7554c00");
+            //lstHeroes.Add("53a2781873767250490c4c00");
+            //lstHeroes.Add("53ae7cde73767271bd930700");
+            //lstHeroes.Add("53b13eea7376727461551a00");
+            //lstHeroes.Add("53b1433673767274bf281b00");
+            //lstHeroes.Add("53b1434473767274bf301b00");
+            //lstHeroes.Add("53b19c1c737672742b014100");
+            //lstHeroes.Add("53b1a18d73767274bf344300");
+            //lstHeroes.Add("53b2baa97376726ecf642700");
+            //lstHeroes.Add("53b28de67376726e37361b00");
+            //lstHeroes.Add("53b35eb97376726e37b34c00");
+            readSession();
+            foreach (dynamic officer in data["owned_officers"])
+            {
+                bool bAllowUpLevel = false;
+                int level = 50;
+                foreach (dynamic component in officer["components"])
+                {
+                    if (component.ContainsKey("level"))
+                    {
+                        level = component["level"];
+                        if (level == 1)
+                        {
+                            bAllowUpLevel = false;
+                            break;
+                        }
+                    }
+                    if (component.ContainsKey("rank"))
+                    {
+                        if (component["rank"] >= 4 || (component["rank"] < 4 && level > 1))
+                            bAllowUpLevel = true;
+                    }
+                }
+                if (bAllowUpLevel)
+                {
+                    lstHeroes.Add(officer["id"]);
+                }
+            }
             // Create a timer with a one second interval.
             aTimer = new System.Timers.Timer(120 * 1000);
 

@@ -27,8 +27,13 @@ namespace VuaThuThanh
         int star = 3;
         string city_id = string.Empty;
         int total_wave_count = 60;
+        int tower_achievement = 10;
+        int tower_floor = 0;
         dynamic data;
         static System.Timers.Timer aTimer;
+
+        string strLoginData = string.Empty;
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -216,6 +221,7 @@ namespace VuaThuThanh
             setStatus("START : Leo Tháp\n");
             readSession();
             bool bDone = false;
+
             while (true)
             {
                 client = new WebClientEx();
@@ -227,22 +233,23 @@ namespace VuaThuThanh
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
                     dynamic rs = serializer.Deserialize<object>(client.ResponseText);
 
-                    client = new WebClientEx();
                     param = new NameValueCollection();
                     param.Add("authentication_token", authentication_token);
                     param.Add("won_floor", bDone ? "0" : "1");
                     param.Add("floor_npc_id", rs["floor_npc_id"]);
-                    param.Add("remaining_hp", bDone ? "0" : ("81." + (new Random().Next(1, 99))));
-                    client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/finish_attack_tower");
-                    if (client.ResponseText != null)
+                    string strRD = new Random().Next(1, 99).ToString();
+                    param.Add("remaining_hp", bDone ? "0" : tower_floor <= 25 ? ("5." + strRD) : ("82." + strRD));
+
+                    for (int iIndex = 0; iIndex < 6; iIndex++)
                     {
-                        if (bDone) break;
-                        serializer = new JavaScriptSerializer();
-                        rs = serializer.Deserialize<object>(client.ResponseText);
-                        if (rs["tower_data"]["tower_achievement"] >= 200)
-                        {
-                            bDone = true;
-                        }
+                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(finish_attack_tower)).Start(param);
+                    }
+
+                    System.Threading.Thread.Sleep(1000);
+                    if (bDone) break;
+                    if (tower_achievement >= 295)
+                    {
+                        bDone = true;
                     }
                 }
                 else { setStatus("Leo chua xong,login leo tiep"); break; }
@@ -250,6 +257,20 @@ namespace VuaThuThanh
 
             writeCurrentInfo();
             setStatus("\nEND : Leo Tháp");
+        }
+
+        private void finish_attack_tower(object param)
+        {
+            WebClientEx clientfat = new WebClientEx();
+            clientfat.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/players/" + id + "/finish_attack_tower");
+            if (clientfat.ResponseText != null)
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                dynamic rs = serializer.Deserialize<object>(clientfat.ResponseText);
+
+                tower_achievement = rs["tower_data"]["tower_achievement"];
+                tower_floor = rs["tower_data"]["tower_floor"];
+            }
         }
         #endregion
 

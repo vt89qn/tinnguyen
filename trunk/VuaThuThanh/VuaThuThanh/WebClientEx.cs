@@ -98,10 +98,8 @@ public class WebClientEx : WebClient
             this.Headers.Clear();
             this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
             this.Headers.Add(HttpRequestHeader.UserAgent, strUserAgent);
-            this.Headers.Add(HttpRequestHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            //this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
-            this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi-VN,vi;q=0.8,fr-FR;q=0.6,fr;q=0.4,en-US;q=0.2,en;q=0.2");
-            this.Headers.Add(HttpRequestHeader.CacheControl, "max-age=0");
+            this.Headers.Add(HttpRequestHeader.Accept, "*/*");
+            this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi, en, en-us;q=0.8");
             if (additionHeader != null)
             {
                 foreach (KeyValuePair<HttpRequestHeader, string> item in additionHeader)

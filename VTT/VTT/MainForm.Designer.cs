@@ -32,34 +32,37 @@
             this.pageLogin = new System.Windows.Forms.TabPage();
             this.btnLogin = new System.Windows.Forms.Button();
             this.pageTool = new System.Windows.Forms.TabPage();
-            this.pageUpLevel = new System.Windows.Forms.TabPage();
-            this.grbThuThanh = new System.Windows.Forms.GroupBox();
-            this.chkChayHetQL = new System.Windows.Forms.CheckBox();
-            this.chkDanhLuotCuoi = new System.Windows.Forms.CheckBox();
-            this.btnThuThanh = new System.Windows.Forms.Button();
             this.grbLeoThap = new System.Windows.Forms.GroupBox();
-            this.btnLeoThap = new System.Windows.Forms.Button();
-            this.txtSoThap = new System.Windows.Forms.Label();
-            this.txtSoSao = new System.Windows.Forms.Label();
-            this.txtLeoThapSoThap = new System.Windows.Forms.TextBox();
             this.txtLeoThapSoSao = new System.Windows.Forms.TextBox();
-            this.grbDuoiTuong = new System.Windows.Forms.GroupBox();
-            this.btnSaThaiTuong = new System.Windows.Forms.Button();
-            this.txtSaThaiTuongLevel = new System.Windows.Forms.TextBox();
-            this.txtSaThaiTuongRank = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.txtLeoThapSoThap = new System.Windows.Forms.TextBox();
+            this.txtSoSao = new System.Windows.Forms.Label();
+            this.txtSoThap = new System.Windows.Forms.Label();
+            this.btnLeoThap = new System.Windows.Forms.Button();
             this.grbGhepManhTuong = new System.Windows.Forms.GroupBox();
             this.txtGhepManhTuongRank = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.grbDuoiTuong = new System.Windows.Forms.GroupBox();
+            this.txtSaThaiTuongLevel = new System.Windows.Forms.TextBox();
+            this.txtSaThaiTuongRank = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnSaThaiTuong = new System.Windows.Forms.Button();
+            this.grbThuThanh = new System.Windows.Forms.GroupBox();
+            this.btnThuThanh = new System.Windows.Forms.Button();
+            this.chkDanhLuotCuoi = new System.Windows.Forms.CheckBox();
+            this.chkChayHetQL = new System.Windows.Forms.CheckBox();
+            this.pageUpLevel = new System.Windows.Forms.TabPage();
+            this.btnBatDauUpLevel = new System.Windows.Forms.Button();
+            this.btnGiamThoiGianCho = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageTool.SuspendLayout();
-            this.grbThuThanh.SuspendLayout();
             this.grbLeoThap.SuspendLayout();
-            this.grbDuoiTuong.SuspendLayout();
             this.grbGhepManhTuong.SuspendLayout();
+            this.grbDuoiTuong.SuspendLayout();
+            this.grbThuThanh.SuspendLayout();
+            this.pageUpLevel.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -108,57 +111,6 @@
             this.pageTool.Text = "VTT Tool";
             this.pageTool.UseVisualStyleBackColor = true;
             // 
-            // pageUpLevel
-            // 
-            this.pageUpLevel.Location = new System.Drawing.Point(4, 22);
-            this.pageUpLevel.Name = "pageUpLevel";
-            this.pageUpLevel.Padding = new System.Windows.Forms.Padding(3);
-            this.pageUpLevel.Size = new System.Drawing.Size(809, 508);
-            this.pageUpLevel.TabIndex = 2;
-            this.pageUpLevel.Text = "Up Level";
-            this.pageUpLevel.UseVisualStyleBackColor = true;
-            // 
-            // grbThuThanh
-            // 
-            this.grbThuThanh.Controls.Add(this.btnThuThanh);
-            this.grbThuThanh.Controls.Add(this.chkDanhLuotCuoi);
-            this.grbThuThanh.Controls.Add(this.chkChayHetQL);
-            this.grbThuThanh.Location = new System.Drawing.Point(8, 6);
-            this.grbThuThanh.Name = "grbThuThanh";
-            this.grbThuThanh.Size = new System.Drawing.Size(350, 74);
-            this.grbThuThanh.TabIndex = 0;
-            this.grbThuThanh.TabStop = false;
-            this.grbThuThanh.Text = "Thủ Thành";
-            // 
-            // chkChayHetQL
-            // 
-            this.chkChayHetQL.AutoSize = true;
-            this.chkChayHetQL.Location = new System.Drawing.Point(6, 19);
-            this.chkChayHetQL.Name = "chkChayHetQL";
-            this.chkChayHetQL.Size = new System.Drawing.Size(85, 17);
-            this.chkChayHetQL.TabIndex = 0;
-            this.chkChayHetQL.Text = "Chạy hết QL";
-            this.chkChayHetQL.UseVisualStyleBackColor = true;
-            // 
-            // chkDanhLuotCuoi
-            // 
-            this.chkDanhLuotCuoi.AutoSize = true;
-            this.chkDanhLuotCuoi.Location = new System.Drawing.Point(6, 42);
-            this.chkDanhLuotCuoi.Name = "chkDanhLuotCuoi";
-            this.chkDanhLuotCuoi.Size = new System.Drawing.Size(118, 17);
-            this.chkDanhLuotCuoi.TabIndex = 0;
-            this.chkDanhLuotCuoi.Text = "Đánh luôn lượt cuối";
-            this.chkDanhLuotCuoi.UseVisualStyleBackColor = true;
-            // 
-            // btnThuThanh
-            // 
-            this.btnThuThanh.Location = new System.Drawing.Point(233, 20);
-            this.btnThuThanh.Name = "btnThuThanh";
-            this.btnThuThanh.Size = new System.Drawing.Size(111, 40);
-            this.btnThuThanh.TabIndex = 1;
-            this.btnThuThanh.Text = "Thủ Thành";
-            this.btnThuThanh.UseVisualStyleBackColor = true;
-            // 
             // grbLeoThap
             // 
             this.grbLeoThap.Controls.Add(this.txtLeoThapSoSao);
@@ -173,23 +125,21 @@
             this.grbLeoThap.TabStop = false;
             this.grbLeoThap.Text = "Leo Tháp";
             // 
-            // btnLeoThap
+            // txtLeoThapSoSao
             // 
-            this.btnLeoThap.Location = new System.Drawing.Point(233, 19);
-            this.btnLeoThap.Name = "btnLeoThap";
-            this.btnLeoThap.Size = new System.Drawing.Size(111, 40);
-            this.btnLeoThap.TabIndex = 0;
-            this.btnLeoThap.Text = "Leo Tháp";
-            this.btnLeoThap.UseVisualStyleBackColor = true;
+            this.txtLeoThapSoSao.Location = new System.Drawing.Point(81, 40);
+            this.txtLeoThapSoSao.Name = "txtLeoThapSoSao";
+            this.txtLeoThapSoSao.Size = new System.Drawing.Size(100, 20);
+            this.txtLeoThapSoSao.TabIndex = 2;
+            this.txtLeoThapSoSao.Text = "301";
             // 
-            // txtSoThap
+            // txtLeoThapSoThap
             // 
-            this.txtSoThap.AutoSize = true;
-            this.txtSoThap.Location = new System.Drawing.Point(6, 21);
-            this.txtSoThap.Name = "txtSoThap";
-            this.txtSoThap.Size = new System.Drawing.Size(44, 13);
-            this.txtSoThap.TabIndex = 2;
-            this.txtSoThap.Text = "Số tháp";
+            this.txtLeoThapSoThap.Location = new System.Drawing.Point(81, 17);
+            this.txtLeoThapSoThap.Name = "txtLeoThapSoThap";
+            this.txtLeoThapSoThap.Size = new System.Drawing.Size(100, 20);
+            this.txtLeoThapSoThap.TabIndex = 2;
+            this.txtLeoThapSoThap.Text = "81";
             // 
             // txtSoSao
             // 
@@ -200,78 +150,23 @@
             this.txtSoSao.TabIndex = 2;
             this.txtSoSao.Text = "Số sao";
             // 
-            // txtLeoThapSoThap
+            // txtSoThap
             // 
-            this.txtLeoThapSoThap.Location = new System.Drawing.Point(81, 17);
-            this.txtLeoThapSoThap.Name = "txtLeoThapSoThap";
-            this.txtLeoThapSoThap.Size = new System.Drawing.Size(100, 20);
-            this.txtLeoThapSoThap.TabIndex = 2;
-            this.txtLeoThapSoThap.Text = "81";
+            this.txtSoThap.AutoSize = true;
+            this.txtSoThap.Location = new System.Drawing.Point(6, 21);
+            this.txtSoThap.Name = "txtSoThap";
+            this.txtSoThap.Size = new System.Drawing.Size(44, 13);
+            this.txtSoThap.TabIndex = 2;
+            this.txtSoThap.Text = "Số tháp";
             // 
-            // txtLeoThapSoSao
+            // btnLeoThap
             // 
-            this.txtLeoThapSoSao.Location = new System.Drawing.Point(81, 40);
-            this.txtLeoThapSoSao.Name = "txtLeoThapSoSao";
-            this.txtLeoThapSoSao.Size = new System.Drawing.Size(100, 20);
-            this.txtLeoThapSoSao.TabIndex = 2;
-            this.txtLeoThapSoSao.Text = "301";
-            // 
-            // grbDuoiTuong
-            // 
-            this.grbDuoiTuong.Controls.Add(this.txtSaThaiTuongLevel);
-            this.grbDuoiTuong.Controls.Add(this.txtSaThaiTuongRank);
-            this.grbDuoiTuong.Controls.Add(this.label1);
-            this.grbDuoiTuong.Controls.Add(this.label2);
-            this.grbDuoiTuong.Controls.Add(this.btnSaThaiTuong);
-            this.grbDuoiTuong.Location = new System.Drawing.Point(8, 86);
-            this.grbDuoiTuong.Name = "grbDuoiTuong";
-            this.grbDuoiTuong.Size = new System.Drawing.Size(350, 74);
-            this.grbDuoiTuong.TabIndex = 0;
-            this.grbDuoiTuong.TabStop = false;
-            this.grbDuoiTuong.Text = "Sa Thải Tướng";
-            // 
-            // btnSaThaiTuong
-            // 
-            this.btnSaThaiTuong.Location = new System.Drawing.Point(233, 19);
-            this.btnSaThaiTuong.Name = "btnSaThaiTuong";
-            this.btnSaThaiTuong.Size = new System.Drawing.Size(111, 40);
-            this.btnSaThaiTuong.TabIndex = 1;
-            this.btnSaThaiTuong.Text = "Sa Thải Tướng";
-            this.btnSaThaiTuong.UseVisualStyleBackColor = true;
-            // 
-            // txtSaThaiTuongLevel
-            // 
-            this.txtSaThaiTuongLevel.Location = new System.Drawing.Point(81, 40);
-            this.txtSaThaiTuongLevel.Name = "txtSaThaiTuongLevel";
-            this.txtSaThaiTuongLevel.Size = new System.Drawing.Size(100, 20);
-            this.txtSaThaiTuongLevel.TabIndex = 5;
-            this.txtSaThaiTuongLevel.Text = "1";
-            // 
-            // txtSaThaiTuongRank
-            // 
-            this.txtSaThaiTuongRank.Location = new System.Drawing.Point(81, 17);
-            this.txtSaThaiTuongRank.Name = "txtSaThaiTuongRank";
-            this.txtSaThaiTuongRank.Size = new System.Drawing.Size(100, 20);
-            this.txtSaThaiTuongRank.TabIndex = 6;
-            this.txtSaThaiTuongRank.Text = "2";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 44);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Level <=";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 21);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(48, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Rank <=";
+            this.btnLeoThap.Location = new System.Drawing.Point(233, 19);
+            this.btnLeoThap.Name = "btnLeoThap";
+            this.btnLeoThap.Size = new System.Drawing.Size(111, 40);
+            this.btnLeoThap.TabIndex = 0;
+            this.btnLeoThap.Text = "Leo Tháp";
+            this.btnLeoThap.UseVisualStyleBackColor = true;
             // 
             // grbGhepManhTuong
             // 
@@ -311,6 +206,134 @@
             this.button1.Text = "Sa Thải Tướng";
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // grbDuoiTuong
+            // 
+            this.grbDuoiTuong.Controls.Add(this.txtSaThaiTuongLevel);
+            this.grbDuoiTuong.Controls.Add(this.txtSaThaiTuongRank);
+            this.grbDuoiTuong.Controls.Add(this.label1);
+            this.grbDuoiTuong.Controls.Add(this.label2);
+            this.grbDuoiTuong.Controls.Add(this.btnSaThaiTuong);
+            this.grbDuoiTuong.Location = new System.Drawing.Point(8, 86);
+            this.grbDuoiTuong.Name = "grbDuoiTuong";
+            this.grbDuoiTuong.Size = new System.Drawing.Size(350, 74);
+            this.grbDuoiTuong.TabIndex = 0;
+            this.grbDuoiTuong.TabStop = false;
+            this.grbDuoiTuong.Text = "Sa Thải Tướng";
+            // 
+            // txtSaThaiTuongLevel
+            // 
+            this.txtSaThaiTuongLevel.Location = new System.Drawing.Point(81, 40);
+            this.txtSaThaiTuongLevel.Name = "txtSaThaiTuongLevel";
+            this.txtSaThaiTuongLevel.Size = new System.Drawing.Size(100, 20);
+            this.txtSaThaiTuongLevel.TabIndex = 5;
+            this.txtSaThaiTuongLevel.Text = "1";
+            // 
+            // txtSaThaiTuongRank
+            // 
+            this.txtSaThaiTuongRank.Location = new System.Drawing.Point(81, 17);
+            this.txtSaThaiTuongRank.Name = "txtSaThaiTuongRank";
+            this.txtSaThaiTuongRank.Size = new System.Drawing.Size(100, 20);
+            this.txtSaThaiTuongRank.TabIndex = 6;
+            this.txtSaThaiTuongRank.Text = "2";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 44);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Level <=";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(48, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Rank <=";
+            // 
+            // btnSaThaiTuong
+            // 
+            this.btnSaThaiTuong.Location = new System.Drawing.Point(233, 19);
+            this.btnSaThaiTuong.Name = "btnSaThaiTuong";
+            this.btnSaThaiTuong.Size = new System.Drawing.Size(111, 40);
+            this.btnSaThaiTuong.TabIndex = 1;
+            this.btnSaThaiTuong.Text = "Sa Thải Tướng";
+            this.btnSaThaiTuong.UseVisualStyleBackColor = true;
+            // 
+            // grbThuThanh
+            // 
+            this.grbThuThanh.Controls.Add(this.btnThuThanh);
+            this.grbThuThanh.Controls.Add(this.chkDanhLuotCuoi);
+            this.grbThuThanh.Controls.Add(this.chkChayHetQL);
+            this.grbThuThanh.Location = new System.Drawing.Point(8, 6);
+            this.grbThuThanh.Name = "grbThuThanh";
+            this.grbThuThanh.Size = new System.Drawing.Size(350, 74);
+            this.grbThuThanh.TabIndex = 0;
+            this.grbThuThanh.TabStop = false;
+            this.grbThuThanh.Text = "Thủ Thành";
+            // 
+            // btnThuThanh
+            // 
+            this.btnThuThanh.Location = new System.Drawing.Point(233, 20);
+            this.btnThuThanh.Name = "btnThuThanh";
+            this.btnThuThanh.Size = new System.Drawing.Size(111, 40);
+            this.btnThuThanh.TabIndex = 1;
+            this.btnThuThanh.Text = "Thủ Thành";
+            this.btnThuThanh.UseVisualStyleBackColor = true;
+            // 
+            // chkDanhLuotCuoi
+            // 
+            this.chkDanhLuotCuoi.AutoSize = true;
+            this.chkDanhLuotCuoi.Location = new System.Drawing.Point(6, 42);
+            this.chkDanhLuotCuoi.Name = "chkDanhLuotCuoi";
+            this.chkDanhLuotCuoi.Size = new System.Drawing.Size(118, 17);
+            this.chkDanhLuotCuoi.TabIndex = 0;
+            this.chkDanhLuotCuoi.Text = "Đánh luôn lượt cuối";
+            this.chkDanhLuotCuoi.UseVisualStyleBackColor = true;
+            // 
+            // chkChayHetQL
+            // 
+            this.chkChayHetQL.AutoSize = true;
+            this.chkChayHetQL.Location = new System.Drawing.Point(6, 19);
+            this.chkChayHetQL.Name = "chkChayHetQL";
+            this.chkChayHetQL.Size = new System.Drawing.Size(85, 17);
+            this.chkChayHetQL.TabIndex = 0;
+            this.chkChayHetQL.Text = "Chạy hết QL";
+            this.chkChayHetQL.UseVisualStyleBackColor = true;
+            // 
+            // pageUpLevel
+            // 
+            this.pageUpLevel.Controls.Add(this.btnGiamThoiGianCho);
+            this.pageUpLevel.Controls.Add(this.btnBatDauUpLevel);
+            this.pageUpLevel.Location = new System.Drawing.Point(4, 22);
+            this.pageUpLevel.Name = "pageUpLevel";
+            this.pageUpLevel.Padding = new System.Windows.Forms.Padding(3);
+            this.pageUpLevel.Size = new System.Drawing.Size(809, 508);
+            this.pageUpLevel.TabIndex = 2;
+            this.pageUpLevel.Text = "Up Level";
+            this.pageUpLevel.UseVisualStyleBackColor = true;
+            // 
+            // btnBatDauUpLevel
+            // 
+            this.btnBatDauUpLevel.Location = new System.Drawing.Point(8, 6);
+            this.btnBatDauUpLevel.Name = "btnBatDauUpLevel";
+            this.btnBatDauUpLevel.Size = new System.Drawing.Size(111, 40);
+            this.btnBatDauUpLevel.TabIndex = 0;
+            this.btnBatDauUpLevel.Text = "Bắt đầu";
+            this.btnBatDauUpLevel.UseVisualStyleBackColor = true;
+            // 
+            // btnGiamThoiGianCho
+            // 
+            this.btnGiamThoiGianCho.Location = new System.Drawing.Point(8, 52);
+            this.btnGiamThoiGianCho.Name = "btnGiamThoiGianCho";
+            this.btnGiamThoiGianCho.Size = new System.Drawing.Size(111, 40);
+            this.btnGiamThoiGianCho.TabIndex = 1;
+            this.btnGiamThoiGianCho.Text = "Giảm thời gian chờ";
+            this.btnGiamThoiGianCho.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,14 +345,15 @@
             this.tabMain.ResumeLayout(false);
             this.pageLogin.ResumeLayout(false);
             this.pageTool.ResumeLayout(false);
-            this.grbThuThanh.ResumeLayout(false);
-            this.grbThuThanh.PerformLayout();
             this.grbLeoThap.ResumeLayout(false);
             this.grbLeoThap.PerformLayout();
-            this.grbDuoiTuong.ResumeLayout(false);
-            this.grbDuoiTuong.PerformLayout();
             this.grbGhepManhTuong.ResumeLayout(false);
             this.grbGhepManhTuong.PerformLayout();
+            this.grbDuoiTuong.ResumeLayout(false);
+            this.grbDuoiTuong.PerformLayout();
+            this.grbThuThanh.ResumeLayout(false);
+            this.grbThuThanh.PerformLayout();
+            this.pageUpLevel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -361,6 +385,8 @@
         private System.Windows.Forms.TextBox txtGhepManhTuongRank;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnBatDauUpLevel;
+        private System.Windows.Forms.Button btnGiamThoiGianCho;
     }
 }
 

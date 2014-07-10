@@ -53,8 +53,17 @@
             this.chkDanhLuotCuoi = new System.Windows.Forms.CheckBox();
             this.chkChayHetQL = new System.Windows.Forms.CheckBox();
             this.pageUpLevel = new System.Windows.Forms.TabPage();
-            this.btnBatDauUpLevel = new System.Windows.Forms.Button();
             this.btnGiamThoiGianCho = new System.Windows.Forms.Button();
+            this.btnBatDauUpLevel = new System.Windows.Forms.Button();
+            this.grbVuotAi = new System.Windows.Forms.GroupBox();
+            this.txtVuotAiDoKho = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnVuotAi = new System.Windows.Forms.Button();
+            this.txtVuotAiTenAi = new System.Windows.Forms.ComboBox();
+            this.chkVuotAiChieuHangTuong = new System.Windows.Forms.CheckBox();
+            this.grbStatus = new System.Windows.Forms.GroupBox();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageTool.SuspendLayout();
@@ -63,6 +72,8 @@
             this.grbDuoiTuong.SuspendLayout();
             this.grbThuThanh.SuspendLayout();
             this.pageUpLevel.SuspendLayout();
+            this.grbVuotAi.SuspendLayout();
+            this.grbStatus.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -99,8 +110,10 @@
             // 
             // pageTool
             // 
+            this.pageTool.Controls.Add(this.grbStatus);
             this.pageTool.Controls.Add(this.grbLeoThap);
             this.pageTool.Controls.Add(this.grbGhepManhTuong);
+            this.pageTool.Controls.Add(this.grbVuotAi);
             this.pageTool.Controls.Add(this.grbDuoiTuong);
             this.pageTool.Controls.Add(this.grbThuThanh);
             this.pageTool.Location = new System.Drawing.Point(4, 22);
@@ -316,6 +329,15 @@
             this.pageUpLevel.Text = "Up Level";
             this.pageUpLevel.UseVisualStyleBackColor = true;
             // 
+            // btnGiamThoiGianCho
+            // 
+            this.btnGiamThoiGianCho.Location = new System.Drawing.Point(8, 52);
+            this.btnGiamThoiGianCho.Name = "btnGiamThoiGianCho";
+            this.btnGiamThoiGianCho.Size = new System.Drawing.Size(111, 40);
+            this.btnGiamThoiGianCho.TabIndex = 1;
+            this.btnGiamThoiGianCho.Text = "Giảm thời gian chờ";
+            this.btnGiamThoiGianCho.UseVisualStyleBackColor = true;
+            // 
             // btnBatDauUpLevel
             // 
             this.btnBatDauUpLevel.Location = new System.Drawing.Point(8, 6);
@@ -325,14 +347,93 @@
             this.btnBatDauUpLevel.Text = "Bắt đầu";
             this.btnBatDauUpLevel.UseVisualStyleBackColor = true;
             // 
-            // btnGiamThoiGianCho
+            // grbVuotAi
             // 
-            this.btnGiamThoiGianCho.Location = new System.Drawing.Point(8, 52);
-            this.btnGiamThoiGianCho.Name = "btnGiamThoiGianCho";
-            this.btnGiamThoiGianCho.Size = new System.Drawing.Size(111, 40);
-            this.btnGiamThoiGianCho.TabIndex = 1;
-            this.btnGiamThoiGianCho.Text = "Giảm thời gian chờ";
-            this.btnGiamThoiGianCho.UseVisualStyleBackColor = true;
+            this.grbVuotAi.Controls.Add(this.chkVuotAiChieuHangTuong);
+            this.grbVuotAi.Controls.Add(this.txtVuotAiTenAi);
+            this.grbVuotAi.Controls.Add(this.txtVuotAiDoKho);
+            this.grbVuotAi.Controls.Add(this.label3);
+            this.grbVuotAi.Controls.Add(this.label5);
+            this.grbVuotAi.Controls.Add(this.btnVuotAi);
+            this.grbVuotAi.Location = new System.Drawing.Point(8, 166);
+            this.grbVuotAi.Name = "grbVuotAi";
+            this.grbVuotAi.Size = new System.Drawing.Size(350, 92);
+            this.grbVuotAi.TabIndex = 0;
+            this.grbVuotAi.TabStop = false;
+            this.grbVuotAi.Text = "Vượt Ải";
+            // 
+            // txtVuotAiDoKho
+            // 
+            this.txtVuotAiDoKho.Location = new System.Drawing.Point(81, 40);
+            this.txtVuotAiDoKho.Name = "txtVuotAiDoKho";
+            this.txtVuotAiDoKho.Size = new System.Drawing.Size(100, 20);
+            this.txtVuotAiDoKho.TabIndex = 5;
+            this.txtVuotAiDoKho.Text = "1";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 44);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Độ Khó";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 21);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(38, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Tên Ải";
+            // 
+            // btnVuotAi
+            // 
+            this.btnVuotAi.Location = new System.Drawing.Point(233, 19);
+            this.btnVuotAi.Name = "btnVuotAi";
+            this.btnVuotAi.Size = new System.Drawing.Size(111, 40);
+            this.btnVuotAi.TabIndex = 1;
+            this.btnVuotAi.Text = "Vượt Ải";
+            this.btnVuotAi.UseVisualStyleBackColor = true;
+            // 
+            // txtVuotAiTenAi
+            // 
+            this.txtVuotAiTenAi.FormattingEnabled = true;
+            this.txtVuotAiTenAi.Location = new System.Drawing.Point(81, 17);
+            this.txtVuotAiTenAi.Name = "txtVuotAiTenAi";
+            this.txtVuotAiTenAi.Size = new System.Drawing.Size(100, 21);
+            this.txtVuotAiTenAi.TabIndex = 6;
+            // 
+            // chkVuotAiChieuHangTuong
+            // 
+            this.chkVuotAiChieuHangTuong.AutoSize = true;
+            this.chkVuotAiChieuHangTuong.Checked = true;
+            this.chkVuotAiChieuHangTuong.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkVuotAiChieuHangTuong.Location = new System.Drawing.Point(81, 67);
+            this.chkVuotAiChieuHangTuong.Name = "chkVuotAiChieuHangTuong";
+            this.chkVuotAiChieuHangTuong.Size = new System.Drawing.Size(116, 17);
+            this.chkVuotAiChieuHangTuong.TabIndex = 7;
+            this.chkVuotAiChieuHangTuong.Text = "Chiêu Hàng Tướng";
+            this.chkVuotAiChieuHangTuong.UseVisualStyleBackColor = true;
+            // 
+            // grbStatus
+            // 
+            this.grbStatus.Controls.Add(this.txtStatus);
+            this.grbStatus.Location = new System.Drawing.Point(8, 349);
+            this.grbStatus.Name = "grbStatus";
+            this.grbStatus.Size = new System.Drawing.Size(793, 151);
+            this.grbStatus.TabIndex = 2;
+            this.grbStatus.TabStop = false;
+            this.grbStatus.Text = "Status";
+            // 
+            // txtStatus
+            // 
+            this.txtStatus.Location = new System.Drawing.Point(9, 19);
+            this.txtStatus.Multiline = true;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(778, 126);
+            this.txtStatus.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -354,6 +455,10 @@
             this.grbThuThanh.ResumeLayout(false);
             this.grbThuThanh.PerformLayout();
             this.pageUpLevel.ResumeLayout(false);
+            this.grbVuotAi.ResumeLayout(false);
+            this.grbVuotAi.PerformLayout();
+            this.grbStatus.ResumeLayout(false);
+            this.grbStatus.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -387,6 +492,15 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnBatDauUpLevel;
         private System.Windows.Forms.Button btnGiamThoiGianCho;
+        private System.Windows.Forms.GroupBox grbVuotAi;
+        private System.Windows.Forms.TextBox txtVuotAiDoKho;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnVuotAi;
+        private System.Windows.Forms.ComboBox txtVuotAiTenAi;
+        private System.Windows.Forms.CheckBox chkVuotAiChieuHangTuong;
+        private System.Windows.Forms.GroupBox grbStatus;
+        private System.Windows.Forms.TextBox txtStatus;
     }
 }
 

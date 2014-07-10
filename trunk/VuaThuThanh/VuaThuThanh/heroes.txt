@@ -6,7 +6,7 @@ InitOfficerFan,5,4,
 LaKien,4,1,
 TanLang,4,1,
 ThanhBao,4,1,
-TaoHoa,4,1,
+TaoHoa,4,1,1
 KhiemHoang,3,1,
 TangBa,3,1,1
 TaoNgang,3,1,
@@ -26,7 +26,7 @@ DienTuc,1,1,
 MaQuan,1,1,
 TranDao,4,2,
 TruongNam,4,2,
-TruongOanhOanh,4,2,
+TruongOanhOanh,4,2,1
 HoangSung,3,2,
 PhoDong,3,2,
 QuangBinh,3,2,
@@ -69,13 +69,13 @@ VuongUy,4,4,
 CaoDinh,3,4,
 ChauTuan,3,4,
 CongTonToan,3,4,
-DiemTuong,3,4,
-DienPhong,3,4,
+DiemTuong,3,4,1
+DienPhong,3,4,1
 DongMan,3,4,
 HaHauHung,3,4,
 HaTrinh,3,4,
 HauTuyen,3,4,
-LoiBac,3,4,
+LoiBac,3,4,1
 LuuHien,3,4,
 LuuHuan,3,4,
 NghiemCuong,3,4,
@@ -102,10 +102,10 @@ VuongHam,1,4,
 TrieuPham,1,4,
 ToanDich,1,4,
 LoiBac,4,4,
-QuanBinh,3,4,
+QuanBinh,3,4,1
 ThachBao,4,1,
 ThaiCong,3,0,
-QuachMa,4,0,1
+QuachMa,4,4,1
 TranNguyen,1,0,
 VienDieu,1,0,
 CaoNhu,1,0,
@@ -114,3 +114,5 @@ ThaiTrung,1,0,
 HoBan,1,0,
 TuTac,1,0,
 TruongTiet,1,0,
+HuaNghi,3,1,1
+ChanPhi,4,1,1

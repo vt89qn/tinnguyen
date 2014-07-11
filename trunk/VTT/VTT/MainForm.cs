@@ -137,13 +137,16 @@ namespace VTT
 
         private void use_chest(object obj)
         {
-            WebClientEx client = new WebClientEx();
-            NameValueCollection param = new NameValueCollection();
-            param.Add("authentication_token", authentication_token);
-            client.DoPost(param, "https://vtt-01.zoygame.com/owned_items/" + obj + "/use_chest");
-            if (string.IsNullOrEmpty(client.ResponseText) && client.Error != null)
+            if (!bErrorWhenUsingChest)
             {
-                bErrorWhenUsingChest = true;
+                WebClientEx client = new WebClientEx();
+                NameValueCollection param = new NameValueCollection();
+                param.Add("authentication_token", authentication_token);
+                client.DoPost(param, "https://vtt-01.zoygame.com/owned_items/" + obj + "/use_chest");
+                if (string.IsNullOrEmpty(client.ResponseText) && client.Error != null)
+                {
+                    bErrorWhenUsingChest = true;
+                }
             }
         }
         #endregion
@@ -923,7 +926,7 @@ namespace VTT
                 login();
                 listTuongUp.ForEach(x => new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(levelup)).Start(x));
                 System.Threading.Thread.Sleep(2000);
-                //login();
+                login();
             }
         }
 

@@ -11,6 +11,7 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.IO;
 using System.Configuration;
+using System.Timers;
 
 namespace VTT
 {
@@ -23,7 +24,7 @@ namespace VTT
 
 
         Dictionary<string, object> dataLogin = null;
-        Timer timerUpLevel = new Timer();
+        System.Windows.Forms.Timer timerUpLevel = new System.Windows.Forms.Timer();
         bool bErrorWhenUsingChest = false;
 
         int tower_achievement = 10;
@@ -39,7 +40,9 @@ namespace VTT
         private int star { get { return current_defense_battle != null ? (int)current_defense_battle["star"] : -1; } }
         private string city_id { get { return current_defense_battle != null ? current_defense_battle["city_id"].ToString() : "-1"; } }
 
+        static System.Timers.Timer aTimer;
         #endregion
+
         #region - CONTRUCTOR -
         public MainForm()
         {
@@ -83,6 +86,57 @@ namespace VTT
                 this.timerUpLevel.Stop();
                 btnBatDauUpLevel.Text = "Bắt đầu";
             }
+        }
+
+        List<string> lstHeroes = new List<string>();
+        void btnUpLevelTheoDinhKy_Click(object sender, EventArgs e)
+        {
+            // Create a timer with a one second interval.
+            aTimer = new System.Timers.Timer(120 * 1000);
+
+            // Hook up the Elapsed event for the timer.
+            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+
+            // Set the Interval
+            aTimer.Enabled = true;
+
+            aTimer.Enabled = !aTimer.Enabled;
+            if (aTimer.Enabled)
+            {
+                aTimer.Start();
+                btnUpLevelTheoDinhKy.Text = "Đang tăng cấp";
+                foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
+                {
+                    bool bAllowUpLevel = false;
+                    int level = 50;
+                    foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
+                    {
+                        if (component.ContainsKey("level"))
+                        {
+                            level = (int)component["level"];
+                            if (level == 1)
+                            {
+                                bAllowUpLevel = false;
+                                break;
+                            }
+                        }
+                        if (component.ContainsKey("rank"))
+                        {
+                            if ((int)component["rank"] >= 3 || ((int)component["rank"] < 3 && level > 1))
+                                bAllowUpLevel = true;
+                        }
+                    }
+                    if (bAllowUpLevel)
+                    {
+                        lstHeroes.Add((string)officer["id"]);
+                    }
+                }                
+            }
+            else
+            {
+                aTimer.Stop();
+                btnBatDauUpLevel.Text = "Tăng cấp theo định kỳ";
+            }            
         }
 
         void btnLogin_Click(object sender, EventArgs e)
@@ -584,9 +638,17 @@ namespace VTT
                 this.btnSaThaiTuong.Enabled = false;
                 foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
                 {
-                    bool bFire = false;
+                    bool bFire = false;                    
                     foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
                     {
+                        if (component.ContainsKey("level"))
+                        {                            
+                            if ((int)component["level"] > 1)
+                            {
+                                bFire = false;
+                                break;
+                            }
+                        }
                         if (component.ContainsKey("rank") && (int)component["rank"] <= 2)
                         {
                             bFire = true;
@@ -950,6 +1012,24 @@ namespace VTT
                 }
             }
         }
+
+        // Specify what you want to happen when the Elapsed event is  
+        // raised.         
+        protected void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            foreach (string id in lstHeroes)
+            {
+                levelup(id);
+            }
+        }
+
+        private void levelup(string id)
+        {
+            WebClientEx client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
+            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_officers/" + id + "/level_up");
+        }
         #endregion
 
         #region - login -
@@ -1113,6 +1193,7 @@ namespace VTT
 
         private void writeGlobalInfo()
         {
+            txtAuthenticationToken.Text = dataLogin["authentication_token"].ToString();
             txtStatus.Text = string.Empty;
             txtStatus.Text += "\r\nQuân Lệnh : " + current_defense_turn_count;
             txtStatus.Text += "\r\nCờ Chiến : " + attack_turn_count;
@@ -1186,6 +1267,7 @@ namespace VTT
             txtProcess.ScrollToCaret();
         }
         #endregion
+                
         #endregion
     }
 }

@@ -67,25 +67,28 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnGhepManhTuongTuDong = new System.Windows.Forms.Button();
             this.pageLinhThachVuKhi = new System.Windows.Forms.TabPage();
+            this.grbQuayRuong = new System.Windows.Forms.GroupBox();
+            this.txtQuayRuongLoaiRuong = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnQuayRuong = new System.Windows.Forms.Button();
             this.grbGhepNgocVuKhi = new System.Windows.Forms.GroupBox();
+            this.txtGhepDoSoLuong = new System.Windows.Forms.ComboBox();
             this.txtGhepDoCap = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.txtGhepDoTenDo = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.btnBanVuKhiLinhThach = new System.Windows.Forms.Button();
             this.btnGhepLinhThachVuKhi = new System.Windows.Forms.Button();
             this.pageLevel = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtAuthenticationToken = new System.Windows.Forms.TextBox();
             this.btnGiamThoiGianCho = new System.Windows.Forms.Button();
+            this.btnUpLevelTheoDinhKy = new System.Windows.Forms.Button();
             this.btnBatDauUpLevel = new System.Windows.Forms.Button();
             this.grbStatus = new System.Windows.Forms.GroupBox();
-            this.txtStatus = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtGhepDoSoLuong = new System.Windows.Forms.ComboBox();
             this.txtProcess = new System.Windows.Forms.TextBox();
-            this.grbQuayRuong = new System.Windows.Forms.GroupBox();
-            this.txtQuayRuongLoaiRuong = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.btnQuayRuong = new System.Windows.Forms.Button();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -97,10 +100,10 @@
             this.grbDuoiTuong.SuspendLayout();
             this.grbGhepManhTuong.SuspendLayout();
             this.pageLinhThachVuKhi.SuspendLayout();
+            this.grbQuayRuong.SuspendLayout();
             this.grbGhepNgocVuKhi.SuspendLayout();
             this.pageLevel.SuspendLayout();
             this.grbStatus.SuspendLayout();
-            this.grbQuayRuong.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -498,6 +501,44 @@
             this.pageLinhThachVuKhi.Text = "Linh Thạch / Vũ Khí";
             this.pageLinhThachVuKhi.UseVisualStyleBackColor = true;
             // 
+            // grbQuayRuong
+            // 
+            this.grbQuayRuong.Controls.Add(this.txtQuayRuongLoaiRuong);
+            this.grbQuayRuong.Controls.Add(this.label13);
+            this.grbQuayRuong.Controls.Add(this.btnQuayRuong);
+            this.grbQuayRuong.Location = new System.Drawing.Point(369, 6);
+            this.grbQuayRuong.Name = "grbQuayRuong";
+            this.grbQuayRuong.Size = new System.Drawing.Size(357, 105);
+            this.grbQuayRuong.TabIndex = 1;
+            this.grbQuayRuong.TabStop = false;
+            this.grbQuayRuong.Text = "Quay Rương";
+            // 
+            // txtQuayRuongLoaiRuong
+            // 
+            this.txtQuayRuongLoaiRuong.FormattingEnabled = true;
+            this.txtQuayRuongLoaiRuong.Location = new System.Drawing.Point(81, 44);
+            this.txtQuayRuongLoaiRuong.Name = "txtQuayRuongLoaiRuong";
+            this.txtQuayRuongLoaiRuong.Size = new System.Drawing.Size(100, 21);
+            this.txtQuayRuongLoaiRuong.TabIndex = 6;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 48);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 13);
+            this.label13.TabIndex = 4;
+            this.label13.Text = "Loại Rương";
+            // 
+            // btnQuayRuong
+            // 
+            this.btnQuayRuong.Location = new System.Drawing.Point(208, 34);
+            this.btnQuayRuong.Name = "btnQuayRuong";
+            this.btnQuayRuong.Size = new System.Drawing.Size(111, 40);
+            this.btnQuayRuong.TabIndex = 1;
+            this.btnQuayRuong.Text = "Quay Rương";
+            this.btnQuayRuong.UseVisualStyleBackColor = true;
+            // 
             // grbGhepNgocVuKhi
             // 
             this.grbGhepNgocVuKhi.Controls.Add(this.txtGhepDoSoLuong);
@@ -515,6 +556,14 @@
             this.grbGhepNgocVuKhi.TabStop = false;
             this.grbGhepNgocVuKhi.Text = "Ghép, Bán Linh Thạch  Vũ Khí";
             // 
+            // txtGhepDoSoLuong
+            // 
+            this.txtGhepDoSoLuong.FormattingEnabled = true;
+            this.txtGhepDoSoLuong.Location = new System.Drawing.Point(81, 71);
+            this.txtGhepDoSoLuong.Name = "txtGhepDoSoLuong";
+            this.txtGhepDoSoLuong.Size = new System.Drawing.Size(100, 21);
+            this.txtGhepDoSoLuong.TabIndex = 6;
+            // 
             // txtGhepDoCap
             // 
             this.txtGhepDoCap.FormattingEnabled = true;
@@ -522,6 +571,15 @@
             this.txtGhepDoCap.Name = "txtGhepDoCap";
             this.txtGhepDoCap.Size = new System.Drawing.Size(100, 21);
             this.txtGhepDoCap.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 75);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 13);
+            this.label10.TabIndex = 3;
+            this.label10.Text = "Số Lượng";
             // 
             // txtGhepDoTenDo
             // 
@@ -569,7 +627,10 @@
             // 
             // pageLevel
             // 
+            this.pageLevel.Controls.Add(this.label11);
+            this.pageLevel.Controls.Add(this.txtAuthenticationToken);
             this.pageLevel.Controls.Add(this.btnGiamThoiGianCho);
+            this.pageLevel.Controls.Add(this.btnUpLevelTheoDinhKy);
             this.pageLevel.Controls.Add(this.btnBatDauUpLevel);
             this.pageLevel.Location = new System.Drawing.Point(4, 34);
             this.pageLevel.Name = "pageLevel";
@@ -579,6 +640,22 @@
             this.pageLevel.Text = "     Level     ";
             this.pageLevel.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(125, 98);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(107, 13);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "authentication_token";
+            // 
+            // txtAuthenticationToken
+            // 
+            this.txtAuthenticationToken.Location = new System.Drawing.Point(128, 118);
+            this.txtAuthenticationToken.Name = "txtAuthenticationToken";
+            this.txtAuthenticationToken.Size = new System.Drawing.Size(264, 20);
+            this.txtAuthenticationToken.TabIndex = 3;
+            // 
             // btnGiamThoiGianCho
             // 
             this.btnGiamThoiGianCho.Location = new System.Drawing.Point(8, 52);
@@ -587,6 +664,16 @@
             this.btnGiamThoiGianCho.TabIndex = 1;
             this.btnGiamThoiGianCho.Text = "Giảm thời gian chờ";
             this.btnGiamThoiGianCho.UseVisualStyleBackColor = true;
+            // 
+            // btnUpLevelTheoDinhKy
+            // 
+            this.btnUpLevelTheoDinhKy.Location = new System.Drawing.Point(8, 98);
+            this.btnUpLevelTheoDinhKy.Name = "btnUpLevelTheoDinhKy";
+            this.btnUpLevelTheoDinhKy.Size = new System.Drawing.Size(111, 40);
+            this.btnUpLevelTheoDinhKy.TabIndex = 2;
+            this.btnUpLevelTheoDinhKy.Text = "Tăng cấp theo định kỳ";
+            this.btnUpLevelTheoDinhKy.UseVisualStyleBackColor = true;
+            this.btnUpLevelTheoDinhKy.Click += new System.EventHandler(this.btnUpLevelTheoDinhKy_Click);
             // 
             // btnBatDauUpLevel
             // 
@@ -610,35 +697,6 @@
             this.grbStatus.TabStop = false;
             this.grbStatus.Text = "Status";
             // 
-            // txtStatus
-            // 
-            this.txtStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtStatus.Location = new System.Drawing.Point(6, 19);
-            this.txtStatus.Multiline = true;
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtStatus.Size = new System.Drawing.Size(361, 281);
-            this.txtStatus.TabIndex = 0;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 75);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(53, 13);
-            this.label10.TabIndex = 3;
-            this.label10.Text = "Số Lượng";
-            // 
-            // txtGhepDoSoLuong
-            // 
-            this.txtGhepDoSoLuong.FormattingEnabled = true;
-            this.txtGhepDoSoLuong.Location = new System.Drawing.Point(81, 71);
-            this.txtGhepDoSoLuong.Name = "txtGhepDoSoLuong";
-            this.txtGhepDoSoLuong.Size = new System.Drawing.Size(100, 21);
-            this.txtGhepDoSoLuong.TabIndex = 6;
-            // 
             // txtProcess
             // 
             this.txtProcess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -651,43 +709,17 @@
             this.txtProcess.Size = new System.Drawing.Size(381, 281);
             this.txtProcess.TabIndex = 0;
             // 
-            // grbQuayRuong
+            // txtStatus
             // 
-            this.grbQuayRuong.Controls.Add(this.txtQuayRuongLoaiRuong);
-            this.grbQuayRuong.Controls.Add(this.label13);
-            this.grbQuayRuong.Controls.Add(this.btnQuayRuong);
-            this.grbQuayRuong.Location = new System.Drawing.Point(369, 6);
-            this.grbQuayRuong.Name = "grbQuayRuong";
-            this.grbQuayRuong.Size = new System.Drawing.Size(357, 105);
-            this.grbQuayRuong.TabIndex = 1;
-            this.grbQuayRuong.TabStop = false;
-            this.grbQuayRuong.Text = "Quay Rương";
-            // 
-            // txtQuayRuongLoaiRuong
-            // 
-            this.txtQuayRuongLoaiRuong.FormattingEnabled = true;
-            this.txtQuayRuongLoaiRuong.Location = new System.Drawing.Point(81, 44);
-            this.txtQuayRuongLoaiRuong.Name = "txtQuayRuongLoaiRuong";
-            this.txtQuayRuongLoaiRuong.Size = new System.Drawing.Size(100, 21);
-            this.txtQuayRuongLoaiRuong.TabIndex = 6;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 48);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(62, 13);
-            this.label13.TabIndex = 4;
-            this.label13.Text = "Loại Rương";
-            // 
-            // btnQuayRuong
-            // 
-            this.btnQuayRuong.Location = new System.Drawing.Point(208, 34);
-            this.btnQuayRuong.Name = "btnQuayRuong";
-            this.btnQuayRuong.Size = new System.Drawing.Size(111, 40);
-            this.btnQuayRuong.TabIndex = 1;
-            this.btnQuayRuong.Text = "Quay Rương";
-            this.btnQuayRuong.UseVisualStyleBackColor = true;
+            this.txtStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtStatus.Location = new System.Drawing.Point(6, 19);
+            this.txtStatus.Multiline = true;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtStatus.Size = new System.Drawing.Size(361, 281);
+            this.txtStatus.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -716,13 +748,14 @@
             this.grbGhepManhTuong.ResumeLayout(false);
             this.grbGhepManhTuong.PerformLayout();
             this.pageLinhThachVuKhi.ResumeLayout(false);
+            this.grbQuayRuong.ResumeLayout(false);
+            this.grbQuayRuong.PerformLayout();
             this.grbGhepNgocVuKhi.ResumeLayout(false);
             this.grbGhepNgocVuKhi.PerformLayout();
             this.pageLevel.ResumeLayout(false);
+            this.pageLevel.PerformLayout();
             this.grbStatus.ResumeLayout(false);
             this.grbStatus.PerformLayout();
-            this.grbQuayRuong.ResumeLayout(false);
-            this.grbQuayRuong.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -787,6 +820,9 @@
         private System.Windows.Forms.ComboBox txtQuayRuongLoaiRuong;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnQuayRuong;
+        private System.Windows.Forms.Button btnUpLevelTheoDinhKy;
+        private System.Windows.Forms.TextBox txtAuthenticationToken;
+        private System.Windows.Forms.Label label11;
     }
 }
 

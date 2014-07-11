@@ -661,16 +661,16 @@ namespace VTT
 
             if (listTuongUp.Count == 5)
             {
-                //listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
-                //System.Threading.Thread.Sleep(1500);
-                //levelup();
+                listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
+                System.Threading.Thread.Sleep(1500);
+                levelup();
             }
 
             {
-                if (listTuongUp.Count == 5)
-                {
-                    listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(unlock_skill_2)).Start(x); });
-                }
+                //if (listTuongUp.Count == 5)
+                //{
+                //    listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(unlock_skill_2)).Start(x); });
+                //}
             }
         }
 

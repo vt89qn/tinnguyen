@@ -804,7 +804,7 @@ namespace VTT
             //}
             //if (dataLogin == null)
             {
-                string strProfile = "tin";
+                string strProfile = System.Configuration.ConfigurationSettings.AppSettings["login"];
                 Dictionary<string, object> dataProfile = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(profileJson);
 
                 WebClientEx client = new WebClientEx();

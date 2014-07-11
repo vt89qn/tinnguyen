@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.Web.Script.Serialization;
 using System.Collections;
 using System.IO;
+using System.Configuration;
 
 namespace VTT
 {
@@ -64,6 +65,8 @@ namespace VTT
             this.btnThuThanh.Click += (objs, obje) => { defence_city(); };
             this.btnDungQLCC.Click += (objs, obje) => { use_item(); };
             this.btnGhepManhTuongTuDong.Click += (objs, obje) => { merge(); };
+            this.btnGhepLinhThachVuKhi.Click += (objs, obje) => { forge(); };
+            this.btnBanVuKhiLinhThach.Click += (objs, obje) => { sell(); };
         }
         void btnBatDauUpLevel_Click(object sender, EventArgs e)
         {
@@ -94,6 +97,122 @@ namespace VTT
         }
 
         #region - METHOD -
+        #region - forge / sell -
+
+        private void sell()
+        {
+            try
+            {
+                btnBanVuKhiLinhThach.Enabled = false;
+                txtStatus.Text = string.Empty;
+                setStatus("START : Bán Vũ Khí / Linh Thạch\n");
+
+                string item_id = string.Concat(txtGhepDoTenDo.SelectedValue.ToString(), "_", txtGhepDoCap.SelectedValue.ToString());
+                List<Dictionary<string, object>> lstItems = new List<Dictionary<string, object>>();
+                int soluong = Convert.ToInt16(txtGhepDoSoLuong.SelectedValue);
+                foreach (Dictionary<string, object> item in dataLogin["owned_items"] as ArrayList)
+                {
+                    if (item["item_id"].ToString() == item_id)
+                    {
+                        lstItems.Add(item);
+
+                    }
+                }
+                //send
+                if (lstItems.Count > 0)
+                {
+                    string strData = "authentication_token=" + authentication_token;
+
+                    foreach (Dictionary<string, object> item in lstItems)
+                    {
+                        strData += "&owned_item_ids%5B%5D=" + item["id"].ToString();
+                        (dataLogin["owned_items"] as ArrayList).Remove(item);
+                    }
+                    WebClientEx client = new WebClientEx();
+                    client.DoPost(strData, "https://vtt-01.zoygame.com/owned_items/sell");
+                }
+
+
+            }
+            catch { }
+            finally
+            {
+                btnBanVuKhiLinhThach.Enabled = true;
+                setStatus("\nEND : Bán Vũ Khí / Linh Thạch");
+                writeGlobalInfo();
+            }
+        }
+
+        private void forge()
+        {
+            try
+            {
+                btnGhepLinhThachVuKhi.Enabled = false;
+                txtStatus.Text = string.Empty;
+                setStatus("START : Ghép Vũ Khí / Linh Thạch\n");
+
+                string item_id = string.Concat(txtGhepDoTenDo.SelectedValue.ToString(), "_", txtGhepDoCap.SelectedValue.ToString());
+                List<Dictionary<string, object>> lstItems = new List<Dictionary<string, object>>();
+                int soluong = Convert.ToInt16(txtGhepDoSoLuong.SelectedValue);
+                foreach (Dictionary<string, object> item in dataLogin["owned_items"] as ArrayList)
+                {
+                    if (item["item_id"].ToString() == item_id)
+                    {
+                        lstItems.Add(item);
+
+                    }
+                }
+                //send
+                if (lstItems.Count >= 3)
+                {
+                    for (int i = 0; i <= lstItems.Count - 3; i += 3)
+                    {
+                        if (soluong != 0 && i >= soluong * 3)
+                        {
+                            setStatus(string.Concat("\nEND : Đã ghép xong ", txtGhepDoTenDo.Text, " ", txtGhepDoCap.Text));
+                            return;
+                        }
+                        NameValueCollection param = new NameValueCollection();
+                        param.Add("authentication_token", authentication_token);
+                        param.Add("owned_item_count", "3");
+                        for (int t = 0; t < 3; t++)
+                        {
+                            param.Add(string.Concat("owned_item_id_", t), lstItems[i + t]["id"].ToString());
+                            (dataLogin["owned_items"] as ArrayList).Remove(lstItems[i + t]);
+                        }
+
+                        for (int iIndex = 0; iIndex < 5; iIndex++)
+                        {
+                            new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(forge)).Start(param);
+                        }
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    setStatus(string.Concat("\nEND : Đã ghép xong ", txtGhepDoTenDo.Text, " ", txtGhepDoCap.Text));
+                }
+                setStatus(string.Concat("\nEND : Đã ghép xong ", txtGhepDoTenDo.Text, "  ", txtGhepDoCap.Text));
+
+            }
+            catch { }
+            finally
+            {
+                btnGhepLinhThachVuKhi.Enabled = true;
+                setStatus("\nEND : Ghép Vũ Khí / Linh Thạch");
+                writeGlobalInfo();
+            }
+        }
+
+        private void forge(object param)
+        {
+            WebClientEx client = new WebClientEx();
+            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_items/forge");
+            if (!string.IsNullOrEmpty(client.ResponseText))
+            {
+                Dictionary<string, object> dataRS = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
+                (dataLogin["owned_items"] as ArrayList).Add(dataRS["new_item"]);
+            }
+        }
+        #endregion
+
         #region - merge -
         private void merge()
         {
@@ -103,9 +222,7 @@ namespace VTT
                 txtStatus.Text = string.Empty;
                 setStatus("START : Ghép mảnh tướng\n");
 
-                List<string> listManhTuongKhongGhep = new List<string> { "ChanPhi", "TieuKieu", "TonThuongHuong", "TruongOanhOanh", "TaoHoa",
-                "TruongNam","KiLinh","LaPham","TruongChieu","TruongLuong","HaTe","QuachMa","LaHien","TruongBao","DiemTuong","DienPhong","CongTonToan","LuuHuan","TangBa"};
-
+                List<string> listManhTuongKhongGhep = ConfigurationManager.AppSettings["ManhTuongKhongGhep"].Split(',').ToList();
                 for (int i = 2; i <= 4; i++)
                 {
                     List<Dictionary<string, object>> dicManhTuong = layDanhSachManhTuong(i);
@@ -649,7 +766,7 @@ namespace VTT
         #region - reduce_cooldown -
         private void reduce_cooldown()
         {
-            List<string> listTuongUpLevelBangVang = new List<string> { "HoangCai", "TonLoDuc", "TienDung", "ChuDongTu", "BaTrieu" };
+            List<string> listTuongUpLevelBangVang = ConfigurationManager.AppSettings["TuongUpLevelBangVang"].Split(',').ToList();
             List<Dictionary<string, object>> listTuongUp = new List<Dictionary<string, object>>();
             foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
             {
@@ -804,7 +921,7 @@ namespace VTT
             //}
             //if (dataLogin == null)
             {
-                string strProfile = System.Configuration.ConfigurationSettings.AppSettings["login"];
+                string strProfile = ConfigurationManager.AppSettings["login"];
                 Dictionary<string, object> dataProfile = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(profileJson);
 
                 WebClientEx client = new WebClientEx();
@@ -886,10 +1003,54 @@ namespace VTT
                 };
                 txtQLCC.SelectedIndex = 0;
             }
+            {
+                DataTable dtData = new DataTable();
+                dtData.Columns.Add("id", typeof(string));
+                dtData.Columns.Add("name", typeof(string));
+                dtData.Rows.Add("wind_stone", "Thạch Phong");
+                dtData.Rows.Add("thunder_stone", "Thạch Lôi");
+                dtData.Rows.Add("light_stone", "Thạch Quang");
+                dtData.Rows.Add("water_stone", "Thạch Thủy");
+                dtData.Rows.Add("fire_stone", "Thạch Hỏa");
+                dtData.Rows.Add("poison_stone", "Thạch Độc");
+                dtData.Rows.Add("sword", "Kiếm");
+                dtData.Rows.Add("spear", "Thương");
+                dtData.Rows.Add("bow", "Cung");
+                dtData.Rows.Add("fan", "Quạt");
+                txtGhepDoTenDo.DataSource = dtData;
+                txtGhepDoTenDo.DisplayMember = "name";
+                txtGhepDoTenDo.ValueMember = "id";
+                txtGhepDoTenDo.SelectedIndex = 0;
+            }
+            {
+                DataTable dtData = new DataTable();
+                dtData.Columns.Add("id", typeof(string));
+                dtData.Columns.Add("name", typeof(string));
+                dtData.Rows.Add("01", "C1 - Level 0");
+                dtData.Rows.Add("02", "C2 - Level 10");
+                dtData.Rows.Add("03", "C3 - Level 20");
+                dtData.Rows.Add("04", "C4 - Level 30");
+                dtData.Rows.Add("05", "Level 40");
+                txtGhepDoCap.DataSource = dtData;
+                txtGhepDoCap.DisplayMember = "name";
+                txtGhepDoCap.ValueMember = "id";
+                txtGhepDoCap.SelectedIndex = 0;
+            }
+            {
+                DataTable dtData = new DataTable();
+                dtData.Columns.Add("id", typeof(string));
+                dtData.Columns.Add("name", typeof(string));
+                dtData.Rows.Add("1", "1");
+                dtData.Rows.Add("0", "Hết");
+                txtGhepDoSoLuong.DataSource = dtData;
+                txtGhepDoSoLuong.DisplayMember = "name";
+                txtGhepDoSoLuong.ValueMember = "id";
+                txtGhepDoSoLuong.SelectedIndex = 0;
+            }
         }
 
         private void writeGlobalInfo()
-        {            
+        {
             setStatus("Quân Lệnh : " + current_defense_turn_count);
             setStatus("Cờ Chiến : " + attack_turn_count);
             setStatus("Đợt : " + current_wave);

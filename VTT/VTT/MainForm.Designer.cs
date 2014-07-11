@@ -66,11 +66,21 @@
             this.txtGhepManhTuongRank = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnGhepManhTuongTuDong = new System.Windows.Forms.Button();
+            this.pageLinhThachVuKhi = new System.Windows.Forms.TabPage();
+            this.grbGhepNgocVuKhi = new System.Windows.Forms.GroupBox();
+            this.txtGhepDoCap = new System.Windows.Forms.ComboBox();
+            this.txtGhepDoTenDo = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.btnBanVuKhiLinhThach = new System.Windows.Forms.Button();
+            this.btnGhepLinhThachVuKhi = new System.Windows.Forms.Button();
             this.pageLevel = new System.Windows.Forms.TabPage();
             this.btnGiamThoiGianCho = new System.Windows.Forms.Button();
             this.btnBatDauUpLevel = new System.Windows.Forms.Button();
             this.grbStatus = new System.Windows.Forms.GroupBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtGhepDoSoLuong = new System.Windows.Forms.ComboBox();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -81,6 +91,8 @@
             this.pageTuong.SuspendLayout();
             this.grbDuoiTuong.SuspendLayout();
             this.grbGhepManhTuong.SuspendLayout();
+            this.pageLinhThachVuKhi.SuspendLayout();
+            this.grbGhepNgocVuKhi.SuspendLayout();
             this.pageLevel.SuspendLayout();
             this.grbStatus.SuspendLayout();
             this.SuspendLayout();
@@ -93,6 +105,7 @@
             this.tabMain.Controls.Add(this.pageLogin);
             this.tabMain.Controls.Add(this.pageThanh);
             this.tabMain.Controls.Add(this.pageTuong);
+            this.tabMain.Controls.Add(this.pageLinhThachVuKhi);
             this.tabMain.Controls.Add(this.pageLevel);
             this.tabMain.ItemSize = new System.Drawing.Size(100, 30);
             this.tabMain.Location = new System.Drawing.Point(12, 12);
@@ -467,6 +480,86 @@
             this.btnGhepManhTuongTuDong.Text = "Ghép Mảnh Tướng Tự Động";
             this.btnGhepManhTuongTuDong.UseVisualStyleBackColor = true;
             // 
+            // pageLinhThachVuKhi
+            // 
+            this.pageLinhThachVuKhi.Controls.Add(this.grbGhepNgocVuKhi);
+            this.pageLinhThachVuKhi.Location = new System.Drawing.Point(4, 34);
+            this.pageLinhThachVuKhi.Name = "pageLinhThachVuKhi";
+            this.pageLinhThachVuKhi.Padding = new System.Windows.Forms.Padding(3);
+            this.pageLinhThachVuKhi.Size = new System.Drawing.Size(752, 187);
+            this.pageLinhThachVuKhi.TabIndex = 4;
+            this.pageLinhThachVuKhi.Text = "Linh Thạch / Vũ Khí";
+            this.pageLinhThachVuKhi.UseVisualStyleBackColor = true;
+            // 
+            // grbGhepNgocVuKhi
+            // 
+            this.grbGhepNgocVuKhi.Controls.Add(this.txtGhepDoSoLuong);
+            this.grbGhepNgocVuKhi.Controls.Add(this.txtGhepDoCap);
+            this.grbGhepNgocVuKhi.Controls.Add(this.label10);
+            this.grbGhepNgocVuKhi.Controls.Add(this.txtGhepDoTenDo);
+            this.grbGhepNgocVuKhi.Controls.Add(this.label8);
+            this.grbGhepNgocVuKhi.Controls.Add(this.label9);
+            this.grbGhepNgocVuKhi.Controls.Add(this.btnBanVuKhiLinhThach);
+            this.grbGhepNgocVuKhi.Controls.Add(this.btnGhepLinhThachVuKhi);
+            this.grbGhepNgocVuKhi.Location = new System.Drawing.Point(6, 6);
+            this.grbGhepNgocVuKhi.Name = "grbGhepNgocVuKhi";
+            this.grbGhepNgocVuKhi.Size = new System.Drawing.Size(357, 105);
+            this.grbGhepNgocVuKhi.TabIndex = 1;
+            this.grbGhepNgocVuKhi.TabStop = false;
+            this.grbGhepNgocVuKhi.Text = "Ghép, Bán Linh Thạch  Vũ Khí";
+            // 
+            // txtGhepDoCap
+            // 
+            this.txtGhepDoCap.FormattingEnabled = true;
+            this.txtGhepDoCap.Location = new System.Drawing.Point(81, 44);
+            this.txtGhepDoCap.Name = "txtGhepDoCap";
+            this.txtGhepDoCap.Size = new System.Drawing.Size(100, 21);
+            this.txtGhepDoCap.TabIndex = 6;
+            // 
+            // txtGhepDoTenDo
+            // 
+            this.txtGhepDoTenDo.FormattingEnabled = true;
+            this.txtGhepDoTenDo.Location = new System.Drawing.Point(81, 17);
+            this.txtGhepDoTenDo.Name = "txtGhepDoTenDo";
+            this.txtGhepDoTenDo.Size = new System.Drawing.Size(100, 21);
+            this.txtGhepDoTenDo.TabIndex = 6;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 48);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(26, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Cấp";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 21);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(43, 13);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "Tên Đồ";
+            // 
+            // btnBanVuKhiLinhThach
+            // 
+            this.btnBanVuKhiLinhThach.Location = new System.Drawing.Point(289, 34);
+            this.btnBanVuKhiLinhThach.Name = "btnBanVuKhiLinhThach";
+            this.btnBanVuKhiLinhThach.Size = new System.Drawing.Size(50, 40);
+            this.btnBanVuKhiLinhThach.TabIndex = 1;
+            this.btnBanVuKhiLinhThach.Text = "Bán";
+            this.btnBanVuKhiLinhThach.UseVisualStyleBackColor = true;
+            // 
+            // btnGhepLinhThachVuKhi
+            // 
+            this.btnGhepLinhThachVuKhi.Location = new System.Drawing.Point(233, 34);
+            this.btnGhepLinhThachVuKhi.Name = "btnGhepLinhThachVuKhi";
+            this.btnGhepLinhThachVuKhi.Size = new System.Drawing.Size(50, 40);
+            this.btnGhepLinhThachVuKhi.TabIndex = 1;
+            this.btnGhepLinhThachVuKhi.Text = "Ghép";
+            this.btnGhepLinhThachVuKhi.UseVisualStyleBackColor = true;
+            // 
             // pageLevel
             // 
             this.pageLevel.Controls.Add(this.btnGiamThoiGianCho);
@@ -521,6 +614,23 @@
             this.txtStatus.Size = new System.Drawing.Size(748, 281);
             this.txtStatus.TabIndex = 0;
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 75);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 13);
+            this.label10.TabIndex = 3;
+            this.label10.Text = "Số Lượng";
+            // 
+            // txtGhepDoSoLuong
+            // 
+            this.txtGhepDoSoLuong.FormattingEnabled = true;
+            this.txtGhepDoSoLuong.Location = new System.Drawing.Point(81, 71);
+            this.txtGhepDoSoLuong.Name = "txtGhepDoSoLuong";
+            this.txtGhepDoSoLuong.Size = new System.Drawing.Size(100, 21);
+            this.txtGhepDoSoLuong.TabIndex = 6;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -547,6 +657,9 @@
             this.grbDuoiTuong.PerformLayout();
             this.grbGhepManhTuong.ResumeLayout(false);
             this.grbGhepManhTuong.PerformLayout();
+            this.pageLinhThachVuKhi.ResumeLayout(false);
+            this.grbGhepNgocVuKhi.ResumeLayout(false);
+            this.grbGhepNgocVuKhi.PerformLayout();
             this.pageLevel.ResumeLayout(false);
             this.grbStatus.ResumeLayout(false);
             this.grbStatus.PerformLayout();
@@ -599,6 +712,16 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnDungQLCC;
         private System.Windows.Forms.TabPage pageTuong;
+        private System.Windows.Forms.TabPage pageLinhThachVuKhi;
+        private System.Windows.Forms.GroupBox grbGhepNgocVuKhi;
+        private System.Windows.Forms.ComboBox txtGhepDoTenDo;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button btnGhepLinhThachVuKhi;
+        private System.Windows.Forms.Button btnBanVuKhiLinhThach;
+        private System.Windows.Forms.ComboBox txtGhepDoCap;
+        private System.Windows.Forms.ComboBox txtGhepDoSoLuong;
+        private System.Windows.Forms.Label label10;
     }
 }
 

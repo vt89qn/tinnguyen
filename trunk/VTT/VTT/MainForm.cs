@@ -515,7 +515,7 @@ namespace VTT
                     client = new WebClientEx();
                     param = new NameValueCollection();
                     string strURL = "coordinate%5B%5D={0}&coordinate%5B%5D={1}&owned_officer_id={2}&authentication_token={3}";
-                    strURL = string.Format(strURL, (officer_coordinate["coordinate"] as List<int>)[0].ToString(), (officer_coordinate["coordinate"] as List<int>)[1].ToString(), officer_coordinate["owned_officer_id"], authentication_token);
+                    strURL = string.Format(strURL, (officer_coordinate["coordinate"] as ArrayList)[0].ToString(), (officer_coordinate["coordinate"] as ArrayList)[1].ToString(), officer_coordinate["owned_officer_id"], authentication_token);
                     client.DoPost(strURL, "https://vtt-01.zoygame.com/players/" + id + "/update_owned_officer_coordinate", null, "PUT");
                 }
             }

@@ -104,7 +104,6 @@ namespace VTT
             try
             {
                 btnBanVuKhiLinhThach.Enabled = false;
-                txtStatus.Text = string.Empty;
                 setStatus("START : Bán Vũ Khí / Linh Thạch\n");
 
                 string item_id = string.Concat(txtGhepDoTenDo.SelectedValue.ToString(), "_", txtGhepDoCap.SelectedValue.ToString());
@@ -148,7 +147,6 @@ namespace VTT
             try
             {
                 btnGhepLinhThachVuKhi.Enabled = false;
-                txtStatus.Text = string.Empty;
                 setStatus("START : Ghép Vũ Khí / Linh Thạch\n");
 
                 string item_id = string.Concat(txtGhepDoTenDo.SelectedValue.ToString(), "_", txtGhepDoCap.SelectedValue.ToString());
@@ -219,7 +217,6 @@ namespace VTT
             try
             {
                 btnGhepManhTuongTuDong.Enabled = false;
-                txtStatus.Text = string.Empty;
                 setStatus("START : Ghép mảnh tướng\n");
 
                 List<string> listManhTuongKhongGhep = ConfigurationManager.AppSettings["ManhTuongKhongGhep"].Split(',').ToList();
@@ -345,7 +342,6 @@ namespace VTT
         #region - use_item -
         private void use_item()
         {
-            txtStatus.Text = string.Empty;
             setStatus("START : Nuốt quân lệnh / cờ chiến\n");
 
             string loaiquanlenh = txtQLCC.SelectedValue.ToString();
@@ -397,7 +393,6 @@ namespace VTT
         #region - defence_city -
         private void defence_city()
         {
-            txtStatus.Text = string.Empty;
             setStatus("START : Thủ Thành \n");
             defense_next_wave();
             writeGlobalInfo();
@@ -1051,55 +1046,77 @@ namespace VTT
 
         private void writeGlobalInfo()
         {
-            setStatus("Quân Lệnh : " + current_defense_turn_count);
-            setStatus("Cờ Chiến : " + attack_turn_count);
-            setStatus("Đợt : " + current_wave);
-            setStatus("-----Quân lệnh-----");
+            txtStatus.Text = string.Empty;
+            txtStatus.Text += "\r\nQuân Lệnh : " + current_defense_turn_count;
+            txtStatus.Text += "\r\nCờ Chiến : " + attack_turn_count;
+            txtStatus.Text += "\r\n================================";
+            txtStatus.Text += "\r\nĐợt : " + current_wave;
+            txtStatus.Text += "\r\n============Quân lệnh============";
             var t = dataLogin["owned_items"].GetType();
             foreach (Dictionary<string, object> item in (dataLogin["owned_items"] as ArrayList))
             {
                 if (item["name"].ToString() == "defense_turn_count_restore_00")
                 {
-                    setStatus("QL sơn trại : " + item["quantity"]);
+                    txtStatus.Text += "\r\nQL sơn trại : " + item["quantity"];
                 }
                 else if (item["name"].ToString() == "defense_turn_count_restore_01")
                 {
-                    setStatus("QL sơ cấp : " + item["quantity"]);
+                    txtStatus.Text += "\r\nQL sơ cấp : " + item["quantity"];
                 }
                 else if (item["name"].ToString() == "defense_turn_count_restore_02")
                 {
-                    setStatus("QL trung cấp : " + item["quantity"]);
+                    txtStatus.Text += "\r\nQL QL trung cấp : " + item["quantity"];
                 }
                 else if (item["name"].ToString() == "defense_turn_count_restore_03")
                 {
-                    setStatus("QL cao cấp : " + item["quantity"]);
+                    txtStatus.Text += "\r\nQL QL cao cấp : " + item["quantity"];
                 }
             }
-            setStatus("-----Cờ chiến-----");
+            txtStatus.Text += "\r\n============Cờ chiến============";
             foreach (Dictionary<string, object> item in (dataLogin["owned_items"] as ArrayList))
             {
                 if (item["name"].ToString() == "attack_turn_count_restore_01")
                 {
-                    setStatus("CC sơ cấp : " + item["quantity"]);
+                    txtStatus.Text += "\r\nCC sơ cấp : " + item["quantity"];
                 }
                 else if (item["name"].ToString() == "attack_turn_count_restore_02")
                 {
-                    setStatus("CC trung cấp : " + item["quantity"]);
+                    txtStatus.Text += "\r\nCC trung cấp : " + item["quantity"];
                 }
                 else if (item["name"].ToString() == "attack_turn_count_restore_03")
                 {
-                    setStatus("CC cao cấp : " + item["quantity"]);
+                    txtStatus.Text += "\r\nCC cao cấp : " + item["quantity"];
+                }
+            }
+            txtStatus.Text += "\r\n============Rương============";
+            foreach (Dictionary<string, object> item in (dataLogin["owned_items"] as ArrayList))
+            {
+                if (item["name"].ToString() == "chest_01")
+                {
+                    txtStatus.Text += "\r\nRương sắt : " + item["quantity"];
+                }
+                else if (item["name"].ToString() == "chest_02")
+                {
+                    txtStatus.Text += "\r\nRương đồng : " + item["quantity"];
+                }
+                else if (item["name"].ToString() == "chest_03")
+                {
+                    txtStatus.Text += "\r\nRương bạc : " + item["quantity"];
+                }
+                else if (item["name"].ToString() == "chest_04")
+                {
+                    txtStatus.Text += "\r\nRương vàng : " + item["quantity"];
                 }
             }
         }
 
         private void setStatus(string strStatus)
         {
-            txtStatus.Text += "\r\n" + DateTime.Now.ToString("HH:mm:ss") + "    " + strStatus;
+            txtProcess.Text += "\r\n" + DateTime.Now.ToString("HH:mm:ss") + "    " + strStatus;
             //move the caret to the end of the text
-            txtStatus.SelectionStart = txtStatus.TextLength;
+            txtProcess.SelectionStart = txtProcess.TextLength;
             //scroll to the caret
-            txtStatus.ScrollToCaret();
+            txtProcess.ScrollToCaret();
         }
         #endregion
         #endregion

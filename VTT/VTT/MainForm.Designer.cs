@@ -82,6 +82,10 @@
             this.label10 = new System.Windows.Forms.Label();
             this.txtGhepDoSoLuong = new System.Windows.Forms.ComboBox();
             this.txtProcess = new System.Windows.Forms.TextBox();
+            this.grbQuayRuong = new System.Windows.Forms.GroupBox();
+            this.txtQuayRuongLoaiRuong = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnQuayRuong = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -96,6 +100,7 @@
             this.grbGhepNgocVuKhi.SuspendLayout();
             this.pageLevel.SuspendLayout();
             this.grbStatus.SuspendLayout();
+            this.grbQuayRuong.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -483,6 +488,7 @@
             // 
             // pageLinhThachVuKhi
             // 
+            this.pageLinhThachVuKhi.Controls.Add(this.grbQuayRuong);
             this.pageLinhThachVuKhi.Controls.Add(this.grbGhepNgocVuKhi);
             this.pageLinhThachVuKhi.Location = new System.Drawing.Point(4, 34);
             this.pageLinhThachVuKhi.Name = "pageLinhThachVuKhi";
@@ -645,6 +651,44 @@
             this.txtProcess.Size = new System.Drawing.Size(381, 281);
             this.txtProcess.TabIndex = 0;
             // 
+            // grbQuayRuong
+            // 
+            this.grbQuayRuong.Controls.Add(this.txtQuayRuongLoaiRuong);
+            this.grbQuayRuong.Controls.Add(this.label13);
+            this.grbQuayRuong.Controls.Add(this.btnQuayRuong);
+            this.grbQuayRuong.Location = new System.Drawing.Point(369, 6);
+            this.grbQuayRuong.Name = "grbQuayRuong";
+            this.grbQuayRuong.Size = new System.Drawing.Size(357, 105);
+            this.grbQuayRuong.TabIndex = 1;
+            this.grbQuayRuong.TabStop = false;
+            this.grbQuayRuong.Text = "Quay Rương";
+            // 
+            // txtQuayRuongLoaiRuong
+            // 
+            this.txtQuayRuongLoaiRuong.FormattingEnabled = true;
+            this.txtQuayRuongLoaiRuong.Location = new System.Drawing.Point(81, 44);
+            this.txtQuayRuongLoaiRuong.Name = "txtQuayRuongLoaiRuong";
+            this.txtQuayRuongLoaiRuong.Size = new System.Drawing.Size(100, 21);
+            this.txtQuayRuongLoaiRuong.TabIndex = 6;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 48);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 13);
+            this.label13.TabIndex = 4;
+            this.label13.Text = "Loại Rương";
+            // 
+            // btnQuayRuong
+            // 
+            this.btnQuayRuong.Location = new System.Drawing.Point(208, 34);
+            this.btnQuayRuong.Name = "btnQuayRuong";
+            this.btnQuayRuong.Size = new System.Drawing.Size(111, 40);
+            this.btnQuayRuong.TabIndex = 1;
+            this.btnQuayRuong.Text = "Quay Rương";
+            this.btnQuayRuong.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -677,6 +721,8 @@
             this.pageLevel.ResumeLayout(false);
             this.grbStatus.ResumeLayout(false);
             this.grbStatus.PerformLayout();
+            this.grbQuayRuong.ResumeLayout(false);
+            this.grbQuayRuong.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -737,6 +783,10 @@
         private System.Windows.Forms.ComboBox txtGhepDoSoLuong;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtProcess;
+        private System.Windows.Forms.GroupBox grbQuayRuong;
+        private System.Windows.Forms.ComboBox txtQuayRuongLoaiRuong;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnQuayRuong;
     }
 }
 

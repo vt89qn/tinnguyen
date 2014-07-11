@@ -24,6 +24,7 @@ namespace VTT
 
         Dictionary<string, object> dataLogin = null;
         Timer timerUpLevel = new Timer();
+        bool bErrorWhenUsingChest = false;
 
         int tower_achievement = 10;
         int tower_floor = 0;
@@ -67,6 +68,7 @@ namespace VTT
             this.btnGhepManhTuongTuDong.Click += (objs, obje) => { merge(); };
             this.btnGhepLinhThachVuKhi.Click += (objs, obje) => { forge(); };
             this.btnBanVuKhiLinhThach.Click += (objs, obje) => { sell(); };
+            this.btnQuayRuong.Click += (objs, obje) => { use_chest(); };
         }
         void btnBatDauUpLevel_Click(object sender, EventArgs e)
         {
@@ -97,6 +99,55 @@ namespace VTT
         }
 
         #region - METHOD -
+        #region - use_chest -
+        private void use_chest()
+        {
+            try
+            {
+                btnQuayRuong.Enabled = false;
+                setStatus("START : Quay rương");
+                bErrorWhenUsingChest = false;
+
+                Dictionary<string, object> chest = null;
+                foreach (Dictionary<string, object> item in dataLogin["owned_items"] as ArrayList)
+                {
+                    if (item["item_id"].ToString() == txtQuayRuongLoaiRuong.SelectedValue.ToString())
+                    {
+                        chest = item;
+                        break;
+                    }
+                }
+                while (!bErrorWhenUsingChest && chest != null)
+                {
+                    for (int iIndex = 0; iIndex < 5; iIndex++)
+                    {
+                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(use_chest)).Start(chest["id"]);
+                    }
+                    System.Threading.Thread.Sleep(300);
+                }
+            }
+            catch { }
+            finally
+            {
+                btnQuayRuong.Enabled = true;
+                setStatus("END : Quay rương");
+                writeGlobalInfo();
+            }
+        }
+
+        private void use_chest(object obj)
+        {
+            WebClientEx client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", authentication_token);
+            client.DoPost(param, "https://vtt-01.zoygame.com/owned_items/" + obj + "/use_chest");
+            if (string.IsNullOrEmpty(client.ResponseText) && client.Error != null)
+            {
+                bErrorWhenUsingChest = true;
+            }
+        }
+        #endregion
+
         #region - forge / sell -
 
         private void sell()
@@ -1041,6 +1092,19 @@ namespace VTT
                 txtGhepDoSoLuong.DisplayMember = "name";
                 txtGhepDoSoLuong.ValueMember = "id";
                 txtGhepDoSoLuong.SelectedIndex = 0;
+            }
+            {
+                DataTable dtData = new DataTable();
+                dtData.Columns.Add("id", typeof(string));
+                dtData.Columns.Add("name", typeof(string));
+                dtData.Rows.Add("chest_01", "Rương sắt");
+                dtData.Rows.Add("chest_02", "Rương đồng");
+                dtData.Rows.Add("chest_03", "Rương bạc");
+                dtData.Rows.Add("chest_04", "Rương vàng");
+                txtQuayRuongLoaiRuong.DataSource = dtData;
+                txtQuayRuongLoaiRuong.DisplayMember = "name";
+                txtQuayRuongLoaiRuong.ValueMember = "id";
+                txtQuayRuongLoaiRuong.SelectedIndex = 0;
             }
         }
 

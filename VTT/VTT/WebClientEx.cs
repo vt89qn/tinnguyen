@@ -89,7 +89,7 @@ public class WebClientEx : WebClient
     {
         return this.DoPost(parameters, strURL, null);
     }
-    public string DoPost(string parameters, string strURL, Dictionary<HttpRequestHeader, string> additionHeader)
+    public string DoPost(string parameters, string strURL, Dictionary<HttpRequestHeader, string> additionHeader, string Method)
     {
         try
         {
@@ -107,7 +107,7 @@ public class WebClientEx : WebClient
                     this.Headers.Add(item.Key, item.Value);
                 }
             }
-            ResponseText = this.UploadString(strURL, parameters);
+            ResponseText = this.UploadString(strURL, Method, parameters);
         }
         catch (Exception ex)
         {
@@ -117,7 +117,7 @@ public class WebClientEx : WebClient
     }
     public string DoPost(string parameters, string strURL)
     {
-        return this.DoPost(parameters, strURL, null);
+        return this.DoPost(parameters, strURL, null, "POST");
     }
     public string DoGet(string strURL, Dictionary<HttpRequestHeader, string> additionHeader)
     {

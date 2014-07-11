@@ -81,6 +81,7 @@
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.txtGhepDoSoLuong = new System.Windows.Forms.ComboBox();
+            this.txtProcess = new System.Windows.Forms.TextBox();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -594,6 +595,7 @@
             // 
             this.grbStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grbStatus.Controls.Add(this.txtProcess);
             this.grbStatus.Controls.Add(this.txtStatus);
             this.grbStatus.Location = new System.Drawing.Point(12, 243);
             this.grbStatus.Name = "grbStatus";
@@ -611,7 +613,7 @@
             this.txtStatus.Multiline = true;
             this.txtStatus.Name = "txtStatus";
             this.txtStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtStatus.Size = new System.Drawing.Size(748, 281);
+            this.txtStatus.Size = new System.Drawing.Size(361, 281);
             this.txtStatus.TabIndex = 0;
             // 
             // label10
@@ -630,6 +632,18 @@
             this.txtGhepDoSoLuong.Name = "txtGhepDoSoLuong";
             this.txtGhepDoSoLuong.Size = new System.Drawing.Size(100, 21);
             this.txtGhepDoSoLuong.TabIndex = 6;
+            // 
+            // txtProcess
+            // 
+            this.txtProcess.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtProcess.Location = new System.Drawing.Point(373, 19);
+            this.txtProcess.Multiline = true;
+            this.txtProcess.Name = "txtProcess";
+            this.txtProcess.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtProcess.Size = new System.Drawing.Size(381, 281);
+            this.txtProcess.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -722,6 +736,7 @@
         private System.Windows.Forms.ComboBox txtGhepDoCap;
         private System.Windows.Forms.ComboBox txtGhepDoSoLuong;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txtProcess;
     }
 }
 

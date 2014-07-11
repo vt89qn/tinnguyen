@@ -873,7 +873,12 @@ namespace VTT
                         {
                             if (item["name"].ToString() == strValue)
                             {
-                                txtDungQLCC_SoLuong.Text = item["quantity"].ToString();
+                                int soluong = Convert.ToInt32(item["quantity"]);
+                                if (soluong > 1)
+                                {
+                                    soluong--;
+                                }
+                                txtDungQLCC_SoLuong.Text = soluong.ToString();
                                 break;
                             }
                         }

@@ -874,7 +874,7 @@ namespace VTT
                             if (item["name"].ToString() == strValue)
                             {
                                 int soluong = Convert.ToInt32(item["quantity"]);
-                                if (soluong > 1)
+                                if (soluong > 0)
                                 {
                                     soluong--;
                                 }
@@ -889,7 +889,7 @@ namespace VTT
         }
 
         private void writeGlobalInfo()
-        {
+        {            
             setStatus("Quân Lệnh : " + current_defense_turn_count);
             setStatus("Cờ Chiến : " + attack_turn_count);
             setStatus("Đợt : " + current_wave);

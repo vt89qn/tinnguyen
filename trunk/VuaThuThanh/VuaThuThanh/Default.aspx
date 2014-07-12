@@ -21,6 +21,7 @@
                                 <Items>
                                     <ext:ListItem Text="Tin" Value="tin" />
                                     <ext:ListItem Text="Thi" Value="thi" />
+                                    <ext:ListItem Text="Pollus" Value="pollus" />
                                 </Items>
                                 <SelectedItems>
                                     <ext:ListItem Text="Tin" Value="tin" />

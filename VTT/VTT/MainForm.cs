@@ -177,7 +177,7 @@ namespace VTT
                     {
                         new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(use_chest)).Start(chest["id"]);
                     }
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(500);
                 }
             }
             catch { }
@@ -571,7 +571,7 @@ namespace VTT
             param.Add("escaped_enemies_count", "0");
             param.Add("killed_animal", current_wave == total_wave_count ? "0" : "1");
 
-            for (int iIndex = 0; iIndex < 5; iIndex++)
+            for (int iIndex = 0; iIndex < (current_wave >= total_wave_count ? 1 : 5); iIndex++)
             {
                 new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(finish_wave)).Start(param);
             }

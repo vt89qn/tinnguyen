@@ -17,7 +17,8 @@ namespace VuaThuThanh
     public partial class Default : System.Web.UI.Page
     {
         string profileJson = @"{'tin':{'access_token':'dm5pX3Rva2VuPTAuODE1NzM1MDAgMTQwMjM3NzkyMSsxNzk2NjIzMzgx','user_name':'vt89qn','user_id':'823493150','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vt89qn.png'}
-                              ,'thi':{'access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}}";
+                                ,'thi':{'access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}
+                                ,'pollus':{'access_token':'dm5pX3Rva2VuPTAuOTk0NTU0MDAgMTQwNTA5MDE3MCsxMDI1NzUyMjIw','user_name':'Pollus','user_id':'4615347','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pollus.png'}}";
         WebClientEx client = new WebClientEx();
         string authentication_token = string.Empty;
         string id = string.Empty;
@@ -33,7 +34,7 @@ namespace VuaThuThanh
         static System.Timers.Timer aTimer;
 
         string strLoginData = string.Empty;
-
+        static string strServer = "https://vtt-01.zoygame.com/";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -61,7 +62,12 @@ namespace VuaThuThanh
                 param.Add("user_id", dataProfile[strProfile]["user_id"]);
                 param.Add("user_status", dataProfile[strProfile]["user_status"]);
                 param.Add("avatar_img_link", dataProfile[strProfile]["avatar_img_link"]);
-                client.DoPost(param, "https://vtt-01.zoygame.com/players/sign_in");
+                
+                if (strProfile == "pollus")
+                {
+                    strServer = "https://vtt-23.playtato.com/";
+                }
+                client.DoPost(param, strServer + "players/sign_in");
 
                 if (client.ResponseText != null)
                 {
@@ -145,7 +151,7 @@ namespace VuaThuThanh
             client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", authentication_token);
-            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/defense_next_wave");
+            client.DoPost(param, strServer + "players/" + id + "/defense_next_wave");
             if (client.ResponseText != null)
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -180,7 +186,7 @@ namespace VuaThuThanh
         private void finish_wave(object param)
         {
             client = new WebClientEx();
-            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/players/" + id + "/finish_wave");
+            client.DoPost((NameValueCollection)param, strServer + "players/" + id + "/finish_wave");
             if (client.ResponseText != null)
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -195,7 +201,7 @@ namespace VuaThuThanh
             client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", authentication_token);
-            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/leave_defense_city");
+            client.DoPost(param, strServer + "players/" + id + "/leave_defense_city");
         }
 
         private void defense_city(string city_id, string star)
@@ -206,7 +212,7 @@ namespace VuaThuThanh
             param.Add("city_id", city_id);
             param.Add("star", star);
             param.Add("is_retrying", "0");
-            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/defense_city");
+            client.DoPost(param, strServer + "players/" + id + "/defense_city");
             if (client.ResponseText != null)
             {
                 chayQuanLenh();
@@ -227,7 +233,7 @@ namespace VuaThuThanh
                 client = new WebClientEx();
                 NameValueCollection param = new NameValueCollection();
                 param.Add("authentication_token", authentication_token);
-                client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/attack_next_tower_floor");
+                client.DoPost(param, strServer + "players/" + id + "/attack_next_tower_floor");
                 if (client.ResponseText != null)
                 {
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -238,7 +244,7 @@ namespace VuaThuThanh
                     param.Add("won_floor", bDone ? "0" : "1");
                     param.Add("floor_npc_id", rs["floor_npc_id"]);
                     string strRD = new Random().Next(1, 99).ToString();
-                    param.Add("remaining_hp", bDone ? "0" : tower_floor <= 25 ? ("5." + strRD) : ("82." + strRD));
+                    param.Add("remaining_hp", bDone ? "0" : tower_floor <= 40 ? ("5." + strRD) : ("82." + strRD));
 
                     for (int iIndex = 0; iIndex < 6; iIndex++)
                     {
@@ -247,7 +253,7 @@ namespace VuaThuThanh
 
                     System.Threading.Thread.Sleep(1000);
                     if (bDone) break;
-                    if (tower_achievement >= 295)
+                    if (tower_achievement >= 360)
                     {
                         bDone = true;
                     }
@@ -262,7 +268,7 @@ namespace VuaThuThanh
         private void finish_attack_tower(object param)
         {
             WebClientEx clientfat = new WebClientEx();
-            clientfat.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/players/" + id + "/finish_attack_tower");
+            clientfat.DoPost((NameValueCollection)param, strServer + "players/" + id + "/finish_attack_tower");
             if (clientfat.ResponseText != null)
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -310,7 +316,7 @@ namespace VuaThuThanh
                 param.Add("owned_item_id", item_id);
                 param.Add("quantity", islrequest.ToString());
                 param.Add("authentication_token", authentication_token);
-                client.DoPost(param, "https://vtt-01.zoygame.com/owned_items/use_item");
+                client.DoPost(param, strServer + "owned_items/use_item");
                 if (client.ResponseText != null)
                 {
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -355,7 +361,7 @@ namespace VuaThuThanh
             {
                 param.Add("formation[]", item["owned_officer_id"]);
             }
-            client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/attack_city");
+            client.DoPost(param, strServer + "players/" + id + "/attack_city");
             if (client.ResponseText != null)
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -368,7 +374,7 @@ namespace VuaThuThanh
                 client = new WebClientEx();
                 param = new NameValueCollection();
                 param.Add("authentication_token", authentication_token);
-                client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/won_attack_city");
+                client.DoPost(param, strServer + "players/" + id + "/won_attack_city");
                 if (client.ResponseText != null)
                 {
                     string capture_card_id = string.Empty;
@@ -419,7 +425,7 @@ namespace VuaThuThanh
                     param.Add("reward_type", "officer");
                     param.Add("game_mode", "attack");
                     param.Add("capture_card_id", capture_card_id);
-                    client.DoPost(param, "https://vtt-01.zoygame.com/players/" + id + "/retrieve_reward_for_last_won_battle");
+                    client.DoPost(param, strServer + "players/" + id + "/retrieve_reward_for_last_won_battle");
                     if (client.ResponseText != null)
                     {
                         setStatus("ĐÃ bắt được tướng");
@@ -482,7 +488,7 @@ namespace VuaThuThanh
         private void fire(object id)
         {
             WebClientEx we = new WebClientEx();
-            we.DoGet("https://vtt-01.zoygame.com/owned_officers/" + id + "/fire?authentication_token=" + authentication_token);
+            we.DoGet(strServer + "owned_officers/" + id + "/fire?authentication_token=" + authentication_token);
         }
         #endregion
 
@@ -562,7 +568,7 @@ namespace VuaThuThanh
 
         private void ghepManhTuong()
         {
-            for (int i = 2; i <= 3; i++)
+            for (int i = 1; i <= 4; i++)
             {
                 Dictionary<string, int> dicManhTuong = layDanhSachManhTuong(i);
 
@@ -570,7 +576,7 @@ namespace VuaThuThanh
                 while (iManhTuong == 5)
                 {
                     iManhTuong = 0;
-                    string strURL = "https://vtt-01.zoygame.com/owned_officer_souls/merge?authentication_token=" + authentication_token;
+                    string strURL = strServer + "owned_officer_souls/merge?authentication_token=" + authentication_token;
                     Dictionary<string, int> dicMT = new Dictionary<string, int>();
 
 
@@ -715,7 +721,7 @@ namespace VuaThuThanh
                 X.Msg.Alert("Vua thủ thành", "số lượng không hợp lệ").Show();
                 return;
             }
-            string strURL = "https://vtt-01.zoygame.com/owned_officer_souls/merge?authentication_token=" + authentication_token;
+            string strURL = strServer + "owned_officer_souls/merge?authentication_token=" + authentication_token;
             foreach (KeyValuePair<string, int> item in Session["mt"] as Dictionary<string, int>)
             {
                 for (int iIndex = 0; iIndex < item.Value; iIndex++)
@@ -769,14 +775,14 @@ namespace VuaThuThanh
                     strData += "&owned_item_ids%5B%5D=" + id;
                 }
                 client = new WebClientEx();
-                client.DoPost(strData, "https://vtt-01.zoygame.com/owned_items/sell");
+                client.DoPost(strData, strServer + "owned_items/sell");
             }
         }
 
         protected void btnGhepDo_Click(object sender, DirectEventArgs e)
         {
-            //banDo();
-            //return;
+            banDo();
+            return;
             txtStatus.Text = string.Empty;
             setStatus("START : Ghép đồ\n");
             readSession();
@@ -830,7 +836,7 @@ namespace VuaThuThanh
         private void forge(object param)
         {
             WebClientEx client = new WebClientEx();
-            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_items/forge");
+            client.DoPost((NameValueCollection)param, strServer + "owned_items/forge");
         }
         #endregion
 
@@ -871,7 +877,7 @@ namespace VuaThuThanh
                     }
                     if (component.ContainsKey("rank"))
                     {
-                        if (component["rank"] >= 4 || (component["rank"] < 4 && level > 1))
+                        if (component["rank"] >= 3 || (component["rank"] < 3 && level > 1))
                             bAllowUpLevel = true;
                     }
                 }
@@ -987,7 +993,7 @@ namespace VuaThuThanh
             WebClientEx client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
-            client.DoPost((NameValueCollection)param, "https://vtt-01.zoygame.com/owned_officers/" + id + "/level_up");
+            client.DoPost((NameValueCollection)param, strServer + "owned_officers/" + id + "/level_up");
         }
         #endregion
 

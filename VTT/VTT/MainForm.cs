@@ -56,7 +56,22 @@ namespace VTT
         void MainForm_Load(object sender, EventArgs e)
         {
             buildDefaultDataOnLoad();
-            //dataLogin = Utilities.DeSerializeObject("login.data");
+            this.Text = "Vua Thủ Thành - Profile [" + ConfigurationManager.AppSettings["login"] + "]";
+            this.trayIcon.Text = this.Text;
+            this.Resize += (objs, obje) =>
+            {
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    ShowInTaskbar = false;
+                    trayIcon.Visible = true;
+                }
+            };
+            this.trayIcon.MouseDoubleClick += (objs, obje) =>
+            {
+                ShowInTaskbar = true;
+                trayIcon.Visible = false;
+                WindowState = FormWindowState.Normal;
+            };
             this.btnLogin.Click += new EventHandler(btnLogin_Click);
             this.timerUpLevel.Enabled = false;
             this.timerUpLevel.Interval = 60000;

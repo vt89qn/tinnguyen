@@ -92,6 +92,10 @@
             this.txtProcess = new System.Windows.Forms.TextBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.pageChat = new System.Windows.Forms.TabPage();
+            this.btnSendChat = new System.Windows.Forms.Button();
+            this.txtInputChat = new System.Windows.Forms.TextBox();
+            this.txtChat = new System.Windows.Forms.TextBox();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -107,6 +111,7 @@
             this.grbGhepNgocVuKhi.SuspendLayout();
             this.pageLevel.SuspendLayout();
             this.grbStatus.SuspendLayout();
+            this.pageChat.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -119,6 +124,7 @@
             this.tabMain.Controls.Add(this.pageTuong);
             this.tabMain.Controls.Add(this.pageLinhThachVuKhi);
             this.tabMain.Controls.Add(this.pageLevel);
+            this.tabMain.Controls.Add(this.pageChat);
             this.tabMain.ItemSize = new System.Drawing.Size(100, 30);
             this.tabMain.Location = new System.Drawing.Point(12, 12);
             this.tabMain.Name = "tabMain";
@@ -732,6 +738,52 @@
             this.trayIcon.Text = "Vua Thủ Thành";
             this.trayIcon.Visible = true;
             // 
+            // pageChat
+            // 
+            this.pageChat.Controls.Add(this.btnSendChat);
+            this.pageChat.Controls.Add(this.txtInputChat);
+            this.pageChat.Controls.Add(this.txtChat);
+            this.pageChat.Location = new System.Drawing.Point(4, 34);
+            this.pageChat.Name = "pageChat";
+            this.pageChat.Size = new System.Drawing.Size(752, 187);
+            this.pageChat.TabIndex = 5;
+            this.pageChat.Text = "Chat";
+            this.pageChat.UseVisualStyleBackColor = true;
+            // 
+            // btnSendChat
+            // 
+            this.btnSendChat.Location = new System.Drawing.Point(650, 160);
+            this.btnSendChat.Name = "btnSendChat";
+            this.btnSendChat.Size = new System.Drawing.Size(99, 23);
+            this.btnSendChat.TabIndex = 6;
+            this.btnSendChat.Text = "Send";
+            this.btnSendChat.UseVisualStyleBackColor = true;
+            this.btnSendChat.Click += new System.EventHandler(this.btnSendChat_Click);
+            // 
+            // txtInputChat
+            // 
+            this.txtInputChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtInputChat.Location = new System.Drawing.Point(369, 3);
+            this.txtInputChat.Multiline = true;
+            this.txtInputChat.Name = "txtInputChat";
+            this.txtInputChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtInputChat.Size = new System.Drawing.Size(380, 151);
+            this.txtInputChat.TabIndex = 5;
+            // 
+            // txtChat
+            // 
+            this.txtChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtChat.Location = new System.Drawing.Point(3, 3);
+            this.txtChat.Multiline = true;
+            this.txtChat.Name = "txtChat";
+            this.txtChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtChat.Size = new System.Drawing.Size(360, 181);
+            this.txtChat.TabIndex = 4;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -768,6 +820,8 @@
             this.pageLevel.PerformLayout();
             this.grbStatus.ResumeLayout(false);
             this.grbStatus.PerformLayout();
+            this.pageChat.ResumeLayout(false);
+            this.pageChat.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -836,6 +890,10 @@
         private System.Windows.Forms.TextBox txtAuthenticationToken;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.TabPage pageChat;
+        private System.Windows.Forms.Button btnSendChat;
+        private System.Windows.Forms.TextBox txtInputChat;
+        private System.Windows.Forms.TextBox txtChat;
     }
 }
 

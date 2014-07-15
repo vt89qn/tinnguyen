@@ -18,14 +18,16 @@ namespace VTT
     public partial class MainForm : Form
     {
         #region - DECLARE -
-        string profileJson = @"{'tin':{'server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuODE1NzM1MDAgMTQwMjM3NzkyMSsxNzk2NjIzMzgx','user_name':'vt89qn','user_id':'823493150','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vt89qn.png'}
-                              ,'thi':{'server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}
-                              ,'lubo':{'server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTA0MTU0MDAgMTQwNDQ0MTg0NSsxNjE1Mjc3Njg2','user_name':'lubo6','user_id':'824338775','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/lubo6.png'}}";
+        string profileJson = @"{'tin':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuODE1NzM1MDAgMTQwMjM3NzkyMSsxNzk2NjIzMzgx','user_name':'vt89qn','user_id':'823493150','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vt89qn.png'}
+                                ,'thi':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}
+                                ,'lubo':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTA0MTU0MDAgMTQwNDQ0MTg0NSsxNjE1Mjc3Njg2','user_name':'lubo6','user_id':'824338775','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/lubo6.png'}
+                                ,'pollus':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTk0NTU0MDAgMTQwNTA5MDE3MCsxMDI1NzUyMjIw','user_name':'Pollus','user_id':'4615347','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pollus.png'}}";
 
         Dictionary<string, object> dataLogin = null;
         System.Windows.Forms.Timer timerUpLevel = new System.Windows.Forms.Timer();
         bool bErrorWhenUsingChest = false;
         string strServer = string.Empty;
+        string strChannel = string.Empty;
 
         int tower_achievement = 10;
         int tower_floor = 0;
@@ -41,6 +43,8 @@ namespace VTT
         private string city_id { get { return current_defense_battle != null ? current_defense_battle["city_id"].ToString() : "-1"; } }
 
         static System.Timers.Timer aTimer;
+
+        static System.Timers.Timer timeChat;
         #endregion
 
         #region - CONTRUCTOR -
@@ -1091,12 +1095,23 @@ namespace VTT
                 param.Add("user_status", (dataProfile[strProfile] as Dictionary<string, object>)["user_status"].ToString());
                 param.Add("avatar_img_link", (dataProfile[strProfile] as Dictionary<string, object>)["avatar_img_link"].ToString());
                 strServer = (dataProfile[strProfile] as Dictionary<string, object>)["server"].ToString();
+                strChannel = (dataProfile[strProfile] as Dictionary<string, object>)["channel"].ToString();
                 client.DoPost(param, strServer + "players/sign_in");
 
                 if (client.ResponseText != null)
                 {
                     dataLogin = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
                     Utilities.SerializeObject("login.data", dataLogin);
+
+                    // Create a timer with a one second interval.
+                    timeChat = new System.Timers.Timer(3000);
+
+                    // Hook up the Elapsed event for the timer.
+                    timeChat.Elapsed += new ElapsedEventHandler(chat);
+
+                    // Set the Interval
+                    timeChat.Enabled = true;
+
                     return true;
                 }
             }
@@ -1297,6 +1312,57 @@ namespace VTT
         }
         #endregion
 
+        private void btnSendChat_Click(object sender, EventArgs e)
+        {
+            if (txtInputChat.Text.Trim() != "")
+            {
+                WebClientEx client = new WebClientEx();
+                NameValueCollection param = new NameValueCollection();
+                param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
+                param.Add("event", "world_chat_event");
+                param.Add("message", txtInputChat.Text);
+                param.Add("channel", "vtt-23-service-channel");
+                client.DoPost((NameValueCollection)param, strServer + "chat/send_message");
+                txtInputChat.Text = "";
+                txtInputChat.Focus();
+            }
+        }
+        // Specify what you want to happen when the Elapsed event is  
+        // raised.         
+        protected void chat(object source, ElapsedEventArgs e)
+        {
+            WebClientEx client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
+            client.DoGet(strServer + "chat?authentication_token=" + txtAuthenticationToken.Text);
+            if (client.ResponseText != null && client.ResponseText != "")
+            {
+                string ms = "";
+                Dictionary<string, object> dicChat = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
+                if (dicChat.Count > 0 && dicChat.ContainsKey("chat_messages"))
+                {
+                    ArrayList messages = (ArrayList)dicChat["chat_messages"];
+                    if (messages.Count > 0)
+                    {
+                        for (int m = 0; m < messages.Count; m++)
+                        {
+                            Dictionary<string, object> msg = (Dictionary<string, object>)messages[m];
+                            if (msg.Count > 0)
+                            {
+                                ms += "\r\n" + Convert.ToDateTime(msg["created_at"]).ToString("yyyy-mm-dd HH:MM") + " " + msg["player"] + " " + msg["message"];
+                            }
+                        }
+                    }
+                }
+                this.Invoke((MethodInvoker)delegate
+                {
+                    txtChat.Text = ms;
+                    txtChat.SelectionStart = txtChat.TextLength;
+                    //scroll to the caret
+                    txtChat.ScrollToCaret();
+                });
+            }
+        }
         #endregion
     }
 }

@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabMain = new System.Windows.Forms.TabControl();
             this.pageLogin = new System.Windows.Forms.TabPage();
             this.btnLogin = new System.Windows.Forms.Button();
@@ -89,6 +91,7 @@
             this.grbStatus = new System.Windows.Forms.GroupBox();
             this.txtProcess = new System.Windows.Forms.TextBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -721,6 +724,14 @@
             this.txtStatus.Size = new System.Drawing.Size(361, 281);
             this.txtStatus.TabIndex = 0;
             // 
+            // trayIcon
+            // 
+            this.trayIcon.BalloonTipText = "Vua Thủ Thành";
+            this.trayIcon.BalloonTipTitle = "Vua Thủ Thành";
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+            this.trayIcon.Text = "Vua Thủ Thành";
+            this.trayIcon.Visible = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -728,6 +739,7 @@
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.grbStatus);
             this.Controls.Add(this.tabMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VTT";
@@ -823,6 +835,7 @@
         private System.Windows.Forms.Button btnUpLevelTheoDinhKy;
         private System.Windows.Forms.TextBox txtAuthenticationToken;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NotifyIcon trayIcon;
     }
 }
 

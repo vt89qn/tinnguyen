@@ -23,7 +23,8 @@ namespace VTT
                                 ,'lubo':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTA0MTU0MDAgMTQwNDQ0MTg0NSsxNjE1Mjc3Njg2','user_name':'lubo6','user_id':'824338775','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/lubo6.png'}
                                 ,'pollus':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTk0NTU0MDAgMTQwNTA5MDE3MCsxMDI1NzUyMjIw','user_name':'Pollus','user_id':'4615347','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pollus.png'}
                                 ,'sieunhon':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTM0NDI1MDAgMTQwNTMzMzMwMysxMzE5MzI5NDYy','user_name':'___Ctrl___','user_id':'4619700','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/___Ctrl___.png'}
-                                ,'doquyen':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNDAyMTgwMDAgMTQwNTU5MzEyNysxOTE2MTY4Mjk0','user_name':'vuathuthanh123','user_id':'824417918','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vuathuthanh123.png'}}";
+                                ,'doquyen':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNDAyMTgwMDAgMTQwNTU5MzEyNysxOTE2MTY4Mjk0','user_name':'vuathuthanh123','user_id':'824417918','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vuathuthanh123.png'}
+                                ,'badao':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuMjg4MDk2MDAgMTQwNTYwNzYwMSsxMDM4MDAwMjI2','user_name':'kj1q76','user_id':'824419684','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/kj1q76.png'}}";
 
         Dictionary<string, object> dataLogin = null;
         System.Windows.Forms.Timer timerUpLevel = new System.Windows.Forms.Timer();

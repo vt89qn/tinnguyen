@@ -21,7 +21,9 @@ namespace VTT
         string profileJson = @"{'tin':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuODE1NzM1MDAgMTQwMjM3NzkyMSsxNzk2NjIzMzgx','user_name':'vt89qn','user_id':'823493150','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vt89qn.png'}
                                 ,'thi':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}
                                 ,'lubo':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTA0MTU0MDAgMTQwNDQ0MTg0NSsxNjE1Mjc3Njg2','user_name':'lubo6','user_id':'824338775','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/lubo6.png'}
-                                ,'pollus':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTk0NTU0MDAgMTQwNTA5MDE3MCsxMDI1NzUyMjIw','user_name':'Pollus','user_id':'4615347','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pollus.png'}}";
+                                ,'pollus':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTk0NTU0MDAgMTQwNTA5MDE3MCsxMDI1NzUyMjIw','user_name':'Pollus','user_id':'4615347','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pollus.png'}
+                                ,'sieunhon':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTM0NDI1MDAgMTQwNTMzMzMwMysxMzE5MzI5NDYy','user_name':'___Ctrl___','user_id':'4619700','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/___Ctrl___.png'}
+                                ,'doquyen':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNDAyMTgwMDAgMTQwNTU5MzEyNysxOTE2MTY4Mjk0','user_name':'vuathuthanh123','user_id':'824417918','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vuathuthanh123.png'}}";
 
         Dictionary<string, object> dataLogin = null;
         System.Windows.Forms.Timer timerUpLevel = new System.Windows.Forms.Timer();
@@ -590,12 +592,12 @@ namespace VTT
             param.Add("escaped_enemies_count", "0");
             param.Add("killed_animal", current_wave == total_wave_count ? "0" : "1");
 
-            for (int iIndex = 0; iIndex < (current_wave >= total_wave_count ? 1 : 5); iIndex++)
+            for (int iIndex = 0; iIndex < (current_wave >= total_wave_count ? 1 : 1); iIndex++)
             {
                 new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(finish_wave)).Start(param);
             }
 
-            System.Threading.Thread.Sleep(1500);
+            System.Threading.Thread.Sleep(500);
 
             defense_next_wave();
         }
@@ -912,19 +914,33 @@ namespace VTT
         {
             List<string> listTuongUpLevelBangVang = ConfigurationManager.AppSettings["TuongUpLevelBangVang"].Split(',').ToList();
             List<Dictionary<string, object>> listTuongUp = new List<Dictionary<string, object>>();
+            List<string> lstHeroes = new List<string>();
             foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
             {
                 if (listTuongUpLevelBangVang.Contains(officer["officer_id"].ToString()))
                 {
                     listTuongUp.Add(officer);
+                    lstHeroes.Add(officer["id"].ToString());
                 }
             }
 
             if (listTuongUp.Count == 5)
             {
-                listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
-                System.Threading.Thread.Sleep(1500);
-                levelup(false);
+                int sogiogiam = Convert.ToInt16(txtSoGioGiam.Text);
+                for (int sl = 0; sl < sogiogiam; sl++)
+                {
+                    listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
+                    System.Threading.Thread.Sleep(1500);
+                    //levelup();
+                    for (int id = 0; id < lstHeroes.Count; id++)
+                    {
+                        levelup(lstHeroes[id]);
+                    }
+                    System.Threading.Thread.Sleep(1500);
+                }
+                //listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
+                //System.Threading.Thread.Sleep(1500);
+                //levelup(false);
             }
 
             {
@@ -1103,6 +1119,7 @@ namespace VTT
                     dataLogin = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
                     Utilities.SerializeObject("login.data", dataLogin);
 
+                    txtAuthenticationToken.Text = dataLogin["authentication_token"].ToString();
                     // Create a timer with a one second interval.
                     timeChat = new System.Timers.Timer(3000);
 
@@ -1110,7 +1127,7 @@ namespace VTT
                     timeChat.Elapsed += new ElapsedEventHandler(chat);
 
                     // Set the Interval
-                    timeChat.Enabled = true;
+                    timeChat.Enabled = false;
 
                     return true;
                 }
@@ -1321,7 +1338,7 @@ namespace VTT
                 param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
                 param.Add("event", "world_chat_event");
                 param.Add("message", txtInputChat.Text);
-                param.Add("channel", "vtt-23-service-channel");
+                param.Add("channel", strChannel + "-service-channel");
                 client.DoPost((NameValueCollection)param, strServer + "chat/send_message");
                 txtInputChat.Text = "";
                 txtInputChat.Focus();
@@ -1358,11 +1375,39 @@ namespace VTT
                 {
                     txtChat.Text = ms;
                     txtChat.SelectionStart = txtChat.TextLength;
-                    //scroll to the caret
-                    txtChat.ScrollToCaret();
+                    //scroll to the caret          
+                    if(txtChat.SelectedText.Length>0)
+                    { }
+                    else
+                    { txtChat.ScrollToCaret(); }                    
                 });
             }
         }
         #endregion
+
+        private void txtSoGioGiam_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                labTongSoVang.Text = (Convert.ToInt16(txtSoGioGiam.Text) * 9) + " vàng";
+            }
+            catch
+            {
+                labTongSoVang.Text = "";
+            }
+        }
+
+        private void btnEnableChat_Click(object sender, EventArgs e)
+        {
+            if (!timeChat.Enabled)
+            {
+                btnEnableChat.Text = "Dừng";
+            }
+            else
+            {
+                btnEnableChat.Text = "Bắt đầu";
+            }
+            timeChat.Enabled = !timeChat.Enabled;
+        }
     }
 }

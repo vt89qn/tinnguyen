@@ -117,3 +117,10 @@ TruongTiet,1,0,
 HuaNghi,3,1,1
 ChanPhi,4,1,1
 ThaiHoa,2,2,
+GiaCatTu,1,2,
+TruongOn,1,2,
+TonLuong,1,2,
+HanPhuc,2,2,
+DongTrieu,2,2,
+HaThuc,2,2,
+TanSuong,2,2,

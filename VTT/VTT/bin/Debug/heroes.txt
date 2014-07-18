@@ -116,3 +116,4 @@ TuTac,1,0,
 TruongTiet,1,0,
 HuaNghi,3,1,1
 ChanPhi,4,1,1
+ThaiHoa,2,2,

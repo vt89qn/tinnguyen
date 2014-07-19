@@ -24,7 +24,8 @@ namespace VTT
                                 ,'pollus':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTk0NTU0MDAgMTQwNTA5MDE3MCsxMDI1NzUyMjIw','user_name':'Pollus','user_id':'4615347','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pollus.png'}
                                 ,'sieunhon':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTM0NDI1MDAgMTQwNTMzMzMwMysxMzE5MzI5NDYy','user_name':'___Ctrl___','user_id':'4619700','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/___Ctrl___.png'}
                                 ,'doquyen':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNDAyMTgwMDAgMTQwNTU5MzEyNysxOTE2MTY4Mjk0','user_name':'vuathuthanh123','user_id':'824417918','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vuathuthanh123.png'}
-                                ,'badao':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuMjg4MDk2MDAgMTQwNTYwNzYwMSsxMDM4MDAwMjI2','user_name':'kj1q76','user_id':'824419684','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/kj1q76.png'}}";
+                                ,'badao':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuMjg4MDk2MDAgMTQwNTYwNzYwMSsxMDM4MDAwMjI2','user_name':'kj1q76','user_id':'824419684','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/kj1q76.png'}
+                                ,'tieuphuong':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuMDE4ODQ5MDAgMTQwNTUyMzYwNisxNjU5ODcxNjI2','user_name':'01699900661','user_id':'824413680','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/01699900661.png'}}";
 
         Dictionary<string, object> dataLogin = null;
         System.Windows.Forms.Timer timerUpLevel = new System.Windows.Forms.Timer();
@@ -350,7 +351,7 @@ namespace VTT
                 setStatus("START : Ghép mảnh tướng\n");
 
                 List<string> listManhTuongKhongGhep = ConfigurationManager.AppSettings["ManhTuongKhongGhep"].Split(',').ToList();
-                for (int i = 2; i <= 4; i++)
+                for (int i = 1; i <= 3; i++)
                 {
                     List<Dictionary<string, object>> dicManhTuong = layDanhSachManhTuong(i);
                     int iManhTuong = 5;
@@ -593,12 +594,12 @@ namespace VTT
             param.Add("escaped_enemies_count", "0");
             param.Add("killed_animal", current_wave == total_wave_count ? "0" : "1");
 
-            for (int iIndex = 0; iIndex < (current_wave >= total_wave_count ? 1 : 1); iIndex++)
+            for (int iIndex = 0; iIndex < (current_wave >= total_wave_count ? 1 : 5); iIndex++)
             {
                 new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(finish_wave)).Start(param);
             }
 
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(700);
 
             defense_next_wave();
         }
@@ -671,7 +672,7 @@ namespace VTT
                                 break;
                             }
                         }
-                        if (component.ContainsKey("rank") && (int)component["rank"] <= 2)
+                        if (component.ContainsKey("rank") && (int)component["rank"] <= 3)
                         {
                             bFire = true;
                         }
@@ -1008,7 +1009,7 @@ namespace VTT
             {
                 DateTime timeLevelup = DateTime.MaxValue;
                 int iLevel = 60;
-                int iRank = 3;
+                int iRank = 3;                
                 foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
                 {
                     if (component.ContainsKey("leveled_up_at"))
@@ -1263,8 +1264,10 @@ namespace VTT
             txtStatus.Text += "\r\nĐợt : " + current_wave;
             txtStatus.Text += "\r\n============Quân lệnh============";
             var t = dataLogin["owned_items"].GetType();
+            if (!dataLogin.ContainsKey("owned_items")) return;
             foreach (Dictionary<string, object> item in (dataLogin["owned_items"] as ArrayList))
             {
+                if (item == null) continue;
                 if (item["name"].ToString() == "defense_turn_count_restore_00")
                 {
                     txtStatus.Text += "\r\nQL sơn trại : " + item["quantity"];

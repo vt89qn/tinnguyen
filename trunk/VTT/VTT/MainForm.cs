@@ -12,6 +12,7 @@ using System.Collections;
 using System.IO;
 using System.Configuration;
 using System.Timers;
+using System.Net;
 
 namespace VTT
 {
@@ -41,11 +42,13 @@ namespace VTT
         private int current_defense_turn_count { get { return (int)dataLogin["current_defense_turn_count"]; } set { dataLogin["current_defense_turn_count"] = value; } }
 
         private Dictionary<string, object> current_defense_battle { get { return (Dictionary<string, object>)dataLogin["current_defense_battle"]; } set { dataLogin["current_defense_battle"] = value; } }
+        private ArrayList owned_officer_souls { get { return dataLogin["owned_officer_souls"] as ArrayList; } }
         private int current_wave { get { return current_defense_battle != null ? (int)current_defense_battle["current_wave"] + 1 : -1; } set { current_defense_battle["current_wave"] = value - 1; } }
         private int total_wave_count { get { return current_defense_battle != null ? (int)current_defense_battle["total_wave_count"] : -1; } }
         private int star { get { return current_defense_battle != null ? (int)current_defense_battle["star"] : -1; } }
         private string city_id { get { return current_defense_battle != null ? current_defense_battle["city_id"].ToString() : "-1"; } }
-
+        private int gold_balance { get { return (int)dataLogin["gold_balance"]; } set { dataLogin["gold_balance"] = value; } }
+        private int silver_balance { get { return (int)dataLogin["silver_balance"]; } set { dataLogin["silver_balance"] = value; } }
         static System.Timers.Timer aTimer;
 
         static System.Timers.Timer timeChat;
@@ -95,6 +98,7 @@ namespace VTT
             this.btnGhepLinhThachVuKhi.Click += (objs, obje) => { forge(); };
             this.btnBanVuKhiLinhThach.Click += (objs, obje) => { sell(); };
             this.btnQuayRuong.Click += (objs, obje) => { use_chest(); };
+            //this.btnDoiManhTuong5Sao.Click += (objs, obje) => { exchange(); };
         }
         void btnBatDauUpLevel_Click(object sender, EventArgs e)
         {
@@ -176,6 +180,91 @@ namespace VTT
         }
 
         #region - METHOD -
+        #region - exchange -
+        Dictionary<string, Dictionary<string, object>> dicDoiManh = new Dictionary<string, Dictionary<string, object>>();
+        private void exchange()
+        {
+            try
+            {
+                btnDoiManhTuong5Sao.Enabled = false;
+                setStatus("START : Đổi mảnh");
+                List<string> listDoiManh5Sao = ConfigurationManager.AppSettings["DoiManh5Sao"].Split(',').ToList();
+                dicDoiManh = new Dictionary<string, Dictionary<string, object>>();
+                foreach (string strTenTuong in listDoiManh5Sao)
+                {
+                    foreach (Dictionary<string, object> off in owned_officer_souls)
+                    {
+                        if (off["officer_id"].ToString() == strTenTuong
+                             && (int)off["quantity"] > 0)
+                        {
+                            dicDoiManh.Add(strTenTuong, off);
+                            break;
+                        }
+                    }
+                    if (!dicDoiManh.ContainsKey(strTenTuong))
+                    {
+                        setStatus("Tướng " + strTenTuong + " không có mảnh");
+                        return;
+                    }
+                }
+                for (int iIndex = 0; iIndex < int.Parse(txtDoiManh5SaoSoLuong.Text.Trim()); iIndex++)
+                {
+                    Dictionary<string, object> offRun = null;
+                    int iMaxManh = 0;
+                    foreach (KeyValuePair<string, Dictionary<string, object>> off in dicDoiManh)
+                    {
+                        if ((int)off.Value["quantity"] > iMaxManh)
+                        {
+                            iMaxManh = (int)off.Value["quantity"];
+                            offRun = off.Value;
+                        }
+                    }
+                    for (int iRun = 0; iRun < 4; iRun++)
+                    {
+                        new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(exchange)).Start(offRun);
+                    }
+                    System.Threading.Thread.Sleep(2000);
+                }
+            }
+            catch { }
+            finally
+            {
+                btnDoiManhTuong5Sao.Enabled = true;
+                setStatus("END : Đổi mảnh");
+                writeGlobalInfo();
+            }
+        }
+
+        private void exchange(object obj)
+        {
+            Dictionary<string, object> off = obj as Dictionary<string, object>;
+            WebClientEx client = new WebClientEx();
+            client.DoGet(strServer + "owned_officer_souls/exchange?owned_officer_soul_id=" + off["id"] + "&authentication_token=" + authentication_token);
+            if (!string.IsNullOrEmpty(client.ResponseText))
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                Dictionary<string, object> rs = serializer.Deserialize<Dictionary<string, object>>(client.ResponseText);
+                foreach (Dictionary<string, object> offrt in rs["affected_souls"] as ArrayList)
+                {
+                    if (offrt["officer_id"].ToString() == off["officer_id"].ToString() && (int)offrt["quantity"] < (int)off["quantity"])
+                    {
+                        off["quantity"] = offrt["quantity"];
+                    }
+                    else
+                    {
+                        if (dicDoiManh.ContainsKey(offrt["officer_id"].ToString()))
+                        {
+                            if ((int)dicDoiManh[offrt["officer_id"].ToString()]["quantity"] < (int)offrt["quantity"])
+                            {
+                                dicDoiManh[offrt["officer_id"].ToString()]["quantity"] = offrt["quantity"];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region - use_chest -
         private void use_chest()
         {
@@ -912,6 +1001,7 @@ namespace VTT
         #endregion
 
         #region - reduce_cooldown -
+        static int hours = 999;
         private void reduce_cooldown()
         {
             List<string> listTuongUpLevelBangVang = ConfigurationManager.AppSettings["TuongUpLevelBangVang"].Split(',').ToList();
@@ -921,24 +1011,65 @@ namespace VTT
             {
                 if (listTuongUpLevelBangVang.Contains(officer["officer_id"].ToString()))
                 {
-                    listTuongUp.Add(officer);
-                    lstHeroes.Add(officer["id"].ToString());
+                    int iLevel = 1;
+                    int iRank = 3;
+                    foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
+                    {                        
+                        if (component.ContainsKey("level"))
+                        {
+                            if (iLevel == 1)
+                            {
+                                iLevel = (int)component["level"];
+                            }
+
+                        }
+                        if (component.ContainsKey("rank"))
+                        {
+                            iRank = (int)component["rank"];
+                        }
+                    }
+                    if ((iRank == 5 && iLevel > 9) || (iRank < 5 && iLevel > 1))
+                    {
+                        listTuongUp.Add(officer);
+                        lstHeroes.Add(officer["id"].ToString());
+                    }
+
+                    //listTuongUp.Add(officer);
+                    //lstHeroes.Add(officer["id"].ToString());
                 }
             }
 
             if (listTuongUp.Count == 5)
             {
+                //for (int id = 0; id < lstHeroes.Count; id++)
+                //{
+                //    levelup(lstHeroes[id]);
+                //}
+                //System.Threading.Thread.Sleep(300);
+                foreach (Dictionary<string, object> hero in listTuongUp)
+                {
+                    levelup(hero);
+                }
+                System.Threading.Thread.Sleep(300);
+
                 int sogiogiam = Convert.ToInt16(txtSoGioGiam.Text);
                 for (int sl = 0; sl < sogiogiam; sl++)
                 {
+                    hours = (int)Math.Ceiling(getHoursReduceCooldown(lstHeroes));
+                    if (hours < 1 || hours > 100) hours = 1;
+                    sl += hours;
                     listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
-                    System.Threading.Thread.Sleep(1500);
+                    System.Threading.Thread.Sleep(500);
                     //levelup();
-                    for (int id = 0; id < lstHeroes.Count; id++)
+                    //for (int id = 0; id < lstHeroes.Count; id++)
+                    //{
+                    //    levelup(lstHeroes[id]);
+                    //}
+                    foreach (Dictionary<string, object> hero in listTuongUp)
                     {
-                        levelup(lstHeroes[id]);
+                        levelup(hero);
                     }
-                    System.Threading.Thread.Sleep(1500);
+                    System.Threading.Thread.Sleep(300);
                 }
                 //listTuongUp.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(reduce_cooldown)).Start(x); });
                 //System.Threading.Thread.Sleep(1500);
@@ -959,21 +1090,21 @@ namespace VTT
             WebClientEx client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", authentication_token);
-            param.Add("hours", "1");
+            param.Add("hours", hours.ToString());
             param.Add("cooldown_type", "LevelComp");
             param.Add("is_skill_2", "false");
             client.DoPost((NameValueCollection)param, strServer + "owned_officers/" + of["id"] + "/reduce_cooldown");
-            if (!string.IsNullOrEmpty(client.ResponseText))
-            {
-                Dictionary<string, object> dataRS = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
-                foreach (Dictionary<string, object> component in (of["components"] as ArrayList))
-                {
-                    if (component.ContainsKey("leveled_up_at"))
-                    {
-                        component["leveled_up_at"] = (dataRS["component_data"] as Dictionary<string, object>)["leveled_up_at"];
-                    }
-                }
-            }
+            //if (!string.IsNullOrEmpty(client.ResponseText))
+            //{
+            //    Dictionary<string, object> dataRS = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
+            //    foreach (Dictionary<string, object> component in (of["components"] as ArrayList))
+            //    {
+            //        if (component.ContainsKey("leveled_up_at"))
+            //        {
+            //            component["leveled_up_at"] = (dataRS["component_data"] as Dictionary<string, object>)["leveled_up_at"];
+            //        }
+            //    }
+            //}
         }
 
         private void unlock_stone_2(object officer)
@@ -1002,13 +1133,35 @@ namespace VTT
         #endregion
 
         #region - levelup -
+        private double getHoursReduceCooldown(List<string> lstHeroes)
+        {
+            double h = 999;
+            foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
+            {
+                if (!lstHeroes.Contains(officer["id"])) continue;
+                DateTime timeLevelup = DateTime.MaxValue;
+                foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
+                {
+                    if (component.ContainsKey("leveled_up_at"))
+                    {
+                        timeLevelup = new DateTime(1970, 1, 1).AddSeconds(Convert.ToDouble(component["leveled_up_at"])).AddHours(7).AddSeconds(Convert.ToDouble(component["cooldown_time_to_next_level"]));
+                        break;
+                    }
+                }
+                double hh = timeLevelup.Subtract(DateTime.Now).TotalHours;
+                if (h > hh) h = hh;
+
+            }
+            return h;
+        }       
+
         private void levelup(bool bRelogin)
         {
             List<Dictionary<string, object>> listTuongUp = new List<Dictionary<string, object>>();
             foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
             {
                 DateTime timeLevelup = DateTime.MaxValue;
-                int iLevel = 60;
+                int iLevel = 1;
                 int iRank = 3;                
                 foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
                 {
@@ -1018,19 +1171,27 @@ namespace VTT
                     }
                     if (component.ContainsKey("level"))
                     {
-                        iLevel = (int)component["level"];
+                        if (iLevel == 1)
+                        {
+                            iLevel = (int)component["level"];
+                        }
+                        
                     }
                     if (component.ContainsKey("rank"))
                     {
                         iRank = (int)component["rank"];
                     }
                 }
-                if (DateTime.Now <= timeLevelup || (iLevel < 50 && iRank < 3))
+                if (DateTime.Now <= timeLevelup)// || (iLevel < 50 && iRank < 3))
                 {
                 }
                 else
                 {
-                    listTuongUp.Add(officer);
+                    if (((iRank == 5 && iLevel > 9) || (iRank < 5 && iLevel > 1)) && iLevel < 100)
+                    {
+                        listTuongUp.Add(officer);
+                    }
+                    
                 }
 
             }
@@ -1079,7 +1240,7 @@ namespace VTT
             WebClientEx client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
             param.Add("authentication_token", txtAuthenticationToken.Text.Trim());
-            client.DoPost((NameValueCollection)param, strServer + "owned_officers/" + id + "/level_up");
+            client.DoPost((NameValueCollection)param, strServer + "owned_officers/" + id + "/level_up");            
         }
         #endregion
 
@@ -1252,6 +1413,25 @@ namespace VTT
                 txtQuayRuongLoaiRuong.ValueMember = "id";
                 txtQuayRuongLoaiRuong.SelectedIndex = 0;
             }
+            {
+                DataTable dtData = new DataTable();
+                dtData.Columns.Add("id", typeof(string));
+                dtData.Columns.Add("name", typeof(string));
+                dtData.Rows.Add("thunder_stone_05", "Thạch Lôi");
+                dtData.Rows.Add("wind_stone_05", "Thạch Phong");
+                dtData.Rows.Add("light_stone_05", "Thạch Quang");
+                dtData.Rows.Add("fire_stone_05", "Thạch Hỏa");
+                dtData.Rows.Add("poison_stone_05", "Thạch Độc");
+                dtData.Rows.Add("water_stone_05", "Thạch Thủy");
+                dtData.Rows.Add("sword_06", "Kiếm");
+                dtData.Rows.Add("spear_06", "Thương");
+                dtData.Rows.Add("bow_06", "Cung");
+                dtData.Rows.Add("fan_06", "Quạt");
+                cmbTenNgoc.DataSource = dtData;
+                cmbTenNgoc.DisplayMember = "name";
+                cmbTenNgoc.ValueMember = "id";
+                cmbTenNgoc.SelectedIndex = 0;
+            }
         }
 
         private void writeGlobalInfo()
@@ -1393,7 +1573,7 @@ namespace VTT
         {
             try
             {
-                labTongSoVang.Text = (Convert.ToInt16(txtSoGioGiam.Text) * 9) + " vàng";
+                labTongSoVang.Text = "= " + (Convert.ToInt16(txtSoGioGiam.Text) * 9) + " vàng";
             }
             catch
             {
@@ -1412,6 +1592,95 @@ namespace VTT
                 btnEnableChat.Text = "Bắt đầu";
             }
             timeChat.Enabled = !timeChat.Enabled;
+        }
+        string hero_id = "";
+        private void btnGanNgoc_Click(object sender, EventArgs e)
+        {
+            if (txtTenTuongGanNgoc.Text.Trim() != "")
+            {
+                setStatus("START : Gắn linh thạnh vào tướng \n");
+                
+                //get hero id
+                foreach (Dictionary<string, object> officer in (dataLogin["owned_officers"] as ArrayList))
+                {
+                    if (officer["officer_id"].ToString().Equals(txtTenTuongGanNgoc.Text.Trim()))
+                    {
+                        int iLevel = 1;
+                        int iRank = 3;
+                        foreach (Dictionary<string, object> component in (officer["components"] as ArrayList))
+                        {
+                            if (component.ContainsKey("level"))
+                            {
+                                if (iLevel == 1)
+                                {
+                                    iLevel = (int)component["level"];
+                                }
+
+                            }
+                            if (component.ContainsKey("rank"))
+                            {
+                                iRank = (int)component["rank"];
+                            }
+                        }
+                        if (iLevel > 50)
+                        {
+                            hero_id = officer["id"].ToString();
+                            break;
+                        }
+                    }
+                }                
+
+                //get store for equip
+                string item_id = cmbTenNgoc.SelectedValue.ToString();
+                int soluongngoc = Convert.ToInt16(txtSoLuongNgocGanVaoTuong.Text);                
+                List<Dictionary<string, object>> lstItems = new List<Dictionary<string, object>>();
+                Dictionary<string, object> storeOld = new Dictionary<string, object>();
+                foreach (Dictionary<string, object> item in dataLogin["owned_items"] as ArrayList)
+                {
+                    if (item["item_id"].ToString() == item_id && item["owned_officer_id"].ToString() == "")
+                    {
+                        lstItems.Add(item);
+                        if (lstItems.Count == soluongngoc) break;
+                    } 
+                }               
+
+                //equip
+                lstItems.ForEach(x => { new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(equip_store)).Start(x); });           
+
+                setStatus("END : Gắn linh thạnh vào tướng \n");
+            }
+        }
+
+        private void unequip_store(object item)
+        { 
+            Dictionary<string, object> it = item as Dictionary<string, object>;
+            WebClientEx client = new WebClientEx();
+            string strParameter = "authentication_token={0}";
+            strParameter = string.Format(strParameter, authentication_token);
+            client.DoPost(strParameter, strServer + "owned_items/" + it["id"] + "/unequip", null, "PUT");
+        }
+
+        private void equip_store(object item)
+        {            
+            Dictionary<string, object> it = item as Dictionary<string, object>;
+            WebClientEx client = new WebClientEx();
+            string strParameter = "owned_officer_id={0}&authentication_token={1}&old_owned_item_id={2}&slot_order={3}";
+            strParameter = string.Format(strParameter, hero_id, authentication_token, "", txtSlotNgoc.Text.ToString());
+            client.DoPost(strParameter, strServer + "owned_items/" + it["id"] + "/equip", null, "PUT");
+            //if (!string.IsNullOrEmpty(client.ResponseText))
+            //{
+            //    Dictionary<string, object> dataRS = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue }.Deserialize<Dictionary<string, object>>(client.ResponseText);
+            //    foreach (Dictionary<string, object> store in dataLogin["owned_items"] as ArrayList)
+            //    {
+            //        if (store["id"].ToString() == it["id"].ToString())
+            //        {
+            //            if (store.ContainsKey("owned_officer_id") && store["owned_officer_id"].ToString() == "")
+            //            {
+            //                store["owned_officer_id"] = hero_id;
+            //            }
+            //        }
+            //    }
+            //}
         }
     }
 }

@@ -58,6 +58,12 @@
             this.chkDanhLuotCuoi = new System.Windows.Forms.CheckBox();
             this.chkChayHetQL = new System.Windows.Forms.CheckBox();
             this.pageTuong = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cmbTenNgoc = new System.Windows.Forms.ComboBox();
+            this.txtTenTuongGanNgoc = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.btnGanNgoc = new System.Windows.Forms.Button();
             this.grbDuoiTuong = new System.Windows.Forms.GroupBox();
             this.txtSaThaiTuongLevel = new System.Windows.Forms.TextBox();
             this.txtSaThaiTuongRank = new System.Windows.Forms.TextBox();
@@ -83,19 +89,27 @@
             this.btnBanVuKhiLinhThach = new System.Windows.Forms.Button();
             this.btnGhepLinhThachVuKhi = new System.Windows.Forms.Button();
             this.pageLevel = new System.Windows.Forms.TabPage();
+            this.labTongSoVang = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtSoGioGiam = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtAuthenticationToken = new System.Windows.Forms.TextBox();
             this.btnGiamThoiGianCho = new System.Windows.Forms.Button();
             this.btnUpLevelTheoDinhKy = new System.Windows.Forms.Button();
             this.btnBatDauUpLevel = new System.Windows.Forms.Button();
+            this.pageChat = new System.Windows.Forms.TabPage();
+            this.btnEnableChat = new System.Windows.Forms.Button();
+            this.btnSendChat = new System.Windows.Forms.Button();
+            this.txtInputChat = new System.Windows.Forms.TextBox();
+            this.txtChat = new System.Windows.Forms.TextBox();
             this.grbStatus = new System.Windows.Forms.GroupBox();
             this.txtProcess = new System.Windows.Forms.TextBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.pageChat = new System.Windows.Forms.TabPage();
-            this.btnSendChat = new System.Windows.Forms.Button();
-            this.txtInputChat = new System.Windows.Forms.TextBox();
-            this.txtChat = new System.Windows.Forms.TextBox();
+            this.txtSoLuongNgocGanVaoTuong = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtSlotNgoc = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.tabMain.SuspendLayout();
             this.pageLogin.SuspendLayout();
             this.pageThanh.SuspendLayout();
@@ -104,14 +118,15 @@
             this.grbVuotAi.SuspendLayout();
             this.grbThuThanh.SuspendLayout();
             this.pageTuong.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.grbDuoiTuong.SuspendLayout();
             this.grbGhepManhTuong.SuspendLayout();
             this.pageLinhThachVuKhi.SuspendLayout();
             this.grbQuayRuong.SuspendLayout();
             this.grbGhepNgocVuKhi.SuspendLayout();
             this.pageLevel.SuspendLayout();
-            this.grbStatus.SuspendLayout();
             this.pageChat.SuspendLayout();
+            this.grbStatus.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -393,6 +408,7 @@
             // 
             // pageTuong
             // 
+            this.pageTuong.Controls.Add(this.groupBox1);
             this.pageTuong.Controls.Add(this.grbDuoiTuong);
             this.pageTuong.Controls.Add(this.grbGhepManhTuong);
             this.pageTuong.Location = new System.Drawing.Point(4, 34);
@@ -402,6 +418,67 @@
             this.pageTuong.TabIndex = 3;
             this.pageTuong.Text = "     Tướng     ";
             this.pageTuong.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.txtSlotNgoc);
+            this.groupBox1.Controls.Add(this.label22);
+            this.groupBox1.Controls.Add(this.txtSoLuongNgocGanVaoTuong);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.cmbTenNgoc);
+            this.groupBox1.Controls.Add(this.txtTenTuongGanNgoc);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.btnGanNgoc);
+            this.groupBox1.Location = new System.Drawing.Point(8, 86);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(350, 95);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Gắn ngọc";
+            // 
+            // cmbTenNgoc
+            // 
+            this.cmbTenNgoc.FormattingEnabled = true;
+            this.cmbTenNgoc.Location = new System.Drawing.Point(81, 41);
+            this.cmbTenNgoc.Name = "cmbTenNgoc";
+            this.cmbTenNgoc.Size = new System.Drawing.Size(100, 21);
+            this.cmbTenNgoc.TabIndex = 7;
+            // 
+            // txtTenTuongGanNgoc
+            // 
+            this.txtTenTuongGanNgoc.Location = new System.Drawing.Point(81, 17);
+            this.txtTenTuongGanNgoc.Name = "txtTenTuongGanNgoc";
+            this.txtTenTuongGanNgoc.Size = new System.Drawing.Size(100, 20);
+            this.txtTenTuongGanNgoc.TabIndex = 6;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 44);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(33, 13);
+            this.label14.TabIndex = 3;
+            this.label14.Text = "Ngọc";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 21);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(56, 13);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "Tên tướng";
+            // 
+            // btnGanNgoc
+            // 
+            this.btnGanNgoc.Location = new System.Drawing.Point(233, 19);
+            this.btnGanNgoc.Name = "btnGanNgoc";
+            this.btnGanNgoc.Size = new System.Drawing.Size(111, 40);
+            this.btnGanNgoc.TabIndex = 1;
+            this.btnGanNgoc.Text = "Gắn ngọc";
+            this.btnGanNgoc.UseVisualStyleBackColor = true;
+            this.btnGanNgoc.Click += new System.EventHandler(this.btnGanNgoc_Click);
             // 
             // grbDuoiTuong
             // 
@@ -636,6 +713,9 @@
             // 
             // pageLevel
             // 
+            this.pageLevel.Controls.Add(this.labTongSoVang);
+            this.pageLevel.Controls.Add(this.label12);
+            this.pageLevel.Controls.Add(this.txtSoGioGiam);
             this.pageLevel.Controls.Add(this.label11);
             this.pageLevel.Controls.Add(this.txtAuthenticationToken);
             this.pageLevel.Controls.Add(this.btnGiamThoiGianCho);
@@ -648,6 +728,31 @@
             this.pageLevel.TabIndex = 2;
             this.pageLevel.Text = "     Level     ";
             this.pageLevel.UseVisualStyleBackColor = true;
+            // 
+            // labTongSoVang
+            // 
+            this.labTongSoVang.AutoSize = true;
+            this.labTongSoVang.Location = new System.Drawing.Point(238, 76);
+            this.labTongSoVang.Name = "labTongSoVang";
+            this.labTongSoVang.Size = new System.Drawing.Size(0, 13);
+            this.labTongSoVang.TabIndex = 4;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(125, 52);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(62, 13);
+            this.label12.TabIndex = 6;
+            this.label12.Text = "Số giờ giảm";
+            // 
+            // txtSoGioGiam
+            // 
+            this.txtSoGioGiam.Location = new System.Drawing.Point(128, 72);
+            this.txtSoGioGiam.Name = "txtSoGioGiam";
+            this.txtSoGioGiam.Size = new System.Drawing.Size(104, 20);
+            this.txtSoGioGiam.TabIndex = 7;
+            this.txtSoGioGiam.TextChanged += new System.EventHandler(this.txtSoGioGiam_TextChanged);
             // 
             // label11
             // 
@@ -692,6 +797,63 @@
             this.btnBatDauUpLevel.TabIndex = 0;
             this.btnBatDauUpLevel.Text = "Bắt đầu";
             this.btnBatDauUpLevel.UseVisualStyleBackColor = true;
+            // 
+            // pageChat
+            // 
+            this.pageChat.Controls.Add(this.btnEnableChat);
+            this.pageChat.Controls.Add(this.btnSendChat);
+            this.pageChat.Controls.Add(this.txtInputChat);
+            this.pageChat.Controls.Add(this.txtChat);
+            this.pageChat.Location = new System.Drawing.Point(4, 34);
+            this.pageChat.Name = "pageChat";
+            this.pageChat.Size = new System.Drawing.Size(752, 187);
+            this.pageChat.TabIndex = 5;
+            this.pageChat.Text = "Chat";
+            this.pageChat.UseVisualStyleBackColor = true;
+            // 
+            // btnEnableChat
+            // 
+            this.btnEnableChat.Location = new System.Drawing.Point(569, 160);
+            this.btnEnableChat.Name = "btnEnableChat";
+            this.btnEnableChat.Size = new System.Drawing.Size(75, 23);
+            this.btnEnableChat.TabIndex = 7;
+            this.btnEnableChat.Text = "Bắt đầu";
+            this.btnEnableChat.UseVisualStyleBackColor = true;
+            this.btnEnableChat.Click += new System.EventHandler(this.btnEnableChat_Click);
+            // 
+            // btnSendChat
+            // 
+            this.btnSendChat.Location = new System.Drawing.Point(650, 160);
+            this.btnSendChat.Name = "btnSendChat";
+            this.btnSendChat.Size = new System.Drawing.Size(99, 23);
+            this.btnSendChat.TabIndex = 6;
+            this.btnSendChat.Text = "Send";
+            this.btnSendChat.UseVisualStyleBackColor = true;
+            this.btnSendChat.Click += new System.EventHandler(this.btnSendChat_Click);
+            // 
+            // txtInputChat
+            // 
+            this.txtInputChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtInputChat.Location = new System.Drawing.Point(369, 3);
+            this.txtInputChat.Multiline = true;
+            this.txtInputChat.Name = "txtInputChat";
+            this.txtInputChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtInputChat.Size = new System.Drawing.Size(380, 151);
+            this.txtInputChat.TabIndex = 5;
+            // 
+            // txtChat
+            // 
+            this.txtChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtChat.Location = new System.Drawing.Point(3, 3);
+            this.txtChat.Multiline = true;
+            this.txtChat.Name = "txtChat";
+            this.txtChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtChat.Size = new System.Drawing.Size(360, 181);
+            this.txtChat.TabIndex = 4;
             // 
             // grbStatus
             // 
@@ -738,51 +900,39 @@
             this.trayIcon.Text = "Vua Thủ Thành";
             this.trayIcon.Visible = true;
             // 
-            // pageChat
+            // txtSoLuongNgocGanVaoTuong
             // 
-            this.pageChat.Controls.Add(this.btnSendChat);
-            this.pageChat.Controls.Add(this.txtInputChat);
-            this.pageChat.Controls.Add(this.txtChat);
-            this.pageChat.Location = new System.Drawing.Point(4, 34);
-            this.pageChat.Name = "pageChat";
-            this.pageChat.Size = new System.Drawing.Size(752, 187);
-            this.pageChat.TabIndex = 5;
-            this.pageChat.Text = "Chat";
-            this.pageChat.UseVisualStyleBackColor = true;
+            this.txtSoLuongNgocGanVaoTuong.Location = new System.Drawing.Point(81, 68);
+            this.txtSoLuongNgocGanVaoTuong.Name = "txtSoLuongNgocGanVaoTuong";
+            this.txtSoLuongNgocGanVaoTuong.Size = new System.Drawing.Size(100, 20);
+            this.txtSoLuongNgocGanVaoTuong.TabIndex = 9;
+            this.txtSoLuongNgocGanVaoTuong.Text = "6";
             // 
-            // btnSendChat
+            // label16
             // 
-            this.btnSendChat.Location = new System.Drawing.Point(650, 160);
-            this.btnSendChat.Name = "btnSendChat";
-            this.btnSendChat.Size = new System.Drawing.Size(99, 23);
-            this.btnSendChat.TabIndex = 6;
-            this.btnSendChat.Text = "Send";
-            this.btnSendChat.UseVisualStyleBackColor = true;
-            this.btnSendChat.Click += new System.EventHandler(this.btnSendChat_Click);
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 72);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(49, 13);
+            this.label16.TabIndex = 8;
+            this.label16.Text = "Số lượng";
             // 
-            // txtInputChat
+            // txtSlotNgoc
             // 
-            this.txtInputChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtInputChat.Location = new System.Drawing.Point(369, 3);
-            this.txtInputChat.Multiline = true;
-            this.txtInputChat.Name = "txtInputChat";
-            this.txtInputChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInputChat.Size = new System.Drawing.Size(380, 151);
-            this.txtInputChat.TabIndex = 5;
+            this.txtSlotNgoc.Location = new System.Drawing.Point(233, 68);
+            this.txtSlotNgoc.Name = "txtSlotNgoc";
+            this.txtSlotNgoc.Size = new System.Drawing.Size(111, 20);
+            this.txtSlotNgoc.TabIndex = 11;
+            this.txtSlotNgoc.Text = "1";
             // 
-            // txtChat
+            // label22
             // 
-            this.txtChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtChat.Location = new System.Drawing.Point(3, 3);
-            this.txtChat.Multiline = true;
-            this.txtChat.Name = "txtChat";
-            this.txtChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChat.Size = new System.Drawing.Size(360, 181);
-            this.txtChat.TabIndex = 4;
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(189, 72);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(25, 13);
+            this.label22.TabIndex = 10;
+            this.label22.Text = "Slot";
             // 
             // MainForm
             // 
@@ -807,6 +957,8 @@
             this.grbThuThanh.ResumeLayout(false);
             this.grbThuThanh.PerformLayout();
             this.pageTuong.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.grbDuoiTuong.ResumeLayout(false);
             this.grbDuoiTuong.PerformLayout();
             this.grbGhepManhTuong.ResumeLayout(false);
@@ -818,10 +970,10 @@
             this.grbGhepNgocVuKhi.PerformLayout();
             this.pageLevel.ResumeLayout(false);
             this.pageLevel.PerformLayout();
-            this.grbStatus.ResumeLayout(false);
-            this.grbStatus.PerformLayout();
             this.pageChat.ResumeLayout(false);
             this.pageChat.PerformLayout();
+            this.grbStatus.ResumeLayout(false);
+            this.grbStatus.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -890,10 +1042,27 @@
         private System.Windows.Forms.TextBox txtAuthenticationToken;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.GroupBox grbDoiManhTuong5Sao;
+        private System.Windows.Forms.Button btnDoiManhTuong5Sao;
+        private System.Windows.Forms.TextBox txtDoiManh5SaoSoLuong;
+        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TabPage pageChat;
         private System.Windows.Forms.Button btnSendChat;
         private System.Windows.Forms.TextBox txtInputChat;
         private System.Windows.Forms.TextBox txtChat;
+        private System.Windows.Forms.Label labTongSoVang;        
+        private System.Windows.Forms.TextBox txtSoGioGiam;
+        private System.Windows.Forms.Button btnEnableChat;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ComboBox cmbTenNgoc;
+        private System.Windows.Forms.TextBox txtTenTuongGanNgoc;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button btnGanNgoc;
+        private System.Windows.Forms.TextBox txtSlotNgoc;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox txtSoLuongNgocGanVaoTuong;
+        private System.Windows.Forms.Label label16;
     }
 }
 

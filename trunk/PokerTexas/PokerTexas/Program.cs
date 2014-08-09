@@ -42,7 +42,7 @@ namespace PokerTexas
             catch { }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (DateTime.Today >= new DateTime(2014, 07, 01))
+            if (DateTime.Today >= new DateTime(2014, 09, 01))
             {
                 return;
             }

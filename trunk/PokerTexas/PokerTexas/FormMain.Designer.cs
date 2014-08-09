@@ -34,7 +34,7 @@
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.lblPack = new System.Windows.Forms.Label();
             this.groupMain = new System.Windows.Forms.GroupBox();
-            this.chkNhanThuong = new System.Windows.Forms.CheckBox();
+            this.chkNhanChip = new System.Windows.Forms.CheckBox();
             this.chkNhanCo4La = new System.Windows.Forms.CheckBox();
             this.btnNhanChipMayMan = new System.Windows.Forms.Button();
             this.btnThemPack = new System.Windows.Forms.Button();
@@ -58,6 +58,7 @@
             this.lblPackNhanThuong = new System.Windows.Forms.Label();
             this.txtLinkNhanThuong = new System.Windows.Forms.TextBox();
             this.lblLinhNhanThuong = new System.Windows.Forms.Label();
+            this.menuTuDongKetBan = new System.Windows.Forms.ToolStripMenuItem();
             this.groupMain.SuspendLayout();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
@@ -68,11 +69,11 @@
             // 
             // btnNhanThuongHangNgay
             // 
-            this.btnNhanThuongHangNgay.Location = new System.Drawing.Point(61, 103);
+            this.btnNhanThuongHangNgay.Location = new System.Drawing.Point(61, 46);
             this.btnNhanThuongHangNgay.Name = "btnNhanThuongHangNgay";
             this.btnNhanThuongHangNgay.Size = new System.Drawing.Size(84, 23);
-            this.btnNhanThuongHangNgay.TabIndex = 1;
-            this.btnNhanThuongHangNgay.Text = "Nhận Thưởng Hằng Ngày";
+            this.btnNhanThuongHangNgay.TabIndex = 3;
+            this.btnNhanThuongHangNgay.Text = "NTHN(F1)";
             this.btnNhanThuongHangNgay.UseVisualStyleBackColor = true;
             this.btnNhanThuongHangNgay.Click += new System.EventHandler(this.btnNhanThuongHangNgay_Click);
             // 
@@ -80,24 +81,24 @@
             // 
             this.txtPackNo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtPackNo.FormattingEnabled = true;
-            this.txtPackNo.Location = new System.Drawing.Point(61, 19);
+            this.txtPackNo.Location = new System.Drawing.Point(65, 19);
             this.txtPackNo.Name = "txtPackNo";
-            this.txtPackNo.Size = new System.Drawing.Size(101, 21);
-            this.txtPackNo.TabIndex = 0;
+            this.txtPackNo.Size = new System.Drawing.Size(89, 21);
+            this.txtPackNo.TabIndex = 1;
             this.txtPackNo.SelectedIndexChanged += new System.EventHandler(this.txtPackNo_SelectedIndexChanged);
             // 
             // lblPack
             // 
             this.lblPack.AutoSize = true;
-            this.lblPack.Location = new System.Drawing.Point(7, 22);
+            this.lblPack.Location = new System.Drawing.Point(-4, 22);
             this.lblPack.Name = "lblPack";
-            this.lblPack.Size = new System.Drawing.Size(52, 13);
-            this.lblPack.TabIndex = 3;
-            this.lblPack.Text = "Pack No.";
+            this.lblPack.Size = new System.Drawing.Size(70, 13);
+            this.lblPack.TabIndex = 0;
+            this.lblPack.Text = "Pack No.(F4)";
             // 
             // groupMain
             // 
-            this.groupMain.Controls.Add(this.chkNhanThuong);
+            this.groupMain.Controls.Add(this.chkNhanChip);
             this.groupMain.Controls.Add(this.chkNhanCo4La);
             this.groupMain.Controls.Add(this.txtPackNo);
             this.groupMain.Controls.Add(this.btnNhanChipMayMan);
@@ -115,31 +116,31 @@
             this.groupMain.TabStop = false;
             this.groupMain.Text = "Bảng Điều Khiển";
             // 
-            // chkNhanThuong
+            // chkNhanChip
             // 
-            this.chkNhanThuong.AutoSize = true;
-            this.chkNhanThuong.Location = new System.Drawing.Point(40, 108);
-            this.chkNhanThuong.Name = "chkNhanThuong";
-            this.chkNhanThuong.Size = new System.Drawing.Size(15, 14);
-            this.chkNhanThuong.TabIndex = 6;
-            this.chkNhanThuong.UseVisualStyleBackColor = true;
+            this.chkNhanChip.AutoSize = true;
+            this.chkNhanChip.Location = new System.Drawing.Point(40, 80);
+            this.chkNhanChip.Name = "chkNhanChip";
+            this.chkNhanChip.Size = new System.Drawing.Size(15, 14);
+            this.chkNhanChip.TabIndex = 3;
+            this.chkNhanChip.UseVisualStyleBackColor = true;
             // 
             // chkNhanCo4La
             // 
             this.chkNhanCo4La.AutoSize = true;
-            this.chkNhanCo4La.Location = new System.Drawing.Point(40, 79);
+            this.chkNhanCo4La.Location = new System.Drawing.Point(40, 108);
             this.chkNhanCo4La.Name = "chkNhanCo4La";
             this.chkNhanCo4La.Size = new System.Drawing.Size(15, 14);
-            this.chkNhanCo4La.TabIndex = 6;
+            this.chkNhanCo4La.TabIndex = 5;
             this.chkNhanCo4La.UseVisualStyleBackColor = true;
             // 
             // btnNhanChipMayMan
             // 
-            this.btnNhanChipMayMan.Location = new System.Drawing.Point(61, 46);
+            this.btnNhanChipMayMan.Location = new System.Drawing.Point(61, 75);
             this.btnNhanChipMayMan.Name = "btnNhanChipMayMan";
             this.btnNhanChipMayMan.Size = new System.Drawing.Size(84, 23);
-            this.btnNhanChipMayMan.TabIndex = 2;
-            this.btnNhanChipMayMan.Text = "Nhận Chip May Mắn";
+            this.btnNhanChipMayMan.TabIndex = 4;
+            this.btnNhanChipMayMan.Text = "NCMM(F2)";
             this.btnNhanChipMayMan.UseVisualStyleBackColor = true;
             this.btnNhanChipMayMan.Click += new System.EventHandler(this.btnNhanChipMayMan_Click);
             // 
@@ -148,7 +149,7 @@
             this.btnThemPack.Location = new System.Drawing.Point(168, 18);
             this.btnThemPack.Name = "btnThemPack";
             this.btnThemPack.Size = new System.Drawing.Size(79, 23);
-            this.btnThemPack.TabIndex = 5;
+            this.btnThemPack.TabIndex = 2;
             this.btnThemPack.Text = "Thêm Pack";
             this.btnThemPack.UseVisualStyleBackColor = true;
             this.btnThemPack.Click += new System.EventHandler(this.btnThemPack_Click);
@@ -186,11 +187,11 @@
             // 
             // btnTangCo4La
             // 
-            this.btnTangCo4La.Location = new System.Drawing.Point(61, 75);
+            this.btnTangCo4La.Location = new System.Drawing.Point(61, 104);
             this.btnTangCo4La.Name = "btnTangCo4La";
             this.btnTangCo4La.Size = new System.Drawing.Size(84, 23);
-            this.btnTangCo4La.TabIndex = 1;
-            this.btnTangCo4La.Text = "Nhận Cỏ 4 Lá";
+            this.btnTangCo4La.TabIndex = 6;
+            this.btnTangCo4La.Text = "NC4L(F3)";
             this.btnTangCo4La.UseVisualStyleBackColor = true;
             this.btnTangCo4La.Click += new System.EventHandler(this.btnTangCo4La_Click);
             // 
@@ -202,10 +203,10 @@
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Location = new System.Drawing.Point(12, 157);
             this.groupData.Name = "groupData";
-            this.groupData.Size = new System.Drawing.Size(542, 262);
-            this.groupData.TabIndex = 1;
+            this.groupData.Size = new System.Drawing.Size(542, 276);
+            this.groupData.TabIndex = 2;
             this.groupData.TabStop = false;
-            this.groupData.Text = "Tài Khoản Trong Pack";
+            this.groupData.Text = "Tài Khoản Trong Pack(F5 Show hide)";
             // 
             // gridData
             // 
@@ -219,22 +220,24 @@
             this.gridData.Location = new System.Drawing.Point(6, 19);
             this.gridData.Name = "gridData";
             this.gridData.ReadOnly = true;
-            this.gridData.Size = new System.Drawing.Size(530, 237);
+            this.gridData.Size = new System.Drawing.Size(530, 251);
             this.gridData.TabIndex = 0;
+            this.gridData.Visible = false;
             this.gridData.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridData_CellDoubleClick);
             this.gridData.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridData_CellMouseDown);
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuCopyFacebookCookie});
+            this.menuCopyFacebookCookie,
+            this.menuTuDongKetBan});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 70);
             // 
             // menuCopyFacebookCookie
             // 
             this.menuCopyFacebookCookie.Name = "menuCopyFacebookCookie";
-            this.menuCopyFacebookCookie.Size = new System.Drawing.Size(196, 22);
+            this.menuCopyFacebookCookie.Size = new System.Drawing.Size(226, 22);
             this.menuCopyFacebookCookie.Text = "Copy Facebook Cookie";
             this.menuCopyFacebookCookie.Click += new System.EventHandler(this.menuCopyFacebookCookie_Click);
             // 
@@ -246,7 +249,7 @@
             this.groupCaptcha.Location = new System.Drawing.Point(276, 16);
             this.groupCaptcha.Name = "groupCaptcha";
             this.groupCaptcha.Size = new System.Drawing.Size(284, 98);
-            this.groupCaptcha.TabIndex = 2;
+            this.groupCaptcha.TabIndex = 1;
             this.groupCaptcha.TabStop = false;
             this.groupCaptcha.Text = "Nhập Captcha";
             this.groupCaptcha.Visible = false;
@@ -354,11 +357,18 @@
             this.lblLinhNhanThuong.Text = "Link";
             this.lblLinhNhanThuong.Visible = false;
             // 
+            // menuTuDongKetBan
+            // 
+            this.menuTuDongKetBan.Name = "menuTuDongKetBan";
+            this.menuTuDongKetBan.Size = new System.Drawing.Size(226, 22);
+            this.menuTuDongKetBan.Text = "Tự Động Kết Bạn Trong Pack";
+            this.menuTuDongKetBan.Click += new System.EventHandler(this.menuTuDongKetBan_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(566, 431);
+            this.ClientSize = new System.Drawing.Size(566, 445);
             this.Controls.Add(this.txtLinkNhanThuong);
             this.Controls.Add(this.lblPackNhanThuong);
             this.Controls.Add(this.lblLinhNhanThuong);
@@ -371,6 +381,7 @@
             this.Controls.Add(this.groupData);
             this.Controls.Add(this.groupMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "FormMain";
             this.Text = "PTV Nuker - Tinnv@VNIT Solutions";
             this.groupMain.ResumeLayout(false);
@@ -412,10 +423,11 @@
         private System.Windows.Forms.Label lblPackNhanThuong;
         private System.Windows.Forms.TextBox txtLinkNhanThuong;
         private System.Windows.Forms.Label lblLinhNhanThuong;
-        private System.Windows.Forms.CheckBox chkNhanThuong;
+        private System.Windows.Forms.CheckBox chkNhanChip;
         private System.Windows.Forms.CheckBox chkNhanCo4La;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem menuCopyFacebookCookie;
+        private System.Windows.Forms.ToolStripMenuItem menuTuDongKetBan;
     }
 }
 

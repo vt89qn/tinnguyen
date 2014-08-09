@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Net;
 using TableConstants;
+using System.Diagnostics;
 
 namespace PokerTexas
 {
@@ -41,7 +42,7 @@ namespace PokerTexas
                 }
                 if (System.Configuration.ConfigurationSettings.AppSettings["CheckNhanThuong"].Trim() != "0")
                 {
-                    chkNhanThuong.Checked = true;
+                    chkNhanChip.Checked = true;
                 }
                 getAndBuildPackNo();
                 timerRefreshGrid.Enabled = false;
@@ -50,6 +51,7 @@ namespace PokerTexas
                 {
                     //gridData.Refresh();
                 };
+                this.FormClosing += (objs, obje) => { Process.GetCurrentProcess().Kill(); };
                 timerNhanThuongFanNhom.Enabled = false;
                 timerNhanThuongFanNhom.Interval = 100;
                 timerNhanThuongFanNhom.Tick += (objs, obje) =>
@@ -169,16 +171,10 @@ namespace PokerTexas
             }
             timerRefreshGrid.Enabled = false;
             groupMain.Enabled = true;
-
-            if (chkNhanThuong.Checked)
-            {
-                for (int iCount = 1; iCount < 100; iCount++)
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(100);
-                }
-                btnNhanThuongHangNgay_Click(null, null);
-            }
+            System.Threading.Thread.Sleep(20000);
+            Console.Beep();
+            System.Threading.Thread.Sleep(1000);
+            Console.Beep();
         }
         void btnNhanChipMayMan_Click(object sender, EventArgs e)
         {
@@ -364,6 +360,16 @@ namespace PokerTexas
             }
             timerRefreshGrid.Enabled = false;
             groupMain.Enabled = true;
+
+            if (chkNhanChip.Checked)
+            {
+                for (int iCount = 1; iCount < 100; iCount++)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(100);
+                }
+                btnNhanChipMayMan_Click(null, null);
+            }
         }
         void btnThemTaiKhoan_Click(object sender, EventArgs e)
         {
@@ -581,6 +587,156 @@ namespace PokerTexas
             {
             }
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.F1 && btnNhanThuongHangNgay.Enabled)
+            {
+                btnNhanThuongHangNgay_Click(null, null);
+                return true;
+            }
+            if (keyData == Keys.F2 && btnNhanChipMayMan.Enabled)
+            {
+                btnNhanChipMayMan_Click(null, null);
+                return true;
+            }
+            if (keyData == Keys.F3 && btnTangCo4La.Enabled)
+            {
+                btnTangCo4La_Click(null, null);
+                return true;
+            }
+            if (keyData == Keys.F4 && btnTangCo4La.Enabled)
+            {
+                try
+                {
+                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                }
+                catch { }
+                return true;
+            }
+            if (keyData == Keys.F5)
+            {
+                gridData.Visible = !gridData.Visible;
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void gridData_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            try
+            {
+                if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+                {
+                    gridData.ClearSelection();
+                    gridData.Rows[gridData.CurrentCell.RowIndex].Selected = true;
+                }
+            }
+            catch { }
+        }
+
+        private void menuTuDongKetBan_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                List<Poker> listPoker = new List<Poker>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (gridData.Rows[iIndex].DataBoundItem is Poker)
+                    {
+                        Poker poker = gridData.Rows[iIndex].DataBoundItem as Poker;
+                        listPoker.Add(poker);
+                    }
+                }
+                while (listPoker.Count > 1)
+                {
+                    Poker pokerSource = listPoker[0];
+                    if (pokerSource.RowData[M_AccountConst.CookieFB] is byte[])
+                    { //
+                        object objCookie = new Serializer().ConvertBlobToObject(pokerSource.RowData[M_AccountConst.CookieFB] as byte[]);
+                        if (objCookie is CookieContainer)
+                        {
+                            WebClientEx clientSource = new WebClientEx();
+                            clientSource.CookieContainer = objCookie as CookieContainer;
+                            NameValueCollection param = new NameValueCollection();
+                            clientSource.DoGet("https://www.facebook.com/friends/requests/?fcref=ff");
+                            string fb_dtsg = string.Empty;
+                            if (!string.IsNullOrEmpty(clientSource.ResponseText))
+                            {
+                                fb_dtsg = Regex.Match(clientSource.ResponseText, "name=\"fb_dtsg\" value=\"(?<val>[^\"]+)\"").Groups["val"].Value;
+                            }
+                            for (int iIndex = 1; iIndex < listPoker.Count; iIndex++)
+                            {
+                                Poker pokerDes = listPoker[iIndex];
+                                param = new NameValueCollection();
+                                param.Add("to_friend", pokerDes.RowData[M_AccountConst.FaceBookID].ToString());
+                                param.Add("action", "add_friend");
+                                param.Add("how_found", "requests_page_pymk");
+                                param.Add("ref_param", "none");
+                                param.Add("outgoing_id", "");
+                                param.Add("logging_location", "friend_browser");
+                                param.Add("no_flyout_on_click", "true");
+                                param.Add("ego_log_data", "");
+                                param.Add("http_referer", "");
+                                param.Add("__user", pokerSource.RowData[M_AccountConst.FaceBookID].ToString());
+                                param.Add("__a", "1");
+                                param.Add("__dyn", "");
+                                param.Add("__req", "8");
+                                param.Add("fb_dtsg", fb_dtsg);
+                                param.Add("ttstamp", "2658169681211128611798985373");
+                                param.Add("__rev", "1342410");
+                                Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
+                                dicHeader.Add(HttpRequestHeader.Referer, "https://www.facebook.com/friends/requests/?fcref=ff");
+                                clientSource.DoPost(param, "https://www.facebook.com/ajax/add_friend/action.php", dicHeader);
+                                System.Threading.Thread.Sleep(5000);
+                            }
+                            for (int iIndex = 1; iIndex < listPoker.Count; iIndex++)
+                            {
+                                Poker pokerDes = listPoker[iIndex];
+                                WebClientEx clientDes = new WebClientEx();
+                                if (pokerDes.RowData[M_AccountConst.CookieFB] is byte[])
+                                { //
+                                    objCookie = new Serializer().ConvertBlobToObject(pokerDes.RowData[M_AccountConst.CookieFB] as byte[]);
+                                    if (objCookie is CookieContainer)
+                                    {
+                                        clientDes.CookieContainer = objCookie as CookieContainer;
+                                        clientDes.DoGet("https://www.facebook.com/friends/requests/?fcref=ff");
+                                        fb_dtsg = string.Empty;
+                                        if (!string.IsNullOrEmpty(clientDes.ResponseText))
+                                        {
+                                            fb_dtsg = Regex.Match(clientDes.ResponseText, "name=\"fb_dtsg\" value=\"(?<val>[^\"]+)\"").Groups["val"].Value;
+
+                                            param = new NameValueCollection();
+                                            param.Add("to_friend", pokerSource.RowData[M_AccountConst.FaceBookID].ToString());
+                                            param.Add("action", "confirm");
+                                            param.Add("ref_param", "/profile.php");
+                                            param.Add("fref", "/reqs.php");
+                                            param.Add("nctr[_mod]", "pagelet_timeline_profile_actions");
+                                            param.Add("__user", pokerDes.RowData[M_AccountConst.FaceBookID].ToString());
+                                            param.Add("__a", "1");
+                                            param.Add("__dyn", "");
+                                            param.Add("__req", "c");
+                                            param.Add("fb_dtsg", fb_dtsg);
+                                            param.Add("ttstamp", "2658169681211128611798985373");
+                                            param.Add("__rev", "1342410");
+                                            Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
+                                            dicHeader.Add(HttpRequestHeader.Referer, "https://www.facebook.com/friends/requests/?fcref=ff");
+                                            clientDes.DoPost(param, "https://www.facebook.com/ajax/add_friend/action.php", dicHeader);
+                                            System.Threading.Thread.Sleep(1000);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    listPoker.Remove(pokerSource);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
         #endregion
         #region - METHOD -
         private void getAccountOfPack(string strPackNo)
@@ -738,17 +894,6 @@ namespace PokerTexas
         }
         #endregion
 
-        private void gridData_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            try
-            {
-                if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
-                {
-                    gridData.ClearSelection();
-                    gridData.Rows[gridData.CurrentCell.RowIndex].Selected = true;
-                }
-            }
-            catch { }
-        }
+
     }
 }

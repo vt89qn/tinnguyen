@@ -19,6 +19,7 @@ namespace VTT
     public partial class MainForm : Form
     {
         #region - DECLARE -
+        //Host: vtt-hq.v2.zoygame.com
         string profileJson = @"{'tin':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuODE1NzM1MDAgMTQwMjM3NzkyMSsxNzk2NjIzMzgx','user_name':'vt89qn','user_id':'823493150','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/vt89qn.png'}
                                 ,'thi':{'channel':'vtt-01','server':'https://vtt-01.zoygame.com/','access_token':'dm5pX3Rva2VuPTAuNTMwOTg3MDAgMTQwMjMxMDk5MSs3NDc4MTU2NjA=','user_name':'Pole','user_id':'91031','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/Pole.png'}
                                 ,'lubo':{'channel':'vtt-23','server':'https://vtt-23.playtato.com/','access_token':'dm5pX3Rva2VuPTAuOTA0MTU0MDAgMTQwNDQ0MTg0NSsxNjE1Mjc3Njg2','user_name':'lubo6','user_id':'824338775','user_status':'1','avatar_img_link':'http://avatar.my.soha.vn/80/lubo6.png'}
@@ -52,6 +53,8 @@ namespace VTT
         static System.Timers.Timer aTimer;
 
         static System.Timers.Timer timeChat;
+
+        string user_id = "";
         #endregion
 
         #region - CONTRUCTOR -
@@ -824,6 +827,7 @@ namespace VTT
 
                     System.Threading.Thread.Sleep(500);
                     NameValueCollection param = new NameValueCollection();
+                    //param.Add("authentication_token", authentication_token);
                     param.Add("authentication_token", authentication_token);
                     for (int iIndex = 0; iIndex < 5; iIndex++)
                     {
@@ -1187,7 +1191,7 @@ namespace VTT
                 }
                 else
                 {
-                    if (((iRank == 5 && iLevel > 9) || (iRank < 5 && iLevel > 1)) && iLevel < 100)
+                    if (((iRank == 5 && iLevel > 9) || (iRank < 5 && iLevel > 1)) && iLevel < 120)
                     {
                         listTuongUp.Add(officer);
                     }
@@ -1247,25 +1251,12 @@ namespace VTT
         #region - login -
         private bool login()
         {
-            //if (dataLogin != null)
-            //{
-            //    WebClientEx client = new WebClientEx();
-            //    client.DoGet(strServer+"bulletins?authentication_token=" + authentication_token);
-            //    if (client.Error != null)
-            //    {
-            //        dataLogin = null;
-            //    }
-            //    else
-            //    {
-            //        return true;
-            //    }
-            //}
-            //if (dataLogin == null)
             {
                 string strProfile = ConfigurationManager.AppSettings["login"];
                 Dictionary<string, object> dataProfile = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(profileJson);
 
-                WebClientEx client = new WebClientEx();
+                WebClientEx client = new WebClientEx();                
+
                 NameValueCollection param = new NameValueCollection();
 
                 param.Add("access_token", (dataProfile[strProfile] as Dictionary<string, object>)["access_token"].ToString());
@@ -1283,6 +1274,10 @@ namespace VTT
                     Utilities.SerializeObject("login.data", dataLogin);
 
                     txtAuthenticationToken.Text = dataLogin["authentication_token"].ToString();
+                    
+                    //encode authorization
+                    GlobalConstant.Authorization = string.Concat("Basic ", Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(string.Concat(txtAuthenticationToken.Text.Trim(), ":"))));
+
                     // Create a timer with a one second interval.
                     timeChat = new System.Timers.Timer(3000);
 
@@ -1436,6 +1431,7 @@ namespace VTT
 
         private void writeGlobalInfo()
         {
+            user_id = dataLogin["id"].ToString();
             txtAuthenticationToken.Text = dataLogin["authentication_token"].ToString();
             txtStatus.Text = string.Empty;
             txtStatus.Text += "\r\nQuân Lệnh : " + current_defense_turn_count;
@@ -1664,7 +1660,7 @@ namespace VTT
         {            
             Dictionary<string, object> it = item as Dictionary<string, object>;
             WebClientEx client = new WebClientEx();
-            string strParameter = "owned_officer_id={0}&authentication_token={1}&old_owned_item_id={2}&slot_order={3}";
+            string strParameter = "owned_officer_id={0}&authentication_token={1}&old_owned_item_id={2}&slot_order={3}&death_match_mode=0";
             strParameter = string.Format(strParameter, hero_id, authentication_token, "", txtSlotNgoc.Text.ToString());
             client.DoPost(strParameter, strServer + "owned_items/" + it["id"] + "/equip", null, "PUT");
             //if (!string.IsNullOrEmpty(client.ResponseText))

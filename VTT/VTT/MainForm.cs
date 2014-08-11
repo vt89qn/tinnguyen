@@ -1276,7 +1276,7 @@ namespace VTT
                     txtAuthenticationToken.Text = dataLogin["authentication_token"].ToString();
                     
                     //encode authorization
-                    GlobalConstant.Authorization = string.Concat("Basic ", Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(string.Concat(txtAuthenticationToken.Text.Trim(), ":"))));
+                    GlobalConstant.Authorization = string.Concat("Basic ", Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(string.Concat(dataLogin["authentication_token"].ToString(), ":"))));
 
                     // Create a timer with a one second interval.
                     timeChat = new System.Timers.Timer(3000);

@@ -292,7 +292,7 @@ namespace VTT
                     {
                         new System.Threading.Thread(new System.Threading.ParameterizedThreadStart(use_chest)).Start(chest["id"]);
                     }
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(5000);
                 }
             }
             catch { }
@@ -758,7 +758,7 @@ namespace VTT
                     {
                         if (component.ContainsKey("level"))
                         {
-                            if ((int)component["level"] > 1)
+                            if ((int)component["level"] > 20)
                             {
                                 bFire = false;
                                 break;
@@ -788,7 +788,9 @@ namespace VTT
         private void fire(object id)
         {
             WebClientEx client = new WebClientEx();
-            client.DoGet(strServer + "owned_officers/" + id + "/fire?authentication_token=" + authentication_token);
+            NameValueCollection param = new NameValueCollection();
+            param.Add("authentication_token", authentication_token);
+            client.DoPost(param, strServer + "owned_officers/" + id + "/fire");
         }
         #endregion
 
@@ -1191,11 +1193,10 @@ namespace VTT
                 }
                 else
                 {
-                    if (((iRank == 5 && iLevel > 9) || (iRank < 5 && iLevel > 1)) && iLevel < 120)
+                    if ((iRank == 5 && iLevel > 9) || (iRank < 5 && iLevel > 1 && iLevel < 101))
                     {
                         listTuongUp.Add(officer);
                     }
-                    
                 }
 
             }

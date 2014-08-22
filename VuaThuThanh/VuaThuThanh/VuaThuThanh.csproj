@@ -72,9 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CSS\style.css" />
-    <Content Include="Default_Old.aspx" />
-    <Content Include="heroes.txt" />
-    <Content Include="LevelUp.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -92,22 +89,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DB.dbml</DependentUpon>
     </Compile>
-    <Compile Include="Default_Old.aspx.cs">
-      <DependentUpon>Default_Old.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default_Old.aspx.designer.cs">
-      <DependentUpon>Default_Old.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="LevelUp.aspx.cs">
-      <DependentUpon>LevelUp.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="LevelUp.aspx.designer.cs">
-      <DependentUpon>LevelUp.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -115,6 +96,8 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="WebClientEx.cs">
       <SubType>Component</SubType>
     </Compile>

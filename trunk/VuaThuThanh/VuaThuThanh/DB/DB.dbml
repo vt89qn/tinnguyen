@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="tinphuong_com_db" Class="DBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=tinphuong.com\MSSQLSERVER2012;Initial Catalog=tinphuong_com_db;Persist Security Info=True;User ID=vtt" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="tinphuong_com_dbConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="vtt.M_Tuong" Member="M_Tuongs">
+    <Type Name="M_Tuong">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="MaTuong" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="TenTuong" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="SoSao" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NuocXid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PhaiXid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LucDanh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TamDanh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TocDoDanh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Mau" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TriLuc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TocDoDiChuyen" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TuyetKy1Xid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TuyetKy2Xid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BoTuongXid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="M_BoTuong_M_Tuong" Member="M_BoTuong" ThisKey="BoTuongXid" OtherKey="Pid" Type="M_BoTuong" IsForeignKey="true" />
+      <Association Name="M_Nuoc_M_Tuong" Member="M_Nuoc" ThisKey="NuocXid" OtherKey="Pid" Type="M_Nuoc" IsForeignKey="true" />
+      <Association Name="M_Phai_M_Tuong" Member="M_Phai" ThisKey="PhaiXid" OtherKey="Pid" Type="M_Phai" IsForeignKey="true" />
+      <Association Name="M_TuyetKy_M_Tuong" Member="M_TuyetKy" ThisKey="TuyetKy1Xid" OtherKey="Pid" Type="M_TuyetKy" IsForeignKey="true" />
+      <Association Name="M_TuyetKy_M_Tuong1" Member="M_TuyetKy1" ThisKey="TuyetKy2Xid" OtherKey="Pid" Type="M_TuyetKy" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="vtt.M_BoTuong" Member="M_BoTuongs">
+    <Type Name="M_BoTuong">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="BoTuong" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="M_BoTuong_M_Tuong" Member="M_Tuongs" ThisKey="Pid" OtherKey="BoTuongXid" Type="M_Tuong" />
+    </Type>
+  </Table>
+  <Table Name="vtt.M_Nuoc" Member="M_Nuocs">
+    <Type Name="M_Nuoc">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Nuoc" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="M_Nuoc_M_Tuong" Member="M_Tuongs" ThisKey="Pid" OtherKey="NuocXid" Type="M_Tuong" />
+    </Type>
+  </Table>
+  <Table Name="vtt.M_Phai" Member="M_Phais">
+    <Type Name="M_Phai">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Phai" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="M_Phai_M_Tuong" Member="M_Tuongs" ThisKey="Pid" OtherKey="PhaiXid" Type="M_Tuong" />
+    </Type>
+  </Table>
+  <Table Name="vtt.M_TuyetKy" Member="M_TuyetKies">
+    <Type Name="M_TuyetKy">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TuyetKy" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="MoTa" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="M_TuyetKy_M_Tuong" Member="M_Tuongs" ThisKey="Pid" OtherKey="TuyetKy1Xid" Type="M_Tuong" />
+      <Association Name="M_TuyetKy_M_Tuong1" Member="M_Tuongs1" ThisKey="Pid" OtherKey="TuyetKy2Xid" Type="M_Tuong" />
+    </Type>
+  </Table>
+</Database>

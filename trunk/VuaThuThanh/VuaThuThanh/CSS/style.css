@@ -1,0 +1,84 @@
+﻿.tuong-view
+{
+    background-color: #fff;
+    text-shadow: #fff 0 1px 0;
+    position: relative;
+    display: block;
+    height: auto;
+}
+.tuong-view div.nuoc-4 img
+{
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+}
+.tuong-view div.nuoc-3 img
+{
+    background-color: #FFF57C;
+    border: 1px solid #CEBD00;
+}
+.tuong-view div.nuoc-2 img
+{
+    background-color: #A9F5BE;
+    border: 1px solid #17CE17;
+}
+.tuong-view div.nuoc-1 img
+{
+    background-color: #99D6FF;
+    border: 1px solid #1BA4FF;
+}
+.tuong-view div.tuong img
+{
+    padding: 5px;
+    width: 150px;
+    height: 225px;
+    border-radius: 5px;
+}
+
+.tuong-view div.tuong
+{
+    float: left;
+    padding: 5px;
+    margin: 5px; /*    margin: 10px 0 0 25px;*/
+    text-align: center;
+    line-height: 14px;
+    color: #333;
+    font-size: 10px;
+    font-family: "Helvetica Neue" ,sans-serif;
+    height: 250px;
+    width: 160px;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+}
+
+.x-ie6 .tuong-view div.tuong, .x-ie7 .tuong-view div.tuong, .x-ie8 .tuong-view div.tuong
+{
+    border-top: none;
+    padding: 3px 2px;
+    margin: 2px;
+}
+
+.tuong-view div.tuong-hover img
+{
+    background-color: #FFE2E2;
+    border: 1px solid #FFB3B3;
+}
+
+.tuong-view .x-item-selected
+{
+    /*background-color: #D3E1F1 !important;*/
+}
+
+.tuong-view div.tuong strong
+{
+    color: #585858;
+    display: block;
+    font-weight: bold;
+    font-size: 12px;
+    padding-top: 3px;
+}
+
+.tuong-view div.tuong span
+{
+    color: #999;
+}

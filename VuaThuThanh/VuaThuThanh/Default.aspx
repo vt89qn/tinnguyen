@@ -4,278 +4,159 @@
 <%@ Register Assembly="Ext.net" Namespace="Ext.Net" TagPrefix="ext" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Thư Viện Vua Thủ Thành</title>
+    <link href="CSS/style.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="/Images/Misc/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <form id="Form1" runat="server">
+    <form runat="server">
     <ext:ResourceManager runat="server" />
-    <ext:Viewport runat="server" Layout="FitLayout">
+    <ext:Viewport ID="viewMain" runat="server" Layout="FitLayout">
         <Items>
-            <ext:Panel runat="server" Layout="FitLayout" Header="false" Border="false" BodyPadding="15">
+            <ext:Panel ID="panelTuong" runat="server" TitleCollapse="true" Layout="AnchorLayout">
                 <Items>
-                    <ext:Window ID="WindowLogin" runat="server" Layout="FitLayout" BodyPadding="5" Closable="false"
-                        Resizable="false" Draggable="false" Modal="true" Title="Vua Thủ Thành">
+                    <ext:Toolbar AnchorHorizontal="100%" Frame="false">
                         <Items>
-                            <ext:ComboBox ID="txtProfile" runat="server" Editable="false" EmptyText="Chọn Profile"
-                                FieldLabel="Profile" LabelWidth="40">
+                            <ext:Button ID="btnDanhSachTuong" runat="server" Text="Danh Sách Tướng" />
+                            <ext:ToolbarSeparator />
+                            <ext:Button ID="btnNuoiHeo" runat="server" Text="Nuôi Heo" OnClientClick="Ext.Msg.alert('Vua Thủ Thành', 'Tính năng đang phát triển...');" />
+                        </Items>
+                    </ext:Toolbar>
+                    <ext:FormPanel ID="Panel3" runat="server" Frame="true" PaddingSummary="5px 5px 0"
+                        ButtonAlign="Center" Height="120" AnchorHorizontal="100%" TitleCollapse="false">
+                        <Items>
+                            <ext:Container runat="server" Layout="Column" Height="35">
                                 <Items>
-                                    <ext:ListItem Text="Tin" Value="tin" />
-                                    <ext:ListItem Text="Thi" Value="thi" />
-                                    <ext:ListItem Text="Pollus" Value="pollus" />
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:TextField ID="txtTenTuong" runat="server" FieldLabel="Tên Tướng" LabelWidth="100"
+                                                EmptyText="Điền Tục / Dien Tuc / DienTuc" />
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:MultiCombo ID="txtNuoc" runat="server" FieldLabel="Nước" LabelWidth="100" Editable="false">
+                                                <Items>
+                                                    <ext:ListItem Text="Ngụy" Value="1" />
+                                                    <ext:ListItem Text="Thục" Value="2" />
+                                                    <ext:ListItem Text="Ngô" Value="3" />
+                                                    <ext:ListItem Text="Khác" Value="4" />
+                                                </Items>
+                                            </ext:MultiCombo>
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:MultiCombo ID="txtPhai" runat="server" FieldLabel="Phái" LabelWidth="100" Editable="false">
+                                                <Items>
+                                                    <ext:ListItem Text="Kiếm" Value="1" />
+                                                    <ext:ListItem Text="Thương" Value="2" />
+                                                    <ext:ListItem Text="Cung" Value="3" />
+                                                    <ext:ListItem Text="Quạt" Value="4" />
+                                                </Items>
+                                            </ext:MultiCombo>
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:MultiCombo ID="txtSoSao" runat="server" FieldLabel="Số Sao" LabelWidth="100"
+                                                Editable="false">
+                                                <Items>
+                                                    <ext:ListItem Text="1" Value="1" />
+                                                    <ext:ListItem Text="2" Value="2" />
+                                                    <ext:ListItem Text="3" Value="3" />
+                                                    <ext:ListItem Text="4" Value="4" />
+                                                    <ext:ListItem Text="5" Value="5" />
+                                                </Items>
+                                            </ext:MultiCombo>
+                                        </Items>
+                                    </ext:Container>
                                 </Items>
-                                <SelectedItems>
-                                    <ext:ListItem Text="Tin" Value="tin" />
-                                </SelectedItems>
-                            </ext:ComboBox>
+                            </ext:Container>
+                            <ext:Container runat="server" Layout="Column" Height="35">
+                                <Items>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:TextField ID="txtLucDanh" runat="server" FieldLabel="Lực Đánh(>=)" LabelWidth="100" />
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:TextField ID="txtPhamVi" runat="server" FieldLabel="Phạm Vi(>=)" LabelWidth="100" />
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:TextField ID="txtTocDo" runat="server" FieldLabel="Tốc Đánh(>=)" LabelWidth="100" />
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                        <Items>
+                                            <ext:TextField ID="txtTriLuc" runat="server" FieldLabel="Trí Lực(>=)" LabelWidth="100" />
+                                        </Items>
+                                    </ext:Container>
+                                </Items>
+                            </ext:Container>
                         </Items>
                         <Buttons>
-                            <ext:Button ID="Button1" runat="server" Text="Login" Icon="Accept">
+                            <ext:Button ID="btnLoc" runat="server" Text="Lọc" Height="35" Width="105" Icon="Accept">
                                 <DirectEvents>
-                                    <Click OnEvent="btnLogin_Click">
-                                        <EventMask ShowMask="true" Msg="Đang đăng nhập" MinDelay="500" />
+                                    <Click OnEvent="btnLocTuong_Click" Timeout="0">
+                                        <EventMask ShowMask="true" Msg="Đang lọc dữ liệu" MinDelay="100" />
                                     </Click>
                                 </DirectEvents>
                             </ext:Button>
                         </Buttons>
-                    </ext:Window>
-                    <ext:Panel ID="WindowWorking" runat="server" Title="Vua Thủ Thành" Layout="VBoxLayout"
-                        BodyPadding="15" Hidden="true">
-                        <LayoutConfig>
-                            <ext:VBoxLayoutConfig Align="Stretch" />
-                        </LayoutConfig>
-                        <Items>
-                            <ext:Button ID="btnChayQuanLenh" runat="server" Text="Thủ Thành" Icon="ApplicationGo"
-                                Height="35" Margins="0 0 5 0">
-                                <DirectEvents>
-                                    <Click OnEvent="btnChayQuanLenh_Click" Timeout="600000">
-                                        <EventMask ShowMask="true" Msg="Đang thủ thành" MinDelay="500" />
-                                    </Click>
-                                </DirectEvents>
-                            </ext:Button>
-                            <ext:Button ID="btnLeoThap" runat="server" Text="Leo Tháp" Icon="ApplicationGo" Height="35"
-                                Margins="0 0 5 0">
-                                <DirectEvents>
-                                    <Click OnEvent="btnLeoThap_Click" Timeout="600000">
-                                        <EventMask ShowMask="true" Msg="Đang leo tháp" MinDelay="500" />
-                                    </Click>
-                                </DirectEvents>
-                            </ext:Button>
-                            <ext:Button ID="btnDuoiTuong" runat="server" Text="Đuổi Tướng" Icon="ApplicationGo"
-                                Height="35" Margins="0 0 5 0">
-                                <DirectEvents>
-                                    <Click OnEvent="btnDuoiTuong_Click" Timeout="600000">
-                                        <EventMask ShowMask="true" Msg="Đang đuổi tướng" MinDelay="500" />
-                                    </Click>
-                                </DirectEvents>
-                            </ext:Button>                            
-                            <ext:Button ID="btnGhepManhTuong" runat="server" Text="Ghép Mảnh Tướng" Icon="ApplicationGo"
-                                Height="35" Margins="0 0 5 0">
-                                <DirectEvents>
-                                    <Click OnEvent="btnGhepManhTuong_Click" Timeout="600000" />
-                                </DirectEvents>
-                            </ext:Button>
-                            <ext:Button ID="btnGhepManhTuongTuDong" runat="server" Text="Ghép Mảnh Tướng Tự Động" Icon="ApplicationGo"
-                                Height="35" Margins="0 0 5 0">
-                                <DirectEvents>
-                                    <Click OnEvent="btnGhepManhTuongTuDong_Click" Timeout="600000">
-                                        <EventMask ShowMask="true" Msg="Đang ghép mảnh tướng" MinDelay="500" />
-                                    </Click>
-                                </DirectEvents>
-                            </ext:Button>
-                            <ext:Panel Layout="HBoxLayout" Border="false">
-                                <Defaults>
-                                    <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
-                                </Defaults>
-                                <Items>
-                                    <ext:ComboBox ID="cmbLoai" runat="server" Editable="false" FieldLabel="Tên đồ" LabelWidth="60"
-                                        Flex="1" Height="35">
-                                        <Items>
-                                            <ext:ListItem Text="Thạch Phong" Value="wind_stone" />
-                                            <ext:ListItem Text="Thạch Lôi" Value="thunder_stone" />
-                                            <ext:ListItem Text="Thạch Quang" Value="light_stone" />
-                                            <ext:ListItem Text="Thạch Thủy" Value="water_stone" />
-                                            <ext:ListItem Text="Thạch Hỏa" Value="fire_stone" />
-                                            <ext:ListItem Text="Thạch Độc" Value="poison_stone" />
-                                            <ext:ListItem Text="Kiếm" Value="sword" />
-                                            <ext:ListItem Text="Thương" Value="spear" />
-                                            <ext:ListItem Text="Cung" Value="bow" />
-                                            <ext:ListItem Text="Quạt" Value="fan" />
-                                        </Items>
-                                        <SelectedItems>
-                                            <ext:ListItem Text="Thạch Phong" Value="wind_stone" />
-                                        </SelectedItems>
-                                    </ext:ComboBox>
-                                    <ext:ComboBox ID="cmbCap" runat="server" Editable="false" FieldLabel="Cấp" LabelWidth="60"
-                                        Flex="1" Height="35">
-                                        <Items>
-                                            <ext:ListItem Text="1" Value="01" />
-                                            <ext:ListItem Text="2" Value="02" />
-                                            <ext:ListItem Text="3" Value="03" />
-                                            <ext:ListItem Text="4" Value="04" />
-                                            <ext:ListItem Text="5" Value="05" />
-                                        </Items>
-                                        <SelectedItems>
-                                            <ext:ListItem Text="1" Value="01" />
-                                        </SelectedItems>
-                                    </ext:ComboBox>
-                                    <ext:ComboBox ID="cmbSoLuong" runat="server" Editable="false" FieldLabel="Số lượng"
-                                        LabelWidth="60" Flex="1" Height="35">
-                                        <Items>
-                                            <ext:ListItem Text="1" Value="1" />
-                                            <ext:ListItem Text="3" Value="3" />
-                                            <ext:ListItem Text="5" Value="5" />
-                                            <ext:ListItem Text="10" Value="10" />
-                                            <ext:ListItem Text="Hết" Value="0" />
-                                        </Items>
-                                        <SelectedItems>
-                                            <ext:ListItem Text="Hết" Value="0" />
-                                        </SelectedItems>
-                                    </ext:ComboBox>
-                                    <ext:Button ID="btnGhepDo" runat="server" Text="Ghép đồ" Icon="ApplicationGo" Height="35"
-                                        Margins="0 0 5 0" Flex="1">
-                                        <DirectEvents>
-                                            <Click OnEvent="btnGhepDo_Click" Timeout="600000">
-                                                <EventMask ShowMask="true" Msg="Đang ghép đồ" MinDelay="500" />
-                                            </Click>
-                                        </DirectEvents>
-                                    </ext:Button>
-                                </Items>
-                            </ext:Panel>
-                            <ext:Panel Layout="HBoxLayout" Border="false">
-                                <Defaults>
-                                    <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
-                                </Defaults>
-                                <Items>
-                                    <ext:ComboBox ID="txtTenAi" runat="server" Editable="false" FieldLabel="Tên Ải" LabelWidth="60"
-                                        Flex="1" Height="35">
-                                        <Items>
-                                            <ext:ListItem Text="Định Đào" Value="dinh_dao" />
-                                            <ext:ListItem Text="Hợp Phì" Value="hop_phi" />
-                                            <ext:ListItem Text="Hoa Dung" Value="hoa_dung" />
-                                            <ext:ListItem Text="Xích Bích" Value="xich_bich" />
-                                            <ext:ListItem Text="Ngưu Chữ" Value="nguu_chu" />
-                                            <ext:ListItem Text="Hổ Lao Quan" Value="ho_lao_quan" />
-                                            <ext:ListItem Text="Dốc Bắc Vọng" Value="doc_bac_vong" />
-                                            <ext:ListItem Text="Di Lăng" Value="di_lang" />
-                                        </Items>
-                                        <SelectedItems>
-                                            <ext:ListItem Text="Hổ Lao Quan" Value="ho_lao_quan" />
-                                        </SelectedItems>
-                                    </ext:ComboBox>
-                                    <ext:ComboBox ID="txtDoKhoAi" runat="server" Editable="false" FieldLabel="Độ Khó"
-                                        LabelWidth="60" Flex="1" Height="35">
-                                        <Items>
-                                            <ext:ListItem Text="1 *" Value="1" />
-                                            <ext:ListItem Text="2 *" Value="2" />
-                                            <ext:ListItem Text="3 *" Value="3" />
-                                        </Items>
-                                        <SelectedItems>
-                                            <ext:ListItem Text="3 *" Value="3" />
-                                        </SelectedItems>
-                                    </ext:ComboBox>
-                                    <ext:Button ID="btnVuotAi" runat="server" Text="Vượt Ải" Icon="ApplicationGo" Height="35"
-                                        Margins="0 0 5 0" Flex="1">
-                                        <DirectEvents>
-                                            <Click OnEvent="btnVuotAi_Click" Timeout="600000">
-                                                <EventMask ShowMask="true" Msg="Đang vượt ải" MinDelay="500" />
-                                            </Click>
-                                        </DirectEvents>
-                                    </ext:Button>
-                                </Items>
-                            </ext:Panel>
-                            <ext:Panel Layout="HBoxLayout" Border="false">
-                                <Defaults>
-                                    <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
-                                </Defaults>
-                                <Items>
-                                    <ext:ComboBox ID="txtLoaiQuanLenh" runat="server" Editable="false" EmptyText="Chọn loại cần dùng"
-                                        Flex="1" Height="35">
-                                        <Items>
-                                            <ext:ListItem Text="QL sơn trại" Value="defense_turn_count_restore_00" />
-                                            <ext:ListItem Text="QL sơ cấp" Value="defense_turn_count_restore_01" />
-                                            <ext:ListItem Text="QL trung cấp" Value="defense_turn_count_restore_02" />
-                                            <ext:ListItem Text="QL cao cấp" Value="defense_turn_count_restore_03" />
-                                            <ext:ListItem Text="CC sơ cấp" Value="attack_turn_count_restore_01" />
-                                            <ext:ListItem Text="CC trung cấp" Value="attack_turn_count_restore_02" />
-                                            <ext:ListItem Text="CC cao cấp" Value="attack_turn_count_restore_03" />
-                                        </Items>
-                                    </ext:ComboBox>
-                                    <ext:TextField ID="txtSoluongQL" runat="server" Text="1" EmptyText="Số lượng cần dùng"
-                                        Flex="1" Height="35" />
-                                    <ext:Button ID="btnNuotQuanLenh" runat="server" Text="Nuốt Quân Lệnh / Cờ Chiến"
-                                        Icon="ApplicationGo" AnchorHorizontal="100%" Height="35" Margins="0 0 5 0" Flex="2">
-                                        <DirectEvents>
-                                            <Click OnEvent="btnNuotQuanLenh_Click" Timeout="600000">
-                                                <EventMask ShowMask="true" Msg="Đang nuốt quân lệnh / cờ chiến" MinDelay="500" />
-                                            </Click>
-                                        </DirectEvents>
-                                    </ext:Button>
-                                </Items>
-                            </ext:Panel>
-
-                            <ext:Panel Layout="HBoxLayout" Border="false">
-                                <Defaults>
-                                    <ext:Parameter Name="margins" Value="0 5 0 0" Mode="Value" />
-                                </Defaults>
-                                <Items>                                    
-                                    <ext:TextField ID="txtAuthenticationToken" runat="server" Text="" EmptyText="authentication_token"
-                                        Flex="1" Height="35" />
-                                    <ext:Button ID="btnAutoLevelUp" runat="server" Text="Tự động nâng cấp tướng"
-                                        Icon="ApplicationGo" AnchorHorizontal="100%" Height="35" Margins="0 0 5 0" Flex="2">
-                                        <DirectEvents>
-                                            <Click OnEvent="btnAutoLevelUp_Click" Timeout="600000">
-                                            </Click>
-                                        </DirectEvents>
-                                    </ext:Button>
-                                </Items>
-                            </ext:Panel>
-
-                            <ext:TextArea Flex="1" runat="server" ReadOnly="true" ID="txtStatus" />
-                        </Items>
-                    </ext:Panel>
-                    <ext:Window runat="server" ID="windowGhepManhTuong" BodyPadding="5" Modal="true"
-                        Layout="AnchorLayout" Hidden="true">
-                        <Items>
-                            <ext:ComboBox ID="txtChonManhTuong" runat="server" Editable="false" EmptyText="Chọn mảnh tướng"
-                                TypeAhead="true" DisplayField="manhtuong_name" ValueField="manhtuong_id" Flex="1"
-                                Height="35" AnchorHorizontal="100%" Margins="5 0 0 0">
-                                <Store>
-                                    <ext:Store runat="server" ID="manhTuongStore">
-                                        <Model>
-                                            <ext:Model runat="server" IDProperty="Id">
-                                                <Fields>
-                                                    <ext:ModelField Name="manhtuong_id" Type="String" ServerMapping="manhtuong_id" />
-                                                    <ext:ModelField Name="manhtuong_name" Type="String" ServerMapping="manhtuong_name" />
-                                                </Fields>
-                                            </ext:Model>
-                                        </Model>
-                                    </ext:Store>
-                                </Store>
-                                <DirectEvents>
-                                    <Change OnEvent="txtChonManhTuong_Change" Timeout="600000" />
-                                </DirectEvents>
-                            </ext:ComboBox>
-                            <ext:TextField ID="txtSoLuongManhTuong" runat="server" EmptyText="Số lượng cần dùng"
-                                AnchorHorizontal="100%" Margins="5 0 0 0" />
-                            <ext:Button ID="btnChonManhTuong" runat="server" Text="Chọn" Icon="ApplicationGo"
-                                AnchorHorizontal="100%" Margins="5 0 0 0" Height="35">
-                                <DirectEvents>
-                                    <Click OnEvent="btnChonManhTuong_Click" Timeout="600000" />
-                                </DirectEvents>
-                            </ext:Button>
-                            <ext:TextArea ID="txtManhTuongDaChon" runat="server" ReadOnly="true" Margins="5 0 0 0"
-                                AnchorHorizontal="100%" Height="100">
-                            </ext:TextArea>
-                        </Items>
-                        <Buttons>
-                            <ext:Button runat="server" Icon="Cancel" Text="Hủy">
-                                <DirectEvents>
-                                    <Click OnEvent="btnGhepManhTuongHuy_Click" />
-                                </DirectEvents>
-                            </ext:Button>
-                        </Buttons>
-                    </ext:Window>
+                    </ext:FormPanel>
+                    <ext:DataView ID="viewTuong" runat="server" DeferInitialRefresh="false" ItemSelector="div.tuong"
+                        OverItemCls="tuong-hover" MultiSelect="true" AutoScroll="true" Cls="tuong-view"
+                        TrackOver="true" AnchorHorizontal="100%" AnchorVertical="-148">
+                        <Store>
+                            <ext:Store ID="storeTuong" runat="server">
+                                <Model>
+                                    <ext:Model ID="modelTuong" runat="server" IDProperty="Pid">
+                                        <Fields>
+                                            <ext:ModelField Name="Pid" Type="Int" />
+                                            <ext:ModelField Name="MaTuong" Type="String" />
+                                            <ext:ModelField Name="TenTuong" Type="String" />
+                                            <ext:ModelField Name="SoSao" Type="Int" />
+                                            <ext:ModelField Name="NuocXid" Type="String" />
+                                        </Fields>
+                                    </ext:Model>
+                                </Model>
+                                <%--         <Sorters>
+                                    <ext:DataSorter Property="NuocXid" Direction="ASC" />
+                                    <ext:DataSorter Property="SoSao" Direction="ASC" />
+                                </Sorters>--%>
+                            </ext:Store>
+                        </Store>
+                        <Tpl ID="tplTuong" runat="server">
+                            <Html>
+                                <tpl for=".">
+                                <div class="tuong nuoc-{NuocXid}">
+                                        <img src="?tuong={[values.MaTuong]}" />
+                                    <strong>{TenTuong}</strong>
+                                </div>
+                                </tpl>
+                            </Html>
+                        </Tpl>
+                        <DirectEvents>
+                            <ItemClick OnEvent="viewTuongItem_Click" Timeout="0">
+                                <EventMask ShowMask="true" Msg="Đang tải dữ liệu" MinDelay="100" />
+                            </ItemClick>
+                        </DirectEvents>
+                        <%--           <Plugins>
+                            <ext:DataViewAnimated ID="animatedTuong" runat="server" Duration="550" IDProperty="id" />
+                        </Plugins>--%>
+                    </ext:DataView>
                 </Items>
+                <BottomBar>
+                    <ext:Toolbar EnableOverflow="true" Frame="false">
+                        <Items>
+                            <ext:Label Text="VuaThuThanh.Net@2014 - Nhóm phát triển fb.com/vuathuthanh.net - Email liên hệ : lienhe@vuathuthanh.net" />
+                        </Items>
+                    </ext:Toolbar>
+                </BottomBar>
             </ext:Panel>
         </Items>
     </ext:Viewport>

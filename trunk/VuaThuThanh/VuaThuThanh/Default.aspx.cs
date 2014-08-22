@@ -184,6 +184,11 @@ namespace VuaThuThanh
             if (!Ex.X.IsAjaxRequest && string.IsNullOrEmpty(Request["tuong"]))
             {
                 DB.DBDataContext db = new DB.DBDataContext();
+                //Bind data Bo Tuong
+
+                //Bind data Thanh Ai
+                
+                //Bind data list Tuong
                 var listTuong = from tuong
                                 in db.M_Tuongs
                                 orderby tuong.SoSao descending

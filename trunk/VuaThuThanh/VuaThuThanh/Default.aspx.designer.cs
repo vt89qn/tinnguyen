@@ -13,6 +13,15 @@ namespace VuaThuThanh {
     public partial class Default {
         
         /// <summary>
+        /// Head1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlHead Head1;
+        
+        /// <summary>
         /// Form1 control.
         /// </summary>
         /// <remarks>
@@ -22,255 +31,291 @@ namespace VuaThuThanh {
         protected global::System.Web.UI.HtmlControls.HtmlForm Form1;
         
         /// <summary>
-        /// WindowLogin control.
+        /// ResourceManager1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Window WindowLogin;
+        protected global::Ext.Net.ResourceManager ResourceManager1;
         
         /// <summary>
-        /// txtProfile control.
+        /// viewMain control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox txtProfile;
+        protected global::Ext.Net.Viewport viewMain;
         
         /// <summary>
-        /// Button1 control.
+        /// panelTuong control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button Button1;
+        protected global::Ext.Net.Panel panelTuong;
         
         /// <summary>
-        /// WindowWorking control.
+        /// btnDanhSachTuong control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Panel WindowWorking;
+        protected global::Ext.Net.Button btnDanhSachTuong;
         
         /// <summary>
-        /// btnChayQuanLenh control.
+        /// btnNuoiHeo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnChayQuanLenh;
+        protected global::Ext.Net.Button btnNuoiHeo;
         
         /// <summary>
-        /// btnLeoThap control.
+        /// Panel3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnLeoThap;
+        protected global::Ext.Net.FormPanel Panel3;
         
         /// <summary>
-        /// btnDuoiTuong control.
+        /// Container1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnDuoiTuong;
+        protected global::Ext.Net.Container Container1;
         
         /// <summary>
-        /// btnGhepManhTuong control.
+        /// Container2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnGhepManhTuong;
+        protected global::Ext.Net.Container Container2;
         
         /// <summary>
-        /// btnGhepManhTuongTuDong control.
+        /// txtTenTuong control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnGhepManhTuongTuDong;
+        protected global::Ext.Net.TextField txtTenTuong;
         
         /// <summary>
-        /// cmbLoai control.
+        /// Container3 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox cmbLoai;
+        protected global::Ext.Net.Container Container3;
         
         /// <summary>
-        /// cmbCap control.
+        /// txtNuoc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox cmbCap;
+        protected global::Ext.Net.MultiCombo txtNuoc;
         
         /// <summary>
-        /// cmbSoLuong control.
+        /// Container4 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox cmbSoLuong;
+        protected global::Ext.Net.Container Container4;
         
         /// <summary>
-        /// btnGhepDo control.
+        /// txtPhai control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnGhepDo;
+        protected global::Ext.Net.MultiCombo txtPhai;
         
         /// <summary>
-        /// txtTenAi control.
+        /// Container5 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox txtTenAi;
+        protected global::Ext.Net.Container Container5;
         
         /// <summary>
-        /// txtDoKhoAi control.
+        /// txtSoSao control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox txtDoKhoAi;
+        protected global::Ext.Net.MultiCombo txtSoSao;
         
         /// <summary>
-        /// btnVuotAi control.
+        /// Container6 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnVuotAi;
+        protected global::Ext.Net.Container Container6;
         
         /// <summary>
-        /// txtLoaiQuanLenh control.
+        /// txtThanhAi control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox txtLoaiQuanLenh;
+        protected global::Ext.Net.MultiCombo txtThanhAi;
         
         /// <summary>
-        /// txtSoluongQL control.
+        /// Container7 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.TextField txtSoluongQL;
+        protected global::Ext.Net.Container Container7;
         
         /// <summary>
-        /// btnNuotQuanLenh control.
+        /// Container8 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnNuotQuanLenh;
+        protected global::Ext.Net.Container Container8;
         
         /// <summary>
-        /// txtAuthenticationToken control.
+        /// txtLucDanh control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.TextField txtAuthenticationToken;
+        protected global::Ext.Net.TextField txtLucDanh;
         
         /// <summary>
-        /// btnAutoLevelUp control.
+        /// Container9 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnAutoLevelUp;
+        protected global::Ext.Net.Container Container9;
         
         /// <summary>
-        /// txtStatus control.
+        /// txtPhamVi control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.TextArea txtStatus;
+        protected global::Ext.Net.TextField txtPhamVi;
         
         /// <summary>
-        /// windowGhepManhTuong control.
+        /// Container10 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Window windowGhepManhTuong;
+        protected global::Ext.Net.Container Container10;
         
         /// <summary>
-        /// txtChonManhTuong control.
+        /// txtTocDo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.ComboBox txtChonManhTuong;
+        protected global::Ext.Net.TextField txtTocDo;
         
         /// <summary>
-        /// manhTuongStore control.
+        /// Container11 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Store manhTuongStore;
+        protected global::Ext.Net.Container Container11;
         
         /// <summary>
-        /// txtSoLuongManhTuong control.
+        /// txtTriLuc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.TextField txtSoLuongManhTuong;
+        protected global::Ext.Net.TextField txtTriLuc;
         
         /// <summary>
-        /// btnChonManhTuong control.
+        /// Container12 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.Button btnChonManhTuong;
+        protected global::Ext.Net.Container Container12;
         
         /// <summary>
-        /// txtManhTuongDaChon control.
+        /// txtBoTuong control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Ext.Net.TextArea txtManhTuongDaChon;
+        protected global::Ext.Net.MultiCombo txtBoTuong;
+        
+        /// <summary>
+        /// btnLoc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Button btnLoc;
+        
+        /// <summary>
+        /// viewTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.DataView viewTuong;
+        
+        /// <summary>
+        /// storeTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Store storeTuong;
+        
+        /// <summary>
+        /// modelTuong control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Ext.Net.Model modelTuong;
     }
 }

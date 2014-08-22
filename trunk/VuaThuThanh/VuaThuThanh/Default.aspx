@@ -3,14 +3,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ Register Assembly="Ext.net" Namespace="Ext.Net" TagPrefix="ext" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<head id="Head1" runat="server">
     <title>Thư Viện Vua Thủ Thành</title>
     <link href="CSS/style.css" rel="stylesheet" />
     <link rel="shortcut icon" href="/Images/Misc/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <form runat="server">
-    <ext:ResourceManager runat="server" />
+    <form id="Form1" runat="server">
+    <ext:ResourceManager ID="ResourceManager1" runat="server" />
     <ext:Viewport ID="viewMain" runat="server" Layout="FitLayout">
         <Items>
             <ext:Panel ID="panelTuong" runat="server" TitleCollapse="true" Layout="AnchorLayout">
@@ -25,15 +25,15 @@
                     <ext:FormPanel ID="Panel3" runat="server" Frame="true" PaddingSummary="5px 5px 0"
                         ButtonAlign="Center" Height="120" AnchorHorizontal="100%" TitleCollapse="false">
                         <Items>
-                            <ext:Container runat="server" Layout="Column" Height="35">
+                            <ext:Container ID="Container1" runat="server" Layout="Column" Height="35">
                                 <Items>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container2" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:TextField ID="txtTenTuong" runat="server" FieldLabel="Tên Tướng" LabelWidth="100"
                                                 EmptyText="Điền Tục / Dien Tuc / DienTuc" />
                                         </Items>
                                     </ext:Container>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container3" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:MultiCombo ID="txtNuoc" runat="server" FieldLabel="Nước" LabelWidth="100" Editable="false">
                                                 <Items>
@@ -45,7 +45,7 @@
                                             </ext:MultiCombo>
                                         </Items>
                                     </ext:Container>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container4" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:MultiCombo ID="txtPhai" runat="server" FieldLabel="Phái" LabelWidth="100" Editable="false">
                                                 <Items>
@@ -57,7 +57,7 @@
                                             </ext:MultiCombo>
                                         </Items>
                                     </ext:Container>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container5" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:MultiCombo ID="txtSoSao" runat="server" FieldLabel="Số Sao" LabelWidth="100"
                                                 Editable="false">
@@ -71,28 +71,40 @@
                                             </ext:MultiCombo>
                                         </Items>
                                     </ext:Container>
+                                    <ext:Container ID="Container6" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
+                                        <Items>
+                                            <ext:MultiCombo ID="txtThanhAi" runat="server" FieldLabel="Thành / Ải" LabelWidth="100"
+                                                Editable="false" />
+                                        </Items>
+                                    </ext:Container>
                                 </Items>
                             </ext:Container>
-                            <ext:Container runat="server" Layout="Column" Height="35">
+                            <ext:Container ID="Container7" runat="server" Layout="Column" Height="35">
                                 <Items>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container8" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:TextField ID="txtLucDanh" runat="server" FieldLabel="Lực Đánh(>=)" LabelWidth="100" />
                                         </Items>
                                     </ext:Container>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container9" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:TextField ID="txtPhamVi" runat="server" FieldLabel="Phạm Vi(>=)" LabelWidth="100" />
                                         </Items>
                                     </ext:Container>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container10" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:TextField ID="txtTocDo" runat="server" FieldLabel="Tốc Đánh(>=)" LabelWidth="100" />
                                         </Items>
                                     </ext:Container>
-                                    <ext:Container runat="server" Layout="FormLayout" ColumnWidth=".25" Padding="5">
+                                    <ext:Container ID="Container11" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
                                         <Items>
                                             <ext:TextField ID="txtTriLuc" runat="server" FieldLabel="Trí Lực(>=)" LabelWidth="100" />
+                                        </Items>
+                                    </ext:Container>
+                                    <ext:Container ID="Container12" runat="server" Layout="FormLayout" ColumnWidth=".2" Padding="5">
+                                        <Items>
+                                            <ext:MultiCombo ID="txtBoTuong" runat="server" FieldLabel="Thành / Ải" LabelWidth="100"
+                                                Editable="false" />
                                         </Items>
                                     </ext:Container>
                                 </Items>

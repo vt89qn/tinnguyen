@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="TPDB">
+  <DataContextMoniker Name="/TPDBDataContext" />
+  <nestedChildShapes>
+    <classShape Id="086016c0-b9c5-44dc-bdbd-b1fbf8b72bb9" absoluteBounds="5.75, 1.625, 2, 1.3862939453125">
+      <DataClassMoniker Name="/TPDBDataContext/IG_SignString" />
+      <nestedChildShapes>
+        <elementListCompartment Id="89e95f36-e199-4677-8f2e-da1f3e2d378c" absoluteBounds="5.765, 2.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

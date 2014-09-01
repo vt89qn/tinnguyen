@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="IGDB">
+  <DataContextMoniker Name="/IGDBDataContext" />
+  <nestedChildShapes>
+    <classShape Id="3e6cc1b7-346d-4596-8d42-2e6906e00406" absoluteBounds="2.75, 1.375, 2, 1.3862939453125">
+      <DataClassMoniker Name="/IGDBDataContext/IG_SignString" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e7552fb9-a855-4003-8cb9-a3044f0f14ed" absoluteBounds="2.765, 1.835, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ee61f2a6-ce14-4fa8-8e8f-9f2b26003491" absoluteBounds="4.875, 1.375, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/IGDBDataContext/IG_Account" />
+      <nestedChildShapes>
+        <elementListCompartment Id="d660c100-9444-4a12-83c6-38aaac5ade44" absoluteBounds="4.89, 1.835, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

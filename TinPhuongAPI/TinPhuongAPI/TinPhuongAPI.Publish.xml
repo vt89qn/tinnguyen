@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="ftp://api.tinphuong.com/api.tinphuong.com/" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FTP" replaceMatchingFiles="True" userName="tin" savePWD="True" userPWD="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA+lmTM342gEiTbiORdL6RLwAAAAACAAAAAAAQZgAAAAEAACAAAAA7K9g5lRUPbWaCIGWbX6OQpC9ou7fif6XX38FOCgDcOgAAAAAOgAAAAAIAACAAAADdAs9lm23yNHzp8amLEZ7VP/dqRkZMtQjtMU9z1UIcWCAAAAC0sl6DKZ+X6HGxzojl/AQP4HLiSalSGSz8WMfJh6YZ6UAAAABY/zjjyNdF1q28ZJQHvcoxrtHrHzJk9pcM8RyhJpsigrOu5tMi9mOz/+3oyGMzGsp67Pnfuc+UY6kwqRv9GJGG" SelectedForPublish="True">
+    <file relUrl="bin/TinPhuongAPI.dll" publishTime="08/31/2014 20:30:39" />
+    <file relUrl="bin/TinPhuongAPI.pdb" publishTime="08/31/2014 20:30:39" />
+    <file relUrl="Web.config" publishTime="08/31/2014 19:52:11" />
+    <file relUrl="Default.aspx" publishTime="08/31/2014 19:35:52" />
+  </publishProfile>
+</publishData>

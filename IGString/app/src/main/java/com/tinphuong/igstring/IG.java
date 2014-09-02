@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tinphuong.services.IGService;
+
 
 public class IG extends Activity {
     @Override

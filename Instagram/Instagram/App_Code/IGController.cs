@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Instagram.App_Data;
 using System.Collections.Specialized;
 using System.Net;
+using System.Web.Script.Serialization;
 
 namespace Instagram
 {
@@ -26,6 +27,55 @@ namespace Instagram
                     Client.UserAgent = "Instagram 6.5.0 Android (" + Model.PhoneInfo + ")";
                 }
             }
+        }
+
+        public string Get_X_TUNNEL_VERIFY()
+        {
+            int iSeed = new Random().Next(10, 1000);
+
+            string strReturn = "2.0.0&";
+            strReturn += iSeed.ToString("X") + "&";
+
+
+            SortedDictionary<string, string> treemap = new SortedDictionary<string, string>();
+            string macID = "123";
+            string macAddr = "234";
+            treemap.Add("api", "62");
+            treemap.Add("appID", "f61DAecVdKkJQ2l4nakA");
+            treemap.Add("appVer", "5.3.1");
+            treemap.Add("zSeed", iSeed.ToString());
+            treemap.Add("zUid", string.Empty);
+            treemap.Add("blistHash", string.Empty);
+            treemap.Add("binHash", string.Empty);
+            treemap.Add("iOSModel", "phone");
+            treemap.Add("iOSType", "android");
+            treemap.Add("iOSVer", "2.2");
+            treemap.Add("macID", Utilities.GetMd5Hash(macID));
+            treemap.Add("macAddr", string.Empty);
+            treemap.Add("udid", "-1");
+            treemap.Add("androidId", string.Empty);
+
+            string jSon = new JavaScriptSerializer().Serialize(treemap);
+            IGDB = new IGDBDataContext();
+            IGDB.PK_SignStrings.InsertOnSubmit(new PK_SignString { String = jSon, Seed = iSeed });
+            IGDB.SubmitChanges();
+            System.Threading.Thread.Sleep(2000);
+            while (true)
+            {
+                IGDB = new IGDBDataContext();
+                PK_SignString signstring = (from _signstring in IGDB.PK_SignStrings where _signstring.String == jSon select _signstring).FirstOrDefault();
+                if (signstring != null && !string.IsNullOrEmpty(signstring.SignedString1))
+                {
+                    strReturn += signstring.SignedString1 + "&" + signstring.SignedString2;
+                    IGDB.PK_SignStrings.DeleteOnSubmit(signstring);
+                    IGDB.SubmitChanges();
+                    break;
+                }
+                System.Threading.Thread.Sleep(1000);
+            }
+
+
+            return strReturn;
         }
 
         public bool SignUp()
@@ -72,7 +122,7 @@ namespace Instagram
                         }
                     }
                     account.Pass = Utilities.GetMd5Hash(account.UserName).Substring(0, 12);
-                    account.Email = account.UserName + "@yahoo.com";
+                    account.Email = account.UserName + "@tinphuong.com";
 
 
                     string csrftoken = string.Empty;

@@ -15,15 +15,16 @@ namespace Instagram
         public MainForm()
         {
             InitializeComponent();
-            this.Load += new EventHandler(MainForm_Load);
-        }
-
-        void MainForm_Load(object sender, EventArgs e)
-        {
+            this.Load += new EventHandler(MainForm_Load); 
             this.btnSignUp.Click += (objs, obje) =>
             {
                 new System.Threading.Thread(new System.Threading.ThreadStart(signUp)).Start();
             };
+        }
+
+        void MainForm_Load(object sender, EventArgs e)
+        {
+            string t = new IGController().Get_X_TUNNEL_VERIFY();
         }
 
         private void signUp()

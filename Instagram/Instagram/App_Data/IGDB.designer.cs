@@ -36,6 +36,9 @@ namespace Instagram.App_Data
     partial void InsertIG_Account(IG_Account instance);
     partial void UpdateIG_Account(IG_Account instance);
     partial void DeleteIG_Account(IG_Account instance);
+    partial void InsertPK_SignString(PK_SignString instance);
+    partial void UpdatePK_SignString(PK_SignString instance);
+    partial void DeletePK_SignString(PK_SignString instance);
     #endregion
 		
 		public IGDBDataContext() : 
@@ -81,6 +84,14 @@ namespace Instagram.App_Data
 			get
 			{
 				return this.GetTable<IG_Account>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PK_SignString> PK_SignStrings
+		{
+			get
+			{
+				return this.GetTable<PK_SignString>();
 			}
 		}
 	}
@@ -400,6 +411,164 @@ namespace Instagram.App_Data
 					this._Cookie = value;
 					this.SendPropertyChanged("Cookie");
 					this.OnCookieChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="vtt.PK_SignString")]
+	public partial class PK_SignString : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Pid;
+		
+		private string _String;
+		
+		private System.Nullable<int> _Seed;
+		
+		private string _SignedString1;
+		
+		private string _SignedString2;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPidChanging(int value);
+    partial void OnPidChanged();
+    partial void OnStringChanging(string value);
+    partial void OnStringChanged();
+    partial void OnSeedChanging(System.Nullable<int> value);
+    partial void OnSeedChanged();
+    partial void OnSignedString1Changing(string value);
+    partial void OnSignedString1Changed();
+    partial void OnSignedString2Changing(string value);
+    partial void OnSignedString2Changed();
+    #endregion
+		
+		public PK_SignString()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pid", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Pid
+		{
+			get
+			{
+				return this._Pid;
+			}
+			set
+			{
+				if ((this._Pid != value))
+				{
+					this.OnPidChanging(value);
+					this.SendPropertyChanging();
+					this._Pid = value;
+					this.SendPropertyChanged("Pid");
+					this.OnPidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_String", DbType="VarChar(MAX)")]
+		public string String
+		{
+			get
+			{
+				return this._String;
+			}
+			set
+			{
+				if ((this._String != value))
+				{
+					this.OnStringChanging(value);
+					this.SendPropertyChanging();
+					this._String = value;
+					this.SendPropertyChanged("String");
+					this.OnStringChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Seed", DbType="Int")]
+		public System.Nullable<int> Seed
+		{
+			get
+			{
+				return this._Seed;
+			}
+			set
+			{
+				if ((this._Seed != value))
+				{
+					this.OnSeedChanging(value);
+					this.SendPropertyChanging();
+					this._Seed = value;
+					this.SendPropertyChanged("Seed");
+					this.OnSeedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SignedString1", DbType="VarChar(MAX)")]
+		public string SignedString1
+		{
+			get
+			{
+				return this._SignedString1;
+			}
+			set
+			{
+				if ((this._SignedString1 != value))
+				{
+					this.OnSignedString1Changing(value);
+					this.SendPropertyChanging();
+					this._SignedString1 = value;
+					this.SendPropertyChanged("SignedString1");
+					this.OnSignedString1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SignedString2", DbType="VarChar(MAX)")]
+		public string SignedString2
+		{
+			get
+			{
+				return this._SignedString2;
+			}
+			set
+			{
+				if ((this._SignedString2 != value))
+				{
+					this.OnSignedString2Changing(value);
+					this.SendPropertyChanging();
+					this._SignedString2 = value;
+					this.SendPropertyChanged("SignedString2");
+					this.OnSignedString2Changed();
 				}
 			}
 		}

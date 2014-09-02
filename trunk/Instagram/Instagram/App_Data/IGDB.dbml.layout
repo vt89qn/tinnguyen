@@ -14,5 +14,11 @@
         <elementListCompartment Id="d660c100-9444-4a12-83c6-38aaac5ade44" absoluteBounds="4.89, 1.835, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="7f46a68e-b457-4943-9799-237939c51686" absoluteBounds="3.125, 4.875, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/IGDBDataContext/PK_SignString" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ed838fc6-2253-4497-b147-d802f595adff" absoluteBounds="3.14, 5.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

@@ -121,6 +121,9 @@ public class WebClientEx : WebClient
         this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip");
         this.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-US");
         this.Headers.Add(HttpRequestHeader.UserAgent, this.UserAgent);
+        //this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded; charset=UTF-8");
+        this.Headers.Add("X-IG-Connection-Type", "WIFI");
+        this.Headers.Add("Cookie2", "$Version=1");
         if (additionHeader != null)
         {
             foreach (KeyValuePair<HttpRequestHeader, string> item in additionHeader)

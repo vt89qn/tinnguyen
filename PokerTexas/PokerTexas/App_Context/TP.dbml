@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="tinphuong_com_db" Class="TPDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=tinphuong.com\MSSQLSERVER2012;Initial Catalog=tinphuong_com_db;Persist Security Info=True;User ID=vtt" SettingsObjectName="PokerTexas.Properties.Settings" SettingsPropertyName="tinphuong_com_dbConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="vtt.PK_SignString" Member="PK_SignStrings">
+    <Type Name="PK_SignString">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="String" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Seed" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SignedString1" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="SignedString2" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

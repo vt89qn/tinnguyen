@@ -16,6 +16,7 @@ namespace TableConstants
     public class GridMainFormConst
     {
         public const string Status = "Status";
+        public const string Money = "Money";
         public const string STT = "STT";
     }
 }

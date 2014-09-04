@@ -15,6 +15,7 @@ using PokerTexas.App_Context;
 using PokerTexas.App_Common;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Globalization;
 
 namespace PokerTexas.App_Present
 {
@@ -144,9 +145,62 @@ namespace PokerTexas.App_Present
                 throw ex;
             }
         }
+
+        private void btnTangQuaBiMat_Click(object sender, EventArgs e)
+        {
+            btnTangQuaBiMat.Enabled = false;
+            Task.Factory.StartNew(tangQuaBiMat);
+        }
         #endregion
 
         #region - METHOD -
+        private void tangQuaBiMat()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    //pkSource.TangQuaBiMat();
+                    tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+                System.Threading.Thread.Sleep(5000);
+                tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    //pkSource.TangQuaBiMat();
+                    tasks.Add(Task.Factory.StartNew(pkSource.NhanQuaBiMat));
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnTangQuaBiMat.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
         private void nhanThuongHangNgay()
         {
             try
@@ -265,6 +319,12 @@ namespace PokerTexas.App_Present
                 gridData.Columns[GridMainFormConst.Status].Width = 300;
                 gridData.Columns[GridMainFormConst.Status].SortMode = DataGridViewColumnSortMode.NotSortable;
 
+                gridData.Columns[GridMainFormConst.Money].Visible = true;
+                gridData.Columns[GridMainFormConst.Money].Width = 100;
+                gridData.Columns[GridMainFormConst.Money].SortMode = DataGridViewColumnSortMode.NotSortable;
+                gridData.Columns[GridMainFormConst.Money].DefaultCellStyle = new DataGridViewCellStyle();
+                gridData.Columns[GridMainFormConst.Money].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+
                 DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
                 colStt.Name = GridMainFormConst.STT;
                 colStt.HeaderText = GridMainFormConst.STT;
@@ -313,5 +373,7 @@ namespace PokerTexas.App_Present
             }
         }
         #endregion
+
+
     }
 }

@@ -43,6 +43,7 @@
             this.btnNhanChipMayMan = new System.Windows.Forms.Button();
             this.btnTangCo4La = new System.Windows.Forms.Button();
             this.btnNhanThuongHangNgay = new System.Windows.Forms.Button();
+            this.btnTangQuaBiMat = new System.Windows.Forms.Button();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.groupMain.SuspendLayout();
@@ -50,9 +51,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -71,9 +72,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.Location = new System.Drawing.Point(6, 56);
             this.gridData.Name = "gridData";
@@ -146,12 +147,13 @@
             // 
             // groupMain
             // 
-            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMain.Controls.Add(this.chkNhanChip);
             this.groupMain.Controls.Add(this.chkNhanCo4La);
             this.groupMain.Controls.Add(this.btnNhanChipMayMan);
             this.groupMain.Controls.Add(this.btnTangCo4La);
+            this.groupMain.Controls.Add(this.btnTangQuaBiMat);
             this.groupMain.Controls.Add(this.btnNhanThuongHangNgay);
             this.groupMain.Location = new System.Drawing.Point(12, 12);
             this.groupMain.Name = "groupMain";
@@ -163,7 +165,7 @@
             // chkNhanChip
             // 
             this.chkNhanChip.AutoSize = true;
-            this.chkNhanChip.Location = new System.Drawing.Point(110, 48);
+            this.chkNhanChip.Location = new System.Drawing.Point(403, 81);
             this.chkNhanChip.Name = "chkNhanChip";
             this.chkNhanChip.Size = new System.Drawing.Size(15, 14);
             this.chkNhanChip.TabIndex = 3;
@@ -172,7 +174,7 @@
             // chkNhanCo4La
             // 
             this.chkNhanCo4La.AutoSize = true;
-            this.chkNhanCo4La.Location = new System.Drawing.Point(226, 48);
+            this.chkNhanCo4La.Location = new System.Drawing.Point(519, 81);
             this.chkNhanCo4La.Name = "chkNhanCo4La";
             this.chkNhanCo4La.Size = new System.Drawing.Size(15, 14);
             this.chkNhanCo4La.TabIndex = 5;
@@ -180,7 +182,7 @@
             // 
             // btnNhanChipMayMan
             // 
-            this.btnNhanChipMayMan.Location = new System.Drawing.Point(124, 39);
+            this.btnNhanChipMayMan.Location = new System.Drawing.Point(417, 72);
             this.btnNhanChipMayMan.Name = "btnNhanChipMayMan";
             this.btnNhanChipMayMan.Size = new System.Drawing.Size(84, 30);
             this.btnNhanChipMayMan.TabIndex = 4;
@@ -189,7 +191,7 @@
             // 
             // btnTangCo4La
             // 
-            this.btnTangCo4La.Location = new System.Drawing.Point(240, 39);
+            this.btnTangCo4La.Location = new System.Drawing.Point(533, 72);
             this.btnTangCo4La.Name = "btnTangCo4La";
             this.btnTangCo4La.Size = new System.Drawing.Size(84, 30);
             this.btnTangCo4La.TabIndex = 6;
@@ -198,13 +200,23 @@
             // 
             // btnNhanThuongHangNgay
             // 
-            this.btnNhanThuongHangNgay.Location = new System.Drawing.Point(6, 39);
+            this.btnNhanThuongHangNgay.Location = new System.Drawing.Point(6, 19);
             this.btnNhanThuongHangNgay.Name = "btnNhanThuongHangNgay";
-            this.btnNhanThuongHangNgay.Size = new System.Drawing.Size(84, 30);
+            this.btnNhanThuongHangNgay.Size = new System.Drawing.Size(260, 30);
             this.btnNhanThuongHangNgay.TabIndex = 3;
-            this.btnNhanThuongHangNgay.Text = "NTHN(F1)";
+            this.btnNhanThuongHangNgay.Text = "NTHN";
             this.btnNhanThuongHangNgay.UseVisualStyleBackColor = true;
             this.btnNhanThuongHangNgay.Click += new System.EventHandler(this.btnNhanThuongHangNgay_Click);
+            // 
+            // btnTangQuaBiMat
+            // 
+            this.btnTangQuaBiMat.Location = new System.Drawing.Point(6, 55);
+            this.btnTangQuaBiMat.Name = "btnTangQuaBiMat";
+            this.btnTangQuaBiMat.Size = new System.Drawing.Size(260, 30);
+            this.btnTangQuaBiMat.TabIndex = 3;
+            this.btnTangQuaBiMat.Text = "TQBM";
+            this.btnTangQuaBiMat.UseVisualStyleBackColor = true;
+            this.btnTangQuaBiMat.Click += new System.EventHandler(this.btnTangQuaBiMat_Click);
             // 
             // MainForm
             // 
@@ -244,6 +256,7 @@
         private System.Windows.Forms.CheckBox chkNhanChip;
         private System.Windows.Forms.CheckBox chkNhanCo4La;
         private System.Windows.Forms.Button btnKetBan;
+        private System.Windows.Forms.Button btnTangQuaBiMat;
 
     }
 }

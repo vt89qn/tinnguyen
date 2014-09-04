@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Common\AppSettings.cs" />
+    <Compile Include="App_Common\Global.cs" />
     <Compile Include="App_Common\TableConstant.cs" />
     <Compile Include="App_Common\Utilities.cs" />
     <Compile Include="App_Context\PokerContext.cs" />
@@ -79,6 +80,12 @@
     <Compile Include="App_Controller\FaceBookController.cs" />
     <Compile Include="App_Controller\PokerController.cs" />
     <Compile Include="App_Model\Models.cs" />
+    <Compile Include="App_Present\AddAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App_Present\AddAccount.designer.cs">
+      <DependentUpon>AddAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="App_Present\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +97,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="App_Present\AddAccount.resx">
+      <DependentUpon>AddAccount.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="App_Present\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

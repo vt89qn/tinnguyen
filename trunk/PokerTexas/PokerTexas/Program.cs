@@ -14,39 +14,13 @@ namespace PokerTexas
         [STAThread]
         static void Main()
         {
-            try
-            {
-                if (IntPtr.Size == 4)
-                {
-                    if (File.Exists("SQLite.Interop_x86.dll"))
-                    {
-                        if (File.Exists("SQLite.Interop.dll"))
-                        {
-                            File.Delete("SQLite.Interop.dll");
-                        }
-                        File.Copy("SQLite.Interop_x86.dll", "SQLite.Interop.dll");
-                    }
-                }
-                else if (IntPtr.Size == 8)
-                {
-                    if (File.Exists("SQLite.Interop_x64.dll"))
-                    {
-                        if (File.Exists("SQLite.Interop.dll"))
-                        {
-                            File.Delete("SQLite.Interop.dll");
-                        }
-                        File.Copy("SQLite.Interop_x64.dll", "SQLite.Interop.dll");
-                    }
-                }
-            }
-            catch { }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (DateTime.Today >= new DateTime(2014, 09, 01))
+            if (DateTime.Today >= new DateTime(2014, 10, 01))
             {
                 return;
             }
-            Application.Run(new FormMain());
+            Application.Run(new App_Present.MainForm());
         }
     }
 }

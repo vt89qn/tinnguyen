@@ -9,75 +9,153 @@ using PokerTexas.App_UserControl;
 using System.Collections.Specialized;
 using System.Web.Script.Serialization;
 using PokerTexas.App_Context;
+using TableConstants;
 
 namespace PokerTexas.App_Controller
 {
-    public class PokerController
+    public class PokerController : INotifyPropertyChanged
     {
-        public bool LoginMobile(Poker model)
+        public event PropertyChangedEventHandler PropertyChanged;
+        private string status = string.Empty;
+        public Poker Models { get; set; }
+        public string Status
         {
-            WebClientEx client = new WebClientEx();
-            if (string.IsNullOrEmpty(model.MBAccessToken))
+            set
             {
-                Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.FaceBook.MBLoginText);
-                model.MBAccessToken = dicLoginFaceBook["access_token"].ToString();
+                if (value != this.status)
+                {
+                    this.status = value;
+                    this.NotifyPropertyChanged(GridMainFormConst.Status);
+                }
             }
-            client = new WebClientEx();
-            client.UserAgent = AppSettings.UserAgentFaceBook;
-            client.DoGet("https://graph.facebook.com/me?access_token=" + model.MBAccessToken + "&format=json");
-            Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-            if (dicInfo.ContainsKey("name"))
+            get { return status; }
+        }
+
+        private void NotifyPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        public bool LoginMobile()
+        {
+            try
             {
+                WebClientEx client = new WebClientEx();
+                if (string.IsNullOrEmpty(Models.MBAccessToken))
+                {
+                    Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
+                    Models.MBAccessToken = dicLoginFaceBook["access_token"].ToString();
+                }
+                client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+                client.DoGet("https://graph.facebook.com/me?access_token=" + Models.MBAccessToken + "&format=json");
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                if (dicInfo.ContainsKey("name"))
+                {
+                    SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
+                    dic.Add("api", "62");
+                    dic.Add("langtype", "13");
+                    dic.Add("method", "Members.Create");
+                    dic.Add("mid", "0");
+                    dic.Add("mtkey", "");
+                    dic.Add("protocol", "1");
+                    dic.Add("sid", "110");
+                    dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                    dic.Add("unid", "193");
+                    dic.Add("version", "5.3.1");
+                    dic.Add("vkey", "");
+                    dic.Add("vmid", "");
+
+
+                    SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+                    dic_param.Add("ANPSetting", "4");
+                    dic_param.Add("appid", "1");
+                    dic_param.Add("appkey", "");
+
+                    dic_param.Add("is_overseas", "1");
+                    dic_param.Add("mbig", "");
+                    dic_param.Add("mnick", dicInfo["name"]);
+                    dic_param.Add("protocol", "1");
+                    dic_param.Add("sitemid", Models.FaceBook.FBID);
+                    dic_param.Add("token", Models.MBAccessToken);
+                    dic.Add("param", dic_param);
+
+                    dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, string.Empty)));
+
+
+                    NameValueCollection param = new NameValueCollection();
+                    string api = new JavaScriptSerializer().Serialize(dic);
+                    param.Add("api", api);
+                    client = new WebClientEx();
+                    client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    client.X_TUNNEL_VERIFY = Get_X_TUNNEL_VERIFY(Models.FaceBook.FBID);
+                    client.SetAPIV8 = true;
+                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    if (!string.IsNullOrEmpty(client.ResponseText)
+                        && client.ResponseText.Contains("mtkey")
+                        && client.ResponseText.Contains("vkey"))
+                    {
+                        dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                        Models.MBLoginText = client.ResponseText;
+                        Models.PKID = (dicInfo["ret"] as Dictionary<string, object>)["mid"].ToString();
+                        Models.X_TUNNEL_VERIFY = client.X_TUNNEL_VERIFY;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
+        }
+
+        public void NhanThuongHangNgayMobile()
+        {
+            try
+            {
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.MBLoginText);
+                string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
+                string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
                 SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
                 dic.Add("api", "62");
                 dic.Add("langtype", "13");
-                dic.Add("method", "Members.Create");
-                dic.Add("mid", "0");
-                dic.Add("mtkey", "");
+                dic.Add("method", "Members.setMoney");
+                dic.Add("mid", Models.PKID);
+                dic.Add("mtkey", mtkey);
                 dic.Add("protocol", "1");
                 dic.Add("sid", "110");
                 dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
                 dic.Add("unid", "193");
                 dic.Add("version", "5.3.1");
-                dic.Add("vkey", "");
-                dic.Add("vmid", "");
+                dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
+                dic.Add("vmid", Models.PKID);
 
 
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
-                dic_param.Add("ANPSetting", "4");
-                dic_param.Add("appid", "1");
-                dic_param.Add("appkey", "");
+                dic_param.Add("sext", "");
+                dic_param.Add("sflag", "0");
+                dic_param.Add("stype", "0");
 
-                dic_param.Add("is_overseas", "1");
-                dic_param.Add("mbig", "");
-                dic_param.Add("mnick", dicInfo["name"]);
-                dic_param.Add("protocol", "1");
-                dic_param.Add("sitemid", model.FaceBook.FBID);
-                dic_param.Add("token", model.MBAccessToken);
                 dic.Add("param", dic_param);
-
-                dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, string.Empty)));
-
+                dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
 
                 NameValueCollection param = new NameValueCollection();
                 string api = new JavaScriptSerializer().Serialize(dic);
                 param.Add("api", api);
-                client = new WebClientEx();
-                client.UserAgent = AppSettings.UserAgentPoker;
-                client.X_TUNNEL_VERIFY = Get_X_TUNNEL_VERIFY(model.FaceBook.FBID);
+                WebClientEx client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                if (!string.IsNullOrEmpty(client.ResponseText) 
-                    && client.ResponseText.Contains("mtkey")
-                    && client.ResponseText.Contains("vkey"))
+                if (!string.IsNullOrEmpty(client.ResponseText))
                 {
-                    //mid=21830508
-                    dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                    model.MBLoginText = client.ResponseText;
-                    model.PKID = ((dicInfo["ret"]as Dictionary<string,object>)["aUser"]as Dictionary<string,object>)["mid"].ToString();
-                    return true;
+
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public string Get_X_TUNNEL_VERIFY(string sigKey)

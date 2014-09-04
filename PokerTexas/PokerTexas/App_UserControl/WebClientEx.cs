@@ -4,11 +4,19 @@ using System.Text;
 using System.Net;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.IO;
+using PokerTexas.App_Common;
 
 namespace PokerTexas.App_UserControl
 {
     public class WebClientEx : WebClient
     {
+        public enum RequestTypeEnum
+        {
+            Poker,
+            FaceBook,
+            Nomal
+        }
         #region - DECLARE -
         public Exception Error = null;
         public CookieContainer CookieContainer = new CookieContainer();
@@ -19,6 +27,9 @@ namespace PokerTexas.App_UserControl
         public Image ResponseImage { get; set; }
         public string UserAgent = "Instagram 6.5.0 Android (17/4.2.2; 240dpi; 480x800; samsung; SGH-T959; SGH-T959; aries; en_US)";
         public string X_TUNNEL_VERIFY = string.Empty;
+        public string Authorization = string.Empty;
+        public RequestTypeEnum RequestType = RequestTypeEnum.Nomal;
+        public bool SetAPIV8 = false;
         #endregion
 
         #region - METHOD -
@@ -49,6 +60,14 @@ namespace PokerTexas.App_UserControl
             try
             {
                 Response = base.GetWebResponse(request);
+            }
+            catch (WebException ex)
+            {
+                this.Error = ex;
+                using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                {
+                    ResponseText = reader.ReadToEnd();
+                }
             }
             catch (Exception ex)
             {
@@ -120,10 +139,30 @@ namespace PokerTexas.App_UserControl
         private void addHeader(Dictionary<HttpRequestHeader, string> additionHeader)
         {
             this.Headers.Clear();
-            this.Headers.Add(HttpRequestHeader.UserAgent, this.UserAgent);
-            if (!string.IsNullOrEmpty(X_TUNNEL_VERIFY))
+
+            if (RequestType == RequestTypeEnum.Poker)
             {
-                this.Headers.Add("X-TUNNEL-VERIFY", X_TUNNEL_VERIFY);
+                if (!string.IsNullOrEmpty(X_TUNNEL_VERIFY))
+                {
+                    this.Headers.Add("X-TUNNEL-VERIFY", X_TUNNEL_VERIFY);
+                }
+                if (SetAPIV8)
+                {
+                    this.Headers.Add("api-v8", "1");
+                }
+                this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentPoker);
+            }
+            else if (RequestType == RequestTypeEnum.FaceBook)
+            {
+                if (!string.IsNullOrEmpty(Authorization))
+                {
+                    this.Headers.Add("Authorization", "OAuth " + Authorization);
+                }
+                this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentFaceBook);
+            }
+            else
+            {
+                this.Headers.Add(HttpRequestHeader.UserAgent, UserAgent);
             }
             if (additionHeader != null)
             {

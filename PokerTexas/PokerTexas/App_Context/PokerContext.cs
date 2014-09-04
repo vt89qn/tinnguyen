@@ -8,7 +8,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace PokerTexas.App_Context
 {
-    class PokerContext : DbContext
+    public class PokerContext : DbContext
     {
         public PokerContext()
         {

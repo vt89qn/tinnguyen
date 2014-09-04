@@ -49,5 +49,7 @@ namespace PokerTexas.App_Model
 
         public string MBLoginText { get; set; }
         public string WebLoginText { get; set; }
+
+        public string X_TUNNEL_VERIFY { get; set; }
     }
 }

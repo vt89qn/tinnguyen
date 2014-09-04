@@ -150,7 +150,6 @@ namespace PokerTexas.App_UserControl
                 {
                     this.Headers.Add("api-v8", "1");
                 }
-                this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentPoker);
             }
             else if (RequestType == RequestTypeEnum.FaceBook)
             {

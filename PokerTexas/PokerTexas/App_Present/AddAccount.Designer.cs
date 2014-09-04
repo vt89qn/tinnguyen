@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddAccount));
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.lblFaceBookUserName = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
@@ -105,10 +106,12 @@
             this.Controls.Add(this.lblFaceBookUserName);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUserName);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddAccount";
+            this.ShowInTaskbar = false;
             this.Text = "Thêm Tài Khoản";
             this.ResumeLayout(false);
             this.PerformLayout();

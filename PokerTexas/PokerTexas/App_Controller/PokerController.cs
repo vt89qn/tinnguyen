@@ -17,6 +17,7 @@ namespace PokerTexas.App_Controller
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private string status = string.Empty;
+        private decimal money = 0;
         public Poker Models { get; set; }
         public string Status
         {
@@ -29,6 +30,19 @@ namespace PokerTexas.App_Controller
                 }
             }
             get { return status; }
+        }
+
+        public decimal Money
+        {
+            set
+            {
+                if (value != this.money)
+                {
+                    this.money = value;
+                    this.NotifyPropertyChanged(GridMainFormConst.Money);
+                }
+            }
+            get { return money; }
         }
 
         private void NotifyPropertyChanged(string name)
@@ -100,6 +114,49 @@ namespace PokerTexas.App_Controller
                         Models.MBLoginText = client.ResponseText;
                         Models.PKID = (dicInfo["ret"] as Dictionary<string, object>)["mid"].ToString();
                         Models.X_TUNNEL_VERIFY = client.X_TUNNEL_VERIFY;
+                        string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
+                        string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
+
+                        #region - System.loadInit -
+                        dic = new SortedDictionary<string, object>();
+                        dic.Add("api", "62");
+                        dic.Add("langtype", "13");
+                        dic.Add("method", "System.loadInit");
+                        dic.Add("mid", Models.PKID);
+                        dic.Add("mtkey", mtkey);
+                        dic.Add("protocol", "1");
+                        dic.Add("sid", "110");
+                        dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                        dic.Add("unid", "193");
+                        dic.Add("version", "5.3.1");
+                        dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
+                        dic.Add("vmid", Models.PKID);
+
+
+                        dic_param = new SortedDictionary<string, object>();
+
+                        dic.Add("param", dic_param);
+                        dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
+
+                        param = new NameValueCollection();
+                        api = new JavaScriptSerializer().Serialize(dic);
+                        param.Add("api", api);
+                        client = new WebClientEx();
+                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
+                        {
+                            dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                            string money = ((dicInfo["ret"] as Dictionary<string, object>)["aUser"] as Dictionary<string, object>)["mmoney"].ToString();
+                            decimal dmoney = 0;
+                            if (decimal.TryParse(money, out dmoney))
+                            {
+                                this.Money = dmoney;
+                            }
+                        }
+
+                        #endregion
+
                         return true;
                     }
                 }
@@ -115,13 +172,17 @@ namespace PokerTexas.App_Controller
         {
             try
             {
+                this.Status = "Bắt đầu nhận thưởng hàng ngày";
                 Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.MBLoginText);
                 string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
                 string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
                 SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
+
+                #region - Members.phoneContinuous -
+                dic = new SortedDictionary<string, object>();
                 dic.Add("api", "62");
                 dic.Add("langtype", "13");
-                dic.Add("method", "Members.setMoney");
+                dic.Add("method", "Members.phoneContinuous");
                 dic.Add("mid", Models.PKID);
                 dic.Add("mtkey", mtkey);
                 dic.Add("protocol", "1");
@@ -134,9 +195,7 @@ namespace PokerTexas.App_Controller
 
 
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
-                dic_param.Add("sext", "");
-                dic_param.Add("sflag", "0");
-                dic_param.Add("stype", "0");
+                dic_param.Add("test", "0");
 
                 dic.Add("param", dic_param);
                 dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
@@ -151,10 +210,178 @@ namespace PokerTexas.App_Controller
                 {
 
                 }
+                #endregion
+
+                #region - Members.setMoney -
+                dic = new SortedDictionary<string, object>();
+                dic.Add("api", "62");
+                dic.Add("langtype", "13");
+                dic.Add("method", "Members.setMoney");
+                dic.Add("mid", Models.PKID);
+                dic.Add("mtkey", mtkey);
+                dic.Add("protocol", "1");
+                dic.Add("sid", "110");
+                dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                dic.Add("unid", "193");
+                dic.Add("version", "5.3.1");
+                dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
+                dic.Add("vmid", Models.PKID);
+
+
+                dic_param = new SortedDictionary<string, object>();
+                dic_param.Add("sext", "");
+                dic_param.Add("sflag", "0");
+                dic_param.Add("stype", "0");
+
+                dic.Add("param", dic_param);
+                dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
+
+                param = new NameValueCollection();
+                api = new JavaScriptSerializer().Serialize(dic);
+                param.Add("api", api);
+                client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
+                {
+                    dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    string money = (dicInfo["ret"] as Dictionary<string, object>)["mmoney"].ToString();
+                    decimal dmoney = 0;
+                    if (decimal.TryParse(money, out dmoney))
+                    {
+                        this.Money = dmoney;
+                    }
+                }
+                #endregion
+
+                this.Status = "Nhận thưởng hàng ngày thành công";
             }
             catch (Exception ex)
             {
                 throw ex;
+                this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
+            }
+        }
+
+        public void TangQuaBiMat()
+        {
+            try
+            {
+                this.Status = "Bắt đầu tặng quà bí mật";
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.MBLoginText);
+                string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
+                string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
+                SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
+
+                foreach (Poker to in this.Models.Package.Pokers)
+                {
+                    if (to == this.Models) continue;
+                    #region - Presents.post -
+                    dic = new SortedDictionary<string, object>();
+                    dic.Add("api", "62");
+                    dic.Add("langtype", "13");
+                    dic.Add("method", "Presents.post");
+                    dic.Add("mid", Models.PKID);
+                    dic.Add("mtkey", mtkey);
+                    dic.Add("protocol", "1");
+                    dic.Add("sid", "110");
+                    dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                    dic.Add("unid", "193");
+                    dic.Add("version", "5.3.1");
+                    dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
+                    dic.Add("vmid", Models.PKID);
+
+
+                    SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+                    dic_param.Add("to", to.PKID);
+
+                    dic.Add("param", dic_param);
+                    dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
+
+                    NameValueCollection param = new NameValueCollection();
+                    string api = new JavaScriptSerializer().Serialize(dic);
+                    param.Add("api", api);
+                    WebClientEx client = new WebClientEx();
+                    client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    if (!string.IsNullOrEmpty(client.ResponseText))
+                    {
+
+                    }
+                    #endregion
+
+                    this.Status = "Tặng quà bí mật thành công cho " + to.FaceBook.Login;
+                    System.Threading.Thread.Sleep(5000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                this.Status = "Có lỗi trong quá trình Tặng quà bí mật";
+            }
+        }
+
+        public void NhanQuaBiMat()
+        {
+            try
+            {
+                this.Status = "Bắt đầu nhận quà bí mật";
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.MBLoginText);
+                string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
+                string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
+                SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
+
+                foreach (Poker to in this.Models.Package.Pokers)
+                {
+                    if (to == this.Models) continue;
+                    #region - Presents.get -
+                    dic = new SortedDictionary<string, object>();
+                    dic.Add("api", "62");
+                    dic.Add("langtype", "13");
+                    dic.Add("method", "Presents.get");
+                    dic.Add("mid", Models.PKID);
+                    dic.Add("mtkey", mtkey);
+                    dic.Add("protocol", "1");
+                    dic.Add("sid", "110");
+                    dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                    dic.Add("unid", "193");
+                    dic.Add("version", "5.3.1");
+                    dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
+                    dic.Add("vmid", Models.PKID);
+
+
+                    SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+                    dic_param.Add("id", DateTime.Today.ToString("yyyyMMdd") + "|" + to.PKID);
+
+                    dic.Add("param", dic_param);
+                    dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
+
+                    NameValueCollection param = new NameValueCollection();
+                    string api = new JavaScriptSerializer().Serialize(dic);
+                    param.Add("api", api);
+                    WebClientEx client = new WebClientEx();
+                    client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
+                    {
+                        dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                        string money = (dicInfo["ret"] as Dictionary<string, object>)["money"].ToString();
+                        decimal dmoney = 0;
+                        if (decimal.TryParse(money, out dmoney))
+                        {
+                            this.Money += dmoney;
+                        }
+                    }
+                    #endregion
+
+                    this.Status = "Nhận quà bí mật thành công từ " + to.FaceBook.Login;
+                    System.Threading.Thread.Sleep(4000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                this.Status = "Có lỗi trong quá trình nhận quà bí mật";
             }
         }
 

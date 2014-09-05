@@ -417,20 +417,43 @@ namespace PokerTexas.App_Controller
             treemap.Add("androidId", string.Empty);
 
             string jSon = new JavaScriptSerializer().Serialize(treemap);
-            TPDataContext TPDB = new TPDataContext();
-            TPDB.PK_SignStrings.InsertOnSubmit(new PK_SignString { String = jSon, Seed = iSeed });
-            TPDB.SubmitChanges();
-            System.Threading.Thread.Sleep(2000);
+
+
+            //TPDataContext TPDB = new TPDataContext();
+            //TPDB.PK_SignStrings.InsertOnSubmit(new PK_SignString { String = jSon, Seed = iSeed });
+            //TPDB.SubmitChanges();
+            //System.Threading.Thread.Sleep(2000);
+
+            WebClientEx client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            param.Add("stage","upload");
+            param.Add("page","pk");
+            param.Add("unsignedstring",jSon);
+            param.Add("seed",iSeed.ToString());
+            client.DoPost(param, "http://api.tinphuong.com/Default.aspx");
             while (true)
             {
-                TPDB = new TPDataContext();
-                PK_SignString signstring = (from _signstring in TPDB.PK_SignStrings where _signstring.String == jSon select _signstring).FirstOrDefault();
-                if (signstring != null && !string.IsNullOrEmpty(signstring.SignedString1))
+                param = new NameValueCollection();
+                param.Add("stage", "download");
+                param.Add("page", "pk");
+                param.Add("unsignedstring", jSon);
+                param.Add("seed", iSeed.ToString());
+                client.DoPost(param, "http://api.tinphuong.com/Default.aspx");
+                if (!string.IsNullOrEmpty(client.ResponseText))
                 {
-                    strReturn += signstring.SignedString1 + "&" + signstring.SignedString2;
-                    TPDB.PK_SignStrings.DeleteOnSubmit(signstring);
-                    TPDB.SubmitChanges();
-                    break;
+                    List<Dictionary<string, object>> listSigned = new JavaScriptSerializer().Deserialize<List<Dictionary<string, object>>>(client.ResponseText);
+                    foreach (Dictionary<string, object> dicSigned in listSigned)
+                    {
+                        if (dicSigned["page"].ToString() == "pk")
+                        {
+                            if (dicSigned["unsignedstring"].ToString() == jSon)
+                            {
+                                strReturn += dicSigned["signedstring1"].ToString() + "&" + dicSigned["signedstring2"].ToString();
+                                return strReturn;
+                                break;
+                            }
+                        }
+                    }
                 }
                 System.Threading.Thread.Sleep(1000);
             }

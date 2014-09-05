@@ -7,4 +7,13 @@
       <Column Name="SignedString" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="vtt.PK_SignString" Member="PK_SignStrings">
+    <Type Name="PK_SignString">
+      <Column Name="Pid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="String" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Seed" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SignedString1" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="SignedString2" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
 </Database>

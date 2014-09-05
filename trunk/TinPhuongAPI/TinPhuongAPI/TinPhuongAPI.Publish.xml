@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishData>
-  <publishProfile publishUrl="ftp://api.tinphuong.com/api.tinphuong.com/" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FTP" replaceMatchingFiles="True" userName="tin" savePWD="True" userPWD="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA+lmTM342gEiTbiORdL6RLwAAAAACAAAAAAAQZgAAAAEAACAAAAA7K9g5lRUPbWaCIGWbX6OQpC9ou7fif6XX38FOCgDcOgAAAAAOgAAAAAIAACAAAADdAs9lm23yNHzp8amLEZ7VP/dqRkZMtQjtMU9z1UIcWCAAAAC0sl6DKZ+X6HGxzojl/AQP4HLiSalSGSz8WMfJh6YZ6UAAAABY/zjjyNdF1q28ZJQHvcoxrtHrHzJk9pcM8RyhJpsigrOu5tMi9mOz/+3oyGMzGsp67Pnfuc+UY6kwqRv9GJGG" SelectedForPublish="True">
-    <file relUrl="bin/TinPhuongAPI.dll" publishTime="08/31/2014 20:30:39" />
-    <file relUrl="bin/TinPhuongAPI.pdb" publishTime="08/31/2014 20:30:39" />
-    <file relUrl="Web.config" publishTime="08/31/2014 19:52:11" />
-    <file relUrl="Default.aspx" publishTime="08/31/2014 19:35:52" />
+  <publishProfile publishUrl="ftp://api.tinphuong.com/api.tinphuong.com/" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FTP" replaceMatchingFiles="True" userName="tin" savePWD="True" userPWD="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA1SAZT07o5kyl7SYcoA0UoQAAAAACAAAAAAAQZgAAAAEAACAAAACOUuC/QT7wHdt1mCzegNYDa2KF5evxtkPmGYrdTX8WZwAAAAAOgAAAAAIAACAAAABssAYfyJTZ3YD0LG5i4iLXGUCKaG29oGrY0eGj+lyh+CAAAADgoSjUYLzqID2Jg16014zDptvjG38n+kbAqSSLd7UzXkAAAABq1mfORN1u538naJlku2AYYB3A8gTPAAViH/IGfQnroRfnkW/3Vk4IM79Qanx0nN/ht/N2Cd6tybDdV9BHtvE8" SelectedForPublish="True">
+    <file relUrl="bin/TinPhuongAPI.pdb" publishTime="09/01/2014 15:33:08" />
+    <file relUrl="Default.aspx" publishTime="09/01/2014 09:59:02" />
+    <file relUrl="bin/TinPhuongAPI.dll" publishTime="09/01/2014 15:33:08" />
+    <file relUrl="Web.config" publishTime="09/01/2014 15:02:37" />
   </publishProfile>
 </publishData>

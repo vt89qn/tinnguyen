@@ -8,5 +8,11 @@
         <elementListCompartment Id="89e95f36-e199-4677-8f2e-da1f3e2d378c" absoluteBounds="5.765, 2.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="7ed55d59-f006-46e8-94f6-8f36d8030548" absoluteBounds="2.75, 1.625, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/TPDBDataContext/PK_SignString" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3744e09f-938f-4726-9bc4-2fe1c9c96a34" absoluteBounds="2.765, 2.085, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

@@ -25,7 +25,6 @@ namespace PokerTexas.App_UserControl
         public WebResponse Response { get; set; }
         public string ResponseText { get; set; }
         public Image ResponseImage { get; set; }
-        public string UserAgent = "Instagram 6.5.0 Android (17/4.2.2; 240dpi; 480x800; samsung; SGH-T959; SGH-T959; aries; en_US)";
         public string X_TUNNEL_VERIFY = string.Empty;
         public string Authorization = string.Empty;
         public RequestTypeEnum RequestType = RequestTypeEnum.Nomal;
@@ -36,7 +35,6 @@ namespace PokerTexas.App_UserControl
         public WebClientEx()
         {
             this.Encoding = Encoding.UTF8;
-            //ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
         }
         protected override WebRequest GetWebRequest(Uri address)
         {
@@ -161,7 +159,7 @@ namespace PokerTexas.App_UserControl
             }
             else
             {
-                this.Headers.Add(HttpRequestHeader.UserAgent, UserAgent);
+                this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentBrowser);
             }
             if (additionHeader != null)
             {

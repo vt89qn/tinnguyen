@@ -16,6 +16,7 @@ using PokerTexas.App_Common;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Globalization;
+using System.Collections.Specialized;
 
 namespace PokerTexas.App_Present
 {
@@ -23,6 +24,7 @@ namespace PokerTexas.App_Present
     {
         #region - DECLARE -
         Dictionary<long, BindingList<PokerController>> dicPokers = new Dictionary<long, BindingList<PokerController>>();
+        private bool isBusy = false;
         #endregion
 
         #region - CONTRUCTOR -
@@ -33,6 +35,74 @@ namespace PokerTexas.App_Present
         #endregion
 
         #region - EVENT -
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (!isBusy)
+            {
+                if (keyData == Keys.F1)
+                {
+                    btnNhanThuongHangNgay_Click(null, null);
+                    return true;
+                }
+                else if (keyData == Keys.F2)
+                {
+                    btnTangQuaBiMat_Click(null, null);
+                    return true;
+                }
+                else if (keyData == Keys.F3)
+                {
+                    btnNhanChipMayMan_Click(null, null);
+                    return true;
+                }
+                else if (keyData == Keys.F4)
+                {
+                    btnTangCo4La_Click(null, null);
+                    return true;
+                }
+                else if (keyData == Keys.F5)
+                {
+                    if (gridData.Visible)
+                    {
+                        gridData.Visible = false;
+                        this.Height = 180;
+                    }
+                    else
+                    {
+                        gridData.Visible = true;
+                        this.Height = 480;
+                    }
+                }
+                else if (keyData == Keys.F6)
+                {
+                    try
+                    {
+                        if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                        {
+                            txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                        }
+                    }
+                    catch { }
+                    return true;
+                }
+                else if (keyData == Keys.F7)
+                {
+                    btnKiemTraTaiKhoan_Click(null, null);
+                    return true;
+                }
+                else if (keyData == Keys.F8)
+                {
+                    btnThemTaiKhoan_Click(null, null);
+                    return true;
+                }
+                else if (keyData == Keys.F9)
+                {
+                    btnKetBan_Click(null, null);
+                    return true;
+                }
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Process.GetCurrentProcess().Kill();
@@ -72,19 +142,99 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void btnXoaTaiKhoan_Click(object sender, EventArgs e)
+        private void btnKiemTraTaiKhoan_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnKiemTraTaiKhoan.Enabled = false;
+            Task.Factory.StartNew(getMoney);
+        }
+
+        private void menuXoaTK_Click(object sender, EventArgs e)
         {
             try
             {
-                if (MessageBox.Show("Bạn muốn xóa Tài Khoản được chọn?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                if (gridData.Rows.Count > 0)
                 {
                     PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
-                    Package pack = txtPackNo.SelectedItem as Package;
+                    if (MessageBox.Show("Bạn muốn xóa Tài Khoản " + pkController.Models.FaceBook.Login + " ?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        Package pack = txtPackNo.SelectedItem as Package;
+                        Global.DBContext.Poker.Remove(pkController.Models);
+                        Global.DBContext.SaveChanges();
+                        dicPokers[pack.ID].Remove(pkController);
+                        reloadGrid();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-                    Global.DBContext.Poker.Remove(pkController.Models);
-                    Global.DBContext.SaveChanges();
-                    dicPokers[pack.ID].Remove(pkController);
-                    reloadGrid();
+        private void menuCopyURL_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
+                FaceBookController fbController = new FaceBookController();
+                string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy);
+                if (!string.IsNullOrEmpty(strURL))
+                {
+                    Clipboard.SetText(strURL);
+                    MessageBox.Show("Đã copy URL vào clipboad");
+                }
+            }
+        }
+
+        bool bOpenByPressAppKey = false;
+        private void menuGridData_Opening(object sender, CancelEventArgs e)
+        {
+            menuCopyURL.Enabled = menuXoaTK.Enabled = gridData.Rows.Count > 0;
+            if (gridData.Rows.Count > 0)
+            {
+                gridData.ClearSelection();
+                gridData.Rows[gridData.CurrentCell.RowIndex].Selected = true;
+                if (bOpenByPressAppKey)
+                {
+                    ContextMenuStrip cms = gridData.ContextMenuStrip;
+                    if (cms != null)
+                    {
+                        Rectangle r = gridData.GetCellDisplayRectangle(gridData.CurrentCell.ColumnIndex, gridData.CurrentCell.RowIndex, false);
+                        Point p = new Point(r.X, r.Y + r.Height / 2);
+                        cms.Show(gridData, p);
+                    }
+                }
+            }
+        }
+
+        private void gridData_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (gridData.RowCount > 0)
+            {
+                if ((e.KeyCode == Keys.F10 && e.Shift) || e.KeyCode == Keys.Apps)
+                {
+                    bOpenByPressAppKey = true;
+                }
+            }
+        }
+
+        private void gridData_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            try
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+                    {
+                        gridData.CurrentCell = gridData[e.ColumnIndex, e.RowIndex];
+                        bOpenByPressAppKey = false;
+                    }
+                    else
+                    {
+                        gridData.CurrentCell = null;
+                    }
                 }
             }
             catch (Exception ex)
@@ -123,9 +273,10 @@ namespace PokerTexas.App_Present
         {
             try
             {
+                if (isBusy) return;
+                isBusy = true;
                 btnKetBan.Enabled = false;
-                Task taskKetBan = new Task(ketBan);
-                taskKetBan.Wait(1000);
+                Task.Factory.StartNew(ketBan);
             }
             catch (Exception ex)
             {
@@ -137,6 +288,8 @@ namespace PokerTexas.App_Present
         {
             try
             {
+                if (isBusy) return;
+                isBusy = true;
                 btnNhanThuongHangNgay.Enabled = false;
                 Task.Factory.StartNew(nhanThuongHangNgay);
             }
@@ -148,12 +301,183 @@ namespace PokerTexas.App_Present
 
         private void btnTangQuaBiMat_Click(object sender, EventArgs e)
         {
+            if (isBusy) return;
+            isBusy = true;
             btnTangQuaBiMat.Enabled = false;
             Task.Factory.StartNew(tangQuaBiMat);
+        }
+
+        private void btnNhanChipMayMan_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnNhanChipMayMan.Enabled = false;
+            Task.Factory.StartNew(tangChipMayMan);
+        }
+
+        private void btnTangCo4La_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnTangCo4La.Enabled = false;
+            Task.Factory.StartNew(tangCo4La);
         }
         #endregion
 
         #region - METHOD -
+        private void getMoney()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    //pkSource.TangQuaBiMat();
+                    tasks.Add(Task.Factory.StartNew(() => pkSource.GetInitMoney(true)));
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnKiemTraTaiKhoan.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
+        private void tangChipMayMan()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                List<string> listLink = new List<string>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    tasks.Add(Task.Factory.StartNew(() =>
+                    {
+                        string strLink = pkSource.ChiaSeChipMayMan();
+                        if (!string.IsNullOrEmpty(strLink))
+                        {
+                            listLink.Add(strLink);
+                        }
+                    }));
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                System.Threading.Thread.Sleep(1000);
+
+                tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    List<string> listLinkForGet = new List<string>();
+                    for (int iPoker = 1; iPoker <= 3; iPoker++)
+                    {
+                        if (iIndex + iPoker < listLink.Count)
+                        {
+                            listLinkForGet.Add(listLink[iIndex + iPoker]);
+                        }
+                        else if (iIndex + iPoker - listLink.Count < listLink.Count)
+                        {
+                            listLinkForGet.Add(listLink[iIndex + iPoker - listLink.Count]);
+                        }
+                    }
+                    if (listLinkForGet.Count > 0)
+                    {
+                        if (this.IsDisposed) return;
+                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        tasks.Add(Task.Factory.StartNew(() => pkSource.NhanChipMayMan(listLinkForGet)));
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnNhanChipMayMan.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
+        private void tangCo4La()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    tasks.Add(Task.Factory.StartNew(pkSource.TangCo4La));
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+                System.Threading.Thread.Sleep(1000);
+                tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    tasks.Add(Task.Factory.StartNew(pkSource.NhanCo4La));
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnTangCo4La.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
         private void tangQuaBiMat()
         {
             try
@@ -165,12 +489,14 @@ namespace PokerTexas.App_Present
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                     //pkSource.TangQuaBiMat();
                     tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
+                    System.Threading.Thread.Sleep(1000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
+                    Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
                 }
-                System.Threading.Thread.Sleep(5000);
+                System.Threading.Thread.Sleep(1000);
                 tasks = new List<Task>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
@@ -178,13 +504,13 @@ namespace PokerTexas.App_Present
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                     //pkSource.TangQuaBiMat();
                     tasks.Add(Task.Factory.StartNew(pkSource.NhanQuaBiMat));
+                    System.Threading.Thread.Sleep(1000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
+                    Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -192,6 +518,7 @@ namespace PokerTexas.App_Present
             }
             finally
             {
+                isBusy = false;
                 if (!this.IsDisposed)
                 {
                     MethodInvoker action = delegate
@@ -211,12 +538,12 @@ namespace PokerTexas.App_Present
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    pkSource.NhanThuongHangNgayMobile();
-                    //tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
+                    tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
                     System.Threading.Thread.Sleep(1000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
+                    Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
                 }
             }
@@ -226,6 +553,7 @@ namespace PokerTexas.App_Present
             }
             finally
             {
+                isBusy = false;
                 if (!this.IsDisposed)
                 {
                     MethodInvoker action = delegate
@@ -282,6 +610,7 @@ namespace PokerTexas.App_Present
             }
             finally
             {
+                isBusy = false;
                 if (!this.IsDisposed)
                 {
                     MethodInvoker action = delegate
@@ -305,7 +634,13 @@ namespace PokerTexas.App_Present
                 {
                     foreach (Poker poker in (txtPackNo.SelectedItem as Package).Pokers)
                     {
-                        listController.Add(new PokerController { Models = poker, Status = "Khởi tạo thành công" });
+                        PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
+                        newPokerController.GridContainer = gridData;
+                        if (AppSettings.GetMoneyOnLoad == "1")
+                        {
+                            newPokerController.GetInitMoney(false);
+                        }
+                        listController.Add(newPokerController);
                     }
                     dicPokers.Add(selectedPackage.ID, listController);
                 }
@@ -325,6 +660,13 @@ namespace PokerTexas.App_Present
                 gridData.Columns[GridMainFormConst.Money].DefaultCellStyle = new DataGridViewCellStyle();
                 gridData.Columns[GridMainFormConst.Money].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
 
+                gridData.Columns[GridMainFormConst.EarnToday].Visible = true;
+                gridData.Columns[GridMainFormConst.EarnToday].HeaderText = "Earn Today";
+                gridData.Columns[GridMainFormConst.EarnToday].Width = 100;
+                gridData.Columns[GridMainFormConst.EarnToday].SortMode = DataGridViewColumnSortMode.NotSortable;
+                gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle = new DataGridViewCellStyle();
+                gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+
                 DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
                 colStt.Name = GridMainFormConst.STT;
                 colStt.HeaderText = GridMainFormConst.STT;
@@ -338,14 +680,6 @@ namespace PokerTexas.App_Present
                 colAccount.Width = 150;
                 colAccount.SortMode = DataGridViewColumnSortMode.NotSortable;
                 gridData.Columns.Insert(1, colAccount);
-
-                //DataGridViewTextBoxColumn colPackageNo = new DataGridViewTextBoxColumn();
-                //colPackageNo.Name = TablePackageConst.Pack;
-                //colPackageNo.HeaderText = TablePackageConst.Pack;
-                //colPackageNo.Width = 50;
-                //colPackageNo.SortMode = DataGridViewColumnSortMode.NotSortable;
-                //colPackageNo.DisplayIndex = 4;
-                //gridData.Columns.Insert(2, colPackageNo);
 
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
@@ -373,7 +707,5 @@ namespace PokerTexas.App_Present
             }
         }
         #endregion
-
-
     }
 }

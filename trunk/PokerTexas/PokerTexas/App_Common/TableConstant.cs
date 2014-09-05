@@ -17,6 +17,7 @@ namespace TableConstants
     {
         public const string Status = "Status";
         public const string Money = "Money";
+        public const string EarnToday = "EarnToday";
         public const string STT = "STT";
     }
 }

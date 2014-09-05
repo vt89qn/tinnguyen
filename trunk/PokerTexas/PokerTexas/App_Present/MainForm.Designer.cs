@@ -28,43 +28,46 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupData = new System.Windows.Forms.GroupBox();
             this.gridData = new System.Windows.Forms.DataGridView();
+            this.menuGridData = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuCopyURL = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuXoaTK = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
-            this.btnXoaTaiKhoan = new System.Windows.Forms.Button();
             this.btnKetBan = new System.Windows.Forms.Button();
             this.btnThemTaiKhoan = new System.Windows.Forms.Button();
             this.groupMain = new System.Windows.Forms.GroupBox();
-            this.chkNhanChip = new System.Windows.Forms.CheckBox();
-            this.chkNhanCo4La = new System.Windows.Forms.CheckBox();
             this.btnNhanChipMayMan = new System.Windows.Forms.Button();
             this.btnTangCo4La = new System.Windows.Forms.Button();
-            this.btnNhanThuongHangNgay = new System.Windows.Forms.Button();
             this.btnTangQuaBiMat = new System.Windows.Forms.Button();
+            this.btnNhanThuongHangNgay = new System.Windows.Forms.Button();
+            this.btnKiemTraTaiKhoan = new System.Windows.Forms.Button();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
+            this.menuGridData.SuspendLayout();
             this.groupMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
             this.groupData.Controls.Add(this.btnThemPack);
-            this.groupData.Controls.Add(this.btnXoaTaiKhoan);
             this.groupData.Controls.Add(this.btnKetBan);
+            this.groupData.Controls.Add(this.btnKiemTraTaiKhoan);
             this.groupData.Controls.Add(this.btnThemTaiKhoan);
-            this.groupData.Location = new System.Drawing.Point(12, 126);
+            this.groupData.Location = new System.Drawing.Point(12, 75);
             this.groupData.Name = "groupData";
-            this.groupData.Size = new System.Drawing.Size(664, 393);
-            this.groupData.TabIndex = 3;
+            this.groupData.Size = new System.Drawing.Size(763, 360);
+            this.groupData.TabIndex = 1;
             this.groupData.TabStop = false;
             this.groupData.Text = "Tài Khoản (F5 How/Hide)";
             // 
@@ -72,39 +75,65 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
             this.gridData.Name = "gridData";
             this.gridData.ReadOnly = true;
-            this.gridData.Size = new System.Drawing.Size(652, 331);
-            this.gridData.TabIndex = 0;
+            this.gridData.Size = new System.Drawing.Size(751, 298);
+            this.gridData.TabIndex = 5;
+            this.gridData.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridData_CellMouseDown);
+            this.gridData.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gridData_KeyUp);
+            // 
+            // menuGridData
+            // 
+            this.menuGridData.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuCopyURL,
+            this.menuXoaTK});
+            this.menuGridData.Name = "menuGridData";
+            this.menuGridData.Size = new System.Drawing.Size(127, 48);
+            this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
+            // 
+            // menuCopyURL
+            // 
+            this.menuCopyURL.Name = "menuCopyURL";
+            this.menuCopyURL.Size = new System.Drawing.Size(126, 22);
+            this.menuCopyURL.Text = "Copy URL";
+            this.menuCopyURL.Click += new System.EventHandler(this.menuCopyURL_Click);
+            // 
+            // menuXoaTK
+            // 
+            this.menuXoaTK.Name = "menuXoaTK";
+            this.menuXoaTK.Size = new System.Drawing.Size(126, 22);
+            this.menuXoaTK.Text = "Xóa TK";
+            this.menuXoaTK.Click += new System.EventHandler(this.menuXoaTK_Click);
             // 
             // lblPack
             // 
             this.lblPack.AutoSize = true;
             this.lblPack.Location = new System.Drawing.Point(6, 32);
             this.lblPack.Name = "lblPack";
-            this.lblPack.Size = new System.Drawing.Size(39, 13);
+            this.lblPack.Size = new System.Drawing.Size(92, 13);
             this.lblPack.TabIndex = 0;
-            this.lblPack.Text = "P#(F4)";
+            this.lblPack.Text = "P#(F6 Next Pack)";
             // 
             // txtPackNo
             // 
             this.txtPackNo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtPackNo.FormattingEnabled = true;
-            this.txtPackNo.Location = new System.Drawing.Point(45, 28);
+            this.txtPackNo.Location = new System.Drawing.Point(104, 29);
             this.txtPackNo.Name = "txtPackNo";
-            this.txtPackNo.Size = new System.Drawing.Size(63, 21);
+            this.txtPackNo.Size = new System.Drawing.Size(52, 21);
             this.txtPackNo.TabIndex = 1;
             this.txtPackNo.SelectedValueChanged += new System.EventHandler(this.txtPackNo_SelectedValueChanged);
             // 
             // btnThemPack
             // 
             this.btnThemPack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btnThemPack.Location = new System.Drawing.Point(111, 27);
+            this.btnThemPack.Location = new System.Drawing.Point(162, 28);
             this.btnThemPack.Name = "btnThemPack";
             this.btnThemPack.Size = new System.Drawing.Size(30, 23);
             this.btnThemPack.TabIndex = 2;
@@ -112,120 +141,104 @@
             this.btnThemPack.UseVisualStyleBackColor = true;
             this.btnThemPack.Click += new System.EventHandler(this.btnThemPack_Click);
             // 
-            // btnXoaTaiKhoan
-            // 
-            this.btnXoaTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnXoaTaiKhoan.Location = new System.Drawing.Point(598, 23);
-            this.btnXoaTaiKhoan.Name = "btnXoaTaiKhoan";
-            this.btnXoaTaiKhoan.Size = new System.Drawing.Size(60, 30);
-            this.btnXoaTaiKhoan.TabIndex = 4;
-            this.btnXoaTaiKhoan.Text = "Xóa TK";
-            this.btnXoaTaiKhoan.UseVisualStyleBackColor = true;
-            this.btnXoaTaiKhoan.Click += new System.EventHandler(this.btnXoaTaiKhoan_Click);
-            // 
             // btnKetBan
             // 
             this.btnKetBan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKetBan.Location = new System.Drawing.Point(466, 23);
+            this.btnKetBan.Location = new System.Drawing.Point(657, 23);
             this.btnKetBan.Name = "btnKetBan";
-            this.btnKetBan.Size = new System.Drawing.Size(60, 30);
-            this.btnKetBan.TabIndex = 3;
-            this.btnKetBan.Text = "Kết bạn";
+            this.btnKetBan.Size = new System.Drawing.Size(100, 30);
+            this.btnKetBan.TabIndex = 4;
+            this.btnKetBan.Text = "Kết bạn(F9)";
             this.btnKetBan.UseVisualStyleBackColor = true;
             this.btnKetBan.Click += new System.EventHandler(this.btnKetBan_Click);
             // 
             // btnThemTaiKhoan
             // 
             this.btnThemTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnThemTaiKhoan.Location = new System.Drawing.Point(532, 23);
+            this.btnThemTaiKhoan.Location = new System.Drawing.Point(551, 23);
             this.btnThemTaiKhoan.Name = "btnThemTaiKhoan";
-            this.btnThemTaiKhoan.Size = new System.Drawing.Size(60, 30);
+            this.btnThemTaiKhoan.Size = new System.Drawing.Size(100, 30);
             this.btnThemTaiKhoan.TabIndex = 3;
-            this.btnThemTaiKhoan.Text = "Thêm TK";
+            this.btnThemTaiKhoan.Text = "Thêm TK(F8)";
             this.btnThemTaiKhoan.UseVisualStyleBackColor = true;
             this.btnThemTaiKhoan.Click += new System.EventHandler(this.btnThemTaiKhoan_Click);
             // 
             // groupMain
             // 
-            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupMain.Controls.Add(this.chkNhanChip);
-            this.groupMain.Controls.Add(this.chkNhanCo4La);
+            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMain.Controls.Add(this.btnNhanChipMayMan);
             this.groupMain.Controls.Add(this.btnTangCo4La);
             this.groupMain.Controls.Add(this.btnTangQuaBiMat);
             this.groupMain.Controls.Add(this.btnNhanThuongHangNgay);
             this.groupMain.Location = new System.Drawing.Point(12, 12);
             this.groupMain.Name = "groupMain";
-            this.groupMain.Size = new System.Drawing.Size(664, 108);
-            this.groupMain.TabIndex = 4;
+            this.groupMain.Size = new System.Drawing.Size(763, 57);
+            this.groupMain.TabIndex = 0;
             this.groupMain.TabStop = false;
             this.groupMain.Text = "Bảng Điều Khiển";
             // 
-            // chkNhanChip
-            // 
-            this.chkNhanChip.AutoSize = true;
-            this.chkNhanChip.Location = new System.Drawing.Point(403, 81);
-            this.chkNhanChip.Name = "chkNhanChip";
-            this.chkNhanChip.Size = new System.Drawing.Size(15, 14);
-            this.chkNhanChip.TabIndex = 3;
-            this.chkNhanChip.UseVisualStyleBackColor = true;
-            // 
-            // chkNhanCo4La
-            // 
-            this.chkNhanCo4La.AutoSize = true;
-            this.chkNhanCo4La.Location = new System.Drawing.Point(519, 81);
-            this.chkNhanCo4La.Name = "chkNhanCo4La";
-            this.chkNhanCo4La.Size = new System.Drawing.Size(15, 14);
-            this.chkNhanCo4La.TabIndex = 5;
-            this.chkNhanCo4La.UseVisualStyleBackColor = true;
-            // 
             // btnNhanChipMayMan
             // 
-            this.btnNhanChipMayMan.Location = new System.Drawing.Point(417, 72);
+            this.btnNhanChipMayMan.Location = new System.Drawing.Point(318, 19);
             this.btnNhanChipMayMan.Name = "btnNhanChipMayMan";
-            this.btnNhanChipMayMan.Size = new System.Drawing.Size(84, 30);
+            this.btnNhanChipMayMan.Size = new System.Drawing.Size(150, 30);
             this.btnNhanChipMayMan.TabIndex = 4;
-            this.btnNhanChipMayMan.Text = "NCMM(F2)";
+            this.btnNhanChipMayMan.Text = "NCMM(F3)";
             this.btnNhanChipMayMan.UseVisualStyleBackColor = true;
+            this.btnNhanChipMayMan.Click += new System.EventHandler(this.btnNhanChipMayMan_Click);
             // 
             // btnTangCo4La
             // 
-            this.btnTangCo4La.Location = new System.Drawing.Point(533, 72);
+            this.btnTangCo4La.Location = new System.Drawing.Point(474, 19);
             this.btnTangCo4La.Name = "btnTangCo4La";
-            this.btnTangCo4La.Size = new System.Drawing.Size(84, 30);
+            this.btnTangCo4La.Size = new System.Drawing.Size(150, 30);
             this.btnTangCo4La.TabIndex = 6;
-            this.btnTangCo4La.Text = "NC4L(F3)";
+            this.btnTangCo4La.Text = "NC4L(F4)";
             this.btnTangCo4La.UseVisualStyleBackColor = true;
+            this.btnTangCo4La.Click += new System.EventHandler(this.btnTangCo4La_Click);
+            // 
+            // btnTangQuaBiMat
+            // 
+            this.btnTangQuaBiMat.Location = new System.Drawing.Point(162, 19);
+            this.btnTangQuaBiMat.Name = "btnTangQuaBiMat";
+            this.btnTangQuaBiMat.Size = new System.Drawing.Size(150, 30);
+            this.btnTangQuaBiMat.TabIndex = 1;
+            this.btnTangQuaBiMat.Text = "TQBM(F2)";
+            this.btnTangQuaBiMat.UseVisualStyleBackColor = true;
+            this.btnTangQuaBiMat.Click += new System.EventHandler(this.btnTangQuaBiMat_Click);
             // 
             // btnNhanThuongHangNgay
             // 
             this.btnNhanThuongHangNgay.Location = new System.Drawing.Point(6, 19);
             this.btnNhanThuongHangNgay.Name = "btnNhanThuongHangNgay";
-            this.btnNhanThuongHangNgay.Size = new System.Drawing.Size(260, 30);
-            this.btnNhanThuongHangNgay.TabIndex = 3;
-            this.btnNhanThuongHangNgay.Text = "NTHN";
+            this.btnNhanThuongHangNgay.Size = new System.Drawing.Size(150, 30);
+            this.btnNhanThuongHangNgay.TabIndex = 0;
+            this.btnNhanThuongHangNgay.Text = "NTHN(F1)";
             this.btnNhanThuongHangNgay.UseVisualStyleBackColor = true;
             this.btnNhanThuongHangNgay.Click += new System.EventHandler(this.btnNhanThuongHangNgay_Click);
             // 
-            // btnTangQuaBiMat
+            // btnKiemTraTaiKhoan
             // 
-            this.btnTangQuaBiMat.Location = new System.Drawing.Point(6, 55);
-            this.btnTangQuaBiMat.Name = "btnTangQuaBiMat";
-            this.btnTangQuaBiMat.Size = new System.Drawing.Size(260, 30);
-            this.btnTangQuaBiMat.TabIndex = 3;
-            this.btnTangQuaBiMat.Text = "TQBM";
-            this.btnTangQuaBiMat.UseVisualStyleBackColor = true;
-            this.btnTangQuaBiMat.Click += new System.EventHandler(this.btnTangQuaBiMat_Click);
+            this.btnKiemTraTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(445, 23);
+            this.btnKiemTraTaiKhoan.Name = "btnKiemTraTaiKhoan";
+            this.btnKiemTraTaiKhoan.Size = new System.Drawing.Size(100, 30);
+            this.btnKiemTraTaiKhoan.TabIndex = 3;
+            this.btnKiemTraTaiKhoan.Text = "Check Money(F7)";
+            this.btnKiemTraTaiKhoan.UseVisualStyleBackColor = true;
+            this.btnKiemTraTaiKhoan.Click += new System.EventHandler(this.btnKiemTraTaiKhoan_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(687, 531);
+            this.ClientSize = new System.Drawing.Size(786, 447);
             this.Controls.Add(this.groupMain);
             this.Controls.Add(this.groupData);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PTV Nuker - Tinnv@VNIT Solutions";
@@ -234,8 +247,8 @@
             this.groupData.ResumeLayout(false);
             this.groupData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).EndInit();
+            this.menuGridData.ResumeLayout(false);
             this.groupMain.ResumeLayout(false);
-            this.groupMain.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -248,15 +261,16 @@
         private System.Windows.Forms.ComboBox txtPackNo;
         private System.Windows.Forms.Button btnNhanChipMayMan;
         private System.Windows.Forms.Button btnThemPack;
-        private System.Windows.Forms.Button btnXoaTaiKhoan;
         private System.Windows.Forms.Button btnThemTaiKhoan;
         private System.Windows.Forms.Button btnTangCo4La;
         private System.Windows.Forms.Button btnNhanThuongHangNgay;
         private System.Windows.Forms.Label lblPack;
-        private System.Windows.Forms.CheckBox chkNhanChip;
-        private System.Windows.Forms.CheckBox chkNhanCo4La;
         private System.Windows.Forms.Button btnKetBan;
         private System.Windows.Forms.Button btnTangQuaBiMat;
+        private System.Windows.Forms.ContextMenuStrip menuGridData;
+        private System.Windows.Forms.ToolStripMenuItem menuCopyURL;
+        private System.Windows.Forms.ToolStripMenuItem menuXoaTK;
+        private System.Windows.Forms.Button btnKiemTraTaiKhoan;
 
     }
 }

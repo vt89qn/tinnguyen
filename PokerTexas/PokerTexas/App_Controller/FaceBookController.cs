@@ -18,8 +18,7 @@ namespace PokerTexas.App_Controller
             try
             {
                 WebClientEx client = new WebClientEx();
-                client.UserAgent = AppSettings.UserAgentFaceBook;
-
+                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 client.DoGet("https://developers.facebook.com/resources/dialog_descriptions_android.json");
 
                 NameValueCollection param = new NameValueCollection();
@@ -36,7 +35,7 @@ namespace PokerTexas.App_Controller
                 param.Add("locale", "en_US");
                 param.Add("method", "auth.login");
                 param.Add("password", model.Pass);
-                string sig = Utilities.getSignFB(param);
+                string sig = Utilities.getSignFB(param, "62f8ce9f74b12f84c123cc23437a4a32");
                 param.Add("sig", sig);
 
                 client.DoPost(param, "https://b-api.facebook.com/method/auth.login");
@@ -73,7 +72,7 @@ namespace PokerTexas.App_Controller
             try
             {
                 WebClientEx client = new WebClientEx();
-                client.UserAgent = AppSettings.UserAgentFaceBook;
+                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model1.MBLoginText);
                 client.Authorization = dicData["access_token"].ToString();
 
@@ -112,7 +111,7 @@ namespace PokerTexas.App_Controller
             try
             {
                 WebClientEx client = new WebClientEx();
-                client.UserAgent = AppSettings.UserAgentFaceBook;
+                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model1.MBLoginText);
                 client.Authorization = dicData["access_token"].ToString();
 
@@ -138,6 +137,40 @@ namespace PokerTexas.App_Controller
                 throw ex;
             }
             return false;
+        }
+
+        public string GetFaceBookLoginURL(FaceBook model,string strDestURl)
+        {
+            string strURl = string.Empty;
+            try
+            {
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                string secret = dicData["secret"].ToString();
+                string session_key = dicData["session_key"].ToString();
+
+                NameValueCollection param = new NameValueCollection();
+                param.Add("api_key", AppSettings.api_key);
+                param.Add("session_key", session_key);
+                param.Add("t", Utilities.GetCurrentSecond());
+                param.Add("uid", model.FBID);
+                param.Add("url", strDestURl);
+
+                string sig = Utilities.getSignFB(param, secret);
+                //param.Add("sig", sig);
+
+                strURl = "https://m.facebook.com/auth.php?api_key="
+                    + AppSettings.api_key
+                    + "&session_key=" + session_key
+                    + "&sig=" + sig
+                    + "&t=" + param["t"]
+                    + "&uid=" + model.FBID
+                    + "&url=" + param["url"];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return strURl;
         }
     }
 }

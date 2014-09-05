@@ -118,7 +118,7 @@ namespace PokerTexas.App_Common
             return localObject1;
         }
 
-        public static string getSignFB(NameValueCollection param)
+        public static string getSignFB(NameValueCollection param,string secret)
         {
             SortedDictionary<string, string> dicParam = new SortedDictionary<string, string>();
             foreach (string key in param)
@@ -137,8 +137,8 @@ namespace PokerTexas.App_Common
                 t.Append("=");
                 t.Append(item.Value);
             }
-
-            t.Append("62f8ce9f74b12f84c123cc23437a4a32");
+            t.Append(secret);
+            //secrett.Append("62f8ce9f74b12f84c123cc23437a4a32");
             return FBHash(t.ToString());
         }
 
@@ -168,7 +168,10 @@ namespace PokerTexas.App_Common
             return sBuilder.ToString();
         }
 
-
+        public static string GetCurrentSecond()
+        {
+            return ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
+        }
         #endregion
     }
 }

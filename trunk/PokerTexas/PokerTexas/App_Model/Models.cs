@@ -19,8 +19,24 @@ namespace PokerTexas.App_Model
         public byte[] MBCookie { get; set; }
         public byte[] WebCookie { get; set; }
 
+        public long FBPackageID { get; set; }
+        public virtual FBPackage FBPackage { get; set; }
+
         public virtual ICollection<Poker> Pokers { get; set; }
     }
+
+    public class FBPackage
+    {
+        public FBPackage()
+        {
+            FaceBooks = new List<FaceBook>();
+        }
+        public long ID { get; set; }
+        public long Pack { get; set; }
+
+        public virtual ICollection<FaceBook> FaceBooks { get; set; }
+    }
+
     public class Package
     {
         public Package()

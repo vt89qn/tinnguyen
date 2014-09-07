@@ -20,7 +20,8 @@ namespace PokerTexas
             {
                 return;
             }
-            Application.Run(new App_Present.MainForm());
+            Application.Run(new App_Present.FaceBookManager());
+            //Application.Run(new App_Present.MainForm());
         }
     }
 }

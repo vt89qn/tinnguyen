@@ -44,6 +44,10 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="OpenPop, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\OpenPop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
@@ -59,6 +63,7 @@
     <Reference Include="System.Data.SQLite.Linq">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.93.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -70,11 +75,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Common\MobileModermController.cs" />
     <Compile Include="App_Common\AppSettings.cs" />
     <Compile Include="App_Common\Global.cs" />
+    <Compile Include="App_Common\Pop3MailClient.cs" />
     <Compile Include="App_Common\TableConstant.cs" />
     <Compile Include="App_Common\Utilities.cs" />
     <Compile Include="App_Context\PokerContext.cs" />
+    <Compile Include="App_Context\TP.cs">
+      <DependentUpon>TP.dbml</DependentUpon>
+    </Compile>
     <Compile Include="App_Context\TP.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -89,6 +99,12 @@
     <Compile Include="App_Present\AddAccount.designer.cs">
       <DependentUpon>AddAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="App_Present\FaceBookManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="App_Present\FaceBookManager.Designer.cs">
+      <DependentUpon>FaceBookManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="App_Present\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +118,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="App_Present\AddAccount.resx">
       <DependentUpon>AddAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App_Present\FaceBookManager.resx">
+      <DependentUpon>FaceBookManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App_Present\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

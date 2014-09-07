@@ -112,6 +112,7 @@
             this.MinimizeBox = false;
             this.Name = "AddAccount";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thêm Tài Khoản";
             this.ResumeLayout(false);
             this.PerformLayout();

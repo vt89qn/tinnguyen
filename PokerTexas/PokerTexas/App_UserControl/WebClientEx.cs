@@ -29,6 +29,7 @@ namespace PokerTexas.App_UserControl
         public string Authorization = string.Empty;
         public RequestTypeEnum RequestType = RequestTypeEnum.Nomal;
         public bool SetAPIV8 = false;
+        public bool SetCookieV2 = false;
         #endregion
 
         #region - METHOD -
@@ -114,6 +115,22 @@ namespace PokerTexas.App_UserControl
             return this.DoPost(parameters, strURL, null, "POST");
         }
 
+        public string DoPost(byte[] parameters, string strURL, Dictionary<HttpRequestHeader, string> additionHeader)
+        {
+            try
+            {
+                Error = null;
+                ResponseText = null;
+                addHeader(additionHeader);
+                ResponseText = ResponseText = Encoding.Default.GetString(this.UploadData(strURL, parameters));
+            }
+            catch (Exception ex)
+            {
+                this.Error = ex;
+            }
+            return ResponseText;
+        }
+
         public string DoGet(string strURL, Dictionary<HttpRequestHeader, string> additionHeader)
         {
             try
@@ -156,10 +173,17 @@ namespace PokerTexas.App_UserControl
                     this.Headers.Add("Authorization", "OAuth " + Authorization);
                 }
                 this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentFaceBook);
+
             }
             else
             {
                 this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentBrowser);
+                this.Headers.Add(HttpRequestHeader.Accept, "*/*");
+                this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi-VN,vi;q=0.8,fr-FR;q=0.6,fr;q=0.4,en-US;q=0.2,en;q=0.2");
+            }
+            if (SetCookieV2)
+            {
+                this.Headers.Add("Cookie2", "$Version=1");
             }
             if (additionHeader != null)
             {

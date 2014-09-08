@@ -507,17 +507,24 @@ Yên Sơn";
                 listHo.Add(names[iIndex]);
                 listTen.Add(names[iIndex + 1]);
             }
-            string strName = listHo[new Random().Next(listHo.Count - 1)].Trim() + " " + listTen[new Random().Next(listTen.Count - 1)].Trim();
-            //strName[1] = strName[strName.Length - 2];
-            try
-            {
-                strName = strName.Substring(0, 1) + listTen[new Random().Next(listTen.Count - 1)].Trim().Substring(1, 2) + strName.Substring(1, 2) + strName.Substring(3);
+            string strName = listHo[new Random().Next(listHo.Count - 1)].Trim();
+            System.Threading.Thread.Sleep(23);
+            strName += listTen[new Random().Next(listTen.Count - 1)].Trim();
+            System.Threading.Thread.Sleep(23);
+            strName += " " + listTen[new Random().Next(listTen.Count - 1)].Trim();
+            System.Threading.Thread.Sleep(23);
+            //strName += listHo[new Random().Next(listHo.Count - 1)].Trim();
 
-            }
-            catch 
-            {
-                strName = listHo[new Random().Next(listHo.Count - 1)].Trim() + " " + listTen[new Random().Next(listTen.Count - 1)].Trim();
-            }
+            //strName[1] = strName[strName.Length - 2];
+            //try
+            //{
+            //    strName = strName.Substring(0, 1) + listTen[new Random().Next(listTen.Count - 1)].Trim().Substring(1, 2) + strName.Substring(1, 2) + strName.Substring(3);
+
+            //}
+            //catch
+            //{
+            //    strName = listHo[new Random().Next(listHo.Count - 1)].Trim() + " " + listTen[new Random().Next(listTen.Count - 1)].Trim();
+            //}
             //strName = strName.Replace(strName[2], strName[strName.Length - 4]);
             return strName;
         }

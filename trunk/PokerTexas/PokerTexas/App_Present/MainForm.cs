@@ -110,20 +110,7 @@ namespace PokerTexas.App_Present
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //while (true)
-            //{
-            //    MobileModermController.Connect();
-            //    FaceBook fb = new FaceBookController().RegNewAccount();
-            //    if (fb != null)
-            //    {
-            //        fb.FBPackageID = 3;
-            //        Global.DBContext.FaceBook.Add(fb);
-            //        Global.DBContext.SaveChanges();
-            //        var t = Global.DBContext.FaceBook.ToList();
-            //    }
-            //    MobileModermController.Disconnect();
-            //}
-            //getDataOnload();
+            getDataOnload();
         }
 
         private void btnThemTaiKhoan_Click(object sender, EventArgs e)

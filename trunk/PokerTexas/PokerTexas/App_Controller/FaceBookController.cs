@@ -234,11 +234,11 @@ namespace PokerTexas.App_Controller
                 //client.SetCookieV2 = false;
                 //client.DoGet("https://developers.facebook.com/resources/dialog_descriptions_android.json");
 
-                string strName = Utilities.GetMaleName();
+                string strName = Utilities.ConvertToUsignNew(Utilities.GetMaleName());
                 param = new NameValueCollection();
                 param.Add("api_key", AppSettings.api_key);
                 param.Add("attempt_login", "true");
-                param.Add("birthday", "1989-05-08");
+                param.Add("birthday", new Random().Next(1979, 1990).ToString() + "-" + new Random().Next(1, 12) + "-" + new Random(3).Next(1, 28));
                 param.Add("client_country_code", "VN");
 
                 param.Add("fb_api_caller_class", "com.facebook.registration.protocol.RegisterAccountMethod");
@@ -248,10 +248,11 @@ namespace PokerTexas.App_Controller
                 param.Add("format", "json");
                 param.Add("gender", "M");
                 param.Add("lastname", strName.Split(' ')[1]);
-                param.Add("email", Utilities.ConvertToUsignNew(param["firstname"] + param["lastname"] + new Random().Next(10, 99)).ToLower() + "@tinphuong.com");
+                List<string> listMail = new List<string> { "gmail", "hotmail", "live", "yahoo" };
+                param.Add("email", Utilities.ConvertToUsignNew(param["firstname"] + param["lastname"] + new Random().Next(10, 99)).ToLower() + "@" + listMail[new Random().Next(0, listMail.Count - 1)] + ".com");
                 param.Add("locale", "en_US");
                 param.Add("method", "user.register");
-                param.Add("password", "random8&^");
+                param.Add("password", Utilities.GetMd5Hash(param["email"]).Substring(0, new Random().Next(13, 20)));
                 param.Add("reg_instance", hash_id);
                 param.Add("return_multiple_errors", "true");
                 sig = Utilities.getSignFB(param, "62f8ce9f74b12f84c123cc23437a4a32");
@@ -269,120 +270,10 @@ namespace PokerTexas.App_Controller
                         model = new FaceBook();
                         model.Login = param["email"];
                         model.Pass = param["password"];
-                        //wait email for 10s
-                        System.Threading.Thread.Sleep(4000);
-                        #region - Feed Email -
-                        //Pop3.Pop3MailClient gmailClient = new Pop3.Pop3MailClient("pop.gmail.com", 995, true, "vantin.work@gmail.com", "leostbuqbcepmvae");
-                        //gmailClient.IsAutoReconnect = true;
-                        //gmailClient.ReadTimeout = 60000; //give pop server 60 seconds to answer
+                        model.MBLoginText = new JavaScriptSerializer().Serialize(dicData["session_info"]);
+                        model.FBID = (dicData["session_info"] as Dictionary<string, object>)["uid"].ToString();
 
-                        ////establish connection
-                        //gmailClient.Connect();
 
-                        ////get mailbox statistics
-                        //int NumberOfMails, MailboxSize;
-                        //gmailClient.GetMailboxStats(out NumberOfMails, out MailboxSize);
-
-                        //for (int iIndex = NumberOfMails; iIndex > NumberOfMails - 3; iIndex--)
-                        //{
-                        //    //get email
-                        //    string Email;
-                        //    bool bFindEmail = false;
-                        //    gmailClient.GetRawEmail(iIndex, out Email);
-                        //    Email = Email.Replace("=\r\n", "").Replace("=3D", "=");
-                        //    if (Email.Contains(model.Login))
-                        //    {
-                        //        string url = System.Text.RegularExpressions.Regex.Match(Email, @"https://www\.facebook\.com/n/\?confirmemail\.php[^\s]+").Value;
-                        //        if (!string.IsNullOrEmpty(url))
-                        //        {
-                        //            WebClientEx clientFB = new WebClientEx();
-                        //            clientFB.DoGet(url);
-                        //            if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                        //            {
-                        //                url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "form action=\"(?<val>/login/confirm/\\?auth_token=[^\"]+)").Groups["val"].Value.Trim();
-                        //                url = "https://www.facebook.com" + url;
-                        //                url = url.Replace("&amp;", "&");
-                        //                string lsd = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "name=\"lsd\" value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
-                        //                param = new NameValueCollection();
-                        //                param.Add("lsd", lsd);
-                        //                param.Add("confirm", "1");
-                        //                clientFB.DoPost(param, url);
-                        //                if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                        //                {
-                        //                    url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "\\?confirmemail\\.php\\&e=[^\"]+").Value;
-                        //                    if (!string.IsNullOrEmpty(url))
-                        //                    {
-                        //                        url = "https://www.facebook.com/n/" + url;
-                        //                        clientFB.DoGet(url);
-
-                        //                    }
-                        //                }
-                        //            }
-                        //            bFindEmail = true;
-                        //        }
-                        //    }
-                        //    //if (Email.Contains("facebookmail.com"))
-                        //    //{
-                        //    //    //delete email
-                        //    //    gmailClient.DeleteEmail(iIndex);
-                        //    //}
-                        //    if (bFindEmail) break;
-                        //}
-
-                        ////close connection
-                        //gmailClient.Disconnect();
-
-                        Pop3Client pop3 = new Pop3Client();
-                        pop3.Connect("pop.gmail.com", 995, true);
-                        pop3.Authenticate("vantin.work@gmail.com", "leostbuqbcepmvae");
-                        int count = pop3.GetMessageCount();
-                        Dictionary<string, string> dicMail = new Dictionary<string, string>();
-                        for (int iIndex = count; iIndex >= count - 3; iIndex--)
-                        {
-                            bool bFindEmail = false;
-                            OpenPop.Mime.Message message = pop3.GetMessage(iIndex);
-                            if (message.Headers.To[0].MailAddress.Address == model.Login)
-                            {
-                                var strBody = message.MessagePart.MessageParts[0].BodyEncoding.GetString(message.MessagePart.MessageParts[0].Body);
-                                string url = Regex.Match(strBody, @"http[^\s]+confirmemail.php[^\s]+").Value;
-                                if (!string.IsNullOrEmpty(url))
-                                {
-                                    WebClientEx clientFB = new WebClientEx();
-                                    clientFB.DoGet(url);
-                                    if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                                    {
-                                        url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "form action=\"(?<val>/login/confirm/\\?auth_token=[^\"]+)").Groups["val"].Value.Trim();
-                                        url = "https://www.facebook.com" + url;
-                                        url = url.Replace("&amp;", "&");
-                                        string lsd = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "name=\"lsd\" value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
-                                        param = new NameValueCollection();
-                                        param.Add("lsd", lsd);
-                                        param.Add("confirm", "1");
-                                        clientFB.DoPost(param, url);
-                                        if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                                        {
-                                            url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "\\?confirmemail\\.php\\&e=[^\"]+").Value;
-                                            if (!string.IsNullOrEmpty(url))
-                                            {
-                                                url = "https://www.facebook.com/n/" + url;
-                                                clientFB.DoGet(url);
-
-                                            }
-                                        }
-                                    }
-                                    bFindEmail = true;
-                                }
-                                try
-                                {
-                                    pop3.DeleteMessage(iIndex);
-                                }
-                                catch { }
-                            }
-                            if (bFindEmail) break;
-                        }
-                        //pop3.DeleteAllMessages();
-                        pop3.Disconnect();
-                        #endregion
 
 
                         //client.Authorization = (dicData["session_info"] as Dictionary<string, object>)["access_token"].ToString();
@@ -455,21 +346,143 @@ namespace PokerTexas.App_Controller
                             client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
 
 
-                            //param = new NameValueCollection();
+                            //wait email for 10s
+                            //System.Threading.Thread.Sleep(5000);
+                            //#region - Feed Email -
+                            ////Pop3.Pop3MailClient gmailClient = new Pop3.Pop3MailClient("pop.gmail.com", 995, true, "vantin.work@gmail.com", "leostbuqbcepmvae");
+                            ////gmailClient.IsAutoReconnect = true;
+                            ////gmailClient.ReadTimeout = 60000; //give pop server 60 seconds to answer
 
-                            //param.Add("normalized_contactpoint", model.Login);
-                            //param.Add("contactpoint_type", "EMAIL");
-                            //param.Add("code", "47944");
-                            //param.Add("source", "ANDROID_DIALOG_API");
-                            //param.Add("format", "json");
-                            //param.Add("locale", "en_US");
-                            //param.Add("client_country_code", "VN");
-                            //param.Add("method", "user.confirmcontactpoint");
-                            //param.Add("fb_api_req_friendly_name", "confirmContactpoint");
-                            //param.Add("fb_api_caller_class", "com.facebook.confirmation.protocol.ConfirmContactpointMethod");
-                            //System.Threading.Thread.Sleep(3000);
-                            //client.DoPost(param, "https://api.facebook.com/method/user.confirmcontactpoint");
+                            //////establish connection
+                            ////gmailClient.Connect();
 
+                            //////get mailbox statistics
+                            ////int NumberOfMails, MailboxSize;
+                            ////gmailClient.GetMailboxStats(out NumberOfMails, out MailboxSize);
+
+                            ////for (int iIndex = NumberOfMails; iIndex > NumberOfMails - 3; iIndex--)
+                            ////{
+                            ////    //get email
+                            ////    string Email;
+                            ////    bool bFindEmail = false;
+                            ////    gmailClient.GetRawEmail(iIndex, out Email);
+                            ////    Email = Email.Replace("=\r\n", "").Replace("=3D", "=");
+                            ////    if (Email.Contains(model.Login))
+                            ////    {
+                            ////        string url = System.Text.RegularExpressions.Regex.Match(Email, @"https://www\.facebook\.com/n/\?confirmemail\.php[^\s]+").Value;
+                            ////        if (!string.IsNullOrEmpty(url))
+                            ////        {
+                            ////            WebClientEx clientFB = new WebClientEx();
+                            ////            clientFB.DoGet(url);
+                            ////            if (!string.IsNullOrEmpty(clientFB.ResponseText))
+                            ////            {
+                            ////                url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "form action=\"(?<val>/login/confirm/\\?auth_token=[^\"]+)").Groups["val"].Value.Trim();
+                            ////                url = "https://www.facebook.com" + url;
+                            ////                url = url.Replace("&amp;", "&");
+                            ////                string lsd = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "name=\"lsd\" value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
+                            ////                param = new NameValueCollection();
+                            ////                param.Add("lsd", lsd);
+                            ////                param.Add("confirm", "1");
+                            ////                clientFB.DoPost(param, url);
+                            ////                if (!string.IsNullOrEmpty(clientFB.ResponseText))
+                            ////                {
+                            ////                    url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "\\?confirmemail\\.php\\&e=[^\"]+").Value;
+                            ////                    if (!string.IsNullOrEmpty(url))
+                            ////                    {
+                            ////                        url = "https://www.facebook.com/n/" + url;
+                            ////                        clientFB.DoGet(url);
+
+                            ////                    }
+                            ////                }
+                            ////            }
+                            ////            bFindEmail = true;
+                            ////        }
+                            ////    }
+                            ////    //if (Email.Contains("facebookmail.com"))
+                            ////    //{
+                            ////    //    //delete email
+                            ////    //    gmailClient.DeleteEmail(iIndex);
+                            ////    //}
+                            ////    if (bFindEmail) break;
+                            ////}
+
+                            //////close connection
+                            ////gmailClient.Disconnect();
+                            //string code = string.Empty;
+                            //Pop3Client pop3 = new Pop3Client();
+                            //pop3.Connect("pop.gmail.com", 995, true);
+                            //pop3.Authenticate("vantin.work@gmail.com", "leostbuqbcepmvae");
+                            //int count = pop3.GetMessageCount();
+                            //Dictionary<string, string> dicMail = new Dictionary<string, string>();
+                            //for (int iIndex = count; iIndex >= count - 3; iIndex--)
+                            //{
+                            //    bool bFindEmail = false;
+                            //    OpenPop.Mime.Message message = pop3.GetMessage(iIndex);
+                            //    if (message.Headers.To[0].MailAddress.Address == model.Login)
+                            //    {
+                            //        var strBody = message.MessagePart.MessageParts[0].BodyEncoding.GetString(message.MessagePart.MessageParts[0].Body);
+                            //        string url = Regex.Match(strBody, @"http[^\s]+confirmemail.php[^\s]+").Value;
+                            //        if (!string.IsNullOrEmpty(url))
+                            //        {
+                            //            code = Regex.Match(url, "&c=(?<val>[0-9]+)").Groups["val"].Value.Trim();
+                            //            if (!string.IsNullOrEmpty(code)) break;
+                            //            WebClientEx clientFB = new WebClientEx();
+                            //            model.FBID = (dicData["session_info"] as Dictionary<string, object>)["uid"].ToString();
+                            //            string t = GetFaceBookLoginURL(model, url);
+                            //            clientFB.DoGet(url);
+                            //            if (!string.IsNullOrEmpty(clientFB.ResponseText))
+                            //            {
+                            //                url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "form action=\"(?<val>/login/confirm/\\?auth_token=[^\"]+)").Groups["val"].Value.Trim();
+                            //                url = "https://www.facebook.com" + url;
+                            //                url = url.Replace("&amp;", "&");
+                            //                string lsd = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "name=\"lsd\" value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
+                            //                param = new NameValueCollection();
+                            //                param.Add("lsd", lsd);
+                            //                param.Add("confirm", "1");
+                            //                clientFB.DoPost(param, url);
+                            //                if (!string.IsNullOrEmpty(clientFB.ResponseText))
+                            //                {
+                            //                    if (clientFB.Response.ResponseUri.AbsolutePath.Contains("checkpoint")) return null;
+                            //                    url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "\\?confirmemail\\.php\\&e=[^\"]+").Value;
+                            //                    if (!string.IsNullOrEmpty(url))
+                            //                    {
+                            //                        url = "https://www.facebook.com/n/" + url;
+                            //                        clientFB.DoGet(url);
+
+                            //                    }
+                            //                }
+                            //            }
+                            //            bFindEmail = true;
+                            //        }
+                            //        try
+                            //        {
+                            //            pop3.DeleteMessage(iIndex);
+                            //        }
+                            //        catch { }
+                            //    }
+                            //    if (bFindEmail) break;
+                            //}
+                            ////pop3.DeleteAllMessages();
+                            //pop3.Disconnect();
+                            //#endregion
+
+                            //if (!string.IsNullOrEmpty(code))
+                            //{
+                            //    param = new NameValueCollection();
+
+                            //    param.Add("normalized_contactpoint", model.Login);
+                            //    param.Add("contactpoint_type", "EMAIL");
+                            //    param.Add("code", code);
+                            //    param.Add("source", "ANDROID_DIALOG_API");
+                            //    param.Add("format", "json");
+                            //    param.Add("locale", "en_US");
+                            //    param.Add("client_country_code", "VN");
+                            //    param.Add("method", "user.confirmcontactpoint");
+                            //    param.Add("fb_api_req_friendly_name", "confirmContactpoint");
+                            //    param.Add("fb_api_caller_class", "com.facebook.confirmation.protocol.ConfirmContactpointMethod");
+                            //    //System.Threading.Thread.Sleep(3000);
+                            //    client.DoPost(param, "https://api.facebook.com/method/user.confirmcontactpoint");
+                            //}
                             return model;
                         }
                     }
@@ -617,6 +630,5 @@ namespace PokerTexas.App_Controller
             }
             return false;
         }
-
     }
 }

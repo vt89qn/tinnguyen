@@ -73,6 +73,7 @@
   <ItemGroup>
     <Content Include="CSS\style.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Tool.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -96,7 +97,15 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="GlobalConstant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tool.aspx.cs">
+      <DependentUpon>Tool.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tool.aspx.designer.cs">
+      <DependentUpon>Tool.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="WebClientEx.cs">
       <SubType>Component</SubType>

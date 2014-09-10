@@ -18,6 +18,7 @@ public class WebClientEx : WebClient
     public string ResponseText { get; set; }
     public Image ResponseImage { get; set; }
     private string strUserAgent = "ah3q-appstore/1.26 (iPhone; iOS 7.1.1; Scale/2.00)";
+    string contentType = "application/x-www-form-urlencoded";
     #endregion
     #region - METHOD -
     public WebClientEx()
@@ -65,10 +66,11 @@ public class WebClientEx : WebClient
             Error = null;
             ResponseText = null;
             this.Headers.Clear();
-            this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            this.Headers.Add(HttpRequestHeader.ContentType, contentType);
             this.Headers.Add(HttpRequestHeader.UserAgent, strUserAgent);
             this.Headers.Add(HttpRequestHeader.Accept, "*/*");
             this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi, en, en-us;q=0.8");
+            this.Headers.Add(HttpRequestHeader.Authorization, GlobalConstant.Authorization);
             if (additionHeader != null)
             {
                 foreach (KeyValuePair<HttpRequestHeader, string> item in additionHeader)
@@ -96,10 +98,11 @@ public class WebClientEx : WebClient
             Error = null;
             ResponseText = null;
             this.Headers.Clear();
-            this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            this.Headers.Add(HttpRequestHeader.ContentType, contentType);
             this.Headers.Add(HttpRequestHeader.UserAgent, strUserAgent);
             this.Headers.Add(HttpRequestHeader.Accept, "*/*");
             this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi, en, en-us;q=0.8");
+            this.Headers.Add(HttpRequestHeader.Authorization, GlobalConstant.Authorization);
             if (additionHeader != null)
             {
                 foreach (KeyValuePair<HttpRequestHeader, string> item in additionHeader)
@@ -126,12 +129,13 @@ public class WebClientEx : WebClient
             Error = null;
             ResponseText = string.Empty;
             this.Headers.Clear();
-            this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            this.Headers.Add(HttpRequestHeader.ContentType, contentType);
             this.Headers.Add(HttpRequestHeader.UserAgent, strUserAgent);
             this.Headers.Add(HttpRequestHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             //this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
             this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi-VN,vi;q=0.8,fr-FR;q=0.6,fr;q=0.4,en-US;q=0.2,en;q=0.2");
             this.Headers.Add(HttpRequestHeader.CacheControl, "max-age=0");
+            this.Headers.Add(HttpRequestHeader.Authorization, GlobalConstant.Authorization);
             if (additionHeader != null)
             {
                 foreach (KeyValuePair<HttpRequestHeader, string> item in additionHeader)
@@ -158,12 +162,13 @@ public class WebClientEx : WebClient
             Error = null;
             ResponseImage = null;
             this.Headers.Clear();
-            this.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            this.Headers.Add(HttpRequestHeader.ContentType, contentType);
             this.Headers.Add(HttpRequestHeader.UserAgent, strUserAgent);
             this.Headers.Add(HttpRequestHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
             //this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
             this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi-VN,vi;q=0.8,fr-FR;q=0.6,fr;q=0.4,en-US;q=0.2,en;q=0.2");
             this.Headers.Add(HttpRequestHeader.CacheControl, "max-age=0");
+            this.Headers.Add(HttpRequestHeader.Authorization, GlobalConstant.Authorization);
             byte[] byteArrayIn = this.DownloadData(strURL);
             MemoryStream ms = new MemoryStream(byteArrayIn);
             ResponseImage = Image.FromStream(ms);

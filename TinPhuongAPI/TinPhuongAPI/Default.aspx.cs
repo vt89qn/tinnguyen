@@ -14,7 +14,40 @@ namespace TinPhuongAPI
         protected void Page_Init(object sender, EventArgs e)
         {
             TPDBDataContext TPDB = new TPDBDataContext();
-            if (Request["stage"].ToLower() == "get")
+            if (Request["stage"].ToLower() == "upload")
+            {
+                if (string.IsNullOrEmpty(Request["page"]) || Request["page"] == "pk")
+                {
+                    string unsignedstring = Request["unsignedstring"];
+                    int iSeed = int.Parse(Request["seed"].Trim());
+                    TPDB.PK_SignStrings.InsertOnSubmit(new PK_SignString { String = unsignedstring, Seed = iSeed });
+                    TPDB.SubmitChanges();
+                }
+            }
+            else if (Request["stage"].ToLower() == "download")
+            {
+                if (string.IsNullOrEmpty(Request["page"]) || Request["page"] == "pk")
+                {
+                    List<Dictionary<string, object>> listSigned = new List<Dictionary<string, object>>();
+                    string unsignedstring = Request["unsignedstring"];
+                    string iSeed = Request["seed"];
+
+                    var dbstring = (from _string in TPDB.PK_SignStrings where (_string.String == unsignedstring && _string.Seed.ToString() == iSeed && _string.SignedString1 != null) select _string).FirstOrDefault();
+                    if (dbstring != null)
+                    {
+                        Dictionary<string, object> dicSigned = new Dictionary<string, object>();
+                        dicSigned.Add("page", "pk");
+                        dicSigned.Add("unsignedstring", unsignedstring);
+                        dicSigned.Add("signedstring1", dbstring.SignedString1);
+                        dicSigned.Add("signedstring2", dbstring.SignedString2);
+
+                        listSigned.Add(dicSigned);
+
+                    }
+                    Response.Write(new JavaScriptSerializer().Serialize(listSigned));
+                }
+            }
+            else if (Request["stage"].ToLower() == "get")
             {
                 List<Dictionary<string, object>> listUnsigned = new List<Dictionary<string, object>>();
                 if (string.IsNullOrEmpty(Request["page"]) || Request["page"] == "ig")

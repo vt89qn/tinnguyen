@@ -8,11 +8,13 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using DotRas;
 
 namespace FB.App_Common
 {
     public static class MobileModermController
     {
+        private static RasDialer d1 = new RasDialer();
         public const int ERROR_SUCCESS = 0;
         const int MAX_PATH = 260;
         const int RAS_MaxDeviceType = 16;
@@ -64,42 +66,66 @@ namespace FB.App_Common
             IntPtr phoneNumber,
             ref RASDIALDLG info);
 
+        //public static bool Connect()
+        //{
+        //    bool ret = false;
+        //    RASDIALDLG info = new RASDIALDLG();
+        //    Task t = Task.Factory.StartNew(() =>
+        //    {
+
+        //        info.dwSize = Marshal.SizeOf(info);
+        //        ret = RasDialDlg(IntPtr.Zero, AppSettings.Name3G, IntPtr.Zero, ref info);
+
+        //    });
+
+        //    //System.Threading.Thread.Sleep(1000);
+        //    ////SendKeys.Send("{ENTER}");
+        //    //SendKeys.SendWait("%{Alt Down}");
+        //    //SendKeys.SendWait("%{TAB}");
+        //    //SendKeys.SendWait("%{Alt Up}");
+        //    t.Wait(5000);
+        //    if (ret == false && info.dwError != ERROR_SUCCESS)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
         public static bool Connect()
         {
-            //bool ret = false;
-            //RASDIALDLG info = new RASDIALDLG();
-            //Task t = Task.Factory.StartNew(() =>
-            //{
 
-            //    info.dwSize = Marshal.SizeOf(info);
-            //    ret = RasDialDlg(IntPtr.Zero, AppSettings.Name3G, IntPtr.Zero, ref info);
-
-            //});
-            ////System.Threading.Thread.Sleep(2000);
-            ////SendKeys.Send("{ENTER}");
-            //t.Wait(5000);
-            //if (ret == false && info.dwError != ERROR_SUCCESS)
-            //{
-            //    return false;
-            //}
+            d1.EntryName = AppSettings.Name3G;
+            d1.PhoneNumber = "*99#";
+            d1.Dial();
             return true;
         }
+
+        //public static bool Disconnect(bool b)
+        //{
+        //    RasHangUp d1 = new RasHandle
+        //    d1.EntryName = AppSettings.Name3G;
+        //    d1.PhoneNumber = "*99#";
+        //    //();
+        //    return true;
+        //}
+
+
         public static void Disconnect()
         {
-            //RASCONN[] rasStructs = GetRasConnections();
+            RASCONN[] rasStructs = GetRasConnections();
 
-            //// Przejście przez każdą strukturę RASCONN
-            //for (int i = 0; i < rasConnectionsAmount; i++)
-            //{
-            //    // Pobranie pojedynczej struktury
-            //    RASCONN rStruct = rasStructs[i];
+            // Przejście przez każdą strukturę RASCONN
+            for (int i = 0; i < rasConnectionsAmount; i++)
+            {
+                // Pobranie pojedynczej struktury
+                RASCONN rStruct = rasStructs[i];
 
-            //    // Jeżeli uchwyt do połączenia wynosi 0, to brak połączenia
-            //    if (rStruct.hrasconn == IntPtr.Zero) continue; // i następna struktura...
-            //    // Rozłączenie...
-            //    var t = RasHangUp(rStruct.hrasconn);
-            //    t = RasHangUp(rStruct.hrasconn);
-            //}
+                // Jeżeli uchwyt do połączenia wynosi 0, to brak połączenia
+                if (rStruct.hrasconn == IntPtr.Zero) continue; // i następna struktura...
+                // Rozłączenie...
+                var t = RasHangUp(rStruct.hrasconn);
+                t = RasHangUp(rStruct.hrasconn);
+            }
         }
 
         private static RASCONN[] GetRasConnections()

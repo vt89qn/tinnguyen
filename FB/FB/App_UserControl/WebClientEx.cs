@@ -13,7 +13,6 @@ namespace FB.App_UserControl
     {
         public enum RequestTypeEnum
         {
-            Poker,
             FaceBook,
             Nomal
         }
@@ -25,10 +24,8 @@ namespace FB.App_UserControl
         public WebResponse Response { get; set; }
         public string ResponseText { get; set; }
         public Image ResponseImage { get; set; }
-        public string X_TUNNEL_VERIFY = string.Empty;
         public string Authorization = string.Empty;
         public RequestTypeEnum RequestType = RequestTypeEnum.Nomal;
-        public bool SetAPIV8 = false;
         public bool SetCookieV2 = false;
         #endregion
 
@@ -156,19 +153,7 @@ namespace FB.App_UserControl
         private void addHeader(Dictionary<HttpRequestHeader, string> additionHeader)
         {
             this.Headers.Clear();
-
-            if (RequestType == RequestTypeEnum.Poker)
-            {
-                if (!string.IsNullOrEmpty(X_TUNNEL_VERIFY))
-                {
-                    this.Headers.Add("X-TUNNEL-VERIFY", X_TUNNEL_VERIFY);
-                }
-                if (SetAPIV8)
-                {
-                    this.Headers.Add("api-v8", "1");
-                }
-            }
-            else if (RequestType == RequestTypeEnum.FaceBook)
+            if (RequestType == RequestTypeEnum.FaceBook)
             {
                 if (!string.IsNullOrEmpty(Authorization))
                 {
@@ -180,10 +165,9 @@ namespace FB.App_UserControl
             else
             {
                 this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentBrowser);
-                this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
+                //this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
                 this.Headers.Add(HttpRequestHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
                 this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi-VN,vi;q=0.8,fr-FR;q=0.6,fr;q=0.4,en-US;q=0.2,en;q=0.2");
-                //this.Headers.Add("Origin", "https://tiki.vn");
             }
             if (SetCookieV2)
             {

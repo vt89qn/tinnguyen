@@ -46,6 +46,7 @@
             this.menuLoginAgain = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
+            this.btnUpdateInfo = new System.Windows.Forms.Button();
             this.groupMain.SuspendLayout();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
@@ -54,10 +55,11 @@
             // 
             // groupMain
             // 
-            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMain.Controls.Add(this.btnPostStatusAllPack);
             this.groupMain.Controls.Add(this.btnKetBan);
+            this.groupMain.Controls.Add(this.btnUpdateInfo);
             this.groupMain.Controls.Add(this.btnConfirmEmail);
             this.groupMain.Controls.Add(this.btnRegFBAccount);
             this.groupMain.Controls.Add(this.btnUploadProfilePhotoAllPack);
@@ -142,9 +144,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -159,9 +161,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
@@ -222,6 +224,16 @@
             this.txtPackNo.TabIndex = 1;
             this.txtPackNo.SelectedValueChanged += new System.EventHandler(this.txtPackNo_SelectedValueChanged);
             // 
+            // btnUpdateInfo
+            // 
+            this.btnUpdateInfo.Location = new System.Drawing.Point(333, 85);
+            this.btnUpdateInfo.Name = "btnUpdateInfo";
+            this.btnUpdateInfo.Size = new System.Drawing.Size(156, 30);
+            this.btnUpdateInfo.TabIndex = 0;
+            this.btnUpdateInfo.Text = "Update Info";
+            this.btnUpdateInfo.UseVisualStyleBackColor = true;
+            this.btnUpdateInfo.Click += new System.EventHandler(this.btnUpdateInfo_Click);
+            // 
             // FaceBookManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -262,5 +274,6 @@
         private System.Windows.Forms.Button btnRegFBAccount;
         private System.Windows.Forms.Button btnKetBan;
         private System.Windows.Forms.Button btnConfirmEmail;
+        private System.Windows.Forms.Button btnUpdateInfo;
     }
 }

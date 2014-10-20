@@ -243,11 +243,11 @@ namespace FB.App_Controller
 
                 param.Add("fb_api_caller_class", "com.facebook.registration.protocol.RegisterAccountMethod");
                 param.Add("fb_api_req_friendly_name", "registerAccount");
-                param.Add("firstname", strName.Trim().Split(' ')[0]);
+                param.Add("firstname", strName.Trim().Split('_')[0]);
                 System.Threading.Thread.Sleep(34);
                 param.Add("format", "json");
                 param.Add("gender", "M");
-                param.Add("lastname", strName.Substring(strName.IndexOf(' ')).Trim());
+                param.Add("lastname", strName.Trim().Split('_')[1]);
                 List<string> listEmail = new List<string>();
                 listEmail.Add("gmail.com");
                 listEmail.Add("hotmail.com");
@@ -259,10 +259,10 @@ namespace FB.App_Controller
                 listEmail.Add("outlook.com");
                 listEmail.Add("live.com");
 
-                param.Add("email", Utilities.ConvertToUsignNew(param["firstname"].Replace(" ", "").Trim() + param["lastname"].Replace(" ", "").Trim() + new Random().Next(10, 99)).ToLower() + "@" + listEmail[new Random().Next(0, listEmail.Count - 1)]);
+                param.Add("email", Utilities.ConvertToUsignNew(param["firstname"].Replace(" ", "").Trim() + param["lastname"].Replace(" ", "").Trim() + new Random().Next(10, 9999)).ToLower() + "@" + listEmail[new Random().Next(0, listEmail.Count - 1)]);
                 param.Add("locale", "en_US");
                 param.Add("method", "user.register");
-                param.Add("password", Utilities.GetMd5Hash(param["email"]).Substring(0, new Random().Next(13, 20)));
+                param.Add("password", Utilities.GetMd5Hash(param["email"]).Substring(0, new Random().Next(15, 30)));
                 param.Add("reg_instance", hash_id);
                 param.Add("return_multiple_errors", "true");
                 sig = Utilities.getSignFB(param, "62f8ce9f74b12f84c123cc23437a4a32");
@@ -740,6 +740,13 @@ namespace FB.App_Controller
 
         public bool UpdateProfileInfo(FaceBook model)
         {
+            WebClientEx client = new WebClientEx();
+            client.DoGet(GetFaceBookLoginURL(model, "https://www.facebook.com/me"));
+            if (string.IsNullOrEmpty(client.ResponseText)) return false;
+            if (client.CookieContainer.GetCookieHeader(new Uri("https://www.facebook.com/")).Contains("c_user=" + model.FBID))
+            {
+
+            }
             return true;
         }
     }

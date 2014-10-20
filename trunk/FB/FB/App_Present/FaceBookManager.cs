@@ -105,7 +105,7 @@ namespace FB.App_Present
                 if (!string.IsNullOrEmpty(strURL))
                 {
                     Clipboard.SetText(strURL);
-                    MessageBox.Show("Đã copy URL vào clipboad");
+                    //MessageBox.Show("Đã copy URL vào clipboad");
                 }
             }
         }
@@ -124,12 +124,12 @@ namespace FB.App_Present
             {
                 while (btnRegFBAccount.Text.Contains("Stop"))
                 {
-                    //if (DateTime.Today >= new DateTime(2014, 09, 10))
-                    //{
-                    //    return;
-                    //}
-                    //MobileModermController.Disconnect();
-                    //MobileModermController.Connect();
+                    if (DateTime.Today >= new DateTime(2014, 11, 21))
+                    {
+                        return;
+                    }
+                    MobileModermController.Disconnect();
+                    MobileModermController.Connect();
                     FaceBook fb = new FaceBookController().RegNewAccount();
                     if (fb != null)
                     {
@@ -154,6 +154,14 @@ namespace FB.App_Present
             isBusy = true;
             btnConfirmEmail.Enabled = false;
             Task.Factory.StartNew(() => confirmEmail(false));
+        }
+
+        private void btnUpdateInfo_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnUpdateInfo.Enabled = false;
+            Task.Factory.StartNew(() => updateInfo(false));
         }
 
         private void menuXoaTK_Click(object sender, EventArgs e)
@@ -556,6 +564,66 @@ namespace FB.App_Present
 
         }
 
+        private void updateInfo(bool bDoAll)
+        {
+            try
+            {
+                MobileModermController.Disconnect();
+                MobileModermController.Connect();
+                List<Task> tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    FaceBook model = gridData.Rows[iIndex].DataBoundItem as FaceBook;
+                    //new FaceBookController().PostStatus(model);
+                    Task task = Task.Factory.StartNew(() =>
+                    {
+                        int iIndexPost = iIndex;
+                        bool bPostOK = new FaceBookController().UpdateProfileInfo(model);
+                        MethodInvoker action = delegate
+                        {
+                            if (bPostOK)
+                            {
+                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Update Info OK";
+                            }
+                            else
+                            {
+                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Update Info Fail";
+                            }
+                        };
+                        this.BeginInvoke(action);
+
+                    });
+                    task.Wait();
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    {
+                        if (!bDoAll)
+                        {
+                            btnConfirmEmail.Enabled = true;
+                            //reloadGrid();
+                        }
+                    };
+                    this.BeginInvoke(action);
+                }
+            }
+
+        }
         private void getDataOnload()
         {
             try
@@ -632,5 +700,7 @@ namespace FB.App_Present
             }
         }
         #endregion
+
+
     }
 }

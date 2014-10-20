@@ -511,6 +511,8 @@ Yên Sơn";
             System.Threading.Thread.Sleep(23);
             strName += " " + listTen[new Random().Next(listTen.Count - 1)].Trim();
             System.Threading.Thread.Sleep(23);
+            strName += "_" + listTen[new Random().Next(listHo.Count - 1)].Trim();
+            System.Threading.Thread.Sleep(23);
             strName += " " + listTen[new Random().Next(listTen.Count - 1)].Trim();
             //System.Threading.Thread.Sleep(23);
             //strName += listHo[new Random().Next(listHo.Count - 1)].Trim();

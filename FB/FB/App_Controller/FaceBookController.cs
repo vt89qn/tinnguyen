@@ -283,36 +283,54 @@ namespace FB.App_Controller
                         model.MBLoginText = new JavaScriptSerializer().Serialize(dicData["session_info"]);
                         model.FBID = (dicData["session_info"] as Dictionary<string, object>)["uid"].ToString();
 
-
-
-
-                        //client.Authorization = (dicData["session_info"] as Dictionary<string, object>)["access_token"].ToString();
-                        //param = new NameValueCollection();
-
-                        //param.Add("normalized_contactpoint", model.Login);
-                        //param.Add("contactpoint_type", "EMAIL");
-                        //param.Add("code", "17679");
-                        //param.Add("source", "ANDROID_DIALOG_API");
-                        //param.Add("format", "json");
-                        //param.Add("locale", "en_US");
-                        //param.Add("client_country_code", "VN");
-                        //param.Add("method", "user.confirmcontactpoint");
-                        //param.Add("fb_api_req_friendly_name", "confirmContactpoint");
-                        //param.Add("fb_api_caller_class", "com.facebook.confirmation.protocol.ConfirmContactpointMethod");
-                        //System.Threading.Thread.Sleep(3000);
-                        //client.DoPost(param, "https://api.facebook.com/method/user.confirmcontactpoint");
-
-                        //if (client.ResponseText != "true") return null;
-
-
-
-
-
                         if (LoginMobile(model, client))
                         {
                             client.SetCookieV2 = false;
                             dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
                             client.Authorization = dicData["access_token"].ToString();
+
+                            #region - Upload profile picture -
+                            string[] files = Directory.GetFiles("Photos");
+                            MemoryStream ms = new MemoryStream();
+                            Image img = Image.FromFile(files[new Random().Next(files.Length - 1)]);
+                            //img = (Image)(new Bitmap(img, new Size(640, 640)));
+                            img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                            byte[] imgBytes = ms.ToArray(); //System.Text.Encoding.Default.GetBytes(files[new Random().Next(files.Length - 1)]);
+                            string imgString = System.Text.Encoding.ASCII.GetString(imgBytes);
+
+                            string boundary = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+
+                            string body = "--" + boundary + "\r\nContent-Disposition: form-data; name=\"profile_pic_source\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nnux";
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"profile_pic_method\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nupload";
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"locale\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nen_US";
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"client_country_code\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nVN";
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"fb_api_req_friendly_name\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nset_profile_photo";
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"fb_api_caller_class\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\ncom.facebook.api.growth.profile.SetProfilePhotoMethod";
+
+                            string filename = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+                            filename = filename.Substring(0, 8) + "-" + filename.Substring(8, 16);
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"source\"; filename=\"" + filename + ".tmp\"\r\nContent-Type: image/jpeg\r\nContent-Transfer-Encoding: binary\r\n\r\n";
+                            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(body);
+
+
+                            byte[] ret = new byte[bytes.Length + imgBytes.Length];
+                            Buffer.BlockCopy(bytes, 0, ret, 0, bytes.Length);
+                            Buffer.BlockCopy(imgBytes, 0, ret, bytes.Length, imgBytes.Length);
+
+                            // write trailing boundary bytes.
+                            byte[] trailerBytes = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
+
+                            byte[] ret2 = new byte[ret.Length + trailerBytes.Length];
+                            Buffer.BlockCopy(ret, 0, ret2, 0, ret.Length);
+                            Buffer.BlockCopy(trailerBytes, 0, ret2, ret.Length, trailerBytes.Length);
+
+                            Dictionary<HttpRequestHeader, string> dicAddition = new Dictionary<HttpRequestHeader, string>();
+                            dicAddition.Add(HttpRequestHeader.ContentType, "multipart/form-data; boundary=" + boundary);
+                            client.DoPost(ret2, "https://graph.facebook.com/" + model.FBID + "/picture", dicAddition);
+
+                            #endregion
                             param = new NameValueCollection();
                             param.Add("format", "JSON");
                             param.Add("nux_id", "ANDROID_NEW_ACCOUNT_WIZARD");
@@ -327,6 +345,18 @@ namespace FB.App_Controller
                             //System.Threading.Thread.Sleep(1000);
                             client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
 
+                            #region - Update work and class info -
+                            param = new NameValueCollection();
+                            param.Add("work", "[{'id':'1479876348939597','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android'}]".Replace("'", "\""));
+                            param.Add("education", "[{'id':'823697264348577','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android','type':'College'},{'id':'823697264348577','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android','type':'High School'}]".Replace("'", "\""));
+                            param.Add("location", "{'id':'108458769184495','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android'}".Replace("'", "\""));
+                            param.Add("hometown", "{'id':'108458769184495','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android'}".Replace("'", "\""));
+                            param.Add("locale", "en_US");
+                            param.Add("client_country_code", "VN");
+                            param.Add("fb_api_req_friendly_name", "save_core_profile_info");
+                            client.DoPost(param, "https://graph.facebook.com/me");
+
+                            #endregion
                             param = new NameValueCollection();
                             param.Add("format", "JSON");
                             param.Add("nux_id", "ANDROID_NEW_ACCOUNT_WIZARD");
@@ -355,149 +385,162 @@ namespace FB.App_Controller
                             //System.Threading.Thread.Sleep(1000);
                             client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
 
+                            string strNewEmail = model.Login.Substring(0, model.Login.IndexOf("@")) + "@tinphuong.com";
+                            param = new NameValueCollection();
+                            param.Add("add_contactpoint", strNewEmail);
+                            param.Add("add_contactpoint_type", "EMAIL");
+                            param.Add("format", "json");
+                            param.Add("locale", "en_US");
+                            param.Add("client_country_code", "VN");
+                            param.Add("fb_api_req_friendly_name", "editRegistrationContactpoint");
+                            param.Add("method", "user.editregistrationcontactpoint");
+                            param.Add("fb_api_caller_class", "com.facebook.confirmation.protocol.EditRegistrationContactpointMethod");
 
-                            //wait email for 10s
-                            //System.Threading.Thread.Sleep(5000);
-                            //#region - Feed Email -
-                            ////Pop3.Pop3MailClient gmailClient = new Pop3.Pop3MailClient("pop.gmail.com", 995, true, "vantin.work@gmail.com", "leostbuqbcepmvae");
-                            ////gmailClient.IsAutoReconnect = true;
-                            ////gmailClient.ReadTimeout = 60000; //give pop server 60 seconds to answer
+                            #region - confirm email -
+                            client.DoPost(param, "https://api.facebook.com/method/user.editregistrationcontactpoint");
+                            if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText == "true")
+                            {
+                                System.Threading.Thread.Sleep(5000);
+                                int iTry = 0;
+                                bool bFindEmail = false;
+                                while (iTry < 3 && !bFindEmail)
+                                {
+                                    Pop3Client pop3 = new Pop3Client();
+                                    pop3.Connect("tinphuong.com", 110, false);
+                                    pop3.Authenticate("mail@tinphuong.com", "uxBa2@05");
+                                    Dictionary<string, string> dicMail = new Dictionary<string, string>();
+                                    for (int iIndex = pop3.GetMessageCount(); iIndex > 0; iIndex--)
+                                    {
+                                        OpenPop.Mime.Message message = pop3.GetMessage(iIndex);
+                                        if (message.Headers.To[0].MailAddress.Address == strNewEmail)
+                                        {
+                                            var strBody = message.MessagePart.MessageParts[0].BodyEncoding.GetString(message.MessagePart.MessageParts[0].Body);
+                                            string code = Regex.Match(strBody, @"&code=(?<val>[0-9]+)&").Groups["val"].Value;
+                                            if (!string.IsNullOrEmpty(code))
+                                            {
+                                                param = new NameValueCollection();
+                                                param.Add("normalized_contactpoint", strNewEmail);
+                                                param.Add("contactpoint_type", "EMAIL");
+                                                param.Add("code", code);
+                                                param.Add("source", "ANDROID_DIALOG_API");
+                                                param.Add("format", "json");
+                                                param.Add("locale", "en_US");
+                                                param.Add("client_country_code", "VN");
+                                                param.Add("fb_api_req_friendly_name", "confirmContactpoint");
+                                                param.Add("method", "user.confirmcontactpoint");
+                                                param.Add("fb_api_caller_class", "com.facebook.confirmation.protocol.ConfirmContactpointMethod");
+                                                client.DoPost(param, "https://api.facebook.com/method/user.confirmcontactpoint");
+                                                //if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText == "true")
+                                                {
+                                                    bFindEmail = true;
+                                                }
+                                            }
+                                            try
+                                            {
+                                                pop3.DeleteMessage(iIndex);
+                                            }
+                                            catch
+                                            {
+                                            }
+                                        }
+                                        if (bFindEmail) break;
+                                    }
+                                    if (bFindEmail)
+                                    {
+                                        try
+                                        {
+                                            pop3.DeleteAllMessages();
+                                            pop3.Disconnect();
+                                        }
+                                        catch { }
+                                        model.Login = strNewEmail;
+                                    }
+                                    else
+                                    {
+                                        System.Threading.Thread.Sleep(3000);
+                                        iTry++;
+                                    }
+                                    try
+                                    {
+                                        pop3.Disconnect();
+                                    }
+                                    catch { }
+                                }
+                            }
+                            #endregion
 
-                            //////establish connection
-                            ////gmailClient.Connect();
 
-                            //////get mailbox statistics
-                            ////int NumberOfMails, MailboxSize;
-                            ////gmailClient.GetMailboxStats(out NumberOfMails, out MailboxSize);
+                            #region - update cover photo -
+                            ms = new MemoryStream();
+                            img = Image.FromFile(files[new Random().Next(files.Length - 1)]);
+                            //img = (Image)(new Bitmap(img, new Size(640, 640)));
+                            img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                            ////for (int iIndex = NumberOfMails; iIndex > NumberOfMails - 3; iIndex--)
-                            ////{
-                            ////    //get email
-                            ////    string Email;
-                            ////    bool bFindEmail = false;
-                            ////    gmailClient.GetRawEmail(iIndex, out Email);
-                            ////    Email = Email.Replace("=\r\n", "").Replace("=3D", "=");
-                            ////    if (Email.Contains(model.Login))
-                            ////    {
-                            ////        string url = System.Text.RegularExpressions.Regex.Match(Email, @"https://www\.facebook\.com/n/\?confirmemail\.php[^\s]+").Value;
-                            ////        if (!string.IsNullOrEmpty(url))
-                            ////        {
-                            ////            WebClientEx clientFB = new WebClientEx();
-                            ////            clientFB.DoGet(url);
-                            ////            if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                            ////            {
-                            ////                url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "form action=\"(?<val>/login/confirm/\\?auth_token=[^\"]+)").Groups["val"].Value.Trim();
-                            ////                url = "https://www.facebook.com" + url;
-                            ////                url = url.Replace("&amp;", "&");
-                            ////                string lsd = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "name=\"lsd\" value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
-                            ////                param = new NameValueCollection();
-                            ////                param.Add("lsd", lsd);
-                            ////                param.Add("confirm", "1");
-                            ////                clientFB.DoPost(param, url);
-                            ////                if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                            ////                {
-                            ////                    url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "\\?confirmemail\\.php\\&e=[^\"]+").Value;
-                            ////                    if (!string.IsNullOrEmpty(url))
-                            ////                    {
-                            ////                        url = "https://www.facebook.com/n/" + url;
-                            ////                        clientFB.DoGet(url);
+                            imgBytes = ms.ToArray(); //System.Text.Encoding.Default.GetBytes(files[new Random().Next(files.Length - 1)]);
+                            imgString = System.Text.Encoding.ASCII.GetString(imgBytes);
 
-                            ////                    }
-                            ////                }
-                            ////            }
-                            ////            bFindEmail = true;
-                            ////        }
-                            ////    }
-                            ////    //if (Email.Contains("facebookmail.com"))
-                            ////    //{
-                            ////    //    //delete email
-                            ////    //    gmailClient.DeleteEmail(iIndex);
-                            ////    //}
-                            ////    if (bFindEmail) break;
-                            ////}
+                            boundary = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
 
-                            //////close connection
-                            ////gmailClient.Disconnect();
-                            //string code = string.Empty;
-                            //Pop3Client pop3 = new Pop3Client();
-                            //pop3.Connect("pop.gmail.com", 995, true);
-                            //pop3.Authenticate("vantin.work@gmail.com", "leostbuqbcepmvae");
-                            //int count = pop3.GetMessageCount();
-                            //Dictionary<string, string> dicMail = new Dictionary<string, string>();
-                            //for (int iIndex = count; iIndex >= count - 3; iIndex--)
-                            //{
-                            //    bool bFindEmail = false;
-                            //    OpenPop.Mime.Message message = pop3.GetMessage(iIndex);
-                            //    if (message.Headers.To[0].MailAddress.Address == model.Login)
-                            //    {
-                            //        var strBody = message.MessagePart.MessageParts[0].BodyEncoding.GetString(message.MessagePart.MessageParts[0].Body);
-                            //        string url = Regex.Match(strBody, @"http[^\s]+confirmemail.php[^\s]+").Value;
-                            //        if (!string.IsNullOrEmpty(url))
-                            //        {
-                            //            code = Regex.Match(url, "&c=(?<val>[0-9]+)").Groups["val"].Value.Trim();
-                            //            if (!string.IsNullOrEmpty(code)) break;
-                            //            WebClientEx clientFB = new WebClientEx();
-                            //            model.FBID = (dicData["session_info"] as Dictionary<string, object>)["uid"].ToString();
-                            //            string t = GetFaceBookLoginURL(model, url);
-                            //            clientFB.DoGet(url);
-                            //            if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                            //            {
-                            //                url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "form action=\"(?<val>/login/confirm/\\?auth_token=[^\"]+)").Groups["val"].Value.Trim();
-                            //                url = "https://www.facebook.com" + url;
-                            //                url = url.Replace("&amp;", "&");
-                            //                string lsd = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "name=\"lsd\" value=\"(?<val>[^\"]+)").Groups["val"].Value.Trim();
-                            //                param = new NameValueCollection();
-                            //                param.Add("lsd", lsd);
-                            //                param.Add("confirm", "1");
-                            //                clientFB.DoPost(param, url);
-                            //                if (!string.IsNullOrEmpty(clientFB.ResponseText))
-                            //                {
-                            //                    if (clientFB.Response.ResponseUri.AbsolutePath.Contains("checkpoint")) return null;
-                            //                    url = System.Text.RegularExpressions.Regex.Match(clientFB.ResponseText, "\\?confirmemail\\.php\\&e=[^\"]+").Value;
-                            //                    if (!string.IsNullOrEmpty(url))
-                            //                    {
-                            //                        url = "https://www.facebook.com/n/" + url;
-                            //                        clientFB.DoGet(url);
+                            body = "--" + boundary + "\r\nContent-Disposition: form-data; name=\"published\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nfalse";
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"audience_exp\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\ntrue";
 
-                            //                    }
-                            //                }
-                            //            }
-                            //            bFindEmail = true;
-                            //        }
-                            //        try
-                            //        {
-                            //            pop3.DeleteMessage(iIndex);
-                            //        }
-                            //        catch { }
-                            //    }
-                            //    if (bFindEmail) break;
-                            //}
-                            ////pop3.DeleteAllMessages();
-                            //pop3.Disconnect();
-                            //#endregion
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"time_since_original_post\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n8";
 
-                            //if (!string.IsNullOrEmpty(code))
-                            //{
-                            //    param = new NameValueCollection();
+                            hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+                            hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
 
-                            //    param.Add("normalized_contactpoint", model.Login);
-                            //    param.Add("contactpoint_type", "EMAIL");
-                            //    param.Add("code", code);
-                            //    param.Add("source", "ANDROID_DIALOG_API");
-                            //    param.Add("format", "json");
-                            //    param.Add("locale", "en_US");
-                            //    param.Add("client_country_code", "VN");
-                            //    param.Add("method", "user.confirmcontactpoint");
-                            //    param.Add("fb_api_req_friendly_name", "confirmContactpoint");
-                            //    param.Add("fb_api_caller_class", "com.facebook.confirmation.protocol.ConfirmContactpointMethod");
-                            //    //System.Threading.Thread.Sleep(3000);
-                            //    client.DoPost(param, "https://api.facebook.com/method/user.confirmcontactpoint");
-                            //}
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"qn\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" + hash_id;
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"composer_session_id\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" + hash_id;
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"idempotence_token\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" + hash_id + "_0";
+
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"locale\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nen_US";
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"client_country_code\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nVN";
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"fb_api_req_friendly_name\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nupload-photo";
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"fb_api_caller_class\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\ncom.facebook.photos.upload.protocol.UploadPhotoMethod";
+
+                            filename = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+                            filename = filename.Substring(0, 8) + "-" + filename.Substring(8, 16);
+
+                            body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"source\"; filename=\"" + filename + ".tmp\"\r\nContent-Type: image/jpeg\r\nContent-Transfer-Encoding: binary\r\n\r\n";
+                            bytes = System.Text.Encoding.UTF8.GetBytes(body);
+
+
+                            ret = new byte[bytes.Length + imgBytes.Length];
+                            Buffer.BlockCopy(bytes, 0, ret, 0, bytes.Length);
+                            Buffer.BlockCopy(imgBytes, 0, ret, bytes.Length, imgBytes.Length);
+
+                            // write trailing boundary bytes.
+                            trailerBytes = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
+
+                            ret2 = new byte[ret.Length + trailerBytes.Length];
+                            Buffer.BlockCopy(ret, 0, ret2, 0, ret.Length);
+                            Buffer.BlockCopy(trailerBytes, 0, ret2, ret.Length, trailerBytes.Length);
+
+                            dicAddition = new Dictionary<HttpRequestHeader, string>();
+                            dicAddition.Add(HttpRequestHeader.ContentType, "multipart/form-data; boundary=" + boundary);
+                            client.DoPost(ret2, "https://graph.facebook.com/me/photos", dicAddition);
+                            if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("id"))
+                            {
+                                dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                                string id = dicData["id"].ToString();
+
+                                param = new NameValueCollection();
+                                param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                                    + "&time_since_original_post=12&photo=" + id + "&focus_y=0.5&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                                    + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
+                                param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                                client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
+                            }
+                            #endregion
                             return model;
                         }
                     }
-
-
                 }
             }
             return null;
@@ -572,7 +615,7 @@ namespace FB.App_Controller
                 client.DoPost(param, "https://api.facebook.com/method/user.editregistrationcontactpoint");
                 if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText == "true")
                 {
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(3000);
                     int iTry = 0;
                     bool bFindEmail = false;
                     while (iTry < 3 && !bFindEmail)
@@ -626,7 +669,7 @@ namespace FB.App_Controller
                         }
                         else
                         {
-                            System.Threading.Thread.Sleep(5000);
+                            System.Threading.Thread.Sleep(3000);
                             iTry++;
                         }
                         pop3.Disconnect();

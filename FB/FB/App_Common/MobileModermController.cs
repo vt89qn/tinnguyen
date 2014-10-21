@@ -31,19 +31,6 @@ namespace FB.App_Common
         [DllImport("rasapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern uint RasHangUp(IntPtr hRasConn);
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Auto)]
-        public struct RASDIALDLG
-        {
-            public int dwSize;
-            public IntPtr hwndOwner;
-            public int dwFlags;
-            public int xDlg;
-            public int yDlg;
-            public int dwSubEntry;
-            public int dwError;
-            public IntPtr reserved;
-            public IntPtr reserved2;
-        }
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         struct RASCONN
         {
@@ -59,56 +46,13 @@ namespace FB.App_Common
             public string szPhonebook;
             public int dwSubEntry;
         }
-        [DllImport("Rasdlg.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool RasDialDlg(
-            IntPtr phoneBook,
-            string entryName,
-            IntPtr phoneNumber,
-            ref RASDIALDLG info);
-
-        //public static bool Connect()
-        //{
-        //    bool ret = false;
-        //    RASDIALDLG info = new RASDIALDLG();
-        //    Task t = Task.Factory.StartNew(() =>
-        //    {
-
-        //        info.dwSize = Marshal.SizeOf(info);
-        //        ret = RasDialDlg(IntPtr.Zero, AppSettings.Name3G, IntPtr.Zero, ref info);
-
-        //    });
-
-        //    //System.Threading.Thread.Sleep(1000);
-        //    ////SendKeys.Send("{ENTER}");
-        //    //SendKeys.SendWait("%{Alt Down}");
-        //    //SendKeys.SendWait("%{TAB}");
-        //    //SendKeys.SendWait("%{Alt Up}");
-        //    t.Wait(5000);
-        //    if (ret == false && info.dwError != ERROR_SUCCESS)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
 
         public static bool Connect()
         {
-
-            d1.EntryName = AppSettings.Name3G;
             d1.PhoneNumber = "*99#";
             d1.Dial();
             return true;
         }
-
-        //public static bool Disconnect(bool b)
-        //{
-        //    RasHangUp d1 = new RasHandle
-        //    d1.EntryName = AppSettings.Name3G;
-        //    d1.PhoneNumber = "*99#";
-        //    //();
-        //    return true;
-        //}
-
 
         public static void Disconnect()
         {

@@ -159,7 +159,7 @@ namespace FB.App_Present
         private void btnUpdateInfo_Click(object sender, EventArgs e)
         {
             if (isBusy) return;
-            isBusy = true;
+            //isBusy = true;
             btnUpdateInfo.Enabled = false;
             Task.Factory.StartNew(() => updateInfo(false));
         }
@@ -340,6 +340,7 @@ namespace FB.App_Present
             if (txtPackNo.SelectedItem is FBPackage)
             {
                 FBPackage selectedPackage = txtPackNo.SelectedItem as FBPackage;
+                gridData.DataSource = null;
                 gridData.DataSource = selectedPackage.FaceBooks;
                 for (int iIndex = 0; iIndex < gridData.Columns.Count; iIndex++)
                 {
@@ -365,8 +366,11 @@ namespace FB.App_Present
 
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
-                    FaceBook fb = gridData.Rows[iIndex].DataBoundItem as FaceBook;
-                    gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
+                    if (gridData.Rows[iIndex].DataBoundItem is FaceBook)
+                    {
+                        FaceBook fb = gridData.Rows[iIndex].DataBoundItem as FaceBook;
+                        gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
+                    }
                 }
             }
         }
@@ -375,8 +379,8 @@ namespace FB.App_Present
         {
             try
             {
-                MobileModermController.Disconnect();
-                MobileModermController.Connect();
+                //MobileModermController.Disconnect();
+                //MobileModermController.Connect();
                 List<Task> tasks = new List<Task>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
@@ -391,11 +395,19 @@ namespace FB.App_Present
                         {
                             if (bPostOK)
                             {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Upload Profile Photo OK";
+                                try
+                                {
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Upload Profile Photo OK";
+                                }
+                                catch { }
                             }
                             else
                             {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Upload Profile Photo Fail";
+                                try
+                                {
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Upload Profile Photo Fail";
+                                }
+                                catch { }
                             }
                         };
                         this.BeginInvoke(action);
@@ -432,8 +444,8 @@ namespace FB.App_Present
         {
             try
             {
-                MobileModermController.Disconnect();
-                MobileModermController.Connect();
+                //MobileModermController.Disconnect();
+                //MobileModermController.Connect();
                 List<Task> tasks = new List<Task>();
                 List<FaceBook> listDelete = new List<FaceBook>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -449,17 +461,25 @@ namespace FB.App_Present
                         {
                             if (bPostOK)
                             {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Post OK";
+                                try
+                                {
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Post OK";
+                                }
+                                catch { }
                             }
                             else
                             {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Post Fail";
+                                try
+                                {
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Post Fail";
+                                }
+                                catch { }
                                 // Global.DBContext.FaceBook.Remove(model);
                                 listDelete.Add(model);
                             }
                         };
                         this.BeginInvoke(action);
-
+                        System.Threading.Thread.Sleep(10);
                     }));
                     System.Threading.Thread.Sleep(1000);
                 }
@@ -488,7 +508,7 @@ namespace FB.App_Present
                         if (!bDoAll)
                         {
                             btnPostStatus.Enabled = true;
-                            //reloadGrid();
+                            reloadGrid();
                         }
                     };
                     this.BeginInvoke(action);
@@ -501,8 +521,8 @@ namespace FB.App_Present
         {
             try
             {
-                MobileModermController.Disconnect();
-                MobileModermController.Connect();
+                //MobileModermController.Disconnect();
+                //MobileModermController.Connect();
                 List<Task> tasks = new List<Task>();
                 List<FaceBook> listConfirm = new List<FaceBook>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -518,12 +538,20 @@ namespace FB.App_Present
                         {
                             if (bPostOK)
                             {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Confirm OK";
+                                try
+                                {
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Confirm OK";
+                                }
+                                catch { }
                                 listConfirm.Add(model);
                             }
                             else
                             {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Confirm Fail";
+                                try
+                                {
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Confirm Fail";
+                                }
+                                catch { }
                             }
                         };
                         this.BeginInvoke(action);
@@ -568,39 +596,86 @@ namespace FB.App_Present
         {
             try
             {
-                MobileModermController.Disconnect();
-                MobileModermController.Connect();
-                List<Task> tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                while (true)
                 {
-                    if (this.IsDisposed) return;
-                    FaceBook model = gridData.Rows[iIndex].DataBoundItem as FaceBook;
-                    //new FaceBookController().PostStatus(model);
-                    Task task = Task.Factory.StartNew(() =>
-                    {
-                        int iIndexPost = iIndex;
-                        bool bPostOK = new FaceBookController().UpdateProfileInfo(model);
-                        MethodInvoker action = delegate
-                        {
-                            if (bPostOK)
-                            {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Update Info OK";
-                            }
-                            else
-                            {
-                                gridData[GridMainFormConst.Status, iIndexPost].Value = "Update Info Fail";
-                            }
-                        };
-                        this.BeginInvoke(action);
+                    MobileModermController.Disconnect();
+                    MobileModermController.Connect();
 
-                    });
-                    task.Wait();
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
+                    MethodInvoker action = delegate
+                    {
+                        btnPostStatus_Click(null, null);
+                    };
+                    this.BeginInvoke(action);
                     System.Threading.Thread.Sleep(1000);
+                    while (isBusy) System.Threading.Thread.Sleep(1000);
+
+                    action = delegate
+                    {
+                        btnUploadProfilePhoto_Click(null, null);
+                    };
+                    this.BeginInvoke(action);
+                    System.Threading.Thread.Sleep(1000);
+                    while (isBusy) System.Threading.Thread.Sleep(1000);
+
+                    action = delegate
+                    {
+                        btnConfirmEmail_Click(null, null);
+                    };
+                    this.BeginInvoke(action);
+                    System.Threading.Thread.Sleep(1000);
+                    while (isBusy) System.Threading.Thread.Sleep(1000);
+
+                    bool bCanMoveNext = false;
+                    action = delegate
+                    {
+                        try
+                        {
+                            if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                            {
+                                txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                                bCanMoveNext = true;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    };
+                    this.BeginInvoke(action);
+                    System.Threading.Thread.Sleep(1000);
+                    if (!bCanMoveNext) break;
+
                 }
+                //List<Task> tasks = new List<Task>();
+                //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                //{
+                //    if (this.IsDisposed) return;
+                //    FaceBook model = gridData.Rows[iIndex].DataBoundItem as FaceBook;
+                //    //new FaceBookController().PostStatus(model);
+                //    Task task = Task.Factory.StartNew(() =>
+                //    {
+                //        int iIndexPost = iIndex;
+                //        bool bPostOK = new FaceBookController().UpdateProfileInfo(model);
+                //        MethodInvoker action = delegate
+                //        {
+                //            if (bPostOK)
+                //            {
+                //                gridData[GridMainFormConst.Status, iIndexPost].Value = "Update Info OK";
+                //            }
+                //            else
+                //            {
+                //                gridData[GridMainFormConst.Status, iIndexPost].Value = "Update Info Fail";
+                //            }
+                //        };
+                //        this.BeginInvoke(action);
+
+                //    });
+                //    task.Wait();
+                //}
+                //while (tasks.Any(t => !t.IsCompleted))
+                //{
+                //    Application.DoEvents();
+                //    System.Threading.Thread.Sleep(1000);
+                //}
             }
             catch (Exception ex)
             {
@@ -624,6 +699,7 @@ namespace FB.App_Present
             }
 
         }
+
         private void getDataOnload()
         {
             try

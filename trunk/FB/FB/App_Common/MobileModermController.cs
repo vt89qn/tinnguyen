@@ -49,6 +49,7 @@ namespace FB.App_Common
 
         public static bool Connect()
         {
+            d1.EntryName = AppSettings.Name3G;
             d1.PhoneNumber = "*99#";
             d1.Dial();
             return true;

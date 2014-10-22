@@ -120,11 +120,12 @@ namespace FB.App_Present
             {
                 btnRegFBAccount.Text = "Start Reg Auto";
             }
+            DateTime beginTime = DateTime.Today;
             Task.Factory.StartNew(() =>
             {
                 while (btnRegFBAccount.Text.Contains("Stop"))
                 {
-                    if (DateTime.Today >= new DateTime(2014, 11, 21))
+                    if (DateTime.Now.Date == beginTime.AddDays(1))
                     {
                         return;
                     }

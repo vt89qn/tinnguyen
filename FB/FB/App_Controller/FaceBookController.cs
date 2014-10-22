@@ -370,7 +370,7 @@ namespace FB.App_Controller
                             param.Add("fb_api_caller_class", "com.facebook.nux.status.UpdateNuxStatusMethod");
                             //System.Threading.Thread.Sleep(1000);
                             client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
-
+                            if (client.ResponseText.ToLower().Trim() != "true") return null;
                             param = new NameValueCollection();
                             param.Add("format", "JSON");
                             param.Add("nux_id", "ANDROID_NEW_ACCOUNT_WIZARD");
@@ -532,7 +532,7 @@ namespace FB.App_Controller
 
                                 param = new NameValueCollection();
                                 param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
-                                    + "&time_since_original_post=12&photo=" + id + "&focus_y=0.5&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                                    + "&time_since_original_post=12&photo=" + id + "&focus_y=0.3&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
                                     + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
                                 param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
                                 client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");

@@ -14,6 +14,7 @@ namespace PokerTexas.App_UserControl
         public enum RequestTypeEnum
         {
             Poker,
+            PokerWeb,
             FaceBook,
             Nomal
         }
@@ -54,6 +55,7 @@ namespace PokerTexas.App_UserControl
             }
             return Request;
         }
+
         protected override WebResponse GetWebResponse(WebRequest request)
         {
             try
@@ -90,6 +92,7 @@ namespace PokerTexas.App_UserControl
             }
             return ResponseText;
         }
+
         public string DoPost(NameValueCollection parameters, string strURL)
         {
             return this.DoPost(parameters, strURL, null);
@@ -101,6 +104,11 @@ namespace PokerTexas.App_UserControl
             {
                 Error = null;
                 ResponseText = null;
+                if (additionHeader.ContainsKey(HttpRequestHeader.ContentType))
+                {
+                    additionHeader.Remove(HttpRequestHeader.ContentType);
+                }
+                additionHeader.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
                 addHeader(additionHeader);
                 ResponseText = this.UploadString(strURL, Method, parameters);
             }
@@ -110,9 +118,12 @@ namespace PokerTexas.App_UserControl
             }
             return ResponseText;
         }
+
         public string DoPost(string parameters, string strURL)
         {
-            return this.DoPost(parameters, strURL, null, "POST");
+            Dictionary<HttpRequestHeader, string> additionHeader = new Dictionary<HttpRequestHeader, string>();
+            additionHeader.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
+            return this.DoPost(parameters, strURL, additionHeader, "POST");
         }
 
         public string DoPost(byte[] parameters, string strURL, Dictionary<HttpRequestHeader, string> additionHeader)
@@ -146,9 +157,30 @@ namespace PokerTexas.App_UserControl
             }
             return ResponseText;
         }
+
         public string DoGet(string strURL)
         {
             return this.DoGet(strURL, null);
+        }
+
+        public Image GetImage(string strURL)
+        {
+            try
+            {
+                Error = null;
+                ResponseText = string.Empty;
+                ResponseImage = null;
+                addHeader(null);
+                ResponseText = this.DownloadString(strURL);
+                byte[] byteArrayIn = this.DownloadData(strURL);
+                MemoryStream ms = new MemoryStream(byteArrayIn);
+                ResponseImage = Image.FromStream(ms);
+            }
+            catch (Exception ex)
+            {
+                this.Error = ex;
+            }
+            return ResponseImage;
         }
 
         private void addHeader(Dictionary<HttpRequestHeader, string> additionHeader)
@@ -173,13 +205,19 @@ namespace PokerTexas.App_UserControl
                     this.Headers.Add("Authorization", "OAuth " + Authorization);
                 }
                 this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentFaceBook);
-
             }
             else
             {
                 this.Headers.Add(HttpRequestHeader.UserAgent, AppSettings.UserAgentBrowser);
-                this.Headers.Add(HttpRequestHeader.Accept, "*/*");
+                //this.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate");
+                this.Headers.Add(HttpRequestHeader.Accept, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
                 this.Headers.Add(HttpRequestHeader.AcceptLanguage, "vi-VN,vi;q=0.8,fr-FR;q=0.6,fr;q=0.4,en-US;q=0.2,en;q=0.2");
+            }
+            if (RequestType == RequestTypeEnum.PokerWeb)
+            {
+                this.Headers.Add("X-Requested-With", "XMLHttpRequest");
+                this.Headers.Remove(HttpRequestHeader.Accept);
+                this.Headers.Add(HttpRequestHeader.Accept, "application/json, text/javascript, */*");
             }
             if (SetCookieV2)
             {

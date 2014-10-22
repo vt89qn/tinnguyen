@@ -92,7 +92,7 @@ namespace FB.App_Present
             if (isBusy) return;
             isBusy = true;
             btnPostStatus.Enabled = false;
-            Task.Factory.StartNew(() => postStatus(false));
+            Task.Factory.StartNew(() => postStatus(false, true));
         }
 
         private void menuCopyURL_Click(object sender, EventArgs e)
@@ -206,7 +206,7 @@ namespace FB.App_Present
             {
                 while (true)
                 {
-                    postStatus(true);
+                    postStatus(true, true);
                     bool bCanMoveNext = false;
                     MethodInvoker action = delegate
                     {
@@ -441,12 +441,15 @@ namespace FB.App_Present
 
         }
 
-        private void postStatus(bool bDoAll)
+        private void postStatus(bool bDoAll,bool bChangeIP)
         {
             try
             {
-                //MobileModermController.Disconnect();
-                //MobileModermController.Connect();
+                if (bChangeIP)
+                {
+                    MobileModermController.Disconnect();
+                    MobileModermController.Connect();
+                }
                 List<Task> tasks = new List<Task>();
                 List<FaceBook> listDelete = new List<FaceBook>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -599,8 +602,8 @@ namespace FB.App_Present
             {
                 while (true)
                 {
-                    MobileModermController.Disconnect();
-                    MobileModermController.Connect();
+                    //MobileModermController.Disconnect();
+                    //MobileModermController.Connect();
 
                     MethodInvoker action = delegate
                     {
@@ -610,21 +613,21 @@ namespace FB.App_Present
                     System.Threading.Thread.Sleep(1000);
                     while (isBusy) System.Threading.Thread.Sleep(1000);
 
-                    action = delegate
-                    {
-                        btnUploadProfilePhoto_Click(null, null);
-                    };
-                    this.BeginInvoke(action);
-                    System.Threading.Thread.Sleep(1000);
-                    while (isBusy) System.Threading.Thread.Sleep(1000);
+                    //action = delegate
+                    //{
+                    //    btnUploadProfilePhoto_Click(null, null);
+                    //};
+                    //this.BeginInvoke(action);
+                    //System.Threading.Thread.Sleep(1000);
+                    //while (isBusy) System.Threading.Thread.Sleep(1000);
 
-                    action = delegate
-                    {
-                        btnConfirmEmail_Click(null, null);
-                    };
-                    this.BeginInvoke(action);
-                    System.Threading.Thread.Sleep(1000);
-                    while (isBusy) System.Threading.Thread.Sleep(1000);
+                    //action = delegate
+                    //{
+                    //    btnConfirmEmail_Click(null, null);
+                    //};
+                    //this.BeginInvoke(action);
+                    //System.Threading.Thread.Sleep(1000);
+                    //while (isBusy) System.Threading.Thread.Sleep(1000);
 
                     bool bCanMoveNext = false;
                     action = delegate

@@ -16,12 +16,11 @@ namespace PokerTexas
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (DateTime.Today >= new DateTime(2014, 10, 01))
+            if (DateTime.Today >= new DateTime(2014, 11, 01))
             {
                 return;
             }
-            Application.Run(new App_Present.FaceBookManager());
-            //Application.Run(new App_Present.MainForm());
+            Application.Run(new App_Present.MainForm());
         }
     }
 }

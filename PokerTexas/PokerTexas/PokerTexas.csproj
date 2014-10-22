@@ -78,18 +78,9 @@
     <Compile Include="App_Common\MobileModermController.cs" />
     <Compile Include="App_Common\AppSettings.cs" />
     <Compile Include="App_Common\Global.cs" />
-    <Compile Include="App_Common\Pop3MailClient.cs" />
     <Compile Include="App_Common\TableConstant.cs" />
     <Compile Include="App_Common\Utilities.cs" />
     <Compile Include="App_Context\PokerContext.cs" />
-    <Compile Include="App_Context\TP.cs">
-      <DependentUpon>TP.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="App_Context\TP.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TP.dbml</DependentUpon>
-    </Compile>
     <Compile Include="App_Controller\FaceBookController.cs" />
     <Compile Include="App_Controller\PokerController.cs" />
     <Compile Include="App_Model\Models.cs" />
@@ -99,11 +90,11 @@
     <Compile Include="App_Present\AddAccount.designer.cs">
       <DependentUpon>AddAccount.cs</DependentUpon>
     </Compile>
-    <Compile Include="App_Present\FaceBookManager.cs">
+    <Compile Include="App_Present\EnterCaptcha.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="App_Present\FaceBookManager.Designer.cs">
-      <DependentUpon>FaceBookManager.cs</DependentUpon>
+    <Compile Include="App_Present\EnterCaptcha.Designer.cs">
+      <DependentUpon>EnterCaptcha.cs</DependentUpon>
     </Compile>
     <Compile Include="App_Present\MainForm.cs">
       <SubType>Form</SubType>
@@ -119,8 +110,8 @@
     <EmbeddedResource Include="App_Present\AddAccount.resx">
       <DependentUpon>AddAccount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="App_Present\FaceBookManager.resx">
-      <DependentUpon>FaceBookManager.cs</DependentUpon>
+    <EmbeddedResource Include="App_Present\EnterCaptcha.resx">
+      <DependentUpon>EnterCaptcha.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="App_Present\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -134,14 +125,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="app.config" />
-    <None Include="App_Context\TP.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>TP.designer.cs</LastGenOutput>
+    <None Include="app.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="App_Context\TP.dbml.layout">
-      <DependentUpon>TP.dbml</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -154,9 +139,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="poker.ico" />
     <Content Include="x64\SQLite.Interop.dll">

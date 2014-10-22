@@ -49,14 +49,15 @@ namespace PokerTexas.App_Present
                     btnTangQuaBiMat_Click(null, null);
                     return true;
                 }
-                else if (keyData == Keys.F3)
-                {
-                    btnNhanChipMayMan_Click(null, null);
-                    return true;
-                }
                 else if (keyData == Keys.F4)
                 {
                     btnTangCo4La_Click(null, null);
+
+                    return true;
+                }
+                else if (keyData == Keys.F3)
+                {
+                    btnNhanThuongWeb_Click(null, null);
                     return true;
                 }
                 else if (keyData == Keys.F5)
@@ -156,13 +157,22 @@ namespace PokerTexas.App_Present
             {
                 if (gridData.Rows.Count > 0)
                 {
-                    PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
-                    if (MessageBox.Show("Bạn muốn xóa Tài Khoản " + pkController.Models.FaceBook.Login + " ?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    if (MessageBox.Show("Bạn muốn xóa các TK được chọn ?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
+                        List<PokerController> list = new List<PokerController>();
+                        for (int iIndex = 0; iIndex < gridData.SelectedCells.Count; iIndex++)
+                        {
+                            PokerController pkController = gridData.Rows[gridData.SelectedCells[iIndex].RowIndex].DataBoundItem as PokerController;
+                            if (list.Contains(pkController)) continue;
+                            list.Add(pkController);
+                        }
                         Package pack = txtPackNo.SelectedItem as Package;
-                        Global.DBContext.Poker.Remove(pkController.Models);
+                        foreach (PokerController pk in list)
+                        {
+                            Global.DBContext.Poker.Remove(pk.Models);
+                            dicPokers[pack.ID].Remove(pk);
+                        }
                         Global.DBContext.SaveChanges();
-                        dicPokers[pack.ID].Remove(pkController);
                         reloadGrid();
                     }
                 }
@@ -183,7 +193,7 @@ namespace PokerTexas.App_Present
                 if (!string.IsNullOrEmpty(strURL))
                 {
                     Clipboard.SetText(strURL);
-                    MessageBox.Show("Đã copy URL vào clipboad");
+                    //MessageBox.Show("Đã copy URL vào clipboad");
                 }
             }
         }
@@ -194,8 +204,8 @@ namespace PokerTexas.App_Present
             menuCopyURL.Enabled = menuXoaTK.Enabled = gridData.Rows.Count > 0;
             if (gridData.Rows.Count > 0)
             {
-                gridData.ClearSelection();
-                gridData.Rows[gridData.CurrentCell.RowIndex].Selected = true;
+                //gridData.ClearSelection();
+                //gridData.Rows[gridData.CurrentCell.RowIndex].Selected = true;
                 if (bOpenByPressAppKey)
                 {
                     ContextMenuStrip cms = gridData.ContextMenuStrip;
@@ -322,6 +332,14 @@ namespace PokerTexas.App_Present
             btnTangCo4La.Enabled = false;
             Task.Factory.StartNew(tangCo4La);
         }
+
+        private void btnNhanThuongWeb_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnNhanThuongWeb.Enabled = false;
+            Task.Factory.StartNew(nhanThuongHangNgayWeb);
+        }
         #endregion
 
         #region - METHOD -
@@ -364,30 +382,22 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                List<Task> tasks = new List<Task>();
                 List<string> listLink = new List<string>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    tasks.Add(Task.Factory.StartNew(() =>
+                    Task task = Task.Factory.StartNew(() =>
                     {
                         string strLink = pkSource.ChiaSeChipMayMan();
                         if (!string.IsNullOrEmpty(strLink))
                         {
                             listLink.Add(strLink);
                         }
-                    }));
-                    System.Threading.Thread.Sleep(1000);
+                    });
+                    task.Wait();
                 }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-                System.Threading.Thread.Sleep(1000);
-
-                tasks = new List<Task>();
+                List<Task> tasks = new List<Task>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     List<string> listLinkForGet = new List<string>();
@@ -406,8 +416,9 @@ namespace PokerTexas.App_Present
                     {
                         if (this.IsDisposed) return;
                         PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        tasks.Add(Task.Factory.StartNew(() => pkSource.NhanChipMayMan(listLinkForGet)));
-                        System.Threading.Thread.Sleep(1000);
+                        Task task = Task.Factory.StartNew(() => pkSource.NhanChipMayMan(listLinkForGet));
+                        tasks.Add(task);
+                        task.Wait();
                     }
                 }
                 while (tasks.Any(t => !t.IsCompleted))
@@ -415,6 +426,7 @@ namespace PokerTexas.App_Present
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
                 }
+
             }
             catch (Exception ex)
             {
@@ -432,6 +444,51 @@ namespace PokerTexas.App_Present
             }
         }
 
+        private void nhanThuongHangNgayWeb()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    Task task = Task.Factory.StartNew(() => pkSource.NhanThuongHangNgayWeb("1"));
+                    tasks.Add(task);
+                    task.Wait();
+                    while (pkSource.ImageCaptcha != null)
+                    {
+                        EnterCaptcha enter = new EnterCaptcha();
+                        enter.Captcha = pkSource.ImageCaptcha;
+                        enter.ShowDialog();
+                        if (!string.IsNullOrEmpty(enter.CaptchaText))
+                        {
+                            task = Task.Factory.StartNew(() => pkSource.NhanThuongHangNgayWeb(enter.CaptchaText));
+                            task.Wait();
+                        }
+                        else
+                        {
+                            pkSource.ImageCaptcha = null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnNhanThuongWeb.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
         private void tangCo4La()
         {
             try
@@ -441,21 +498,26 @@ namespace PokerTexas.App_Present
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    tasks.Add(Task.Factory.StartNew(pkSource.TangCo4La));
+                    Task task = Task.Factory.StartNew(pkSource.TangCo4La);
+                    tasks.Add(task);
+                    task.Wait(5000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
                     System.Threading.Thread.Sleep(1000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
                     System.Threading.Thread.Sleep(1000);
                 }
-                System.Threading.Thread.Sleep(1000);
                 tasks = new List<Task>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    tasks.Add(Task.Factory.StartNew(pkSource.NhanCo4La));
-                    System.Threading.Thread.Sleep(1000);
+                    Task task = Task.Factory.StartNew(pkSource.NhanCo4La);
+                    tasks.Add(task);
+                    task.Wait(5000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -706,6 +768,7 @@ namespace PokerTexas.App_Present
                 throw ex;
             }
         }
+
         #endregion
     }
 }

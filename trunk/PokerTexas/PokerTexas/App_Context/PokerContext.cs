@@ -15,12 +15,9 @@ namespace PokerTexas.App_Context
             // Turn off the Migrations, (NOT a code first Db)
             Database.SetInitializer<PokerContext>(null);
         }
-
         public DbSet<FaceBook> FaceBook { get; set; }
         public DbSet<Package> Package { get; set; }
         public DbSet<Poker> Poker { get; set; }
-        public DbSet<FBPackage> FBPackage { get; set; }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Database does not pluralize table names

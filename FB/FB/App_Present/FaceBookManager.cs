@@ -125,10 +125,10 @@ namespace FB.App_Present
             {
                 while (btnRegFBAccount.Text.Contains("Stop"))
                 {
-                    if (DateTime.Now.Date == beginTime.AddDays(1))
-                    {
-                        return;
-                    }
+                    //if (DateTime.Now.Date == beginTime.AddDays(1))
+                    //{
+                    //    return;
+                    //}
                     MobileModermController.Disconnect();
                     MobileModermController.Connect();
                     FaceBook fb = new FaceBookController().RegNewAccount();

@@ -189,7 +189,7 @@ namespace FB.App_Controller
         public FaceBook RegNewAccount()
         {
             FaceBook model = null;
-
+            FBExtraData extraData = new FBExtraData();
 
             WebClientEx client = new WebClientEx();
             client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
@@ -238,7 +238,8 @@ namespace FB.App_Controller
                 param = new NameValueCollection();
                 param.Add("api_key", AppSettings.api_key);
                 param.Add("attempt_login", "true");
-                param.Add("birthday", new Random().Next(1979, 1990).ToString() + "-" + new Random().Next(1, 12) + "-" + new Random(3).Next(1, 28));
+                extraData.BirthDay = new DateTime(new Random().Next(1979, 1990), new Random().Next(1, 12), new Random(3).Next(1, 28));
+                param.Add("birthday", extraData.BirthDay.Value.ToString("yyyy-MM-dd"));
                 param.Add("client_country_code", "VN");
 
                 param.Add("fb_api_caller_class", "com.facebook.registration.protocol.RegisterAccountMethod");
@@ -258,11 +259,13 @@ namespace FB.App_Controller
                 listEmail.Add("yahoo.com");
                 listEmail.Add("outlook.com");
                 listEmail.Add("live.com");
-
+                extraData.ComfirmedEmail = false;
                 param.Add("email", Utilities.ConvertToUsignNew(param["firstname"].Replace(" ", "").Trim() + param["lastname"].Replace(" ", "").Trim() + new Random().Next(10, 9999)).ToLower() + "@" + listEmail[new Random().Next(0, listEmail.Count - 1)]);
                 param.Add("locale", "en_US");
-                param.Add("method", "user.register");
-                param.Add("password", Utilities.GetMd5Hash(param["email"]).Substring(0, new Random().Next(15, 30)));
+                param.Add("method", "user.register"); string strPass = param["firstname"].Split(' ')[0] + new List<string> { "!", "@", "#", "$", "%", "^", "~", "&", "*", "(" }[new Random().Next(0, 10)] + param["lastname"].Split(' ')[1] + new Random().Next(10, 1000);
+                System.Threading.Thread.Sleep(19);
+                strPass += new List<string> { "!", "@", "#", "$", "%", "^", "~", "&", "*", "(" }[new Random().Next(0, 10)];
+                param.Add("password", strPass);
                 param.Add("reg_instance", hash_id);
                 param.Add("return_multiple_errors", "true");
                 sig = Utilities.getSignFB(param, "62f8ce9f74b12f84c123cc23437a4a32");
@@ -329,7 +332,7 @@ namespace FB.App_Controller
                             Dictionary<HttpRequestHeader, string> dicAddition = new Dictionary<HttpRequestHeader, string>();
                             dicAddition.Add(HttpRequestHeader.ContentType, "multipart/form-data; boundary=" + boundary);
                             client.DoPost(ret2, "https://graph.facebook.com/" + model.FBID + "/picture", dicAddition);
-
+                            extraData.LastUpdateProfilePhoto = DateTime.Now;
                             #endregion
                             param = new NameValueCollection();
                             param.Add("format", "JSON");
@@ -355,7 +358,7 @@ namespace FB.App_Controller
                             param.Add("client_country_code", "VN");
                             param.Add("fb_api_req_friendly_name", "save_core_profile_info");
                             client.DoPost(param, "https://graph.facebook.com/me");
-
+                            extraData.UpdatedProfileInfo = true;
                             #endregion
                             param = new NameValueCollection();
                             param.Add("format", "JSON");
@@ -385,7 +388,7 @@ namespace FB.App_Controller
                             //System.Threading.Thread.Sleep(1000);
                             client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
 
-                            string strNewEmail = model.Login.Substring(0, model.Login.IndexOf("@")) + "@tinphuong.com";
+                            string strNewEmail = model.Login.Substring(0, model.Login.IndexOf("@")) + "@vuathuthanh.net";
                             param = new NameValueCollection();
                             param.Add("add_contactpoint", strNewEmail);
                             param.Add("add_contactpoint_type", "EMAIL");
@@ -406,8 +409,8 @@ namespace FB.App_Controller
                                 while (iTry < 3 && !bFindEmail)
                                 {
                                     Pop3Client pop3 = new Pop3Client();
-                                    pop3.Connect("tinphuong.com", 110, false);
-                                    pop3.Authenticate("mail@tinphuong.com", "uxBa2@05");
+                                    pop3.Connect("vuathuthanh.net", 110, false);
+                                    pop3.Authenticate("mail@vuathuthanh.net", "uxBa2@05");
                                     Dictionary<string, string> dicMail = new Dictionary<string, string>();
                                     for (int iIndex = pop3.GetMessageCount(); iIndex > 0; iIndex--)
                                     {
@@ -454,6 +457,7 @@ namespace FB.App_Controller
                                         }
                                         catch { }
                                         model.Login = strNewEmail;
+                                        extraData.ComfirmedEmail = true;
                                     }
                                     else
                                     {
@@ -536,8 +540,10 @@ namespace FB.App_Controller
                                     + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
                                 param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
                                 client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
+                                extraData.LastUpdateCoverPhoto = DateTime.Now;
                             }
                             #endregion
+                            model.ExtraData = new JavaScriptSerializer().Serialize(extraData);
                             return model;
                         }
                     }
@@ -550,6 +556,7 @@ namespace FB.App_Controller
         {
             try
             {
+                FBExtraData extraData = GetExtraData(model);
                 WebClientEx client = new WebClientEx();
                 client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
@@ -581,6 +588,16 @@ namespace FB.App_Controller
                 client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
                 if (client.Error == null)
                 {
+                    extraData.LastUpdateStatus = DateTime.Now;
+                    SaveExtraData(model, extraData);
+                    return true;
+                }
+                else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("\"error\""))
+                {
+                    return false;
+                }
+                else
+                {
                     return true;
                 }
             }
@@ -595,14 +612,14 @@ namespace FB.App_Controller
         {
             try
             {
-                if (model.Login.EndsWith("@tinphuong.com")) return false;
+                if (model.Login.EndsWith("@vuathuthanh.net")) return false;
                 WebClientEx client = new WebClientEx();
                 client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
                 client.Authorization = dicData["access_token"].ToString();
 
                 NameValueCollection param = new NameValueCollection();
-                string strNewEmail = model.Login.Substring(0, model.Login.IndexOf("@")) + "@tinphuong.com";
+                string strNewEmail = model.Login.Substring(0, model.Login.IndexOf("@")) + "@vuathuthanh.net";
                 param.Add("add_contactpoint", strNewEmail);
                 param.Add("add_contactpoint_type", "EMAIL");
                 param.Add("format", "json");
@@ -621,8 +638,8 @@ namespace FB.App_Controller
                     while (iTry < 3 && !bFindEmail)
                     {
                         Pop3Client pop3 = new Pop3Client();
-                        pop3.Connect("tinphuong.com", 110, false);
-                        pop3.Authenticate("mail@tinphuong.com", "uxBa2@05");
+                        pop3.Connect("vuathuthanh.net", 110, false);
+                        pop3.Authenticate("mail@vuathuthanh.net", "uxBa2@05");
                         Dictionary<string, string> dicMail = new Dictionary<string, string>();
                         for (int iIndex = pop3.GetMessageCount(); iIndex > 0; iIndex--)
                         {
@@ -791,6 +808,23 @@ namespace FB.App_Controller
 
             }
             return true;
+        }
+
+        private FBExtraData GetExtraData(FaceBook model)
+        {
+            FBExtraData fbExtraData = new FBExtraData();
+            if (model != null && !string.IsNullOrEmpty(model.ExtraData))
+            {
+                fbExtraData = new JavaScriptSerializer().Deserialize<FBExtraData>(model.ExtraData);
+            }
+            return fbExtraData;
+        }
+
+        private void SaveExtraData(FaceBook model, FBExtraData extraData)
+        {
+            if (!extraData.CreateDate.HasValue) extraData.CreateDate = DateTime.Now;
+            model.ExtraData = new JavaScriptSerializer().Serialize(extraData);
+            Global.DBContext.SaveChanges();
         }
     }
 }

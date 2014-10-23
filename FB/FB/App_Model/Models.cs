@@ -17,6 +17,7 @@ namespace FB.App_Model
         public string MBLoginText { get; set; }
         public byte[] MBCookie { get; set; }
         public byte[] WebCookie { get; set; }
+        public string ExtraData { get; set; }
 
         public long FBPackageID { get; set; }
         public virtual FBPackage FBPackage { get; set; }
@@ -34,44 +35,16 @@ namespace FB.App_Model
         public virtual ICollection<FaceBook> FaceBooks { get; set; }
     }
 
-    public class Package
+    public class FBExtraData
     {
-        public Package()
-        {
-            Pokers = new List<Poker>();
-        }
-        public long ID { get; set; }
-        public long Pack { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? LastUpdateStatus { get; set; }
+        public DateTime? LastUpLoadPhoto { get; set; }
+        public DateTime? BirthDay { get; set; }
+        public DateTime? LastUpdateProfilePhoto { get; set; }
+        public DateTime? LastUpdateCoverPhoto { get; set; }
+        public bool? ComfirmedEmail { get; set; }
+        public bool? UpdatedProfileInfo { get; set; }
 
-        public virtual ICollection<Poker> Pokers { get; set; }
-    }
-    public class Poker
-    {
-        public long ID { get; set; }
-
-        public long FaceBookID { get; set; }
-        public virtual FaceBook FaceBook { get; set; }
-
-        public string PKID { get; set; }
-
-        public long PackageID { get; set; }
-        public virtual Package Package { get; set; }
-
-        public string MBAccessToken { get; set; }
-        public string WebAccessToken { get; set; }
-
-        public string MBLoginText { get; set; }
-        public string WebLoginText { get; set; }
-
-        public byte[] WebCookie { get; set; }
-        public string X_TUNNEL_VERIFY { get; set; }
-    }
-
-    public class Tiki
-    {
-        public long ID { get; set; }
-        public string Login { get; set; }
-        public string Pass { get; set; }
-        public byte[] Cookie { get; set; }
     }
 }

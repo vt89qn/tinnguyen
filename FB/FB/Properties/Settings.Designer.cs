@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PokerTexas.Properties {
+namespace FB.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -20,17 +20,6 @@ namespace PokerTexas.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=tinphuong.com\\MSSQLSERVER2012;Initial Catalog=tinphuong_com_db;Persis" +
-            "t Security Info=True;User ID=vtt;Password=uxBa2@05")]
-        public string tinphuong_com_dbConnectionString {
-            get {
-                return ((string)(this["tinphuong_com_dbConnectionString"]));
             }
         }
     }

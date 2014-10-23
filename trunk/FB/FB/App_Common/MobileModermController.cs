@@ -54,8 +54,20 @@ namespace FB.App_Common
             {
                 d1.EntryName = AppSettings.Name3G;
                 d1.PhoneNumber = "*99#";
-                d1.Dial();
-                bOK = true;
+                while (!bOK)
+                {
+                    try
+                    {
+                        d1.Dial();
+                        bOK = true;
+                    }
+                    catch { }
+                    if (!bOK)
+                    {
+                        Disconnect();
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
             });
             t.Wait(10000);
             return bOK;

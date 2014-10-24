@@ -18,6 +18,8 @@ namespace FB.App_Context
 
         public DbSet<FaceBook> FaceBook { get; set; }
         public DbSet<FBPackage> FBPackage { get; set; }
+        public DbSet<FBFriend> FBFriend { get; set; }
+        public DbSet<StatusData> StatusData { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

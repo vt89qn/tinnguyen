@@ -60,10 +60,14 @@ namespace FB.App_UserControl
             catch (WebException ex)
             {
                 this.Error = ex;
-                using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                try
                 {
-                    ResponseText = reader.ReadToEnd();
+                    using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                    {
+                        ResponseText = reader.ReadToEnd();
+                    }
                 }
+                catch { }
             }
             catch (Exception ex)
             {

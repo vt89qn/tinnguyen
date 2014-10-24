@@ -152,7 +152,6 @@ namespace FB.App_Common
                 t.Append(item.Value);
             }
             t.Append(secret);
-            //secrett.Append("62f8ce9f74b12f84c123cc23437a4a32");
             return FBHash(t.ToString());
         }
 

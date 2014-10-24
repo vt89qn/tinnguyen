@@ -14,6 +14,7 @@ using System.Web;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using System.Collections;
 
 namespace FB.App_Controller
 {
@@ -74,12 +75,193 @@ namespace FB.App_Controller
             return this.LoginMobile(model, null);
         }
 
-        /// <summary>
-        /// Send request from Model 1 to Model 2
-        /// </summary>
-        /// <param name="model1"></param>
-        /// <param name="model2"></param>
-        /// <returns></returns>
+        public void checkFaceBook(FaceBook model)
+        {
+            FBExtraData exData = GetExtraData(model);
+            WebClientEx client = new WebClientEx();
+            client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+            Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+            ArrayList listPost = new ArrayList();
+            client.Authorization = dicData["access_token"].ToString();
+            NameValueCollection param = new NameValueCollection();
+            string hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+            hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
+            #region - Check live -
+            {
+                WebClientEx clientAPI = new WebClientEx();
+                clientAPI.DoGet("https://graph.facebook.com/v2.1/me/?access_token=" + client.Authorization + "&fields=birthday&format=json&method=get&pretty=0&suppress_http_code=1");
+                if (clientAPI.Error != null && client.ResponseText.Contains("birthday"))
+                {
+                    //Live
+                }
+                else
+                {
+
+                }
+            }
+            #endregion
+            #region - Get New Feed -
+            {
+                param = new NameValueCollection();
+                param.Add("batch", "[{'method':'POST','body':'query_id=10153084471926729&method=get&query_params=%7B%22action_location%22%3A%22feed%22%7D&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=NewsFeedQueryDepth2','name':'first-fetch','omit_response_on_success':false,'relative_url':'graphql'}]".Replace("'", "\""));
+                param.Add("fb_api_caller_class", "com.facebook.feed.server.NewsFeedServiceImplementation");
+                param.Add("flush", "1");
+                client.DoPost(param, "https://graph.facebook.com/?include_headers=false&decode_body_json=false&streamable_json_response=true&locale=en_US&client_country_code=VN");
+                if (!string.IsNullOrEmpty(client.ResponseText))
+                {
+                    dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    if (dicData.ContainsKey("first-fetch") && dicData["first-fetch"] is ArrayList)
+                    {
+                        foreach (Dictionary<string, object> dicFeed in dicData["first-fetch"] as ArrayList)
+                        {
+                            if (dicFeed.ContainsKey("body"))
+                            {
+                                listPost = (((dicFeed["body"] as Dictionary<string, object>)["viewer"] as Dictionary<string, object>)["news_feed"] as Dictionary<string, object>)["edges"] as ArrayList;
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region - Post Status -
+            if (!exData.LastUpdateStatus.HasValue || exData.LastUpdateStatus.Value.Date.AddDays(new Random().Next(0, 4)) <= DateTime.Today)
+            {
+                if (PostStatus(model))
+                {
+                    exData.LastUpdateStatus = DateTime.Now;
+                }
+            }
+            #endregion
+            #region - Upload photo -
+            if (!exData.LastUpLoadPhoto.HasValue || exData.LastUpLoadPhoto.Value.Date.AddDays(new Random().Next(0, 4)) <= DateTime.Today)
+            {
+                if (Global.LisCoverPhotoLink.Count > 0)
+                {
+                    UploadPhoto(model, Global.LisCoverPhotoLink[0]);
+                    Global.LisCoverPhotoLink.RemoveAt(0);
+                    exData.LastUpLoadPhoto = DateTime.Now;
+                }
+            }
+            #endregion
+            #region - Update Profile Photo -
+            if (!exData.LastUpdateProfilePhoto.HasValue || exData.LastUpdateProfilePhoto.Value.Date.AddDays(new Random().Next(10, 20)) <= DateTime.Today)
+            {
+                if (Global.ListProfilePhotoLink.Count > 0)
+                {
+                    string id = UploadPhoto(model, Global.ListProfilePhotoLink[0]);
+                    Global.ListProfilePhotoLink.RemoveAt(0);
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                     + "&time_since_original_post=3&scaled_crop_rect=%7B%22y%22%3A0%2C%22height%22%3A1%2C%22width%22%3A1%2C%22x%22%3A0%7D&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                     + "\"relative_url\":\"" + model.FBID + "/picture/" + id + "\"}]");
+                        param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                        client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
+                        exData.LastUpdateProfilePhoto = DateTime.Now;
+                    }
+                }
+            }
+            #endregion
+            #region - Update Cover Photo -
+            if (!exData.LastUpdateCoverPhoto.HasValue || exData.LastUpdateCoverPhoto.Value.Date.AddDays(new Random().Next(10, 20)) <= DateTime.Today)
+            {
+                if (Global.LisCoverPhotoLink.Count > 0)
+                {
+                    string id = UploadPhoto(model, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
+                    Global.LisCoverPhotoLink.RemoveAt(Global.LisCoverPhotoLink.Count - 1);
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        param = new NameValueCollection();
+                        param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                         + "&time_since_original_post=12&photo=" + id + "&focus_y=0&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                         + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
+                        param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                        client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
+                        exData.LastUpdateCoverPhoto = DateTime.Now;
+                    }
+                }
+            }
+            #endregion
+            #region - Like -
+            if (listPost.Count > 0)
+            {
+                int iRD = new Random().Next(0, 4);
+                for (int iIndex = 0; iIndex < iRD; iIndex++)
+                {
+                    if (listPost.Count > iIndex)
+                    {
+                        string strPostID = (((listPost[iIndex] as Dictionary<string, object>)["node"] as Dictionary<string, object>)["feedback"] as Dictionary<string, object>)["legacy_api_post_id"].ToString();
+                        Like(model, strPostID);
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+            }
+            #endregion
+            #region - Comment -
+            if (listPost.Count > 0)
+            {
+                int iRD = new Random().Next(0, 4);
+                for (int iIndex = 0; iIndex < iRD; iIndex++)
+                {
+                    if (listPost.Count > iIndex)
+                    {
+                        string strPostID = (((listPost[iIndex] as Dictionary<string, object>)["node"] as Dictionary<string, object>)["feedback"] as Dictionary<string, object>)["legacy_api_post_id"].ToString();
+                        Comment(model, strPostID);
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
+            }
+            #endregion
+            #region - Make Friend -
+            {
+                int iRD = new Random().Next(0, 3);
+                //Select in Package
+                List<FaceBook> listFB = (from fb in Global.DBContext.FaceBook
+                                         where fb.ID != model.ID
+                                         && fb.FBPackageID == model.FBPackageID
+                                         && !(from o in Global.DBContext.FBFriend
+                                              select o.FBID1)
+                                                .Contains(fb.ID)
+                                        && !(from o in Global.DBContext.FBFriend
+                                             select o.FBID2)
+                                        .Contains(fb.ID)
+                                         select fb).ToList();
+                while (listFB.Count > 0 && iRD > 0)
+                {
+                    if (SendFriendRequest(model, listFB[0]) &&
+                     AcceptFriendRequest(listFB[0], model))
+                    {
+                        Global.DBContext.FBFriend.Add(new FBFriend { FBID1 = model.ID, FBID2 = listFB[0].ID });
+                        Global.DBContext.SaveChanges();
+                    }
+                    listFB.RemoveAt(0);
+                    iRD--;
+                }
+                //Select in Package
+                listFB = (from fb in Global.DBContext.FaceBook
+                          where fb.ID != model.ID
+                          && !(from o in Global.DBContext.FBFriend
+                               select o.FBID1)
+                                 .Contains(fb.ID)
+                         && !(from o in Global.DBContext.FBFriend
+                              select o.FBID2)
+                         .Contains(fb.ID)
+                          select fb).Take(iRD).ToList();
+                while (listFB.Count > 0 && iRD > 0)
+                {
+                    if (SendFriendRequest(model, listFB[0]) &&
+                     AcceptFriendRequest(listFB[0], model))
+                    {
+                        Global.DBContext.FBFriend.Add(new FBFriend { FBID1 = model.ID, FBID2 = listFB[0].ID });
+                        Global.DBContext.SaveChanges();
+                    }
+                    listFB.RemoveAt(0);
+                    iRD--;
+                }
+            }
+            #endregion
+        }
+
         public bool SendFriendRequest(FaceBook model1, FaceBook model2)
         {
             try
@@ -113,12 +295,6 @@ namespace FB.App_Controller
             return false;
         }
 
-        /// <summary>
-        /// Model 1 accept friend Request from Model2
-        /// </summary>
-        /// <param name="model1"></param>
-        /// <param name="model2"></param>
-        /// <returns></returns>
         public bool AcceptFriendRequest(FaceBook model1, FaceBook model2)
         {
             try
@@ -260,31 +436,16 @@ namespace FB.App_Controller
                         #region - Upload profile picture -
                         if (Global.ListProfilePhotoLink.Count > 0)
                         {
-                            param = new NameValueCollection();
-                            param.Add("access_token", client.Authorization);
-                            param.Add("format", "json");
-                            param.Add("method", "post");
-                            param.Add("pretty", "0");
-                            param.Add("suppress_http_code", "1");
-                            param.Add("url", Global.ListProfilePhotoLink[0]);
-                            WebClientEx clientAPI = new WebClientEx();
-                            clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/me/photos");
-                            if (!string.IsNullOrEmpty(clientAPI.ResponseText))
+                            string id = UploadPhoto(model, Global.ListProfilePhotoLink[0]);
+                            Global.ListProfilePhotoLink.RemoveAt(0);
+                            if (!string.IsNullOrEmpty(id))
                             {
-                                dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                                if (dicData.ContainsKey("id"))
-                                {
-                                    string id = dicData["id"].ToString();
-
-                                    param = new NameValueCollection();
-
-                                    param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
-                                        + "&time_since_original_post=3&scaled_crop_rect=%7B%22y%22%3A0%2C%22height%22%3A1%2C%22width%22%3A1%2C%22x%22%3A0%7D&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
-                                        + "\"relative_url\":\"" + model.FBID + "/picture/" + id + "\"}]");
-                                    param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
-                                    client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
-                                    extraData.LastUpdateProfilePhoto = DateTime.Now;
-                                }
+                                param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                             + "&time_since_original_post=3&scaled_crop_rect=%7B%22y%22%3A0%2C%22height%22%3A1%2C%22width%22%3A1%2C%22x%22%3A0%7D&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                             + "\"relative_url\":\"" + model.FBID + "/picture/" + id + "\"}]");
+                                param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                                client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
+                                extraData.LastUpdateProfilePhoto = DateTime.Now;
                             }
                         }
                         #endregion
@@ -430,35 +591,23 @@ namespace FB.App_Controller
                         #region - update cover photo -
                         if (Global.LisCoverPhotoLink.Count > 0)
                         {
-                            param = new NameValueCollection();
-                            param.Add("access_token", client.Authorization);
-                            param.Add("format", "json");
-                            param.Add("method", "post");
-                            param.Add("pretty", "0");
-                            param.Add("suppress_http_code", "1");
-                            param.Add("url", Global.LisCoverPhotoLink[0]);
-                            WebClientEx clientAPI = new WebClientEx();
-                            clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/me/photos");
-                            if (!string.IsNullOrEmpty(clientAPI.ResponseText))
-                            {
-                                dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                                if (dicData.ContainsKey("id"))
-                                {
-                                    string id = dicData["id"].ToString();
+                            string id = UploadPhoto(model, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
+                            Global.ListProfilePhotoLink.RemoveAt(Global.LisCoverPhotoLink.Count - 1);
 
-                                    param = new NameValueCollection();
-                                    param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
-                             + "&time_since_original_post=12&photo=" + id + "&focus_y=0&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
-                             + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
-                                    param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
-                                    client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
-                                    extraData.LastUpdateCoverPhoto = DateTime.Now;
-                                }
+                            if (!string.IsNullOrEmpty(id))
+                            {
+                                param = new NameValueCollection();
+                                param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                                 + "&time_since_original_post=12&photo=" + id + "&focus_y=0&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                                 + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
+                                param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                                client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
+                                extraData.LastUpdateCoverPhoto = DateTime.Now;
                             }
                         }
                         #endregion
 
-                        model.ExtraData = new JavaScriptSerializer().Serialize(extraData);
+                        SetExtraData(model, extraData);
                         return model;
                     }
                 }
@@ -476,17 +625,8 @@ namespace FB.App_Controller
                 Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
                 client.Authorization = dicData["access_token"].ToString();
 
-                WebClientEx clientGetStatus = new WebClientEx();
-                clientGetStatus.DoGet("http://www.postrandomonium.com/Random");
-                string strStatus = "i post this !";
-                if (clientGetStatus.ResponseText != null)
-                {
-                    string strStatus2 = Regex.Match(clientGetStatus.ResponseText, "class=\"small-message\">[\\s\n\r]+<span>(?<1>.+)</span>").Groups[1].Value;
-                    if (!string.IsNullOrEmpty(strStatus2))
-                    {
-                        strStatus = strStatus2;
-                    }
-                }
+                Random r = new Random();
+                string strStatus = Global.DBContext.StatusData.ElementAt(r.Next(1, Global.DBContext.StatusData.Count())).Text;
 
                 NameValueCollection param = new NameValueCollection();
                 strStatus = HttpUtility.UrlEncode(strStatus);
@@ -502,8 +642,6 @@ namespace FB.App_Controller
                 client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
                 if (client.Error == null)
                 {
-                    extraData.LastUpdateStatus = DateTime.Now;
-                    SaveExtraData(model, extraData);
                     return true;
                 }
                 else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("\"error\""))
@@ -515,11 +653,42 @@ namespace FB.App_Controller
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                throw ex;
             }
             return false;
+        }
+
+        public string UploadPhoto(FaceBook model, string strLink)
+        {
+            try
+            {
+                FBExtraData extraData = GetExtraData(model);
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                if (Global.LisCoverPhotoLink.Count > 0)
+                {
+                    NameValueCollection param = new NameValueCollection();
+                    param.Add("access_token", dicData["access_token"].ToString());
+                    param.Add("format", "json");
+                    param.Add("method", "post");
+                    param.Add("pretty", "0");
+                    param.Add("suppress_http_code", "1");
+                    param.Add("url", Global.LisCoverPhotoLink[0]);
+                    WebClientEx clientAPI = new WebClientEx();
+                    clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/me/photos");
+                    if (!string.IsNullOrEmpty(clientAPI.ResponseText))
+                    {
+                        dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(clientAPI.ResponseText);
+                        if (dicData.ContainsKey("id"))
+                        {
+                            string id = dicData["id"].ToString();
+                            return id;
+                        }
+                    }
+                }
+            }
+            catch { }
+            return string.Empty;
         }
 
         public bool ConfirmEmail(FaceBook model)
@@ -619,109 +788,46 @@ namespace FB.App_Controller
             return false;
         }
 
-        public bool ChangeProfilePhoto(FaceBook model)
+        public void Like(FaceBook model, string id)
         {
             try
             {
-                WebClientEx client = new WebClientEx();
-                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
-                client.Authorization = dicData["access_token"].ToString();
-
-                string[] files = Directory.GetFiles("Photos");
-                MemoryStream ms = new MemoryStream();
-                Image img = Image.FromFile(files[new Random().Next(files.Length - 1)]);
-                //img = (Image)(new Bitmap(img, new Size(640, 640)));
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                byte[] imgBytes = ms.ToArray(); //System.Text.Encoding.Default.GetBytes(files[new Random().Next(files.Length - 1)]);
-                string imgString = System.Text.Encoding.ASCII.GetString(imgBytes);
-
-                string boundary = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
-
-                string body = "--" + boundary + "\r\nContent-Disposition: form-data; name=\"published\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nfalse";
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"audience_exp\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\ntrue";
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"time_since_original_post\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n1";
-
-                string hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
-                hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"qn\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" + hash_id;
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"composer_session_id\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" + hash_id;
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"idempotence_token\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" + hash_id;
-
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"locale\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nen_US";
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"client_country_code\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nVN";
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"fb_api_req_friendly_name\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\nupload-photo";
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"fb_api_caller_class\"\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\ncom.facebook.photos.upload.protocol.UploadPhotoMethod";
-
-                string filename = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
-                filename = filename.Substring(0, 8) + "-" + filename.Substring(8, 16);
-
-                body += "\r\n--" + boundary + "\r\nContent-Disposition: form-data; name=\"source\"; filename=\"" + filename + ".tmp\"\r\nContent-Type: image/jpeg\r\nContent-Transfer-Encoding: binary\r\n\r\n";
-                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(body);
-
-
-                byte[] ret = new byte[bytes.Length + imgBytes.Length];
-                Buffer.BlockCopy(bytes, 0, ret, 0, bytes.Length);
-                Buffer.BlockCopy(imgBytes, 0, ret, bytes.Length, imgBytes.Length);
-
-                // write trailing boundary bytes.
-                byte[] trailerBytes = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
-
-                byte[] ret2 = new byte[ret.Length + trailerBytes.Length];
-                Buffer.BlockCopy(ret, 0, ret2, 0, ret.Length);
-                Buffer.BlockCopy(trailerBytes, 0, ret2, ret.Length, trailerBytes.Length);
-
-                Dictionary<HttpRequestHeader, string> dicAddition = new Dictionary<HttpRequestHeader, string>();
-                dicAddition.Add(HttpRequestHeader.ContentType, "multipart/form-data; boundary=" + boundary);
-                client.DoPost(ret2, "https://graph.facebook.com/me/photos", dicAddition);
-                if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("id"))
+                if (Global.LisCoverPhotoLink.Count > 0)
                 {
-                    dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                    string id = dicData["id"].ToString();
-
-                    //hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
-                    //hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
-
-
                     NameValueCollection param = new NameValueCollection();
-
-                    param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
-                        + "&time_since_original_post=3&scaled_crop_rect=%7B%22y%22%3A0%2C%22height%22%3A1%2C%22width%22%3A1%2C%22x%22%3A0%7D&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
-                        + "\"relative_url\":\"" + model.FBID + "/picture/" + id + "\"}]");
-                    param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
-                    client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=en_US&client_country_code=VN");
-                    if (client.Error == null)
-                    {
-                        return true;
-                    }
+                    param.Add("access_token", dicData["access_token"].ToString());
+                    param.Add("format", "json");
+                    param.Add("method", "post");
+                    param.Add("pretty", "0");
+                    param.Add("suppress_http_code", "1");
+                    WebClientEx clientAPI = new WebClientEx();
+                    clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/" + id + "/likes");
                 }
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return false;
+            catch { }
         }
 
-        public bool UpdateProfileInfo(FaceBook model)
+        public void Comment(FaceBook model, string id)
         {
-            WebClientEx client = new WebClientEx();
-            client.DoGet(GetFaceBookLoginURL(model, "https://www.facebook.com/me"));
-            if (string.IsNullOrEmpty(client.ResponseText)) return false;
-            if (client.CookieContainer.GetCookieHeader(new Uri("https://www.facebook.com/")).Contains("c_user=" + model.FBID))
+            try
             {
-
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                if (Global.LisCoverPhotoLink.Count > 0)
+                {
+                    Random r = new Random();
+                    NameValueCollection param = new NameValueCollection();
+                    param.Add("access_token", dicData["access_token"].ToString());
+                    param.Add("format", "json");
+                    param.Add("method", "post");
+                    param.Add("pretty", "0");
+                    param.Add("suppress_http_code", "1");
+                    param.Add("message", Global.DBContext.StatusData.ElementAt(r.Next(1, Global.DBContext.StatusData.Count())).Text);
+                    WebClientEx clientAPI = new WebClientEx();
+                    clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/" + id + "/comments");
+                }
             }
-            return true;
+            catch { }
         }
 
         private FBExtraData GetExtraData(FaceBook model)
@@ -734,11 +840,10 @@ namespace FB.App_Controller
             return fbExtraData;
         }
 
-        private void SaveExtraData(FaceBook model, FBExtraData extraData)
+        private void SetExtraData(FaceBook model, FBExtraData extraData)
         {
             if (!extraData.CreateDate.HasValue) extraData.CreateDate = DateTime.Now;
             model.ExtraData = new JavaScriptSerializer().Serialize(extraData);
-            Global.DBContext.SaveChanges();
         }
     }
 }

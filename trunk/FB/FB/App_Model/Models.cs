@@ -35,6 +35,19 @@ namespace FB.App_Model
         public virtual ICollection<FaceBook> FaceBooks { get; set; }
     }
 
+    public class FBFriend
+    {
+        public long ID { get; set; }
+        public long FBID1 { get; set; }
+        public long FBID2 { get; set; }
+    }
+
+    public class StatusData
+    {
+        public long ID { get; set; }
+        public string Text { get; set; }
+    }
+
     public class FBExtraData
     {
         public DateTime? CreateDate { get; set; }
@@ -43,6 +56,7 @@ namespace FB.App_Model
         public DateTime? BirthDay { get; set; }
         public DateTime? LastUpdateProfilePhoto { get; set; }
         public DateTime? LastUpdateCoverPhoto { get; set; }
+        public DateTime? LastMakeFriend { get; set; }
         public bool? ComfirmedEmail { get; set; }
         public bool? UpdatedProfileInfo { get; set; }
 

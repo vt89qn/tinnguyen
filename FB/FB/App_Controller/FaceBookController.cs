@@ -94,9 +94,13 @@ namespace FB.App_Controller
                 {
                     //Live
                 }
+                else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("\"error\""))
+                {
+                    model.FBPackageID = 1;
+                    Global.DBContext.SaveChanges();
+                }
                 else
                 {
-
                 }
             }
             #endregion

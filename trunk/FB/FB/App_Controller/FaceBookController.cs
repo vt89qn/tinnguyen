@@ -740,7 +740,5 @@ namespace FB.App_Controller
             model.ExtraData = new JavaScriptSerializer().Serialize(extraData);
             Global.DBContext.SaveChanges();
         }
-
-
     }
 }

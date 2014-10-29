@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using FB.App_Common;
+using System.Diagnostics;
 
 namespace FB.App_UserControl
 {
@@ -83,7 +84,9 @@ namespace FB.App_UserControl
                 Error = null;
                 ResponseText = null;
                 addHeader(additionHeader);
+                Debug.WriteLine("--Start POST--");
                 ResponseText = Encoding.Default.GetString(this.UploadValues(strURL, parameters));
+                Debug.WriteLine("--End POST--");
             }
             catch (Exception ex)
             {
@@ -103,7 +106,9 @@ namespace FB.App_UserControl
                 Error = null;
                 ResponseText = null;
                 addHeader(additionHeader);
+                Debug.WriteLine("--Start POST--");
                 ResponseText = this.UploadString(strURL, Method, parameters);
+                Debug.WriteLine("--End POST--");
             }
             catch (Exception ex)
             {
@@ -125,7 +130,10 @@ namespace FB.App_UserControl
                 Error = null;
                 ResponseText = null;
                 addHeader(additionHeader);
+                Debug.WriteLine("--Start POST--");
                 ResponseText = ResponseText = Encoding.Default.GetString(this.UploadData(strURL, parameters));
+                Debug.WriteLine("--End POST--");
+                
             }
             catch (Exception ex)
             {
@@ -141,7 +149,9 @@ namespace FB.App_UserControl
                 Error = null;
                 ResponseText = string.Empty;
                 addHeader(additionHeader);
+                Debug.WriteLine("--Start GET--");
                 ResponseText = this.DownloadString(strURL);
+                Debug.WriteLine("--End GET--");
             }
             catch (Exception ex)
             {

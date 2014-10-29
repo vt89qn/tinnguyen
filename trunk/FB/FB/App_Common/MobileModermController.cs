@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using DotRas;
+using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 namespace FB.App_Common
 {
@@ -50,26 +52,25 @@ namespace FB.App_Common
         public static bool Connect()
         {
             bool bOK = false;
-            Task t = Task.Factory.StartNew(() =>
+            Debug.WriteLine("Connect");
+            d1.EntryName = AppSettings.Name3G;
+            d1.PhoneNumber = "*99#";
+            while (!bOK)
             {
-                d1.EntryName = AppSettings.Name3G;
-                d1.PhoneNumber = "*99#";
-                while (!bOK)
+                try
                 {
-                    try
-                    {
-                        d1.Dial();
-                        bOK = true;
-                    }
-                    catch { }
-                    if (!bOK)
-                    {
-                        Disconnect();
-                        System.Threading.Thread.Sleep(1000);
-                    }
+                    d1.Dial();
+                    bOK = new Ping().Send("fb.com").Status == IPStatus.Success;
+                    //bOK = true;
                 }
-            });
-            t.Wait(10000);
+                catch { }
+                if (!bOK)
+                {
+                    Disconnect();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            Debug.WriteLine("Connect OK");
             return bOK;
         }
 

@@ -57,7 +57,7 @@ namespace FB.App_Common
                             Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
                             if (dicData.ContainsKey("photos"))
                             {
-                                foreach (Dictionary<string, object> dicPhoto in dicData["photo"] as ArrayList)
+                                foreach (Dictionary<string, object> dicPhoto in dicData["photos"] as ArrayList)
                                 {
                                     foreach (Dictionary<string, object> dicImage in dicPhoto["images"] as ArrayList)
                                     {

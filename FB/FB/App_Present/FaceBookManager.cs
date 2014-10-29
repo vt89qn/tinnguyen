@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using FB.App_Controller;
 using System.Collections;
+using System.Diagnostics;
 
 namespace FB.App_Present
 {
@@ -47,52 +48,48 @@ namespace FB.App_Present
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void btnUploadProfilePhoto_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnUploadProfilePhoto.Enabled = false;
-            Task.Factory.StartNew(() => uploadProfilePhoto(false));
-        }
-
-        private void btnUploadProfilePhotoAllPack_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnUploadProfilePhotoAllPack.Enabled = false;
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    uploadProfilePhoto(true);
-                    bool bCanMoveNext = false;
-                    MethodInvoker action = delegate
-                    {
-                        try
-                        {
-                            if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
-                            {
-                                txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
-                                bCanMoveNext = true;
-                            }
-                        }
-                        catch
-                        {
-                        }
-                    };
-                    this.BeginInvoke(action);
-                    System.Threading.Thread.Sleep(1000);
-                    if (!bCanMoveNext) break;
-                }
-            });
-        }
-
         private void btnPostStatus_Click(object sender, EventArgs e)
         {
             if (isBusy) return;
             isBusy = true;
             btnPostStatus.Enabled = false;
-            Task.Factory.StartNew(() => postStatus(false, true));
+            bool bFail = false;
+            Task task = Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    if (!bFail)
+                    {
+                        MobileModermController.Disconnect();
+                        MobileModermController.Connect();
+                    }
+                    bFail = !checkFaceBook();
+                    if (txtAutoMoveToNextPack.Checked)
+                    {
+                        bool bCanMoveNext = false;
+                        MethodInvoker action = delegate
+                        {
+                            try
+                            {
+                                if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                                {
+                                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                                    bCanMoveNext = true;
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        };
+                        this.BeginInvoke(action);
+                        System.Threading.Thread.Sleep(500);
+                        if (!bCanMoveNext) break;
+                    }
+                    else break;
+                }
+            });
+            isBusy = false;
+            btnPostStatus.Enabled = true;
         }
 
         private void menuCopyURL_Click(object sender, EventArgs e)
@@ -112,6 +109,7 @@ namespace FB.App_Present
 
         private void btnRegFBAccount_Click(object sender, EventArgs e)
         {
+            btnRegFBAccount.Enabled = false;
             if (btnRegFBAccount.Text.Contains("Start"))
             {
                 btnRegFBAccount.Text = "Stop Reg Auto";
@@ -120,33 +118,39 @@ namespace FB.App_Present
             {
                 btnRegFBAccount.Text = "Start Reg Auto";
             }
-            DateTime beginTime = DateTime.Today;
-            Task.Factory.StartNew(() =>
+            //Task.Factory.StartNew(() =>
             {
                 while (btnRegFBAccount.Text.Contains("Stop"))
                 {
-                    //if (DateTime.Now.Date == beginTime.AddDays(1))
-                    //{
-                    //    return;
-                    //}
+                    Debug.WriteLine("Begin");
                     MobileModermController.Disconnect();
                     MobileModermController.Connect();
-                    FaceBook fb = new FaceBookController().RegNewAccount();
+                    Debug.WriteLine("Start Reg");
+                    FaceBookController controller = new FaceBookController();
+                    FaceBook fb = controller.RegNewAccount();
+                    Debug.WriteLine("End Reg");
                     if (fb != null)
                     {
+                        Debug.WriteLine("Begin get Package");
                         FBPackage package = Global.DBContext.FBPackage.Where(m => m.FaceBooks.Count < 3).FirstOrDefault();
+                        Debug.WriteLine("End get Package");
                         if (package == null)
                         {
                             long iMax = Global.DBContext.FBPackage.Max(m => m.ID);
                             package = new FBPackage { Pack = iMax + 1 };
                         }
                         fb.FBPackage = package;
+                        Debug.WriteLine("Begin save");
                         Global.DBContext.FaceBook.Add(fb);
                         Global.DBContext.SaveChanges();
+                        Debug.WriteLine("End save");
                         //var t = Global.DBContext.FaceBook.ToList();
                     }
+                    controller.Dispose();
                 }
-            });
+                btnRegFBAccount.Enabled = true;
+            }
+            //);
         }
 
         private void btnConfirmEmail_Click(object sender, EventArgs e)
@@ -195,40 +199,6 @@ namespace FB.App_Present
                     }
                 }
             }
-        }
-
-        private void btnPostStatusAllPack_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnPostStatusAllPack.Enabled = false;
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    postStatus(true, true);
-                    bool bCanMoveNext = false;
-                    MethodInvoker action = delegate
-                    {
-                        try
-                        {
-                            if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
-                            {
-                                txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
-                                bCanMoveNext = true;
-                            }
-                        }
-                        catch
-                        {
-                        }
-                    };
-                    this.BeginInvoke(action);
-                    System.Threading.Thread.Sleep(1000);
-                    if (!bCanMoveNext) break;
-
-
-                }
-            });
         }
 
         private void FaceBookManager_Load(object sender, EventArgs e)
@@ -376,98 +346,33 @@ namespace FB.App_Present
             }
         }
 
-        private void uploadProfilePhoto(bool bDoAll)
+        private bool checkFaceBook()
         {
+            bool bOK = false;
             try
             {
-                //MobileModermController.Disconnect();
-                //MobileModermController.Connect();
-                List<Task> tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    FaceBook model = gridData.Rows[iIndex].DataBoundItem as FaceBook;
-                    //bool bPostOK = new FaceBookController().ChangeProfilePhoto(model);
-                    tasks.Add(Task.Factory.StartNew(() =>
-                    {
-                        int iIndexPost = iIndex;
-                        bool bPostOK = new FaceBookController().ChangeProfilePhoto(model);
-                        MethodInvoker action = delegate
-                        {
-                            if (bPostOK)
-                            {
-                                try
-                                {
-                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Upload Profile Photo OK";
-                                }
-                                catch { }
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Upload Profile Photo Fail";
-                                }
-                                catch { }
-                            }
-                        };
-                        this.BeginInvoke(action);
-
-                    }));
-                    System.Threading.Thread.Sleep(1000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    {
-                        if (!bDoAll) btnUploadProfilePhoto.Enabled = true;
-                    };
-                    this.BeginInvoke(action);
-                }
-            }
-
-        }
-
-        private void postStatus(bool bDoAll,bool bChangeIP)
-        {
-            try
-            {
-                if (bChangeIP)
-                {
-                    MobileModermController.Disconnect();
-                    MobileModermController.Connect();
-                }
                 List<Task> tasks = new List<Task>();
                 List<FaceBook> listDelete = new List<FaceBook>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
-                    if (this.IsDisposed) return;
+                    if (this.IsDisposed) return false;
                     FaceBook model = gridData.Rows[iIndex].DataBoundItem as FaceBook;
-                    //new FaceBookController().PostStatus(model);
-                    tasks.Add(Task.Factory.StartNew(() =>
+                    Task task = Task.Factory.StartNew(() =>
                     {
                         int iIndexPost = iIndex;
-                        bool bPostOK = new FaceBookController().PostStatus(model);
+                        bool bPostOK = new FaceBookController().checkFaceBook(model);
+                        if (!bPostOK)
+                        {
+                            listDelete.Add(model);
+                        }
+                        else bOK = true;
                         MethodInvoker action = delegate
                         {
                             if (bPostOK)
                             {
                                 try
                                 {
-                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Post OK";
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Live";
                                 }
                                 catch { }
                             }
@@ -475,26 +380,19 @@ namespace FB.App_Present
                             {
                                 try
                                 {
-                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Post Fail";
+                                    gridData[GridMainFormConst.Status, iIndexPost].Value = "Die";
                                 }
                                 catch { }
-                                // Global.DBContext.FaceBook.Remove(model);
-                                listDelete.Add(model);
+
                             }
                         };
                         this.BeginInvoke(action);
-                        System.Threading.Thread.Sleep(10);
-                    }));
-                    System.Threading.Thread.Sleep(1000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
+                    });
+                    task.Wait();
                 }
                 if (listDelete.Count > 0)
                 {
-                    listDelete.ForEach(m => Global.DBContext.FaceBook.Remove(m));
+                    listDelete.ForEach(m => m.FBPackageID = 1);
                     Global.DBContext.SaveChanges();
                 }
             }
@@ -504,21 +402,8 @@ namespace FB.App_Present
             }
             finally
             {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    {
-                        if (!bDoAll)
-                        {
-                            btnPostStatus.Enabled = true;
-                            reloadGrid();
-                        }
-                    };
-                    this.BeginInvoke(action);
-                }
             }
-
+            return bOK;
         }
 
         private void confirmEmail(bool bDoAll)
@@ -709,11 +594,12 @@ namespace FB.App_Present
             try
             {
                 //Load Package
-                List<FBPackage> listPackage = Global.DBContext.FBPackage.ToList();
+                List<FBPackage> listPackage = Global.DBContext.FBPackage.Where(x => x.FaceBooks.Count > 0).ToList();
                 BindingSource bindingPackage = new BindingSource { DataSource = listPackage };
                 txtPackNo.DataSource = bindingPackage;
                 txtPackNo.DisplayMember = TablePackageConst.Pack;
                 txtPackNo.ValueMember = TablePackageConst.ID;
+                txtPackNo.SelectedValue = 2;
             }
             catch (Exception ex)
             {
@@ -780,6 +666,11 @@ namespace FB.App_Present
             }
         }
         #endregion
+
+        private void gridData_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+
+        }
 
 
     }

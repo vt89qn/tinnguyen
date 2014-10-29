@@ -31,12 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FaceBookManager));
             this.groupMain = new System.Windows.Forms.GroupBox();
-            this.btnPostStatusAllPack = new System.Windows.Forms.Button();
+            this.txtAutoMoveToNextPack = new System.Windows.Forms.CheckBox();
             this.btnKetBan = new System.Windows.Forms.Button();
+            this.btnUpdateInfo = new System.Windows.Forms.Button();
             this.btnConfirmEmail = new System.Windows.Forms.Button();
             this.btnRegFBAccount = new System.Windows.Forms.Button();
-            this.btnUploadProfilePhotoAllPack = new System.Windows.Forms.Button();
-            this.btnUploadProfilePhoto = new System.Windows.Forms.Button();
             this.btnPostStatus = new System.Windows.Forms.Button();
             this.groupData = new System.Windows.Forms.GroupBox();
             this.gridData = new System.Windows.Forms.DataGridView();
@@ -46,7 +45,6 @@
             this.menuLoginAgain = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
-            this.btnUpdateInfo = new System.Windows.Forms.Button();
             this.groupMain.SuspendLayout();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
@@ -57,40 +55,48 @@
             // 
             this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupMain.Controls.Add(this.btnPostStatusAllPack);
+            this.groupMain.Controls.Add(this.txtAutoMoveToNextPack);
             this.groupMain.Controls.Add(this.btnKetBan);
             this.groupMain.Controls.Add(this.btnUpdateInfo);
             this.groupMain.Controls.Add(this.btnConfirmEmail);
             this.groupMain.Controls.Add(this.btnRegFBAccount);
-            this.groupMain.Controls.Add(this.btnUploadProfilePhotoAllPack);
-            this.groupMain.Controls.Add(this.btnUploadProfilePhoto);
             this.groupMain.Controls.Add(this.btnPostStatus);
             this.groupMain.Location = new System.Drawing.Point(12, 12);
             this.groupMain.Name = "groupMain";
             this.groupMain.Size = new System.Drawing.Size(819, 121);
             this.groupMain.TabIndex = 2;
             this.groupMain.TabStop = false;
-            this.groupMain.Text = "Bảng Điều Khiển";
+            this.groupMain.Text = "Control Panel";
             // 
-            // btnPostStatusAllPack
+            // txtAutoMoveToNextPack
             // 
-            this.btnPostStatusAllPack.Location = new System.Drawing.Point(162, 19);
-            this.btnPostStatusAllPack.Name = "btnPostStatusAllPack";
-            this.btnPostStatusAllPack.Size = new System.Drawing.Size(150, 30);
-            this.btnPostStatusAllPack.TabIndex = 0;
-            this.btnPostStatusAllPack.Text = "Post Status All Pack(F2)";
-            this.btnPostStatusAllPack.UseVisualStyleBackColor = true;
-            this.btnPostStatusAllPack.Click += new System.EventHandler(this.btnPostStatusAllPack_Click);
+            this.txtAutoMoveToNextPack.AutoSize = true;
+            this.txtAutoMoveToNextPack.Location = new System.Drawing.Point(9, 75);
+            this.txtAutoMoveToNextPack.Name = "txtAutoMoveToNextPack";
+            this.txtAutoMoveToNextPack.Size = new System.Drawing.Size(147, 17);
+            this.txtAutoMoveToNextPack.TabIndex = 1;
+            this.txtAutoMoveToNextPack.Text = "Auto Move To Next Pack";
+            this.txtAutoMoveToNextPack.UseVisualStyleBackColor = true;
             // 
             // btnKetBan
             // 
-            this.btnKetBan.Location = new System.Drawing.Point(6, 55);
+            this.btnKetBan.Location = new System.Drawing.Point(118, 19);
             this.btnKetBan.Name = "btnKetBan";
-            this.btnKetBan.Size = new System.Drawing.Size(150, 30);
+            this.btnKetBan.Size = new System.Drawing.Size(50, 50);
             this.btnKetBan.TabIndex = 0;
-            this.btnKetBan.Text = "Ket Ban";
+            this.btnKetBan.Text = "Make Friend";
             this.btnKetBan.UseVisualStyleBackColor = true;
             this.btnKetBan.Click += new System.EventHandler(this.btnKetBan_Click);
+            // 
+            // btnUpdateInfo
+            // 
+            this.btnUpdateInfo.Location = new System.Drawing.Point(333, 85);
+            this.btnUpdateInfo.Name = "btnUpdateInfo";
+            this.btnUpdateInfo.Size = new System.Drawing.Size(156, 30);
+            this.btnUpdateInfo.TabIndex = 0;
+            this.btnUpdateInfo.Text = "Update Info";
+            this.btnUpdateInfo.UseVisualStyleBackColor = true;
+            this.btnUpdateInfo.Click += new System.EventHandler(this.btnUpdateInfo_Click);
             // 
             // btnConfirmEmail
             // 
@@ -104,41 +110,21 @@
             // 
             // btnRegFBAccount
             // 
-            this.btnRegFBAccount.Location = new System.Drawing.Point(657, 85);
+            this.btnRegFBAccount.Location = new System.Drawing.Point(6, 19);
             this.btnRegFBAccount.Name = "btnRegFBAccount";
-            this.btnRegFBAccount.Size = new System.Drawing.Size(156, 30);
+            this.btnRegFBAccount.Size = new System.Drawing.Size(50, 50);
             this.btnRegFBAccount.TabIndex = 0;
             this.btnRegFBAccount.Text = "Start Reg Auto";
             this.btnRegFBAccount.UseVisualStyleBackColor = true;
             this.btnRegFBAccount.Click += new System.EventHandler(this.btnRegFBAccount_Click);
             // 
-            // btnUploadProfilePhotoAllPack
-            // 
-            this.btnUploadProfilePhotoAllPack.Location = new System.Drawing.Point(474, 19);
-            this.btnUploadProfilePhotoAllPack.Name = "btnUploadProfilePhotoAllPack";
-            this.btnUploadProfilePhotoAllPack.Size = new System.Drawing.Size(177, 30);
-            this.btnUploadProfilePhotoAllPack.TabIndex = 0;
-            this.btnUploadProfilePhotoAllPack.Text = "Upload Profile Photo All Pack(F4)";
-            this.btnUploadProfilePhotoAllPack.UseVisualStyleBackColor = true;
-            this.btnUploadProfilePhotoAllPack.Click += new System.EventHandler(this.btnUploadProfilePhotoAllPack_Click);
-            // 
-            // btnUploadProfilePhoto
-            // 
-            this.btnUploadProfilePhoto.Location = new System.Drawing.Point(318, 19);
-            this.btnUploadProfilePhoto.Name = "btnUploadProfilePhoto";
-            this.btnUploadProfilePhoto.Size = new System.Drawing.Size(150, 30);
-            this.btnUploadProfilePhoto.TabIndex = 0;
-            this.btnUploadProfilePhoto.Text = "Upload Profile Photo(F3)";
-            this.btnUploadProfilePhoto.UseVisualStyleBackColor = true;
-            this.btnUploadProfilePhoto.Click += new System.EventHandler(this.btnUploadProfilePhoto_Click);
-            // 
             // btnPostStatus
             // 
-            this.btnPostStatus.Location = new System.Drawing.Point(6, 19);
+            this.btnPostStatus.Location = new System.Drawing.Point(62, 19);
             this.btnPostStatus.Name = "btnPostStatus";
-            this.btnPostStatus.Size = new System.Drawing.Size(150, 30);
+            this.btnPostStatus.Size = new System.Drawing.Size(50, 50);
             this.btnPostStatus.TabIndex = 0;
-            this.btnPostStatus.Text = "Post Status(F1)";
+            this.btnPostStatus.Text = "Check (F1)";
             this.btnPostStatus.UseVisualStyleBackColor = true;
             this.btnPostStatus.Click += new System.EventHandler(this.btnPostStatus_Click);
             // 
@@ -155,7 +141,7 @@
             this.groupData.Size = new System.Drawing.Size(819, 345);
             this.groupData.TabIndex = 3;
             this.groupData.TabStop = false;
-            this.groupData.Text = "Tài Khoản (F5 How/Hide)";
+            this.groupData.Text = "Accounts (F5 How/Hide)";
             // 
             // gridData
             // 
@@ -172,6 +158,7 @@
             this.gridData.Size = new System.Drawing.Size(807, 283);
             this.gridData.TabIndex = 5;
             this.gridData.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridData_CellMouseDown);
+            this.gridData.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridData_DataError);
             this.gridData.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gridData_KeyUp);
             // 
             // menuGridData
@@ -181,27 +168,27 @@
             this.menuXoaTK,
             this.menuLoginAgain});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(176, 70);
+            this.menuGridData.Size = new System.Drawing.Size(167, 70);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
             // 
             this.menuCopyURL.Name = "menuCopyURL";
-            this.menuCopyURL.Size = new System.Drawing.Size(175, 22);
+            this.menuCopyURL.Size = new System.Drawing.Size(166, 22);
             this.menuCopyURL.Text = "Copy URL";
             this.menuCopyURL.Click += new System.EventHandler(this.menuCopyURL_Click);
             // 
             // menuXoaTK
             // 
             this.menuXoaTK.Name = "menuXoaTK";
-            this.menuXoaTK.Size = new System.Drawing.Size(175, 22);
+            this.menuXoaTK.Size = new System.Drawing.Size(166, 22);
             this.menuXoaTK.Text = "Delete this account";
             this.menuXoaTK.Click += new System.EventHandler(this.menuXoaTK_Click);
             // 
             // menuLoginAgain
             // 
             this.menuLoginAgain.Name = "menuLoginAgain";
-            this.menuLoginAgain.Size = new System.Drawing.Size(175, 22);
+            this.menuLoginAgain.Size = new System.Drawing.Size(166, 22);
             this.menuLoginAgain.Text = "Try login again";
             this.menuLoginAgain.Click += new System.EventHandler(this.menuLoginAgain_Click);
             // 
@@ -224,16 +211,6 @@
             this.txtPackNo.TabIndex = 1;
             this.txtPackNo.SelectedValueChanged += new System.EventHandler(this.txtPackNo_SelectedValueChanged);
             // 
-            // btnUpdateInfo
-            // 
-            this.btnUpdateInfo.Location = new System.Drawing.Point(333, 85);
-            this.btnUpdateInfo.Name = "btnUpdateInfo";
-            this.btnUpdateInfo.Size = new System.Drawing.Size(156, 30);
-            this.btnUpdateInfo.TabIndex = 0;
-            this.btnUpdateInfo.Text = "Update Info";
-            this.btnUpdateInfo.UseVisualStyleBackColor = true;
-            this.btnUpdateInfo.Click += new System.EventHandler(this.btnUpdateInfo_Click);
-            // 
             // FaceBookManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,6 +225,7 @@
             this.Text = "FaceBookManager";
             this.Load += new System.EventHandler(this.FaceBookManager_Load);
             this.groupMain.ResumeLayout(false);
+            this.groupMain.PerformLayout();
             this.groupData.ResumeLayout(false);
             this.groupData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).EndInit();
@@ -267,13 +245,11 @@
         private System.Windows.Forms.ContextMenuStrip menuGridData;
         private System.Windows.Forms.ToolStripMenuItem menuCopyURL;
         private System.Windows.Forms.ToolStripMenuItem menuXoaTK;
-        private System.Windows.Forms.Button btnPostStatusAllPack;
-        private System.Windows.Forms.Button btnUploadProfilePhotoAllPack;
-        private System.Windows.Forms.Button btnUploadProfilePhoto;
         private System.Windows.Forms.ToolStripMenuItem menuLoginAgain;
         private System.Windows.Forms.Button btnRegFBAccount;
         private System.Windows.Forms.Button btnKetBan;
         private System.Windows.Forms.Button btnConfirmEmail;
         private System.Windows.Forms.Button btnUpdateInfo;
+        private System.Windows.Forms.CheckBox txtAutoMoveToNextPack;
     }
 }

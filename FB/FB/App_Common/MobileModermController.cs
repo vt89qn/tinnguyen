@@ -60,7 +60,7 @@ namespace FB.App_Common
                 try
                 {
                     d1.Dial();
-                    bOK = new Ping().Send("fb.com").Status == IPStatus.Success;
+                    bOK = new Ping().Send("www.facebook.com").Status == IPStatus.Success;
                     //bOK = true;
                 }
                 catch { }

@@ -51,7 +51,7 @@ namespace FB.App_Common
                     string strToken = Regex.Match(client.ResponseText, "content=\"(?<val>[^\"]+)\" name=\"csrf-token\"").Groups["val"].Value.Trim();
                     if (!string.IsNullOrEmpty(strToken))
                     {
-                        client.DoGet("https://api.500px.com/v1/photos?rpp=38&feature=popular&image_size[]=3&image_size[]=5&page=" + new Random().Next(1, 400) + "&sort=&include_states=true&formats=jpeg%2Clytro&only=&authenticity_token=" + strToken);
+                        client.DoGet("https://api.500px.com/v1/photos?rpp=38&feature=popular&image_size[]=3&image_size[]=5&page=" + new Random().Next(1, 400) + "&sort=&include_states=true&formats=jpeg%2Clytro&only=&authenticity_token=" + strToken.Replace("+", "&#43;"));
                         if (!string.IsNullOrEmpty(client.ResponseText))
                         {
                             Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);

@@ -97,19 +97,19 @@ namespace FB.App_Common
             return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
         }
 
-        public static string ConvertToUsignNew(string s)
-        {
-            const string FindText = "áàảãạâấầẩẫậăắằẳẵặdéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶDÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ";
-            const string ReplText = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
-            int index = -1;
-            char[] arrChar = FindText.ToCharArray();
-            while ((index = s.IndexOfAny(arrChar)) != -1)
-            {
-                int index2 = FindText.IndexOf(s[index]);
-                s = s.Replace(s[index], ReplText[index2]);
-            }
-            return s;
-        }
+        //public static string ConvertToUsignNew(string s)
+        //{
+        //    const string FindText = "áàảãạâấầẩẫậăắằẳẵặdéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶDÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ";
+        //    const string ReplText = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
+        //    int index = -1;
+        //    char[] arrChar = FindText.ToCharArray();
+        //    while ((index = s.IndexOfAny(arrChar)) != -1)
+        //    {
+        //        int index2 = FindText.IndexOf(s[index]);
+        //        s = s.Replace(s[index], ReplText[index2]);
+        //    }
+        //    return s;
+        //}
 
         public static string getSigPoker(object paramObject, string paramString)
         {
@@ -569,7 +569,7 @@ Yên Sơn";
             System.Threading.Thread.Sleep(5000);
             while (iTry < 3 && !bFindEmail)
             {
-                
+
                 Pop3Client pop3 = new Pop3Client();
                 pop3.Connect("vuathuthanh.net", 110, false);
                 if (strEmail.Contains("vuathuthanh.net"))
@@ -580,8 +580,8 @@ Yên Sơn";
                 {
                     pop3.Authenticate("mail@tinphuong.com", "uxBa2@05");
                 }
-                Dictionary<string, string> dicMail = new Dictionary<string, string>();
-                for (int iIndex = pop3.GetMessageCount(); iIndex > 0; iIndex--)
+                int iCount = pop3.GetMessageCount();
+                for (int iIndex = iCount; iIndex > 0 && iIndex > iCount - 10; iIndex--)
                 {
                     OpenPop.Mime.Message message = pop3.GetMessage(iIndex);
                     if (message.Headers.To[0].MailAddress.Address == strEmail)
@@ -604,27 +604,45 @@ Yên Sơn";
                         {
                         }
                     }
+                    else
+                    {
+                        var strBody = message.MessagePart.MessageParts[0].BodyEncoding.GetString(message.MessagePart.MessageParts[0].Body);
+                        string strLink = Regex.Match(strBody, @"/o.php[^\s]+", RegexOptions.IgnoreCase).Value.Trim();
+                        if (!string.IsNullOrEmpty(strLink))
+                        {
+                            App_UserControl.WebClientEx client = new App_UserControl.WebClientEx();
+                            client.DoGet("https://www.facebook.com" + strLink);
+                            if (!string.IsNullOrEmpty(client.ResponseText))
+                            {
+                                string t = Regex.Match(strLink, "k=(?<val>[^&]+)", RegexOptions.IgnoreCase).Groups["val"].Value;
+                                NameValueCollection param = new NameValueCollection();
+                                param.Add("lsd", Regex.Match(client.ResponseText, "\"token\":\"(?<val>[^\"]+)", RegexOptions.IgnoreCase).Groups["val"].Value);
+                                param.Add("u", Regex.Match(strLink, "u=(?<val>[^&]+)", RegexOptions.IgnoreCase).Groups["val"].Value);
+                                param.Add("mid", Regex.Match(strLink, "mid=(?<val>[^&]+)", RegexOptions.IgnoreCase).Groups["val"].Value);
+                                param.Add("k", Regex.Match(strLink, "k=(?<val>[^&]+)", RegexOptions.IgnoreCase).Groups["val"].Value);
+                                param.Add("e", message.Headers.To[0].MailAddress.Address);
+                                param.Add("t", "43");
+                                param.Add("confirm", "1");
+                                param.Add("optout", "Chấp nhận");
+
+                                client.DoPost(param, "https://www.facebook.com/o.php");
+                            }
+                        }
+                    }
                     if (bFindEmail) break;
                 }
-                if (bFindEmail)
+                try
                 {
-                    try
-                    {
-                        pop3.DeleteAllMessages();
-                        pop3.Disconnect();
-                    }
-                    catch { }
+                    pop3.DeleteAllMessages();
+                    pop3.Disconnect();
                 }
-                else
+                catch { }
+
+                if (!bFindEmail)
                 {
                     System.Threading.Thread.Sleep(3000);
                     iTry++;
                 }
-                try
-                {
-                    pop3.Disconnect();
-                }
-                catch { }
             }
             return strCode;
         }

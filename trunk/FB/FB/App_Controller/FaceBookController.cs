@@ -117,6 +117,10 @@ namespace FB.App_Controller
                     return true;
                 }
             }
+            //Like(model, "bichlien1234");
+            //Like(model, "352321118281980");
+            //Like(model, "150884418415392");
+            return true;
             #endregion
             #region - Get New Feed -
             {
@@ -446,7 +450,15 @@ namespace FB.App_Controller
             param = new NameValueCollection();
             param.Add("api_key", AppSettings.api_key);
             param.Add("attempt_login", "true");
-            extraData.BirthDay = new DateTime(new Random().Next(1979, 1990), new Random().Next(1, 12), new Random(3).Next(1, 28));
+            {
+                System.Threading.Thread.Sleep(23);
+                int iY = new Random().Next(1979, 1990);
+                System.Threading.Thread.Sleep(23);
+                int iM = new Random().Next(1, 12);
+                System.Threading.Thread.Sleep(23);
+                int iD = new Random(3).Next(1, 28);
+                extraData.BirthDay = new DateTime(iY, iM, iD);
+            }
             param.Add("birthday", extraData.BirthDay.Value.ToString("yyyy-MM-dd"));
             param.Add("client_country_code", "VN");
 
@@ -468,9 +480,9 @@ namespace FB.App_Controller
             listEmail.Add("outlook.com");
             listEmail.Add("live.com");
             extraData.ComfirmedEmail = false;
-            param.Add("email", Utilities.ConvertToUsignNew(param["firstname"].Replace(" ", "").Trim() + param["lastname"].Replace(" ", "").Trim() + new Random().Next(10, 9999)).ToLower() + "@" + listEmail[new Random().Next(0, listEmail.Count - 1)]);
+            param.Add("email", Utilities.ConvertToUnSign3(param["firstname"].Replace(" ", "").Trim() + param["lastname"].Replace(" ", "").Trim() + new Random().Next(10, 9999)).ToLower() + "@" + listEmail[new Random().Next(0, listEmail.Count - 1)]);
             param.Add("locale", "vi_VN");
-            param.Add("method", "user.register"); string strPass = Utilities.ConvertToUsignNew(param["firstname"].Split(' ')[0] + new List<string> { "!", "@", "#", "$", "%", "^", "~", "&", "*", "(" }[new Random().Next(0, 10)] + param["lastname"].Split(' ')[0] + new Random().Next(10, 1000));
+            param.Add("method", "user.register"); string strPass = Utilities.ConvertToUnSign3(param["firstname"].Split(' ')[0] + new List<string> { "!", "@", "#", "$", "%", "^", "~", "&", "*", "(" }[new Random().Next(0, 10)] + param["lastname"].Split(' ')[0] + new Random().Next(10, 1000));
             System.Threading.Thread.Sleep(19);
             strPass += new List<string> { "!", "@", "#", "$", "%", "^", "~", "&", "*", "(" }[new Random().Next(0, 10)];
             param.Add("password", strPass);
@@ -570,7 +582,8 @@ namespace FB.App_Controller
                         param.Add("fb_api_caller_class", "com.facebook.nux.status.UpdateNuxStatusMethod");
                         //System.Threading.Thread.Sleep(1000);
                         client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
-                        string strNewEmail = new Random().Next(1, 999) % 2 == 0 ? "@vuathuthanh.net" : "@tinphuong.com";
+                        //string strNewEmail = new Random().Next(1, 999) % 2 == 0 ? "@vuathuthanh.net" : "@tinphuong.com";
+                        string strNewEmail = "@tinphuong.com";
                         strNewEmail = model.Login.Substring(0, model.Login.IndexOf("@")) + strNewEmail;
                         param = new NameValueCollection();
                         param.Add("add_contactpoint", strNewEmail);

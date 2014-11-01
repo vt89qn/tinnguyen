@@ -12,6 +12,7 @@ namespace FB.App_Common
 {
     public class Global
     {
+        public static bool ContextBusy { get; set; }
         public static PokerContext DBContext = new PokerContext();
 
         private static List<string> listCoverPhotoLink = new List<string>();

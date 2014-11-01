@@ -60,8 +60,8 @@ namespace FB.App_Present
                 {
                     if (!bFail)
                     {
-                        MobileModermController.Disconnect();
-                        MobileModermController.Connect();
+                        //MobileModermController.Disconnect();
+                        //MobileModermController.Connect();
                     }
                     bFail = !checkFaceBook();
                     if (txtAutoMoveToNextPack.Checked)
@@ -172,6 +172,25 @@ namespace FB.App_Present
         private void menuXoaTK_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void copyPassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
+                Clipboard.SetText(model.Pass);
+            }
+        }
+
+        private void createPageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                FaceBookController fbController = new FaceBookController();
+                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
+                fbController.CreateNewPage(model);
+            });
         }
 
         private void menuLoginAgain_Click(object sender, EventArgs e)
@@ -594,12 +613,12 @@ namespace FB.App_Present
             try
             {
                 //Load Package
-                List<FBPackage> listPackage = Global.DBContext.FBPackage.Where(x => x.FaceBooks.Count > 0).ToList();
+                List<FBPackage> listPackage = Global.DBContext.FBPackage.Where(x => x.ID != 1 && x.FaceBooks.Count > 0).ToList();
                 BindingSource bindingPackage = new BindingSource { DataSource = listPackage };
                 txtPackNo.DataSource = bindingPackage;
                 txtPackNo.DisplayMember = TablePackageConst.Pack;
                 txtPackNo.ValueMember = TablePackageConst.ID;
-                txtPackNo.SelectedValue = 2;
+                //txtPackNo.SelectedValue = 2;
             }
             catch (Exception ex)
             {
@@ -671,6 +690,9 @@ namespace FB.App_Present
         {
 
         }
+
+
+
 
 
     }

@@ -9,6 +9,7 @@ namespace FB.App_Model
     {
         public FaceBook()
         {
+            Pages = new List<Page>();
         }
         public long ID { get; set; }
         public string Login { get; set; }
@@ -21,6 +22,20 @@ namespace FB.App_Model
 
         public long FBPackageID { get; set; }
         public virtual FBPackage FBPackage { get; set; }
+
+        public virtual ICollection<Page> Pages { get; set; }
+    }
+
+    public class Page
+    {
+        public long ID { get; set; }
+        public string PageID { get; set; }
+        public string PageName { get; set; }
+        public string AccessToken { get; set; }
+        public string PageData { get; set; }
+
+        public long FaceBookID { get; set; }
+        public virtual FaceBook FaceBook { get; set; }
     }
 
     public class FBPackage

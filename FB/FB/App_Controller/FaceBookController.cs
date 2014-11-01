@@ -431,6 +431,54 @@ namespace FB.App_Controller
             return strURl;
         }
 
+        public void CreateNewPage(FaceBook model)
+        {
+            int iCount = 0;
+            while (iCount < 500)
+            {
+                System.Threading.Thread.Sleep(60000);
+                WebClientEx client = new WebClientEx();
+                client.DoGet(GetFaceBookLoginURL(model, "https://m.facebook.com/pages/create"));
+                NameValueCollection param = new NameValueCollection();
+                List<string> listSub = new List<string>() { "1103", "1601", "1600", "1301", "1609", "1606", "1802", "1610", "1614", "1615", "1611", "1617", "1113", "1701", "1604", "1114", "1202", "1605", "2632", "1616", "1700", "1108", "1602", "1613", "1109" };
+
+                string fb_dtsg = Regex.Match(client.ResponseText, "\"token\":\"(?<val>[^\"]+)").Groups["val"].Value;
+
+                Page page = new Page();
+                page.FaceBookID = model.ID;
+                page.PageName = Utilities.GetMaleName();
+
+                param.Add("fb_dtsg", fb_dtsg);
+                param.Add("charset_test", "€,´,€,´,水,Д,Є");
+                param.Add("page_name", page.PageName);
+                param.Add("super_category", "1007");
+                param.Add("category", listSub[new Random().Next(0, listSub.Count - 1)]);
+                param.Add("m_sess", "");
+                param.Add("__dyn", "");
+                param.Add("__req", "2");
+                param.Add("__ajax__", "true");
+                param.Add("__user", model.FBID);
+                client.DoPost(param, "https://m.facebook.com/pages/create/add/");
+                if (!string.IsNullOrEmpty(client.ResponseText))
+                {
+                    string strpageID = Regex.Match(client.ResponseText, @"getting_started\.php\?id=(?<val>[0-9]+)").Groups["val"].Value;
+                    if (!string.IsNullOrEmpty(strpageID))
+                    {
+                        page.PageID = strpageID;
+                        Global.DBContext.Page.Add(page);
+                        while (Global.ContextBusy)
+                        {
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        Global.ContextBusy = true;
+                        Global.DBContext.SaveChanges();
+                        Global.ContextBusy = false;
+                        iCount++;
+                    }
+                }
+            }
+        }
+
         public FaceBook RegNewAccount()
         {
             Debug.WriteLine("-- Start INNER Reg --");

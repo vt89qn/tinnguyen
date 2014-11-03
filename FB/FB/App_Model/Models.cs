@@ -63,6 +63,14 @@ namespace FB.App_Model
         public string Text { get; set; }
     }
 
+    public class PageData
+    {
+        public DateTime? LUS { get; set; }
+        public DateTime? LUP { get; set; }
+        public DateTime? LUPP { get; set; }
+        public DateTime? LUCP { get; set; }
+    }
+
     public class FBExtraData
     {
         public DateTime? CreateDate { get; set; }

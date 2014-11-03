@@ -165,7 +165,7 @@ namespace FB.App_Controller
             {
                 if (Global.LisCoverPhotoLink.Count > 0)
                 {
-                    UploadPhoto(model, Global.LisCoverPhotoLink[0]);
+                    UploadPhoto(client.Authorization, Global.LisCoverPhotoLink[0]);
                     Global.LisCoverPhotoLink.RemoveAt(0);
                     exData.LastUpLoadPhoto = DateTime.Now;
                 }
@@ -177,7 +177,7 @@ namespace FB.App_Controller
             {
                 if (Global.ListProfilePhotoLink.Count > 0)
                 {
-                    string id = UploadPhoto(model, Global.ListProfilePhotoLink[0]);
+                    string id = UploadPhoto(client.Authorization, Global.ListProfilePhotoLink[0]);
                     Global.ListProfilePhotoLink.RemoveAt(0);
                     if (!string.IsNullOrEmpty(id))
                     {
@@ -198,7 +198,7 @@ namespace FB.App_Controller
             {
                 if (Global.LisCoverPhotoLink.Count > 0)
                 {
-                    string id = UploadPhoto(model, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
+                    string id = UploadPhoto(client.Authorization, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
                     Global.LisCoverPhotoLink.RemoveAt(Global.LisCoverPhotoLink.Count - 1);
                     if (!string.IsNullOrEmpty(id))
                     {
@@ -431,12 +431,107 @@ namespace FB.App_Controller
             return strURl;
         }
 
+        public void FeedAccessToken(FaceBook model)
+        {
+            try
+            {
+                WebClientEx client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                client.Authorization = dicData["access_token"].ToString();
+                NameValueCollection param = new NameValueCollection();
+                param.Add("batch", "[{'method':'GET','name':'prefetchAccessToken','omit_response_on_success':false,'relative_url':'fql?format=json&q=%7B%22token_query%22%3A%22SELECT+page_id%2C+name%2C+access_token+FROM+page+WHERE+page_id+IN+%28SELECT+page_id+FROM+%23page_query%29%22%2C%22page_query%22%3A%22SELECT+page_id+FROM+page_admin+WHERE+uid+%3D+me%28%29+AND+type+%21%3D+%27APPLICATION%27+ORDER+BY+last_used_time+DESC%22%7D&locale=en_US&client_country_code=VN&fb_api_req_friendly_name=page_access_token'}]".Replace("'", "\""));
+                param.Add("fb_api_caller_class", "com.facebook.feed.server.NewsFeedServiceImplementation");
+                param.Add("flush", "1");
+                client.DoPost(param, "https://graph.facebook.com/?include_headers=false&decode_body_json=false&streamable_json_response=true&locale=vi_VN&client_country_code=VN");
+                if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
+                {
+                    dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    foreach (Dictionary<string, object> pagefeed in ((((((dicData["prefetchAccessToken"] as ArrayList)[1] as Dictionary<string, object>)["body"] as Dictionary<string, object>)["data"] as ArrayList)[1] as Dictionary<string, object>)["fql_result_set"] as ArrayList))
+                    {
+                        Page page = getFBByID(pagefeed["page_id"].ToString());
+                        if (page == null)
+                        {
+                            page = new Page();
+                            Global.DBContext.Page.Add(page);
+                        }
+                        page.AccessToken = pagefeed["access_token"].ToString();
+                        page.FaceBookID = model.ID;
+                        page.PageID = pagefeed["page_id"].ToString();
+                        page.PageName = pagefeed["name"].ToString();
+                    }
+                    Global.DBContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void UpdatePhotoAndCover(FaceBook model)
+        {
+            foreach (Page page in model.Pages)
+            {
+                WebClientEx client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+                client.Authorization = page.AccessToken;
+                NameValueCollection param = new NameValueCollection();
+
+                #region - Upload profile picture -
+                if (Global.ListProfilePhotoLink.Count > 0)
+                {
+                    string id = UploadPhoto(page.AccessToken, Global.ListProfilePhotoLink[0]);
+                    Global.ListProfilePhotoLink.RemoveAt(0);
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        param = new NameValueCollection();
+                        string hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+                        hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
+
+                        param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                     + "&scaled_crop_rect=%7B%22y%22%3A0%2C%22height%22%3A1%2C%22width%22%3A1%2C%22x%22%3A0%7D&locale=vi_VN&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                     + "\"relative_url\":\"" + page.PageID + "/picture/" + id + "\"}]");
+                        param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                        client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=vi_VN&client_country_code=VN");
+                    }
+                }
+                #endregion
+
+                #region - update cover photo -
+                if (Global.LisCoverPhotoLink.Count > 0)
+                {
+                    string id = UploadPhoto(client.Authorization, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
+                    Global.LisCoverPhotoLink.RemoveAt(Global.LisCoverPhotoLink.Count - 1);
+
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        param = new NameValueCollection();
+                        string hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+                        hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
+
+                        param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                         + "&photo=" + id + "&focus_y=0&locale=vi_VN&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                         + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
+                        param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                        client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=vi_VN&client_country_code=VN");
+                    }
+                }
+                #endregion
+            }
+        }
+
+        private Page getFBByID(string PageID)
+        {
+            return Global.DBContext.Page.Where(page => page.PageID == PageID).FirstOrDefault();
+        }
+
         public void CreateNewPage(FaceBook model)
         {
             int iCount = 0;
             while (iCount < 500)
             {
-                System.Threading.Thread.Sleep(60000);
+
                 WebClientEx client = new WebClientEx();
                 client.DoGet(GetFaceBookLoginURL(model, "https://m.facebook.com/pages/create"));
                 NameValueCollection param = new NameValueCollection();
@@ -461,21 +556,26 @@ namespace FB.App_Controller
                 client.DoPost(param, "https://m.facebook.com/pages/create/add/");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
+                    //if (client.ResponseText.Contains("Please slow down, or you could be blocked from using it")) return;
                     string strpageID = Regex.Match(client.ResponseText, @"getting_started\.php\?id=(?<val>[0-9]+)").Groups["val"].Value;
                     if (!string.IsNullOrEmpty(strpageID))
                     {
                         page.PageID = strpageID;
                         Global.DBContext.Page.Add(page);
-                        while (Global.ContextBusy)
+                        int iBeginWait = 0;
+                        while (Global.ContextBusy && iBeginWait < 10)
                         {
-                            System.Threading.Thread.Sleep(1000);
+                            System.Threading.Thread.Sleep(new Random().Next(200, 1000));
+                            iBeginWait++;
                         }
                         Global.ContextBusy = true;
                         Global.DBContext.SaveChanges();
                         Global.ContextBusy = false;
                         iCount++;
                     }
+                    else return;
                 }
+                System.Threading.Thread.Sleep(120000);
             }
         }
 
@@ -562,7 +662,7 @@ namespace FB.App_Controller
                         #region - Upload profile picture -
                         if (Global.ListProfilePhotoLink.Count > 0)
                         {
-                            string id = UploadPhoto(model, Global.ListProfilePhotoLink[0]);
+                            string id = UploadPhoto(client.Authorization, Global.ListProfilePhotoLink[0]);
                             Global.ListProfilePhotoLink.RemoveAt(0);
                             if (!string.IsNullOrEmpty(id))
                             {
@@ -671,7 +771,7 @@ namespace FB.App_Controller
                         #region - update cover photo -
                         if (Global.LisCoverPhotoLink.Count > 0)
                         {
-                            string id = UploadPhoto(model, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
+                            string id = UploadPhoto(client.Authorization, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
                             Global.LisCoverPhotoLink.RemoveAt(Global.LisCoverPhotoLink.Count - 1);
 
                             if (!string.IsNullOrEmpty(id))
@@ -734,16 +834,14 @@ namespace FB.App_Controller
             return false;
         }
 
-        public string UploadPhoto(FaceBook model, string strLink)
+        public string UploadPhoto(string access_token, string strLink)
         {
             try
             {
-                FBExtraData extraData = GetExtraData(model);
-                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
                 if (!string.IsNullOrEmpty(strLink))
                 {
                     NameValueCollection param = new NameValueCollection();
-                    param.Add("access_token", dicData["access_token"].ToString());
+                    param.Add("access_token", access_token);
                     param.Add("format", "json");
                     param.Add("method", "post");
                     param.Add("pretty", "0");
@@ -753,7 +851,7 @@ namespace FB.App_Controller
                     clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/me/photos");
                     if (!string.IsNullOrEmpty(clientAPI.ResponseText))
                     {
-                        dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(clientAPI.ResponseText);
+                        Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(clientAPI.ResponseText);
                         if (dicData.ContainsKey("id"))
                         {
                             string id = dicData["id"].ToString();

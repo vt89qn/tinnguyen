@@ -44,9 +44,11 @@
             this.menuXoaTK = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoginAgain = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
-            this.createPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.feedAccessTokenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadPhotoAndCoiverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupMain.SuspendLayout();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
@@ -170,38 +172,47 @@
             this.menuXoaTK,
             this.menuLoginAgain,
             this.copyPassToolStripMenuItem,
-            this.createPageToolStripMenuItem});
+            this.createPageToolStripMenuItem,
+            this.feedAccessTokenToolStripMenuItem,
+            this.uploadPhotoAndCoiverToolStripMenuItem});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(176, 136);
+            this.menuGridData.Size = new System.Drawing.Size(208, 180);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
             // 
             this.menuCopyURL.Name = "menuCopyURL";
-            this.menuCopyURL.Size = new System.Drawing.Size(175, 22);
+            this.menuCopyURL.Size = new System.Drawing.Size(207, 22);
             this.menuCopyURL.Text = "Copy URL";
             this.menuCopyURL.Click += new System.EventHandler(this.menuCopyURL_Click);
             // 
             // menuXoaTK
             // 
             this.menuXoaTK.Name = "menuXoaTK";
-            this.menuXoaTK.Size = new System.Drawing.Size(175, 22);
+            this.menuXoaTK.Size = new System.Drawing.Size(207, 22);
             this.menuXoaTK.Text = "Delete this account";
             this.menuXoaTK.Click += new System.EventHandler(this.menuXoaTK_Click);
             // 
             // menuLoginAgain
             // 
             this.menuLoginAgain.Name = "menuLoginAgain";
-            this.menuLoginAgain.Size = new System.Drawing.Size(175, 22);
+            this.menuLoginAgain.Size = new System.Drawing.Size(207, 22);
             this.menuLoginAgain.Text = "Try login again";
             this.menuLoginAgain.Click += new System.EventHandler(this.menuLoginAgain_Click);
             // 
             // copyPassToolStripMenuItem
             // 
             this.copyPassToolStripMenuItem.Name = "copyPassToolStripMenuItem";
-            this.copyPassToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.copyPassToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.copyPassToolStripMenuItem.Text = "Copy Pass";
             this.copyPassToolStripMenuItem.Click += new System.EventHandler(this.copyPassToolStripMenuItem_Click);
+            // 
+            // createPageToolStripMenuItem
+            // 
+            this.createPageToolStripMenuItem.Name = "createPageToolStripMenuItem";
+            this.createPageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.createPageToolStripMenuItem.Text = "Create Page";
+            this.createPageToolStripMenuItem.Click += new System.EventHandler(this.createPageToolStripMenuItem_Click);
             // 
             // lblPack
             // 
@@ -222,12 +233,19 @@
             this.txtPackNo.TabIndex = 1;
             this.txtPackNo.SelectedValueChanged += new System.EventHandler(this.txtPackNo_SelectedValueChanged);
             // 
-            // createPageToolStripMenuItem
+            // feedAccessTokenToolStripMenuItem
             // 
-            this.createPageToolStripMenuItem.Name = "createPageToolStripMenuItem";
-            this.createPageToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.createPageToolStripMenuItem.Text = "Create Page";
-            this.createPageToolStripMenuItem.Click += new System.EventHandler(this.createPageToolStripMenuItem_Click);
+            this.feedAccessTokenToolStripMenuItem.Name = "feedAccessTokenToolStripMenuItem";
+            this.feedAccessTokenToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.feedAccessTokenToolStripMenuItem.Text = "Feed AccessToken";
+            this.feedAccessTokenToolStripMenuItem.Click += new System.EventHandler(this.feedAccessTokenToolStripMenuItem_Click);
+            // 
+            // uploadPhotoAndCoiverToolStripMenuItem
+            // 
+            this.uploadPhotoAndCoiverToolStripMenuItem.Name = "uploadPhotoAndCoiverToolStripMenuItem";
+            this.uploadPhotoAndCoiverToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.uploadPhotoAndCoiverToolStripMenuItem.Text = "Upload Photo and Coiver";
+            this.uploadPhotoAndCoiverToolStripMenuItem.Click += new System.EventHandler(this.uploadPhotoAndCoiverToolStripMenuItem_Click);
             // 
             // FaceBookManager
             // 
@@ -271,5 +289,7 @@
         private System.Windows.Forms.CheckBox txtAutoMoveToNextPack;
         private System.Windows.Forms.ToolStripMenuItem copyPassToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem feedAccessTokenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uploadPhotoAndCoiverToolStripMenuItem;
     }
 }

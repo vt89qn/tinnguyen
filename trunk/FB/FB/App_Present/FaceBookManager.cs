@@ -185,12 +185,45 @@ namespace FB.App_Present
 
         private void createPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(() =>
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
             {
-                FaceBookController fbController = new FaceBookController();
-                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
-                fbController.CreateNewPage(model);
-            });
+                Task.Factory.StartNew(() =>
+                {
+                    FaceBookController fbController = new FaceBookController();
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    fbController.CreateNewPage(model);
+                });
+                System.Threading.Thread.Sleep(5000);
+            }
+        }
+
+
+        private void feedAccessTokenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 3; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    FaceBookController fbController = new FaceBookController();
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    fbController.FeedAccessToken(model);
+                });
+                task.Wait();
+            }
+        }
+
+        private void uploadPhotoAndCoiverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    FaceBookController fbController = new FaceBookController();
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    fbController.UpdatePhotoAndCover(model);
+                });
+                task.Wait();
+            }
         }
 
         private void menuLoginAgain_Click(object sender, EventArgs e)
@@ -613,7 +646,7 @@ namespace FB.App_Present
             try
             {
                 //Load Package
-                List<FBPackage> listPackage = Global.DBContext.FBPackage.Where(x => x.ID != 1 && x.FaceBooks.Count > 0).ToList();
+                List<FBPackage> listPackage = Global.DBContext.FBPackage.Where(x => x.ID != 10 && x.FaceBooks.Count > 0).ToList();
                 BindingSource bindingPackage = new BindingSource { DataSource = listPackage };
                 txtPackNo.DataSource = bindingPackage;
                 txtPackNo.DisplayMember = TablePackageConst.Pack;
@@ -690,6 +723,10 @@ namespace FB.App_Present
         {
 
         }
+
+
+
+
 
 
 

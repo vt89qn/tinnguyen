@@ -195,7 +195,7 @@ namespace PokerTexas.App_UserControl
                 }
                 if (SetAPIV8)
                 {
-                    this.Headers.Add("api-v8", "1");
+                    this.Headers.Add("X-API-VER", "8");
                 }
             }
             else if (RequestType == RequestTypeEnum.FaceBook)

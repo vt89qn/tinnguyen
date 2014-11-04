@@ -41,25 +41,25 @@ namespace PokerTexas.App_Present
             {
                 if (keyData == Keys.F1)
                 {
-                    btnNhanThuongHangNgay_Click(null, null);
+                    btnCheckMobile_Click(null, null);
                     return true;
                 }
                 else if (keyData == Keys.F2)
                 {
-                    btnTangQuaBiMat_Click(null, null);
+                    btnCheckWeb_Click(null, null);
                     return true;
                 }
-                else if (keyData == Keys.F4)
-                {
-                    btnTangCo4La_Click(null, null);
+                //else if (keyData == Keys.F4)
+                //{
+                //    btnTangCo4La_Click(null, null);
 
-                    return true;
-                }
-                else if (keyData == Keys.F3)
-                {
-                    btnNhanThuongWeb_Click(null, null);
-                    return true;
-                }
+                //    return true;
+                //}
+                //else if (keyData == Keys.F3)
+                //{
+                //    btnCheckWeb_Click(null, null);
+                //    return true;
+                //}
                 else if (keyData == Keys.F5)
                 {
                     if (gridData.Visible)
@@ -112,6 +112,14 @@ namespace PokerTexas.App_Present
         private void MainForm_Load(object sender, EventArgs e)
         {
             getDataOnload();
+        }
+
+        private void btnCapNhatNgaySinh_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnCapNhatNgaySinh.Enabled = false;
+            Task.Factory.StartNew(getBirthdayInfo);
         }
 
         private void btnThemTaiKhoan_Click(object sender, EventArgs e)
@@ -294,27 +302,19 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void btnNhanThuongHangNgay_Click(object sender, EventArgs e)
+        private void btnCheckMobile_Click(object sender, EventArgs e)
         {
             try
             {
                 if (isBusy) return;
                 isBusy = true;
-                btnNhanThuongHangNgay.Enabled = false;
-                Task.Factory.StartNew(nhanThuongHangNgay);
+                btnCheckMobile.Enabled = false;
+                Task.Factory.StartNew(checkMobile);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-        }
-
-        private void btnTangQuaBiMat_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnTangQuaBiMat.Enabled = false;
-            Task.Factory.StartNew(tangQuaBiMat);
         }
 
         private void btnNhanChipMayMan_Click(object sender, EventArgs e)
@@ -325,24 +325,52 @@ namespace PokerTexas.App_Present
             Task.Factory.StartNew(tangChipMayMan);
         }
 
-        private void btnTangCo4La_Click(object sender, EventArgs e)
+        private void btnCheckWeb_Click(object sender, EventArgs e)
         {
             if (isBusy) return;
             isBusy = true;
-            btnTangCo4La.Enabled = false;
-            Task.Factory.StartNew(tangCo4La);
-        }
-
-        private void btnNhanThuongWeb_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnNhanThuongWeb.Enabled = false;
-            Task.Factory.StartNew(nhanThuongHangNgayWeb);
+            btnCheckWeb.Enabled = false;
+            Task.Factory.StartNew(checkWeb);
         }
         #endregion
 
         #region - METHOD -
+        private void getBirthdayInfo()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    Task t = Task.Factory.StartNew(() => pkSource.getBirthDayInfo());
+                    tasks.Add(t);
+                    t.Wait();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnCapNhatNgaySinh.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
         private void getMoney()
         {
             try
@@ -444,52 +472,7 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void nhanThuongHangNgayWeb()
-        {
-            try
-            {
-                List<Task> tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    Task task = Task.Factory.StartNew(() => pkSource.NhanThuongHangNgayWeb("1"));
-                    tasks.Add(task);
-                    task.Wait();
-                    while (pkSource.ImageCaptcha != null)
-                    {
-                        EnterCaptcha enter = new EnterCaptcha();
-                        enter.Captcha = pkSource.ImageCaptcha;
-                        enter.ShowDialog();
-                        if (!string.IsNullOrEmpty(enter.CaptchaText))
-                        {
-                            task = Task.Factory.StartNew(() => pkSource.NhanThuongHangNgayWeb(enter.CaptchaText));
-                            task.Wait();
-                        }
-                        else
-                        {
-                            pkSource.ImageCaptcha = null;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    { btnNhanThuongWeb.Enabled = true; };
-                    this.BeginInvoke(action);
-                }
-            }
-        }
-
-        private void tangCo4La()
+        private void checkWeb()
         {
             try
             {
@@ -500,11 +483,7 @@ namespace PokerTexas.App_Present
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                     Task task = Task.Factory.StartNew(pkSource.TangCo4La);
                     tasks.Add(task);
-                    task.Wait(5000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    System.Threading.Thread.Sleep(1000);
+                    task.Wait(3000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -517,7 +496,7 @@ namespace PokerTexas.App_Present
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                     Task task = Task.Factory.StartNew(pkSource.NhanCo4La);
                     tasks.Add(task);
-                    task.Wait(5000);
+                    task.Wait(3000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -534,22 +513,35 @@ namespace PokerTexas.App_Present
                 if (!this.IsDisposed)
                 {
                     MethodInvoker action = delegate
-                    { btnTangCo4La.Enabled = true; };
+                    { btnCheckWeb.Enabled = true; };
                     this.BeginInvoke(action);
                 }
             }
         }
 
-        private void tangQuaBiMat()
+        private void checkMobile()
         {
             try
             {
                 List<Task> tasks = new List<Task>();
+                FaceBookController fbController = new FaceBookController();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    //pkSource.TangQuaBiMat();
+                    tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                     tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
                     System.Threading.Thread.Sleep(1000);
                 }
@@ -564,7 +556,6 @@ namespace PokerTexas.App_Present
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    //pkSource.TangQuaBiMat();
                     tasks.Add(Task.Factory.StartNew(pkSource.NhanQuaBiMat));
                     System.Threading.Thread.Sleep(1000);
                 }
@@ -584,42 +575,7 @@ namespace PokerTexas.App_Present
                 if (!this.IsDisposed)
                 {
                     MethodInvoker action = delegate
-                    { btnTangQuaBiMat.Enabled = true; };
-                    this.BeginInvoke(action);
-                }
-            }
-        }
-
-        private void nhanThuongHangNgay()
-        {
-            try
-            {
-                List<Task> tasks = new List<Task>();
-                FaceBookController fbController = new FaceBookController();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
-                    System.Threading.Thread.Sleep(1000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    { btnNhanThuongHangNgay.Enabled = true; };
+                    { btnCheckMobile.Enabled = true; };
                     this.BeginInvoke(action);
                 }
             }

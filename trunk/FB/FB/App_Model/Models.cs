@@ -57,6 +57,13 @@ namespace FB.App_Model
         public long FBID2 { get; set; }
     }
 
+    public class Like
+    {
+        public long ID { get; set; }
+        public long FromID { get; set; }
+        public long ToID { get; set; }
+    }
+
     public class StatusData
     {
         public long ID { get; set; }
@@ -82,6 +89,8 @@ namespace FB.App_Model
         public DateTime? LastMakeFriend { get; set; }
         public bool? ComfirmedEmail { get; set; }
         public bool? UpdatedProfileInfo { get; set; }
+        public bool? BlockCreatePage { get; set; }
+        public bool? ProfileUS { get; set; }
 
     }
 }

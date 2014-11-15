@@ -41,14 +41,22 @@
             this.gridData = new System.Windows.Forms.DataGridView();
             this.menuGridData = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuCopyURL = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuXoaTK = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoginAgain = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyPassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuLoginAgainAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCreatePage = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCreatePageAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuFeedPageAccessToken = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuFeedPageAccessTokenAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuUpdatePhotoAndCover = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuUpdatePhotoAndCoverAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCheckLive = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCheckLiveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
-            this.feedAccessTokenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uploadPhotoAndCoiverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReNameToUS = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReNameToUSAll = new System.Windows.Forms.ToolStripMenuItem();
             this.groupMain.SuspendLayout();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
@@ -57,8 +65,8 @@
             // 
             // groupMain
             // 
-            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupMain.Controls.Add(this.txtAutoMoveToNextPack);
             this.groupMain.Controls.Add(this.btnKetBan);
             this.groupMain.Controls.Add(this.btnUpdateInfo);
@@ -134,9 +142,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -151,9 +159,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
@@ -169,14 +177,16 @@
             // 
             this.menuGridData.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuCopyURL,
+            this.copyPassToolStripMenuItem,
             this.menuXoaTK,
             this.menuLoginAgain,
-            this.copyPassToolStripMenuItem,
-            this.createPageToolStripMenuItem,
-            this.feedAccessTokenToolStripMenuItem,
-            this.uploadPhotoAndCoiverToolStripMenuItem});
+            this.menuCreatePage,
+            this.menuFeedPageAccessToken,
+            this.menuUpdatePhotoAndCover,
+            this.menuCheckLive,
+            this.menuReNameToUS});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(208, 180);
+            this.menuGridData.Size = new System.Drawing.Size(208, 224);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
@@ -185,6 +195,13 @@
             this.menuCopyURL.Size = new System.Drawing.Size(207, 22);
             this.menuCopyURL.Text = "Copy URL";
             this.menuCopyURL.Click += new System.EventHandler(this.menuCopyURL_Click);
+            // 
+            // copyPassToolStripMenuItem
+            // 
+            this.copyPassToolStripMenuItem.Name = "copyPassToolStripMenuItem";
+            this.copyPassToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copyPassToolStripMenuItem.Text = "Copy Pass";
+            this.copyPassToolStripMenuItem.Click += new System.EventHandler(this.copyPassToolStripMenuItem_Click);
             // 
             // menuXoaTK
             // 
@@ -195,24 +212,83 @@
             // 
             // menuLoginAgain
             // 
+            this.menuLoginAgain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuLoginAgainAll});
             this.menuLoginAgain.Name = "menuLoginAgain";
             this.menuLoginAgain.Size = new System.Drawing.Size(207, 22);
             this.menuLoginAgain.Text = "Try login again";
             this.menuLoginAgain.Click += new System.EventHandler(this.menuLoginAgain_Click);
             // 
-            // copyPassToolStripMenuItem
+            // menuLoginAgainAll
             // 
-            this.copyPassToolStripMenuItem.Name = "copyPassToolStripMenuItem";
-            this.copyPassToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.copyPassToolStripMenuItem.Text = "Copy Pass";
-            this.copyPassToolStripMenuItem.Click += new System.EventHandler(this.copyPassToolStripMenuItem_Click);
+            this.menuLoginAgainAll.Name = "menuLoginAgainAll";
+            this.menuLoginAgainAll.Size = new System.Drawing.Size(88, 22);
+            this.menuLoginAgainAll.Text = "All";
+            this.menuLoginAgainAll.Click += new System.EventHandler(this.menuLoginAgainAll_Click);
             // 
-            // createPageToolStripMenuItem
+            // menuCreatePage
             // 
-            this.createPageToolStripMenuItem.Name = "createPageToolStripMenuItem";
-            this.createPageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.createPageToolStripMenuItem.Text = "Create Page";
-            this.createPageToolStripMenuItem.Click += new System.EventHandler(this.createPageToolStripMenuItem_Click);
+            this.menuCreatePage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuCreatePageAll});
+            this.menuCreatePage.Name = "menuCreatePage";
+            this.menuCreatePage.Size = new System.Drawing.Size(207, 22);
+            this.menuCreatePage.Text = "Create Page";
+            this.menuCreatePage.Click += new System.EventHandler(this.createPageToolStripMenuItem_Click);
+            // 
+            // menuCreatePageAll
+            // 
+            this.menuCreatePageAll.Name = "menuCreatePageAll";
+            this.menuCreatePageAll.Size = new System.Drawing.Size(88, 22);
+            this.menuCreatePageAll.Text = "All";
+            this.menuCreatePageAll.Click += new System.EventHandler(this.menuCreatePageAll_Click);
+            // 
+            // menuFeedPageAccessToken
+            // 
+            this.menuFeedPageAccessToken.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuFeedPageAccessTokenAll});
+            this.menuFeedPageAccessToken.Name = "menuFeedPageAccessToken";
+            this.menuFeedPageAccessToken.Size = new System.Drawing.Size(207, 22);
+            this.menuFeedPageAccessToken.Text = "Feed AccessToken";
+            this.menuFeedPageAccessToken.Click += new System.EventHandler(this.feedAccessTokenToolStripMenuItem_Click);
+            // 
+            // menuFeedPageAccessTokenAll
+            // 
+            this.menuFeedPageAccessTokenAll.Name = "menuFeedPageAccessTokenAll";
+            this.menuFeedPageAccessTokenAll.Size = new System.Drawing.Size(88, 22);
+            this.menuFeedPageAccessTokenAll.Text = "All";
+            this.menuFeedPageAccessTokenAll.Click += new System.EventHandler(this.menuFeedPageAccessTokenAll_Click);
+            // 
+            // menuUpdatePhotoAndCover
+            // 
+            this.menuUpdatePhotoAndCover.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuUpdatePhotoAndCoverAll});
+            this.menuUpdatePhotoAndCover.Name = "menuUpdatePhotoAndCover";
+            this.menuUpdatePhotoAndCover.Size = new System.Drawing.Size(207, 22);
+            this.menuUpdatePhotoAndCover.Text = "Upload Photo and Coiver";
+            this.menuUpdatePhotoAndCover.Click += new System.EventHandler(this.uploadPhotoAndCoiverToolStripMenuItem_Click);
+            // 
+            // menuUpdatePhotoAndCoverAll
+            // 
+            this.menuUpdatePhotoAndCoverAll.Name = "menuUpdatePhotoAndCoverAll";
+            this.menuUpdatePhotoAndCoverAll.Size = new System.Drawing.Size(88, 22);
+            this.menuUpdatePhotoAndCoverAll.Text = "All";
+            this.menuUpdatePhotoAndCoverAll.Click += new System.EventHandler(this.menuUpdatePhotoAndCoverAll_Click);
+            // 
+            // menuCheckLive
+            // 
+            this.menuCheckLive.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuCheckLiveAll});
+            this.menuCheckLive.Name = "menuCheckLive";
+            this.menuCheckLive.Size = new System.Drawing.Size(207, 22);
+            this.menuCheckLive.Text = "Check Live";
+            this.menuCheckLive.Click += new System.EventHandler(this.menuCheckLive_Click);
+            // 
+            // menuCheckLiveAll
+            // 
+            this.menuCheckLiveAll.Name = "menuCheckLiveAll";
+            this.menuCheckLiveAll.Size = new System.Drawing.Size(88, 22);
+            this.menuCheckLiveAll.Text = "All";
+            this.menuCheckLiveAll.Click += new System.EventHandler(this.menuCheckLiveAll_Click);
             // 
             // lblPack
             // 
@@ -233,19 +309,21 @@
             this.txtPackNo.TabIndex = 1;
             this.txtPackNo.SelectedValueChanged += new System.EventHandler(this.txtPackNo_SelectedValueChanged);
             // 
-            // feedAccessTokenToolStripMenuItem
+            // menuReNameToUS
             // 
-            this.feedAccessTokenToolStripMenuItem.Name = "feedAccessTokenToolStripMenuItem";
-            this.feedAccessTokenToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.feedAccessTokenToolStripMenuItem.Text = "Feed AccessToken";
-            this.feedAccessTokenToolStripMenuItem.Click += new System.EventHandler(this.feedAccessTokenToolStripMenuItem_Click);
+            this.menuReNameToUS.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuReNameToUSAll});
+            this.menuReNameToUS.Name = "menuReNameToUS";
+            this.menuReNameToUS.Size = new System.Drawing.Size(207, 22);
+            this.menuReNameToUS.Text = "Rename To US";
+            this.menuReNameToUS.Click += new System.EventHandler(this.menuReNameToUS_Click);
             // 
-            // uploadPhotoAndCoiverToolStripMenuItem
+            // menuReNameToUSAll
             // 
-            this.uploadPhotoAndCoiverToolStripMenuItem.Name = "uploadPhotoAndCoiverToolStripMenuItem";
-            this.uploadPhotoAndCoiverToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.uploadPhotoAndCoiverToolStripMenuItem.Text = "Upload Photo and Coiver";
-            this.uploadPhotoAndCoiverToolStripMenuItem.Click += new System.EventHandler(this.uploadPhotoAndCoiverToolStripMenuItem_Click);
+            this.menuReNameToUSAll.Name = "menuReNameToUSAll";
+            this.menuReNameToUSAll.Size = new System.Drawing.Size(152, 22);
+            this.menuReNameToUSAll.Text = "All";
+            this.menuReNameToUSAll.Click += new System.EventHandler(this.menuReNameToUSAll_Click);
             // 
             // FaceBookManager
             // 
@@ -288,8 +366,16 @@
         private System.Windows.Forms.Button btnUpdateInfo;
         private System.Windows.Forms.CheckBox txtAutoMoveToNextPack;
         private System.Windows.Forms.ToolStripMenuItem copyPassToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createPageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem feedAccessTokenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem uploadPhotoAndCoiverToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuCreatePage;
+        private System.Windows.Forms.ToolStripMenuItem menuFeedPageAccessToken;
+        private System.Windows.Forms.ToolStripMenuItem menuUpdatePhotoAndCover;
+        private System.Windows.Forms.ToolStripMenuItem menuLoginAgainAll;
+        private System.Windows.Forms.ToolStripMenuItem menuCreatePageAll;
+        private System.Windows.Forms.ToolStripMenuItem menuFeedPageAccessTokenAll;
+        private System.Windows.Forms.ToolStripMenuItem menuUpdatePhotoAndCoverAll;
+        private System.Windows.Forms.ToolStripMenuItem menuCheckLive;
+        private System.Windows.Forms.ToolStripMenuItem menuCheckLiveAll;
+        private System.Windows.Forms.ToolStripMenuItem menuReNameToUS;
+        private System.Windows.Forms.ToolStripMenuItem menuReNameToUSAll;
     }
 }

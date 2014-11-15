@@ -13,16 +13,21 @@ using System.Threading.Tasks;
 using FB.App_Controller;
 using System.Collections;
 using System.Diagnostics;
+using System.Web.Script.Serialization;
+using FB.App_UserControl;
+using System.Text.RegularExpressions;
 
 namespace FB.App_Present
 {
     public partial class FaceBookManager : Form
     {
         private bool isBusy = false;
+        Timer t = new Timer();
         public FaceBookManager()
         {
             InitializeComponent();
         }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (!isBusy)
@@ -106,6 +111,226 @@ namespace FB.App_Present
                 }
             }
         }
+        private void menuLoginAgainAll_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    FaceBookController fbController = new FaceBookController();
+                    if (fbController.LoginMobile(model))
+                    {
+                        //gridData[GridMainFormConst.Status, iINdex].Value = "Đăng nhập thành công";
+                    }
+                    else
+                    {
+                        model.FBPackageID = 1;
+                    }
+                });
+                task.Wait();
+            }
+            Global.DBContext.SaveChanges();
+        }
+
+        private void menuCreatePageAll_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void menuFeedPageAccessTokenAll_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void menuUpdatePhotoAndCoverAll_Click(object sender, EventArgs e)
+        {
+            bool bFind = true;
+            while (bFind)
+            {
+                bFind = false;
+                for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+                {
+                    Task task = Task.Factory.StartNew(() =>
+                    {
+                        FaceBookController fbController = new FaceBookController();
+                        FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                        Page page = model.Pages.Where(x => (x.PageData == null || !x.PageData.Contains("\"LUPP\":\"\\/Date("))).FirstOrDefault();
+                        if (page != null)
+                        {
+                            fbController.UpdatePhotoAndCover(page);
+                            bFind = true;
+                        }
+                    });
+                    task.Wait();
+                    if (Global.DBContext.ChangeTracker.HasChanges())
+                    {
+                        Global.DBContext.SaveChanges();
+                    }
+                }
+            }
+            //for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            //{
+            //    Task task = Task.Factory.StartNew(() =>
+            //    {
+            //        FaceBookController fbController = new FaceBookController();
+            //        FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+
+            //        fbController.Like(model, "1420890824837381");
+            //    });
+            //    task.Wait();
+            //}
+
+        }
+
+        private void copyPassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
+                Clipboard.SetText(model.Pass);
+            }
+        }
+
+        private void createPageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    FaceBookController fbController = new FaceBookController();
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    fbController.CreateNewPage(model);
+                    if (Global.DBContext.ChangeTracker.HasChanges()) Global.DBContext.SaveChanges();
+                });
+                System.Threading.Thread.Sleep(5000);
+            }
+        }
+
+        private void feedAccessTokenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    FaceBookController fbController = new FaceBookController();
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    fbController.FeedAccessToken(model);
+                });
+                task.Wait();
+            }
+        }
+
+        private void uploadPhotoAndCoiverToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Task task = Task.Factory.StartNew(() =>
+            {
+                FaceBookController fbController = new FaceBookController();
+                FaceBook model = gridData.Rows[gridData.SelectedCells[0].RowIndex].DataBoundItem as FaceBook;
+                fbController.UpdatePhotoAndCover(model);
+            });
+            task.Wait();
+        }
+
+        private void menuLoginAgain_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
+                FaceBookController fbController = new FaceBookController();
+                if (fbController.LoginMobile(model))
+                {
+                    Global.DBContext.SaveChanges();
+                    gridData[GridMainFormConst.Status, gridData.CurrentCell.RowIndex].Value = "Đăng nhập thành công";
+                }
+                else
+                {
+                    if (MessageBox.Show("Đăng nhập thất bại ! Xóa ?", "", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        Global.DBContext.FaceBook.Remove(model);
+                        Global.DBContext.SaveChanges();
+                        reloadGrid();
+                    }
+                    else
+                    {
+                        gridData[GridMainFormConst.Status, gridData.CurrentCell.RowIndex].Value = "Đăng nhập thất bại";
+                    }
+                }
+            }
+        }
+
+        private void menuCheckLive_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
+                FaceBookController fbController = new FaceBookController();
+                if (fbController.checkFaceBook(model))
+                {
+                    //Global.DBContext.SaveChanges();
+                    gridData[GridMainFormConst.Status, gridData.CurrentCell.RowIndex].Value = "Live";
+                }
+                else
+                {
+                    gridData[GridMainFormConst.Status, gridData.CurrentCell.RowIndex].Value = "Die";
+                }
+            }
+        }
+
+        private void menuCheckLiveAll_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                Task task = Task.Factory.StartNew(() =>
+                {
+                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                    FaceBookController fbController = new FaceBookController();
+                    if (fbController.checkFaceBook(model))
+                    {
+                        //Global.DBContext.SaveChanges();
+                        gridData[GridMainFormConst.Status, iINdex].Value = "Live";
+                    }
+                    else
+                    {
+                        gridData[GridMainFormConst.Status, iINdex].Value = "Die";
+                    }
+                });
+                task.Wait();
+            }
+        }
+
+        private void menuReNameToUS_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
+                FaceBookController fbController = new FaceBookController();
+                fbController.RenameToUS(model);
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
+            }
+        }
+
+        private void menuReNameToUSAll_Click(object sender, EventArgs e)
+        {
+            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
+            {
+                FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
+                FaceBookController fbController = new FaceBookController();
+                fbController.RenameToUS(model);
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
+            }
+        }
+
+        private void menuXoaTK_Click(object sender, EventArgs e)
+        {
+
+        }
 
         private void btnRegFBAccount_Click(object sender, EventArgs e)
         {
@@ -169,93 +394,104 @@ namespace FB.App_Present
             Task.Factory.StartNew(() => updateInfo(false));
         }
 
-        private void menuXoaTK_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void copyPassToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (gridData.Rows.Count > 0)
-            {
-                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
-                Clipboard.SetText(model.Pass);
-            }
-        }
-
-        private void createPageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    FaceBookController fbController = new FaceBookController();
-                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
-                    fbController.CreateNewPage(model);
-                });
-                System.Threading.Thread.Sleep(5000);
-            }
-        }
-
-
-        private void feedAccessTokenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            for (int iINdex = 3; iINdex < gridData.Rows.Count; iINdex++)
-            {
-                Task task = Task.Factory.StartNew(() =>
-                {
-                    FaceBookController fbController = new FaceBookController();
-                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
-                    fbController.FeedAccessToken(model);
-                });
-                task.Wait();
-            }
-        }
-
-        private void uploadPhotoAndCoiverToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            for (int iINdex = 0; iINdex < gridData.Rows.Count; iINdex++)
-            {
-                Task task = Task.Factory.StartNew(() =>
-                {
-                    FaceBookController fbController = new FaceBookController();
-                    FaceBook model = gridData.Rows[iINdex].DataBoundItem as FaceBook;
-                    fbController.UpdatePhotoAndCover(model);
-                });
-                task.Wait();
-            }
-        }
-
-        private void menuLoginAgain_Click(object sender, EventArgs e)
-        {
-            if (gridData.Rows.Count > 0)
-            {
-                FaceBook model = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as FaceBook;
-                FaceBookController fbController = new FaceBookController();
-                if (fbController.LoginMobile(model))
-                {
-                    Global.DBContext.SaveChanges();
-                    gridData[GridMainFormConst.Status, gridData.CurrentCell.RowIndex].Value = "Đăng nhập thành công";
-                }
-                else
-                {
-                    if (MessageBox.Show("Đăng nhập thất bại ! Xóa ?", "", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        Global.DBContext.FaceBook.Remove(model);
-                        Global.DBContext.SaveChanges();
-                        reloadGrid();
-                    }
-                    else
-                    {
-                        gridData[GridMainFormConst.Status, gridData.CurrentCell.RowIndex].Value = "Đăng nhập thất bại";
-                    }
-                }
-            }
-        }
 
         private void FaceBookManager_Load(object sender, EventArgs e)
         {
+            //string str = @"";
+            //foreach(string strLogin in str.Split('\n'))
+            //{
+            //FaceBookController controller = new FaceBookController();
+            //FaceBook model = new FaceBook();
+            //model.Login = strLogin.Trim();
+            //model.Pass = "random8&^";//"S12365hh*";
+
+            //    if (controller.LoginMobile(model))
+            //    {
+            //        model.FBPackageID = 3;
+            //        Global.DBContext.FaceBook.Add(model);
+            //        Global.DBContext.SaveChanges();
+            //    }
+
+            //}
+            //t.Enabled = false;
+            //t.Interval = 2 * 60 * 1000;
+            ////  t.Tick += new EventHandler(t_Tick);
+            //t.Enabled = true;
+            // t.Start();
+            //var facebooks = Global.DBContext.FaceBook.Where(x => x.FBPackageID == 2).ToList();
+            //FaceBookController cl = new FaceBookController();
+
+            //for (int iIndex = 14; iIndex < 30; iIndex++)
+            //{
+            //    cl.Like(facebooks[iIndex], "1507272666189235");
+            //    System.Threading.Thread.Sleep(2000);
+            //}
+
+            //var pages = getPages(2);
+            //FaceBookController cl = new FaceBookController();
+            //List<string> listPost = new List<string>();
+
+            //listPost.Add("331482693689624");
+            //listPost.Add("331841126987114");
+            //listPost.Add("334201940084366");
+            //listPost.Add("334503823387511");
+            //listPost.Add("336957949808765");
+            //listPost.Add("338848622953031");
+            //listPost.Add("340395706131656");
+            //listPost.Add("342703079234252");
+            //listPost.Add("343920365779190");
+            //listPost.Add("346062188898341");
+            //listPost.Add("348187828685777");
+            //listPost.Add("349921741845719");
+            //listPost.Add("351593658345194");
+
+            //int iStart = 3200;
+            //while (listPost.Count > 0)
+            //{
+            //    string strDoWork = listPost[0];
+            //    listPost.RemoveAt(0);
+            //    int iEnd = iStart + (new Random().Next(80, 140));
+            //    for (int iIndex = iStart; iIndex <= iEnd; iIndex++)
+            //    {
+            //        cl.Like(pages[iIndex].AccessToken, strDoWork);
+            //        int iRD = new Random().Next(0, 2);
+            //        if (iRD == 1)
+            //        {
+            //            System.Threading.Thread.Sleep(1000);
+            //            cl.Share(pages[iIndex], strDoWork, "");
+            //        }
+            //        System.Threading.Thread.Sleep(1000);
+            //    }
+            //    iStart = iEnd + 1;
+            //}
+
+
+            //WebClientEx client = new WebClientEx();
+            //List<string> name = new List<string>();
+            //for (int iPage = 1; iPage <= 19; iPage++)
+            //{
+            //    client.DoGet("http://babynames.net/list/last-names-for-first-names-1?page=" + iPage);
+            //    MatchCollection mc = Regex.Matches(client.ResponseText, "result-name[^>]+>(?<val>[^<]+)");
+            //    foreach (Match m in mc)
+            //    {
+            //        name.Add(m.Groups["val"].Value.Trim());
+            //    }
+            //}
+            //string strName = string.Join(",", name.ToArray());
+
             getDataOnload();
+        }
+
+        private List<Page> getPages(int iPackage)
+        {
+            var pages = Global.DBContext.Page.Where(x => x.FaceBook.FBPackageID == iPackage).ToList();
+            return pages;
+        }
+
+        void t_Tick(object sender, EventArgs e)
+        {
+            createPageToolStripMenuItem_Click(null, null);
         }
 
         private void txtPackNo_SelectedValueChanged(object sender, EventArgs e)
@@ -723,14 +959,5 @@ namespace FB.App_Present
         {
 
         }
-
-
-
-
-
-
-
-
-
     }
 }

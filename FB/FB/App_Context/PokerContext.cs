@@ -21,6 +21,7 @@ namespace FB.App_Context
         public DbSet<FBFriend> FBFriend { get; set; }
         public DbSet<StatusData> StatusData { get; set; }
         public DbSet<Page> Page { get; set; }
+        public DbSet<Like> Like { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Database does not pluralize table names

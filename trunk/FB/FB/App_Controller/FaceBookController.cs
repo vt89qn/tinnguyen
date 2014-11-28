@@ -872,6 +872,206 @@ namespace FB.App_Controller
             return null;
         }
 
+        public FaceBook RegFBWeb()
+        {
+            FaceBook model = null;
+            FBExtraData extraData = new FBExtraData();
+
+            WebClientEx client = new WebClientEx();
+            NameValueCollection param = new NameValueCollection();
+            client.DoGet("https://m.facebook.com/r.php?loc=bottom&refid=8");
+            if (client.Error == null)
+            {
+                model = new FaceBook();
+                model.Pass = new List<string>() { "0123", "0124", "0125", "0126", "0127", "098", "097", "096", "094", "092" }[new Random().Next(0, 10)] + new Random().Next(1000000, 9999999).ToString();
+                string name = Utilities.GetMaleName(true);
+                param = new NameValueCollection();
+                param.Add("lsd", Utilities.GetRegexString(client.ResponseText, "lsd", 1));
+                param.Add("charset_test", "€,´,€,´,水,Д,Є");
+                param.Add("reg_instance", Utilities.GetRegexString(client.ResponseText, "reg_instance", 1));
+                param.Add("cred_label", "email_or_phone");
+                param.Add("submission_request", "true");
+                param.Add("lastname", name.Split(' ')[0]);
+                param.Add("firstname", name.Split(' ')[1]);
+                param.Add("email", model.Pass);
+                param.Add("gender", new Random().Next(1, 3).ToString());
+                System.Threading.Thread.Sleep(12);
+                param.Add("day", new Random().Next(01, 28).ToString("00"));
+                System.Threading.Thread.Sleep(12);
+                param.Add("month", new Random().Next(01, 12).ToString("00"));
+                System.Threading.Thread.Sleep(12);
+                param.Add("year", new Random().Next(1980, 1990).ToString());
+                param.Add("pass", model.Pass);
+                param.Add("submit", "Đăng ký");
+                System.Threading.Thread.Sleep(5000);
+                client.DoPost(param, "https://m.facebook.com/r.php");
+                if (client.Response.ResponseUri.AbsolutePath.Contains("confirmemail.php"))
+                {
+                    System.Threading.Thread.Sleep(5000);
+                    client.DoGet("https://m.facebook.com/changeemail?");
+                    if (client != null)
+                    {
+                        param = new NameValueCollection();
+                        string USER_ID = Utilities.GetRegexString(client.ResponseText, "USER_ID", 2);
+                        param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
+                        param.Add("charset_test", "€,´,€,´,水,Д,Є");
+                        param.Add("old_email", "+84" + model.Pass.Substring(1));
+                        param.Add("reg_instance", Utilities.GetRegexString(client.ResponseText, "reg_instance", 1));
+                        param.Add("new", USER_ID + "@tinphuong.com");
+                        param.Add("submit", "Thay đổi");
+                        //param.Add("__req", "a");
+                        param.Add("__ajax__", "true");
+                        param.Add("__user", USER_ID);
+                        System.Threading.Thread.Sleep(5000);
+                        client.DoPost(param, "https://m.facebook.com/setemail");
+                        client.DoGet("https://m.facebook.com/confirmemail.php?email_changed&__user=" + USER_ID + "&__req=b&__ajax__=true");
+                        string strCode = Utilities.GetConfirmCode(param["new"]);
+
+                        param = new NameValueCollection();
+                        param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "token", 2));
+                        param.Add("charset_test", "€,´,€,´,水,Д,Є");
+                        param.Add("c", strCode);
+                        param.Add("submit", "Chấp nhận");
+                        //param.Add("__req", "g");
+                        param.Add("__ajax__", "true");
+                        param.Add("__user", USER_ID);
+
+                        client.DoPost(param, "https://m.facebook.com/confirmemail.php");
+                        client.DoGet("https://m.facebook.com/home.php?confirmed_account");
+                        System.Threading.Thread.Sleep(3000);
+                        client.DoGet("https://www.facebook.com/ajax/settings/account/password.php?__user=" + USER_ID + "&__a=1&__req=v");
+
+                        param = new NameValueCollection();
+
+                        param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "token", 2));
+                        param.Add("password_strength", "2");
+                        param.Add("password_old", model.Pass);
+                        param.Add("password_new", USER_ID);
+                        param.Add("password_confirm", USER_ID);
+                        param.Add("__user", USER_ID);
+                        param.Add("__a", "1");
+                        //param.Add("__req", "6");
+                        //param.Add("ttstamp","26581721109510410766839049103");
+                        //param.Add("__rev	1512134
+                        System.Threading.Thread.Sleep(5000);
+                        client.DoPost(param, "https://www.facebook.com/ajax/settings/account/password.php");
+                        model.Pass = USER_ID;
+                        model.Login = USER_ID;
+                        model.FBID = USER_ID;
+                        if (LoginMobile(model, client))
+                        {
+                            client = new WebClientEx();
+                            client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+                            client.SetCookieV2 = false;
+                            Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                            client.Authorization = dicData["access_token"].ToString();
+                            string hash_id = Utilities.GetMd5Hash(DateTime.Now.Ticks.ToString());
+                            hash_id = hash_id.Substring(0, 8) + "-" + hash_id.Substring(8, 4) + "-" + hash_id.Substring(12, 4) + "-" + hash_id.Substring(16, 4) + "-" + hash_id.Substring(20, 12);
+                            #region - Upload profile picture -
+                            if (Global.ListProfilePhotoLink.Count > 0)
+                            {
+                                string id = UploadPhoto(client.Authorization, Global.ListProfilePhotoLink[0]);
+                                Global.ListProfilePhotoLink.RemoveAt(0);
+                                if (!string.IsNullOrEmpty(id))
+                                {
+                                    param = new NameValueCollection();
+
+                                    param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                                 + "&scaled_crop_rect=%7B%22y%22%3A0%2C%22height%22%3A1%2C%22width%22%3A1%2C%22x%22%3A0%7D&locale=vi_VN&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                                 + "\"relative_url\":\"" + model.FBID + "/picture/" + id + "\"}]");
+                                    param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                                    client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=vi_VN&client_country_code=VN");
+                                    extraData.LastUpdateProfilePhoto = DateTime.Now;
+                                }
+                            }
+                            #endregion
+                            param = new NameValueCollection();
+                            param.Add("format", "JSON");
+                            param.Add("nux_id", "ANDROID_NEW_ACCOUNT_WIZARD");
+                            param.Add("step", "upload_profile_pic");
+                            param.Add("status", "COMPLETE");
+                            param.Add("extra_data", "{}");
+                            param.Add("locale", "vi_VN");
+                            param.Add("client_country_code", "VN");
+                            param.Add("method", "user.updateNuxStatus");
+                            param.Add("fb_api_req_friendly_name", "updateNuxStatus");
+                            param.Add("fb_api_caller_class", "com.facebook.nux.status.UpdateNuxStatusMethod");
+                            System.Threading.Thread.Sleep(1000);
+                            client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
+
+                            #region - Update work and class info -
+                            param = new NameValueCollection();
+                            param.Add("work", ("[{'id':'" + Utilities.GetProfileInfo(4) + "','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android'}]").Replace("'", "\""));
+                            param.Add("education", ("[{'id':'" + Utilities.GetProfileInfo(3) + "','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android','type':'College'},{'id':'" + Utilities.GetProfileInfo(2) + "','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android','type':'High School'}]").Replace("'", "\""));
+                            param.Add("location", "{'id':'108458769184495','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android'}".Replace("'", "\""));
+                            param.Add("hometown", "{'id':'108458769184495','privacy':'{\\'value\\':\\'EVERYONE\\'}','ref':'nux_android'}".Replace("'", "\""));
+                            param.Add("locale", "vi_VN");
+                            param.Add("client_country_code", "VN");
+                            param.Add("fb_api_req_friendly_name", "save_core_profile_info");
+                            client.DoPost(param, "https://graph.facebook.com/me");
+                            extraData.UpdatedProfileInfo = true;
+                            #endregion
+                            param = new NameValueCollection();
+                            param.Add("format", "JSON");
+                            param.Add("nux_id", "ANDROID_NEW_ACCOUNT_WIZARD");
+                            param.Add("step", "classmates_coworkers");
+                            param.Add("status", "COMPLETE");
+                            param.Add("extra_data", "{}");
+                            param.Add("locale", "vi_VN");
+                            param.Add("client_country_code", "VN");
+                            param.Add("method", "user.updateNuxStatus");
+                            param.Add("fb_api_req_friendly_name", "updateNuxStatus");
+                            param.Add("fb_api_caller_class", "com.facebook.nux.status.UpdateNuxStatusMethod");
+                            System.Threading.Thread.Sleep(1000);
+                            client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
+                            if (client.ResponseText.ToLower().Trim() != "true") return null;
+                            param = new NameValueCollection();
+                            param.Add("format", "JSON");
+                            param.Add("nux_id", "ANDROID_NEW_ACCOUNT_WIZARD");
+                            param.Add("step", "contact_importer");
+                            param.Add("status", "COMPLETE");
+                            param.Add("extra_data", "{}");
+                            param.Add("locale", "vi_VN");
+                            param.Add("client_country_code", "VN");
+                            param.Add("method", "user.updateNuxStatus");
+                            param.Add("fb_api_req_friendly_name", "updateNuxStatus");
+                            param.Add("fb_api_caller_class", "com.facebook.nux.status.UpdateNuxStatusMethod");
+                            System.Threading.Thread.Sleep(1000);
+                            client.DoPost(param, "https://api.facebook.com/method/user.updateNuxStatus");
+
+                            #region - update cover photo -
+                            if (Global.LisCoverPhotoLink.Count > 0)
+                            {
+                                string id = UploadPhoto(client.Authorization, Global.LisCoverPhotoLink[Global.LisCoverPhotoLink.Count - 1]);
+                                Global.LisCoverPhotoLink.RemoveAt(Global.LisCoverPhotoLink.Count - 1);
+
+                                if (!string.IsNullOrEmpty(id))
+                                {
+                                    param = new NameValueCollection();
+                                    param.Add("batch", "[{\"method\":\"POST\",\"body\":\"qn=" + hash_id
+                                     + "&photo=" + id + "&focus_y=0&locale=vi_VN&client_country_code=VN&fb_api_req_friendly_name=publish-photo\",\"name\":\"publish\",\"omit_response_on_success\":false,"
+                                     + "\"relative_url\":\"" + model.FBID + "/cover\"}]");
+                                    param.Add("fb_api_caller_class", "com.facebook.photos.upload.protocol.PhotoPublisher");
+                                    client.DoPost(param, "https://graph.facebook.com/?include_headers=false&locale=vi_VN&client_country_code=VN");
+                                    extraData.LastUpdateCoverPhoto = DateTime.Now;
+                                }
+                            }
+                            #endregion
+                            //Like(model, "639987956113732");
+                            Debug.WriteLine("-- SetExtraData --");
+                            SetExtraData(model, extraData);
+                            Debug.WriteLine("-- End INNER Reg --");
+                            return model;
+                        }
+
+
+                    }
+                }
+            }
+
+            return null;
+        }
+
         public bool PostStatus(FaceBook model)
         {
             try
@@ -1080,7 +1280,7 @@ namespace FB.App_Controller
                 clientEx.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
                 clientEx.Authorization = page.AccessToken;
                 NameValueCollection param = new NameValueCollection();
-                
+
                 param.Add("batch", ("[{'method':'POST','body':'message=" + strMessage + "&nectar_module=pages_identity_ufi&composer_session_id=" + hash_id + "&qn=" + hash_id + "&idempotence_token=" + hash_id + "&audience_exp=true&attach_place_suggestion=true&format=json&id=" + id + "&to=" + page.PageID + "&fb_api_req_friendly_name=graphObjectShare','name':'graphObjectShares','omit_response_on_success':false,'relative_url':'sharedposts'}]").Replace("'", "\""));
                 param.Add("fb_api_caller_class", "com.facebook.composer.publish.ComposerPublishServiceHandler");
                 clientEx.DoPost(param, "https://graph.facebook.com/?include_headers=false&decode_body_json=false&streamable_json_response=true&locale=vi_VN&client_country_code=VN");

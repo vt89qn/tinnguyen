@@ -585,7 +585,7 @@ Yên Sơn";
             {
 
                 Pop3Client pop3 = new Pop3Client();
-                pop3.Connect("vuathuthanh.net", 110, false);
+                pop3.Connect("tinphuong.com", 110, false);
                 if (strEmail.Contains("vuathuthanh.net"))
                 {
                     pop3.Authenticate("mail@vuathuthanh.net", "uxBa2@05");
@@ -659,6 +659,28 @@ Yên Sơn";
                 }
             }
             return strCode;
+        }
+
+        /// <summary>
+        /// 1 : name="key" value="value"
+        /// 2 : "name":"key"
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <param name="iType"></param>
+        /// <returns></returns>
+        public static string GetRegexString(string input,string key, int iType)
+        {
+            string value = string.Empty;
+            if (iType == 1)
+            {
+                value = Regex.Match(input, "name=(\"|')" + key + "(\"|') value=(\"|')(?<val>[^'\"]+)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+            }
+            else if (iType == 2)
+            {
+                value = Regex.Match(input, "(\\\\|)(\"|')" + key + "(\\\\|)(\"|')([\\s]+|):([\\s]+|)(\\\\|)(\"|')(?<val>[^'\"\\\\]+)(\\\\|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+            }
+            return value;
         }
         #endregion
     }

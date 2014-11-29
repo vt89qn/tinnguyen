@@ -38,6 +38,7 @@
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
+            this.btnCapNhatNgaySinh = new System.Windows.Forms.Button();
             this.btnKetBan = new System.Windows.Forms.Button();
             this.btnKiemTraTaiKhoan = new System.Windows.Forms.Button();
             this.btnThemTaiKhoan = new System.Windows.Forms.Button();
@@ -45,7 +46,6 @@
             this.btnCheckWeb = new System.Windows.Forms.Button();
             this.btnNhanChipMayMan = new System.Windows.Forms.Button();
             this.btnCheckMobile = new System.Windows.Forms.Button();
-            this.btnCapNhatNgaySinh = new System.Windows.Forms.Button();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -142,6 +142,17 @@
             this.btnThemPack.UseVisualStyleBackColor = true;
             this.btnThemPack.Click += new System.EventHandler(this.btnThemPack_Click);
             // 
+            // btnCapNhatNgaySinh
+            // 
+            this.btnCapNhatNgaySinh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCapNhatNgaySinh.Location = new System.Drawing.Point(657, 23);
+            this.btnCapNhatNgaySinh.Name = "btnCapNhatNgaySinh";
+            this.btnCapNhatNgaySinh.Size = new System.Drawing.Size(100, 30);
+            this.btnCapNhatNgaySinh.TabIndex = 5;
+            this.btnCapNhatNgaySinh.Text = "Lấy Ngày Sinh";
+            this.btnCapNhatNgaySinh.UseVisualStyleBackColor = true;
+            this.btnCapNhatNgaySinh.Click += new System.EventHandler(this.btnCapNhatNgaySinh_Click);
+            // 
             // btnKetBan
             // 
             this.btnKetBan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -201,7 +212,6 @@
             // 
             // btnNhanChipMayMan
             // 
-            this.btnNhanChipMayMan.Enabled = false;
             this.btnNhanChipMayMan.Location = new System.Drawing.Point(519, 19);
             this.btnNhanChipMayMan.Name = "btnNhanChipMayMan";
             this.btnNhanChipMayMan.Size = new System.Drawing.Size(100, 30);
@@ -219,17 +229,6 @@
             this.btnCheckMobile.Text = "Mobile(F1)";
             this.btnCheckMobile.UseVisualStyleBackColor = true;
             this.btnCheckMobile.Click += new System.EventHandler(this.btnCheckMobile_Click);
-            // 
-            // btnCapNhatNgaySinh
-            // 
-            this.btnCapNhatNgaySinh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCapNhatNgaySinh.Location = new System.Drawing.Point(657, 23);
-            this.btnCapNhatNgaySinh.Name = "btnCapNhatNgaySinh";
-            this.btnCapNhatNgaySinh.Size = new System.Drawing.Size(100, 30);
-            this.btnCapNhatNgaySinh.TabIndex = 5;
-            this.btnCapNhatNgaySinh.Text = "Lấy Ngày Sinh";
-            this.btnCapNhatNgaySinh.UseVisualStyleBackColor = true;
-            this.btnCapNhatNgaySinh.Click += new System.EventHandler(this.btnCapNhatNgaySinh_Click);
             // 
             // MainForm
             // 

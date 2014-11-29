@@ -9,5 +9,6 @@ namespace PokerTexas.App_Common
     public static class Global
     {
         public static PokerContext DBContext = new PokerContext();
+        public static string strLink = string.Empty;
     }
 }

@@ -872,6 +872,109 @@ namespace FB.App_Controller
             return null;
         }
 
+        public FaceBook CheckAccount(FaceBook model)
+        {
+            if (LoginMobile(model))
+            {
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                if (dicData != null && dicData.ContainsKey("session_cookies"))
+                {
+                    WebClientEx client = new WebClientEx();
+                    client.CookieContainer = new CookieContainer();
+                    foreach (Dictionary<string, object> dicCookie in dicData["session_cookies"] as ArrayList)
+                    {
+                        client.CookieContainer.Add(new Cookie(dicCookie["name"].ToString(), dicCookie["value"].ToString()
+                            , dicCookie["path"].ToString(), dicCookie["domain"].ToString()));
+                    }
+                    client.DoGet("https://www.facebook.com/settings");
+                    NameValueCollection param = new NameValueCollection();
+                    string USER_ID = Utilities.GetRegexString(client.ResponseText, "USER_ID", 2);
+                    #region - Change pass -
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoGet("https://www.facebook.com/ajax/settings/account/password.php?__user=" + USER_ID + "&__a=1&__req=v");
+
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "token", 2));
+                    param.Add("password_strength", "2");
+                    param.Add("password_old", model.Pass);
+                    param.Add("password_new", USER_ID);
+                    param.Add("password_confirm", USER_ID);
+                    param.Add("__user", USER_ID);
+                    param.Add("__a", "1");
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoPost(param, "https://www.facebook.com/ajax/settings/account/password.php");
+
+                    model.Login = USER_ID;
+                    model.Pass = USER_ID;
+                    #endregion
+
+                    #region - Change Email -
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoGet("https://www.facebook.com/ajax/settings/account/email.php?__user=" + USER_ID + "&__a=1&__req=v");
+                    string primary_email = WebUtility.HtmlDecode(Utilities.GetRegexString(client.ResponseText, "primary_email", 1));
+                    string fb_dtsg = Utilities.GetRegexString(client.ResponseText, "token", 2);
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", fb_dtsg);
+                    param.Add("primary_email", primary_email);
+                    param.Add("new_email", USER_ID + "@tinphuong.com");
+                    param.Add("__user", USER_ID);
+                    param.Add("__a", "1");
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoPost(param, "https://www.facebook.com/ajax/settings/account/email.php");
+                    string strCode = Utilities.GetConfirmCode(param["new_email"]);
+                    client.DoGet("https://m.facebook.com/entercode.php");
+
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
+                    param.Add("charset_test", "€,´,€,´,水,Д,Є");
+                    param.Add("code", strCode);
+                    param.Add("submit", "Chấp nhận");
+                    param.Add("__ajax__", "true");
+                    param.Add("__user", USER_ID);
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoPost(param, "https://m.facebook.com/entercode.php?step=validate");
+
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", fb_dtsg);
+                    param.Add("primary_email", USER_ID + "@tinphuong.com");
+                    //param.Add("remove_emails[0]", primary_email);
+                    param.Add("new_email", "");
+                    param.Add("__user", USER_ID);
+                    param.Add("__a", "1");
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoPost(param, "https://www.facebook.com/ajax/settings/account/email.php");
+
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", fb_dtsg);
+                    param.Add("primary_email", USER_ID + "@tinphuong.com");
+                    param.Add("remove_emails[0]", primary_email);
+                    param.Add("new_email", "");
+                    param.Add("__user", USER_ID);
+                    param.Add("__a", "1");
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoPost(param, "https://www.facebook.com/ajax/settings/account/email.php");
+                    #endregion
+
+                    #region - Remove phone number -
+                    System.Threading.Thread.Sleep(1000);
+                    client.DoGet("https://www.facebook.com/settings?tab=mobile");
+                    string strPhone = Utilities.GetRegexString(client.ResponseText, "phoneNumber", 2);
+                    if (!string.IsNullOrEmpty(strPhone))
+                    {
+                        param = new NameValueCollection();
+                        param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
+                        param.Add("profile_id", USER_ID);
+                        param.Add("__user", USER_ID);
+                        param.Add("__a", "1");
+                        param.Add("phone_number", strPhone);
+                        client.DoPost(param, "https://www.facebook.com/ajax/settings/mobile/delete_phone.php");
+                    }
+                    #endregion
+                }
+            }
+            return null;
+        }
+
         public FaceBook RegFBWeb()
         {
             FaceBook model = null;

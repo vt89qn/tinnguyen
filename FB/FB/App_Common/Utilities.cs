@@ -601,7 +601,12 @@ Yên Sơn";
                     if (message.Headers.To[0].MailAddress.Address == strEmail)
                     {
                         var strBody = message.MessagePart.MessageParts[0].BodyEncoding.GetString(message.MessagePart.MessageParts[0].Body);
-                        string code = Regex.Match(strBody, @"&code=(?<val>[0-9]+)&").Groups["val"].Value;
+                        string code = Regex.Match(strBody, @"(&code|\?c)=(?<val>[0-9]+)&").Groups["val"].Value;
+                        if (string.IsNullOrEmpty(code) && message.MessagePart.MessageParts.Count > 1)
+                        {
+                            var strhtmlbody = message.MessagePart.MessageParts[1].GetBodyAsText();
+                            code = Regex.Match(strhtmlbody, @"confirmcontact\.php\?c=(?<val>[0-9]+)&").Groups["val"].Value;
+                        }
                         if (!string.IsNullOrEmpty(code))
                         {
 
@@ -674,11 +679,11 @@ Yên Sơn";
             string value = string.Empty;
             if (iType == 1)
             {
-                value = Regex.Match(input, "name=(\"|')" + key + "(\"|') value=(\"|')(?<val>[^'\"]+)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+                value = Regex.Match(input, "name=([\\\\]+|)(\"|')" + key + "([\\\\]+|)(\"|') value=([\\\\]+|)(\"|')(?<val>[^'\"\\\\]+)([\\\\]+|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
             }
             else if (iType == 2)
             {
-                value = Regex.Match(input, "(\\\\|)(\"|')" + key + "(\\\\|)(\"|')([\\s]+|):([\\s]+|)(\\\\|)(\"|')(?<val>[^'\"\\\\]+)(\\\\|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+                value = Regex.Match(input, "([\\\\]+|)(\"|')" + key + "([\\\\]+|)(\"|')([\\s]+|):([\\s]+|)([\\\\]+|)(\"|')(?<val>[^'\"\\\\]+)([\\\\]+|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
             }
             return value;
         }

@@ -528,6 +528,28 @@ Yên Sơn";
             //strName = strName.Replace(strName[2], strName[strName.Length - 4]);
             return strName;
         }
+
+        /// <summary>
+        /// 1 : name="key" value="value"
+        /// 2 : "name":"key"
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="key"></param>
+        /// <param name="iType"></param>
+        /// <returns></returns>
+        public static string GetRegexString(string input, string key, int iType)
+        {
+            string value = string.Empty;
+            if (iType == 1)
+            {
+                value = Regex.Match(input, "name=(\"|')" + key + "(\"|') value=(\"|')(?<val>[^'\"]+)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+            }
+            else if (iType == 2)
+            {
+                value = Regex.Match(input, "(\\\\|)(\"|')" + key + "(\\\\|)(\"|')([\\s]+|):([\\s]+|)(\\\\|)(\"|')(?<val>[^'\"\\\\]+)(\\\\|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+            }
+            return value;
+        }
         #endregion
     }
 }

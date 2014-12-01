@@ -52,7 +52,6 @@ namespace PokerTexas.App_Controller
                     && client.ResponseText.Contains("access_token"))
                 {
                     model.MBLoginText = client.ResponseText;
-                    model.MBCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
 
                     Dictionary<string, object> rs = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
                     if (rs.ContainsKey("uid"))

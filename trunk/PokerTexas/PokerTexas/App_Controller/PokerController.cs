@@ -45,7 +45,7 @@ namespace PokerTexas.App_Controller
         private decimal money = 0;
         private decimal earnToday = 0;
         private decimal oldMoney = 0;
-        private bool bWebLogedIn = false;
+        public bool bWebLogedIn = false;
         private bool bTryLogin = false;
         private bool bMBLogedIn = false;
         private bool bTryMBLogin = false;
@@ -487,7 +487,39 @@ namespace PokerTexas.App_Controller
             return strReturn;
         }
 
+        public void LoginWebAppCache()
+        {
+            try
+            {
+                this.Status = "Bắt đầu Authen Facebook";
+                WebClientEx client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+                NameValueCollection param = new NameValueCollection();
+                if (!string.IsNullOrEmpty(Models.MBLoginText))
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Status = "Có lỗi trong quá trình Authen Facebook";
+                throw ex;
+            }
+        }
+
         public void LoginWebApp()
+        {
+            if (DateTime.Today.Date == new DateTime(2014, 12, 01).Date)
+            {
+                LoginWebApp("https://apps.facebook.com/vntexas/?by_ref=27&by_langtype=13&by_mid=22666800&by_time=1417402559&by_sig=07e2e8ec4c2af82de1895c2139567f9e", true);
+            }
+            else
+            {
+                LoginWebApp("https://apps.facebook.com/vntexas/?by_ref=27&by_langtype=13&by_mid=22666800&by_time=1417402559&by_sig=07e2e8ec4c2af82de1895c2139567f9e", false);
+            }
+        }
+
+        public void LoginWebApp(string strLinkLogin, bool bForceLogin)
         {
             try
             {
@@ -496,106 +528,56 @@ namespace PokerTexas.App_Controller
                 WebClientEx client = new WebClientEx();
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 NameValueCollection param = new NameValueCollection();
-                int iCheck = 0;
-            //Check FaceBook Cookie
-            FCheckFaceBook: ;
-                if (iCheck > 3)
+                if (!bForceLogin)
                 {
-                    this.Status = "KHÔNG thể Authen Facebook";
-                    return;
-                }
-                if (string.IsNullOrEmpty(Models.WebAccessToken))
-                {
-                    client.CookieContainer = new CookieContainer();
-                    Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
-                    foreach (Dictionary<string, object> dicCookie in dicData["session_cookies"] as ArrayList)
-                    {
-                        client.CookieContainer.Add(new Cookie(dicCookie["name"].ToString(), dicCookie["value"].ToString()
-                            , dicCookie["path"].ToString(), dicCookie["domain"].ToString()));
-                    }
-                    //client.DoGet(new FaceBookController().GetFaceBookLoginURL(Models.FaceBook, "https://apps.facebook.com/vntexas/"));
-                    client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
-                    if (client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
-                    { //Not Authen
-                        client.DoGet("https://www.facebook.com/dialog/oauth?app_id=373853122704634&client_id=373853122704634&display=popup&domain=httpvntexas01.boyaagame.com&e2e=%7B%7D&locale=en_US&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df280fb8f8c%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dopener%26frame%3Df4fe2ecf8&response_type=token%2Csigned_request&scope=email%2Cpublish_stream%2Cpublish_actions&sdk=joey");
-                        param = new NameValueCollection();
-                        param.Add("fb_dtsg", Regex.Match(client.ResponseText, "\"token\":\"(?<val>[^\"]+)\"").Groups["val"].Value);
-                        param.Add("app_id", "373853122704634");
-                        param.Add("redirect_uri", "https://s-static.ak.facebook.com/connect/xd_arbiter/2_ZudbRXWRs.js?version=41#cb=fd8ff7f8&domain=httpvntexas01.boyaagame.com&origin=https%3A%2F%2Fhttpvntexas01.boyaagame.com%2Ff347970a&relation=opener&frame=f1bc1da8dc");
-                        param.Add("display", "popup");
-                        param.Add("sdk", "joey");
-                        param.Add("from_post", "1");
-                        //param.Add("e2e","{"submit_0":1413963128018}");
-                        param.Add("audience[0][value]", "10");
-                        param.Add("GdpEmailBucket_grantEmailType", "contact_email");
-                        param.Add("readwrite", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
-                        param.Add("gdp_version", "2.5");
-                        param.Add("seen_scopes", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
-                        param.Add("ref", "Default");
-                        param.Add("return_format", "signed_request,access_token,base_domain");
-                        param.Add("domain", "httpvntexas01.boyaagame.com");
-                        param.Add("__CONFIRM__", "1");
-                        param.Add("__user", Models.FaceBook.FBID.ToString());
-                        param.Add("__a", "1");
-                        //param.Add("__dyn", Utilities.GetMd5Hash(DateTime.Now.ToString()));
-                        param.Add("__req", "1");
-                        param.Add("locale", "en_US");
-                        //param.Add("ttstamp", "26581701108110484891155585122");
-                        param.Add("__rev", "1464406");
-                        client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
-                        client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
-                    }
-                    if (client.Response.ResponseUri.AbsoluteUri.Contains("signed_request"))
-                    {
-                        Models.WebAccessToken = Regex.Match(client.Response.ResponseUri.AbsoluteUri, "signed_request=(?<val>[^&]+)").Groups["val"].Value;
-                    }
-                    else
-                    {
-                        this.Status = "Kiểm tra lại tài khoản facebook này";
-                    }
-                }
-                if (!string.IsNullOrEmpty(Models.WebAccessToken))
-                {
-                    client.CookieContainer.Add(new Cookie("fbm_373853122704634", "base_domain=.boyaagame.com", "/", "httpvntexas01.boyaagame.com"));
-                    client.CookieContainer.Add(new Cookie("fbsr_373853122704634", Models.WebAccessToken, "/", "httpvntexas01.boyaagame.com"));
-                    client.CookieContainer.Add(new Cookie("fbm_179106755472856", "base_domain=.httpvntexas01.boyaagame.com", "/", "httpvntexas01.boyaagame.com"));
-
-                    client.DoGet("https://httpvntexas01.boyaagame.com/");
-                    Models.WebAccessToken = Regex.Match(client.ResponseText, "name=\"signed_request\" value=\"(?<val>[^\"]+)").Groups["val"].Value;
-                    if (string.IsNullOrEmpty(Models.WebAccessToken))
-                    {
-                        iCheck++;
-                        goto FCheckFaceBook;
-                    }
-                    else
-                    {
-                        param = new NameValueCollection();
-                        param.Add("signed_request", Models.WebAccessToken);
-
-                        Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
-                        dicHeader.Add(HttpRequestHeader.Referer, "https://httpvntexas01.boyaagame.com/");
-                        client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/?_hd=1&token=&sign=", dicHeader);
-                        if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("apik"))
+                    if (!string.IsNullOrEmpty(Models.MBLoginText))
+                    { //Check Logged-in
+                        object objCookie = Utilities.ConvertBlobToObject(Models.WebCookie);
+                        if (objCookie is CookieContainer)
                         {
-                            //client.CookieContainer.Add(new Cookie("_apik", Regex.Match(Models.WebLoginText, @"apik:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim(), "/", "httpvntexas01.boyaagame.com"));
-                            //client.CookieContainer.Add(new Cookie("locale22666811", "1", "/", "httpvntexas01.boyaagame.com"));
-
-                            //client.DoGet("https://httpvntexas01.boyaagame.com/texas/facebookvn/");
-
-                            Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
-                            Models.WebLoginText = client.ResponseText;
-                            Global.DBContext.SaveChanges();
-                            //KyTen();
-                            bWebLogedIn = true;
-                        }
-                        else
-                        {
-                            Models.WebAccessToken = string.Empty;
-                            iCheck++;
-                            goto FCheckFaceBook;
+                            client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+                            string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                            string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                            string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                            client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + sid
+                                + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
+                            if (client.ResponseText.Contains("\"ok\":1"))
+                            {
+                                bWebLogedIn = true;
+                                this.Status = "Authen Facebook Thành Công";
+                                return;
+                            }
                         }
                     }
                 }
+                client.CookieContainer = new CookieContainer();
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
+                foreach (Dictionary<string, object> dicCookie in dicData["session_cookies"] as ArrayList)
+                {
+                    client.CookieContainer.Add(new Cookie(dicCookie["name"].ToString(), dicCookie["value"].ToString()
+                        , dicCookie["path"].ToString(), dicCookie["domain"].ToString()));
+                }
+                client.DoGet(strLinkLogin);
+                if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("signed_request"))
+                {
+                    Models.WebAccessToken = Utilities.GetRegexString(client.ResponseText, "signed_request", 1);
+                    param = new NameValueCollection();
+                    param.Add("signed_request", Models.WebAccessToken);
+
+                    Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
+                    dicHeader.Add(HttpRequestHeader.Referer, strLinkLogin);
+                    string strLinkPost = strLinkLogin.Substring(strLinkLogin.IndexOf("?"));
+                    client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
+                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("apik"))
+                    {
+                        Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
+                        Models.WebLoginText = client.ResponseText;
+                        bWebLogedIn = true;
+                        this.Status = "Authen Facebook Thành Công";
+                        return;
+                    }
+                }
+                this.Status = "Kiểm tra lại tài khoản facebook này";
             }
             catch (Exception ex)
             {
@@ -610,11 +592,6 @@ namespace PokerTexas.App_Controller
             try
             {
                 this.Status = "Bắt đầu chia sẻ chip may mắn";
-                if (!bWebLogedIn)
-                {
-                    if (!bTryLogin) LoginWebApp();
-                }
-                NhanChipMayMan(null);
                 if (!bWebLogedIn) return string.Empty;
 
                 string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
@@ -635,13 +612,12 @@ namespace PokerTexas.App_Controller
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
                 Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
-                dicHeader.Add(HttpRequestHeader.Referer, "https://httpvntexas01.boyaagame.com/texas/facebookvn/?_hd=1&token=&sign=");
+                dicHeader.Add(HttpRequestHeader.Referer, "https://httpvntexas01.boyaagame.com/texas/facebookvn/");
                 client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/api/facebook/ui.php", dicHeader);
                 if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("properties") && client.ResponseText.Contains("href"))
                 {
                     Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
                     href = ((dicInfo["properties"] as ArrayList)[0] as Dictionary<string, object>)["href"].ToString();
-
                 }
                 System.Threading.Thread.Sleep(2000);
                 param.Add("flag", "1");
@@ -657,31 +633,84 @@ namespace PokerTexas.App_Controller
             return href;
         }
 
+        public void RutFanChip(string strLink)
+        {
+            try
+            {
+                this.Status = "Bắt đầu nhận fan chip";
+                NameValueCollection param = new NameValueCollection();
+                WebClientEx client = new WebClientEx();
+                Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
+                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+                client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+
+                //client.DoGet(strLink);
+                //Models.WebAccessToken = Regex.Match(client.ResponseText, "name=\"signed_request\" value=\"(?<val>[^\"]+)").Groups["val"].Value;
+
+                //param = new NameValueCollection();
+                //param.Add("signed_request", Models.WebAccessToken);
+
+                //dicHeader = new Dictionary<HttpRequestHeader, string>();
+                //dicHeader.Add(HttpRequestHeader.Referer, strLink);
+                //string strLinkPost = strLink.Substring(strLink.IndexOf("?"));
+                //client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
+
+                //Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
+                //Models.WebLoginText = client.ResponseText;
+
+                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                string loginkey = Regex.Match(Models.WebLoginText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+
+                param = new NameValueCollection();
+                param.Add("by_ref", "77");
+                string strRegex = Regex.Match(strLink, "sn=(?<val>[0-9a-zA-Z]+)").Groups["val"].Value.Trim();
+                param.Add("sn", strRegex);
+                param.Add("loginkey", loginkey);
+                param.Add("act", "1003");
+                param.Add("mid", mid);
+                param.Add("sid", "110");
+                param.Add("mtkey", mtkey);
+                param.Add("sitemid", Models.FaceBook.FBID);
+                param.Add("langtype", "13");
+
+                dicHeader = new Dictionary<HttpRequestHeader, string>();
+                dicHeader.Add(HttpRequestHeader.Referer, strLink.Replace("apps.facebook.com/vntexas", "httpvntexas01.boyaagame.com/texas/facebookvn"));
+                client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/api/facebook/rest.php", dicHeader);
+                this.Status = "nhận fan chip thành công";
+            }
+            catch (Exception ex)
+            {
+                this.Status = "Có lỗi trong quá trình rút fan chip";
+                throw ex;
+            }
+        }
+
         public void NhanChipMayMan(List<string> listLink)
         {
             try
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu nhận chip may mắn";
-
+                NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
+                Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
 
-                client.DoGet(listLink[0]);
-                Models.WebAccessToken = Regex.Match(client.ResponseText, "name=\"signed_request\" value=\"(?<val>[^\"]+)").Groups["val"].Value;
+                //client.DoGet(listLink[0]);
+                //Models.WebAccessToken = Regex.Match(client.ResponseText, "name=\"signed_request\" value=\"(?<val>[^\"]+)").Groups["val"].Value;
 
-                NameValueCollection param = new NameValueCollection();
-                param.Add("signed_request", Models.WebAccessToken);
+                //param = new NameValueCollection();
+                //param.Add("signed_request", Models.WebAccessToken);
 
-                Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
+                //dicHeader = new Dictionary<HttpRequestHeader, string>();
                 //dicHeader.Add(HttpRequestHeader.Referer, listLink[0]);
-                string strLinkPost = listLink[0].Substring(listLink[0].IndexOf("?"));
-                client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
+                //string strLinkPost = listLink[0].Substring(listLink[0].IndexOf("?"));
+                //client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
 
-                Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
-                Models.WebLoginText = client.ResponseText;
-                Global.DBContext.SaveChanges();
+                //Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
+                //Models.WebLoginText = client.ResponseText;
 
                 string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
                 string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
@@ -693,6 +722,11 @@ namespace PokerTexas.App_Controller
                     param.Add("by_langtype", "13");
                     string strRegex = Regex.Match(strLink, "by_mid=(?<val>[0-9]+)").Groups["val"].Value.Trim();
                     param.Add("by_mid", strRegex);
+                    strRegex = Regex.Match(strLink, "by_adfeed=(?<val>[0-9]+)").Groups["val"].Value.Trim();
+                    if (!string.IsNullOrEmpty(strRegex))
+                    {
+                        param.Add("by_adfeed", strRegex);
+                    }
                     strRegex = Regex.Match(strLink, "by_time=(?<val>[0-9]+)").Groups["val"].Value.Trim();
                     param.Add("by_time", strRegex);
                     strRegex = Regex.Match(strLink, "by_sig=(?<val>[0-9a-zA-Z]+)").Groups["val"].Value.Trim();
@@ -707,7 +741,6 @@ namespace PokerTexas.App_Controller
 
                     dicHeader = new Dictionary<HttpRequestHeader, string>();
                     dicHeader.Add(HttpRequestHeader.Referer, strLink.Replace("apps.facebook.com/vntexas", "httpvntexas01.boyaagame.com/texas/facebookvn"));
-
                     client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/api/facebook/rest.php", dicHeader);
                     System.Threading.Thread.Sleep(5000);
                 }
@@ -724,12 +757,9 @@ namespace PokerTexas.App_Controller
         {
             try
             {
-                if (!bWebLogedIn)
-                {
-                    if (!bTryLogin) LoginWebApp();
-                }
+                //return;
                 if (!bWebLogedIn) return;
-                KyTen();
+                //KyTen();
                 this.Status = "Bắt đầu tặng cỏ 4 lá";
                 string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
                 string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
@@ -827,7 +857,7 @@ namespace PokerTexas.App_Controller
                             param.Add("msgid[]", strId);
                             int iCountfRequestCo4La = 0;
                         fRequestCo4La: ;
-                        client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
+                            client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
                             if (string.IsNullOrEmpty(client.ResponseText) || client.ResponseText.Contains("Error request"))
                             {
                                 if (iCountfRequestCo4La < 3)
@@ -1023,7 +1053,6 @@ namespace PokerTexas.App_Controller
                         if (dicData.ContainsKey("birthday"))
                         {
                             Models.FaceBook.BirthDay = dicData["birthday"].ToString();
-                            Global.DBContext.SaveChanges();
                             this.Status = "lấy ngày sinh thành công";
                         }
                         else if (dicData.ContainsKey("error"))

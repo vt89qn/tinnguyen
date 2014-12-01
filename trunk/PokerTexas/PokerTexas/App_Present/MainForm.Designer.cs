@@ -42,14 +42,21 @@
             this.btnKetBan = new System.Windows.Forms.Button();
             this.btnKiemTraTaiKhoan = new System.Windows.Forms.Button();
             this.btnThemTaiKhoan = new System.Windows.Forms.Button();
-            this.groupMain = new System.Windows.Forms.GroupBox();
             this.btnCheckWeb = new System.Windows.Forms.Button();
-            this.btnNhanChipMayMan = new System.Windows.Forms.Button();
             this.btnCheckMobile = new System.Windows.Forms.Button();
+            this.txtCheckCo4La = new System.Windows.Forms.CheckBox();
+            this.txtCheckChipMayMan = new System.Windows.Forms.CheckBox();
+            this.txtCheckKyTen = new System.Windows.Forms.CheckBox();
+            this.btnChuanBiRutFan = new System.Windows.Forms.Button();
+            this.btnRutThuongFan = new System.Windows.Forms.Button();
+            this.txtRutFanLink = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.groupRutfan = new System.Windows.Forms.GroupBox();
+            this.btnAuthenNhanFanChip = new System.Windows.Forms.Button();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
-            this.groupMain.SuspendLayout();
+            this.groupRutfan.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupData
@@ -186,57 +193,134 @@
             this.btnThemTaiKhoan.UseVisualStyleBackColor = true;
             this.btnThemTaiKhoan.Click += new System.EventHandler(this.btnThemTaiKhoan_Click);
             // 
-            // groupMain
-            // 
-            this.groupMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupMain.Controls.Add(this.btnCheckWeb);
-            this.groupMain.Controls.Add(this.btnNhanChipMayMan);
-            this.groupMain.Controls.Add(this.btnCheckMobile);
-            this.groupMain.Location = new System.Drawing.Point(12, 12);
-            this.groupMain.Name = "groupMain";
-            this.groupMain.Size = new System.Drawing.Size(763, 57);
-            this.groupMain.TabIndex = 0;
-            this.groupMain.TabStop = false;
-            this.groupMain.Text = "Bảng Điều Khiển";
-            // 
             // btnCheckWeb
             // 
-            this.btnCheckWeb.Location = new System.Drawing.Point(112, 19);
+            this.btnCheckWeb.Location = new System.Drawing.Point(116, 12);
             this.btnCheckWeb.Name = "btnCheckWeb";
-            this.btnCheckWeb.Size = new System.Drawing.Size(100, 30);
+            this.btnCheckWeb.Size = new System.Drawing.Size(100, 50);
             this.btnCheckWeb.TabIndex = 3;
             this.btnCheckWeb.Text = "Web(F2)";
             this.btnCheckWeb.UseVisualStyleBackColor = true;
             this.btnCheckWeb.Click += new System.EventHandler(this.btnCheckWeb_Click);
             // 
-            // btnNhanChipMayMan
-            // 
-            this.btnNhanChipMayMan.Location = new System.Drawing.Point(519, 19);
-            this.btnNhanChipMayMan.Name = "btnNhanChipMayMan";
-            this.btnNhanChipMayMan.Size = new System.Drawing.Size(100, 30);
-            this.btnNhanChipMayMan.TabIndex = 3;
-            this.btnNhanChipMayMan.Text = "NCMM_Wait";
-            this.btnNhanChipMayMan.UseVisualStyleBackColor = true;
-            this.btnNhanChipMayMan.Click += new System.EventHandler(this.btnNhanChipMayMan_Click);
-            // 
             // btnCheckMobile
             // 
-            this.btnCheckMobile.Location = new System.Drawing.Point(6, 19);
+            this.btnCheckMobile.Location = new System.Drawing.Point(12, 12);
             this.btnCheckMobile.Name = "btnCheckMobile";
-            this.btnCheckMobile.Size = new System.Drawing.Size(100, 30);
+            this.btnCheckMobile.Size = new System.Drawing.Size(100, 50);
             this.btnCheckMobile.TabIndex = 0;
             this.btnCheckMobile.Text = "Mobile(F1)";
             this.btnCheckMobile.UseVisualStyleBackColor = true;
             this.btnCheckMobile.Click += new System.EventHandler(this.btnCheckMobile_Click);
+            // 
+            // txtCheckCo4La
+            // 
+            this.txtCheckCo4La.AutoSize = true;
+            this.txtCheckCo4La.Checked = true;
+            this.txtCheckCo4La.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckCo4La.Location = new System.Drawing.Point(222, 30);
+            this.txtCheckCo4La.Name = "txtCheckCo4La";
+            this.txtCheckCo4La.Size = new System.Drawing.Size(63, 17);
+            this.txtCheckCo4La.TabIndex = 4;
+            this.txtCheckCo4La.Text = "Cỏ 4 Lá";
+            this.txtCheckCo4La.UseVisualStyleBackColor = true;
+            // 
+            // txtCheckChipMayMan
+            // 
+            this.txtCheckChipMayMan.AutoSize = true;
+            this.txtCheckChipMayMan.Checked = true;
+            this.txtCheckChipMayMan.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckChipMayMan.Location = new System.Drawing.Point(222, 47);
+            this.txtCheckChipMayMan.Name = "txtCheckChipMayMan";
+            this.txtCheckChipMayMan.Size = new System.Drawing.Size(94, 17);
+            this.txtCheckChipMayMan.TabIndex = 4;
+            this.txtCheckChipMayMan.Text = "Chip May Mắn";
+            this.txtCheckChipMayMan.UseVisualStyleBackColor = true;
+            // 
+            // txtCheckKyTen
+            // 
+            this.txtCheckKyTen.AutoSize = true;
+            this.txtCheckKyTen.Checked = true;
+            this.txtCheckKyTen.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckKyTen.Location = new System.Drawing.Point(222, 12);
+            this.txtCheckKyTen.Name = "txtCheckKyTen";
+            this.txtCheckKyTen.Size = new System.Drawing.Size(60, 17);
+            this.txtCheckKyTen.TabIndex = 4;
+            this.txtCheckKyTen.Text = "Ký Tên";
+            this.txtCheckKyTen.UseVisualStyleBackColor = true;
+            // 
+            // btnChuanBiRutFan
+            // 
+            this.btnChuanBiRutFan.Location = new System.Drawing.Point(322, 12);
+            this.btnChuanBiRutFan.Name = "btnChuanBiRutFan";
+            this.btnChuanBiRutFan.Size = new System.Drawing.Size(100, 50);
+            this.btnChuanBiRutFan.TabIndex = 3;
+            this.btnChuanBiRutFan.Text = "Chuẩn bị nhận Fan chip";
+            this.btnChuanBiRutFan.UseVisualStyleBackColor = true;
+            this.btnChuanBiRutFan.Click += new System.EventHandler(this.btnChuanBiRutFan_Click);
+            // 
+            // btnRutThuongFan
+            // 
+            this.btnRutThuongFan.Location = new System.Drawing.Point(280, 12);
+            this.btnRutThuongFan.Name = "btnRutThuongFan";
+            this.btnRutThuongFan.Size = new System.Drawing.Size(60, 36);
+            this.btnRutThuongFan.TabIndex = 3;
+            this.btnRutThuongFan.Text = "NHẬN";
+            this.btnRutThuongFan.UseVisualStyleBackColor = true;
+            this.btnRutThuongFan.Click += new System.EventHandler(this.btnRutThuongFan_Click);
+            // 
+            // txtRutFanLink
+            // 
+            this.txtRutFanLink.Location = new System.Drawing.Point(6, 27);
+            this.txtRutFanLink.Name = "txtRutFanLink";
+            this.txtRutFanLink.Size = new System.Drawing.Size(202, 20);
+            this.txtRutFanLink.TabIndex = 5;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(27, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Link";
+            // 
+            // groupRutfan
+            // 
+            this.groupRutfan.Controls.Add(this.txtRutFanLink);
+            this.groupRutfan.Controls.Add(this.btnAuthenNhanFanChip);
+            this.groupRutfan.Controls.Add(this.btnRutThuongFan);
+            this.groupRutfan.Controls.Add(this.label1);
+            this.groupRutfan.Location = new System.Drawing.Point(428, 7);
+            this.groupRutfan.Name = "groupRutfan";
+            this.groupRutfan.Size = new System.Drawing.Size(346, 55);
+            this.groupRutfan.TabIndex = 7;
+            this.groupRutfan.TabStop = false;
+            this.groupRutfan.Visible = false;
+            // 
+            // btnAuthenNhanFanChip
+            // 
+            this.btnAuthenNhanFanChip.Location = new System.Drawing.Point(214, 12);
+            this.btnAuthenNhanFanChip.Name = "btnAuthenNhanFanChip";
+            this.btnAuthenNhanFanChip.Size = new System.Drawing.Size(60, 36);
+            this.btnAuthenNhanFanChip.TabIndex = 3;
+            this.btnAuthenNhanFanChip.Text = "Authen All";
+            this.btnAuthenNhanFanChip.UseVisualStyleBackColor = true;
+            this.btnAuthenNhanFanChip.Click += new System.EventHandler(this.btnAuthenNhanFanChip_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(786, 447);
-            this.Controls.Add(this.groupMain);
+            this.Controls.Add(this.groupRutfan);
+            this.Controls.Add(this.txtCheckChipMayMan);
+            this.Controls.Add(this.txtCheckKyTen);
+            this.Controls.Add(this.txtCheckCo4La);
+            this.Controls.Add(this.btnChuanBiRutFan);
             this.Controls.Add(this.groupData);
+            this.Controls.Add(this.btnCheckWeb);
+            this.Controls.Add(this.btnCheckMobile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -249,8 +333,10 @@
             this.groupData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).EndInit();
             this.menuGridData.ResumeLayout(false);
-            this.groupMain.ResumeLayout(false);
+            this.groupRutfan.ResumeLayout(false);
+            this.groupRutfan.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -258,9 +344,7 @@
 
         private System.Windows.Forms.GroupBox groupData;
         private System.Windows.Forms.DataGridView gridData;
-        private System.Windows.Forms.GroupBox groupMain;
         private System.Windows.Forms.ComboBox txtPackNo;
-        private System.Windows.Forms.Button btnNhanChipMayMan;
         private System.Windows.Forms.Button btnThemPack;
         private System.Windows.Forms.Button btnThemTaiKhoan;
         private System.Windows.Forms.Button btnCheckMobile;
@@ -272,6 +356,15 @@
         private System.Windows.Forms.Button btnKiemTraTaiKhoan;
         private System.Windows.Forms.Button btnCheckWeb;
         private System.Windows.Forms.Button btnCapNhatNgaySinh;
+        private System.Windows.Forms.CheckBox txtCheckChipMayMan;
+        private System.Windows.Forms.CheckBox txtCheckKyTen;
+        private System.Windows.Forms.CheckBox txtCheckCo4La;
+        private System.Windows.Forms.Button btnChuanBiRutFan;
+        private System.Windows.Forms.Button btnRutThuongFan;
+        private System.Windows.Forms.TextBox txtRutFanLink;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupRutfan;
+        private System.Windows.Forms.Button btnAuthenNhanFanChip;
 
     }
 }

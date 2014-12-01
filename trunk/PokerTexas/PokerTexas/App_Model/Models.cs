@@ -16,8 +16,6 @@ namespace PokerTexas.App_Model
         public string Pass { get; set; }
         public string FBID { get; set; }
         public string MBLoginText { get; set; }
-        public byte[] MBCookie { get; set; }
-        public byte[] WebCookie { get; set; }
         public string BirthDay { get; set; }
         public virtual ICollection<Poker> Pokers { get; set; }
     }

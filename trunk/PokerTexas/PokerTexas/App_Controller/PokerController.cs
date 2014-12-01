@@ -557,10 +557,40 @@ namespace PokerTexas.App_Controller
                     client.CookieContainer.Add(new Cookie(dicCookie["name"].ToString(), dicCookie["value"].ToString()
                         , dicCookie["path"].ToString(), dicCookie["domain"].ToString()));
                 }
-                client.DoGet(strLinkLogin);
-                if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("signed_request"))
+                Models.WebAccessToken = string.Empty;
+                client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
+                if (client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
+                { //Not Authen
+                    client.DoGet("https://www.facebook.com/dialog/oauth?app_id=373853122704634&client_id=373853122704634&display=popup&domain=httpvntexas01.boyaagame.com&e2e=%7B%7D&locale=en_US&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df280fb8f8c%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dopener%26frame%3Df4fe2ecf8&response_type=token%2Csigned_request&scope=email%2Cpublish_stream%2Cpublish_actions&sdk=joey");
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", Regex.Match(client.ResponseText, "\"token\":\"(?<val>[^\"]+)\"").Groups["val"].Value);
+                    param.Add("app_id", "373853122704634");
+                    param.Add("redirect_uri", "https://s-static.ak.facebook.com/connect/xd_arbiter/2_ZudbRXWRs.js?version=41#cb=fd8ff7f8&domain=httpvntexas01.boyaagame.com&origin=https%3A%2F%2Fhttpvntexas01.boyaagame.com%2Ff347970a&relation=opener&frame=f1bc1da8dc");
+                    param.Add("display", "popup");
+                    param.Add("sdk", "joey");
+                    param.Add("from_post", "1");
+                    //param.Add("e2e","{"submit_0":1413963128018}");
+                    param.Add("audience[0][value]", "10");
+                    param.Add("GdpEmailBucket_grantEmailType", "contact_email");
+                    param.Add("readwrite", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
+                    param.Add("gdp_version", "2.5");
+                    param.Add("seen_scopes", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
+                    param.Add("ref", "Default");
+                    param.Add("return_format", "signed_request,access_token,base_domain");
+                    param.Add("domain", "httpvntexas01.boyaagame.com");
+                    param.Add("__CONFIRM__", "1");
+                    param.Add("__user", Models.FaceBook.FBID.ToString());
+                    param.Add("__a", "1");
+                    //param.Add("__dyn", Utilities.GetMd5Hash(DateTime.Now.ToString()));
+                    param.Add("__req", "1");
+                    param.Add("locale", "en_US");
+                    //param.Add("ttstamp", "26581701108110484891155585122");
+                    param.Add("__rev", "1464406");
+                    client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
+                    client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
+                }
+                if (client.Response.ResponseUri.AbsoluteUri.Contains("signed_request"))
                 {
-                    Models.WebAccessToken = Utilities.GetRegexString(client.ResponseText, "signed_request", 1);
                     param = new NameValueCollection();
                     param.Add("signed_request", Models.WebAccessToken);
 

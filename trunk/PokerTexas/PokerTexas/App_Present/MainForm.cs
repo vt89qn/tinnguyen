@@ -317,14 +317,6 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void btnNhanChipMayMan_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnNhanChipMayMan.Enabled = false;
-            Task.Factory.StartNew(tangChipMayMan);
-        }
-
         private void btnCheckWeb_Click(object sender, EventArgs e)
         {
             if (isBusy) return;
@@ -332,9 +324,121 @@ namespace PokerTexas.App_Present
             btnCheckWeb.Enabled = false;
             Task.Factory.StartNew(checkWeb);
         }
+
+        private void btnChuanBiRutFan_Click(object sender, EventArgs e)
+        {
+            groupRutfan.Visible = true;
+            if (!string.IsNullOrEmpty(Clipboard.GetText()) && Clipboard.GetText().Contains("apps.facebook.com/vntexas"))
+            {
+                txtRutFanLink.Text = Clipboard.GetText().Trim();
+            }
+            txtPackNo.SelectedIndex = -1;
+        }
+
+        private void btnRutThuongFan_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnRutThuongFan.Enabled = false;
+            Task.Factory.StartNew(rutThuongFan);
+        }
+
+        private void btnAuthenNhanFanChip_Click(object sender, EventArgs e)
+        {
+            if (isBusy) return;
+            isBusy = true;
+            btnAuthenNhanFanChip.Enabled = false;
+            Task.Factory.StartNew(authenRutThuongFan);
+        }
         #endregion
 
         #region - METHOD -
+        private void authenRutThuongFan()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                List<string> listLink = new List<string>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    Task task = Task.Factory.StartNew(
+                        () =>
+                        {
+                            pkSource.LoginWebApp(txtRutFanLink.Text.Trim(), true);
+                        });
+                    tasks.Add(task);
+                    task.Wait(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnAuthenNhanFanChip.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
+        private void rutThuongFan()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                List<string> listLink = new List<string>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    Task task = Task.Factory.StartNew(
+                        () =>
+                        {
+                            if (pkSource.bWebLogedIn) pkSource.RutFanChip(txtRutFanLink.Text.Trim());
+                        });
+                    tasks.Add(task);
+                    task.Wait(100);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                isBusy = false;
+                if (!this.IsDisposed)
+                {
+                    MethodInvoker action = delegate
+                    { btnRutThuongFan.Enabled = true; };
+                    this.BeginInvoke(action);
+                }
+            }
+        }
+
         private void getBirthdayInfo()
         {
             try
@@ -353,6 +457,10 @@ namespace PokerTexas.App_Present
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
+                }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
                 }
             }
             catch (Exception ex)
@@ -411,6 +519,7 @@ namespace PokerTexas.App_Present
             try
             {
                 List<string> listLink = new List<string>();
+                List<Task> tasks = new List<Task>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
@@ -423,9 +532,15 @@ namespace PokerTexas.App_Present
                             listLink.Add(strLink);
                         }
                     });
-                    task.Wait();
+                    tasks.Add(task);
+                    task.Wait(3000);
                 }
-                List<Task> tasks = new List<Task>();
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                tasks = new List<Task>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     List<string> listLinkForGet = new List<string>();
@@ -446,7 +561,7 @@ namespace PokerTexas.App_Present
                         PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                         Task task = Task.Factory.StartNew(() => pkSource.NhanChipMayMan(listLinkForGet));
                         tasks.Add(task);
-                        task.Wait();
+                        task.Wait(3000);
                     }
                 }
                 while (tasks.Any(t => !t.IsCompleted))
@@ -463,12 +578,12 @@ namespace PokerTexas.App_Present
             finally
             {
                 isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    { btnNhanChipMayMan.Enabled = true; };
-                    this.BeginInvoke(action);
-                }
+                //if (!this.IsDisposed)
+                //{
+                //    MethodInvoker action = delegate
+                //    { btnNhanChipMayMan.Enabled = true; };
+                //    this.BeginInvoke(action);
+                //}
             }
         }
 
@@ -477,11 +592,29 @@ namespace PokerTexas.App_Present
             try
             {
                 List<Task> tasks = new List<Task>();
+                List<string> listLink = new List<string>();
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    Task task = Task.Factory.StartNew(pkSource.TangCo4La);
+                    Task task = Task.Factory.StartNew(
+                        () =>
+                        {
+                            pkSource.LoginWebApp();
+                            if (pkSource.bWebLogedIn)
+                            {
+                                if (txtCheckKyTen.Checked) pkSource.KyTen();
+                                if (txtCheckCo4La.Checked) pkSource.TangCo4La();
+                                if (txtCheckChipMayMan.Checked)
+                                {
+                                    string strLink = pkSource.ChiaSeChipMayMan();
+                                    if (!string.IsNullOrEmpty(strLink))
+                                    {
+                                        listLink.Add(strLink);
+                                    }
+                                }
+                            }
+                        });
                     tasks.Add(task);
                     task.Wait(3000);
                 }
@@ -494,13 +627,36 @@ namespace PokerTexas.App_Present
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    Task task = Task.Factory.StartNew(pkSource.NhanCo4La);
+                    List<string> listLinkForGet = new List<string>();
+                    for (int iPoker = 1; iPoker <= 3; iPoker++)
+                    {
+                        if (iIndex + iPoker < listLink.Count)
+                        {
+                            listLinkForGet.Add(listLink[iIndex + iPoker]);
+                        }
+                        else if (iIndex + iPoker - listLink.Count < listLink.Count)
+                        {
+                            listLinkForGet.Add(listLink[iIndex + iPoker - listLink.Count]);
+                        }
+                    }
+                    Task task = Task.Factory.StartNew(() =>
+                    {
+                        if (pkSource.bWebLogedIn)
+                        {
+                            if (txtCheckCo4La.Checked) pkSource.NhanCo4La();
+                            if (txtCheckChipMayMan.Checked && listLinkForGet.Count > 0) pkSource.NhanChipMayMan(listLinkForGet);
+                        }
+                    });
                     tasks.Add(task);
                     task.Wait(3000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
                     System.Threading.Thread.Sleep(1000);
+                }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
                 }
             }
             catch (Exception ex)
@@ -684,6 +840,50 @@ namespace PokerTexas.App_Present
                 gridData.Columns[GridMainFormConst.EarnToday].SortMode = DataGridViewColumnSortMode.NotSortable;
                 gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle = new DataGridViewCellStyle();
                 gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+
+                DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
+                colStt.Name = GridMainFormConst.STT;
+                colStt.HeaderText = GridMainFormConst.STT;
+                colStt.Width = 50;
+                colStt.SortMode = DataGridViewColumnSortMode.NotSortable;
+                gridData.Columns.Insert(0, colStt);
+
+                DataGridViewTextBoxColumn colAccount = new DataGridViewTextBoxColumn();
+                colAccount.Name = TableFaceBookConst.Login;
+                colAccount.HeaderText = TableFaceBookConst.Login;
+                colAccount.Width = 150;
+                colAccount.SortMode = DataGridViewColumnSortMode.NotSortable;
+                gridData.Columns.Insert(1, colAccount);
+
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
+                    gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
+                }
+            }
+            else
+            {
+                Package selectedPackage = txtPackNo.SelectedItem as Package;
+                BindingList<PokerController> listController = new BindingList<PokerController>();
+                foreach (Package p in Global.DBContext.Package.ToList())
+                {
+                    foreach (Poker poker in p.Pokers)
+                    {
+                        PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
+                        newPokerController.GridContainer = gridData;
+                        listController.Add(newPokerController);
+                    }
+                }
+                BindingSource bindingGrid = new BindingSource { DataSource = listController };
+                gridData.DataSource = bindingGrid;
+                for (int iIndex = 0; iIndex < gridData.Columns.Count; iIndex++)
+                {
+                    gridData.Columns[iIndex].Visible = false;
+                }
+                gridData.Columns[GridMainFormConst.Status].Visible = true;
+                gridData.Columns[GridMainFormConst.Status].Width = 300;
+                gridData.Columns[GridMainFormConst.Status].SortMode = DataGridViewColumnSortMode.NotSortable;
 
                 DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
                 colStt.Name = GridMainFormConst.STT;

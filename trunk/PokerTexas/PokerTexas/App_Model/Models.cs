@@ -52,4 +52,11 @@ namespace PokerTexas.App_Model
         public byte[] WebCookie { get; set; }
         public string X_TUNNEL_VERIFY { get; set; }
     }
+
+    public class IPAddress
+    {
+        public long ID { get; set; }
+        public string IP { get; set; }
+        public string Date { get; set; }
+    }
 }

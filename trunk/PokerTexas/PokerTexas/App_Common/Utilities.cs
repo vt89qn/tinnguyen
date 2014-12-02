@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
+using PokerTexas.App_UserControl;
 namespace PokerTexas.App_Common
 {
     public class Utilities
@@ -549,6 +550,11 @@ Yên Sơn";
                 value = Regex.Match(input, "(\\\\|)(\"|')" + key + "(\\\\|)(\"|')([\\s]+|):([\\s]+|)(\\\\|)(\"|')(?<val>[^'\"\\\\]+)(\\\\|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
             }
             return value;
+        }
+
+        public static string GetMyIpAddress()
+        {
+            return new WebClientEx().DoGet("http://115.79.60.134:8082/api/ip.aspx");
         }
         #endregion
     }

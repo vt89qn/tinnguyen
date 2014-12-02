@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Globalization;
 using System.Collections.Specialized;
+using FB.App_Common;
 
 namespace PokerTexas.App_Present
 {
@@ -126,22 +127,204 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                AddAccount addAccount = new AddAccount();
-                addAccount.ShowDialog();
-                FaceBook fb = addAccount.Model;
-                if (fb != null)
+                if (!string.IsNullOrEmpty(AppSettings.Seft))
                 {
-                    //Global.DBContext.FaceBook.Add(fb);
-                    //Global.DBContext.SaveChanges();
-                    Package pack = txtPackNo.SelectedItem as Package;
-                    PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, Package = pack } };
-                    if (pkController.LoginMobile())
+                    int iTry = 0;
+                    string t = @"
+01868777745 - 21017541
+01868988861 - akiravangyen
+01868998748 - 12345678
+01869285192 - 227799
+01869917355 - duong12c5
+01882559123 - nkonkinkak
+01882566635 - 220398
+01882566635 - 220398
+01882713644 - anhhanall
+01882753961 - loantran9x@
+01882907880 - 132125
+01883820668 - voyeuchonglun
+01884590741 - 06011997
+01885256009 - 01885256009
+01885999160 - thuthu123
+01886262160 - 0967862667
+01886646959 - nhikum
+01886666758 - yeuthuongxadaulam
+01887084222 - 079824086
+01887084222 - 079824086
+01887302012 - mavuong
+01889482398 - gameboycolor
+0875297621 - 25451990
+0902384457 - 06121973
+0903059970 - DVLTnganhuyenh3
+0903059970 - DVLTnganhuyenh3
+090309xxxx@gmail.com - 01289715353
+0904666231 - fuckcaibeep
+0906731573 - thuyan123
+0908128377 - ngoni558
+0912671143 - 0912671143tu
+0913064842 - ilovekatyperry299
+0913405362 - anhanhanhqwe
+0914695380 - 0936866363
+0915439167 - vudinhphu
+0917617357 - sailam1990
+0918694689 - hlove38
+0923012181 - 123456789
+0924477380 - 041296
+0924717611 - tuyen0 viet
+0925037753 - 335566
+0925077332 - nhan4122512
+0925212742 - 0939144186nhuy
+0925638441 - 0923333948
+0926128893 - 0123456789
+0926211484 - 27071978
+0927739447 - hoahongden
+0929287130 - nocare96
+0932685859 - 01213738638
+0934433924 - 01654853492
+0934783424 - 215403154
+0935037753 - 335566
+0935329080 - bameyentien0933058232
+0936817101 - hongchip
+0937353844 - songnhunhungdoahoa
+0938288464 - 01021997
+0938563582 - 1235789 
+0942571933 - saobang
+0942718646 - 0942718646
+0943050020 - ynhi301094
+0946036300 - long love forever
+0946232828 - huyki123
+0946979299 - betuyet
+0948477577 - buungockyanh
+0949062069 - wencachyeu
+0962013978 - 0962013978
+0962037807 - bongyeu
+0962676037 - tamdinh
+0962730330 - honghanh96
+0963076958 - 06052013
+0963671355 - 01694448062
+0963744429 - trungZxc
+0964384440 - Xike1995
+0964405237 - maiyeu
+0964434255 - 0943075217
+0965816675 - 20041995
+0967077691 - 12303888
+0967200398 - anhyeuem
+0967267184 - vananh
+0967471651 - 01685994667
+0967651986 - huyenngoc
+0968304701 - ht25051997
+0968512172 - 6111994
+0968996099 - 12101990
+0972397830 - Pitorao1234
+0973027829 - 01686508278
+0973583692 - bichdang
+0973631127 - 2851005
+0973631127 - 2851995
+0973762129 - 0973762129
+0973917431 - Khanhlinh
+0975269785 - 0562212889
+0975970195 - duytrung
+0976468244 - Nghean86
+0976635529 - Kimhien
+0976831409 - kq64455062kl
+0977734575 - 0975577075
+0978193557 - Gjmptw
+0979505205 - 240684
+0979673482 - 13091994
+0979798796 - nguyenthohung
+0982375690 - 51219997
+0983080277 - 0987654321
+0983337702  - minhdangkhoa
+0983531795 - Heolun1510
+0983741809 - mauyeuanh96
+0984208747 - Chiquy123
+0984585488 - 0984585488
+0984645257 - cotrang
+0985561437 - 261101
+0986198142 - 0986198142
+0987204505 - truong
+0987367130 - ukthit0inghe0
+0987675621 - 521194
+0987904543 - Ngodoanhieu
+0988033043 - minh135792468
+0988080454 - 0974696424
+0988653568 - 199791297
+0988738514 - 05051988
+0989662734 - money1999
+0989839829 - maianhhai1234
+4ewitu@gmail.com - baeyongjoon
+60187666590 - 06111992
+84123049787 - tuanh1010
+Binhyennhe 1409@gmail.com - a2family
+Dautranlinhdan@ymail.com - linhlinhdandan
+Dohuynhngocthuong@gmail.com - 123459
+Dung.kute.12345 - anhdung
+Hoanganh.tramanh.9@facobook.com - godbye
+Hoangnamlonghn@gmail.com - giangvo123
+Katenguyen.3720 - laanhdo
+Kendynguyen198@yahoo.com - lanquynh
+Pemiin@yahoo.com.vn - anhnhudaovotrungkien123456789
+Tanh433@ymail.com - 19981998
+Thanhthuy20hp@yahoo.com.vn  - 10101984
+Tien tjnh tu toj - Nhat 2013
+Tinhyeudanhchopokemon@zing.vn - Bao123+
+Tuyet Nguyen0907040240 - 240778
+Vudoan.1428 - 151172
+ady_pitri@yahoo.com - Adygokil
+ai_thuong_toi_15@yahoo.com - anhnien
+aihaychungo91@yahoo.com - tranvanphong17111991
+amynguyen_84@yahoo.com.vn - hoangkimkimkhanh843502
+anh995@gmail.com - lien123
+anhdepzai12345_sanhdieu@yahoo.com.vn - thenguyentai
+anhkhangdeptrai_thu2@yahoo.com - khanbganh
+anhphuong01882132006
+anhphuong710@gmail.com - 221204
+babynguyenhue91@gmail.com - 01663686760";
+                    for (int iIndex = 0; iIndex < t.Split('\n').Length; iIndex++)
                     {
-                        Global.DBContext.Poker.Add(pkController.Models);
-                        Global.DBContext.SaveChanges();
-                        dicPokers[pack.ID].Add(pkController);
-                        pkController.Status = "Thêm thành công";
-                        reloadGrid();
+                        string info = t.Split('\n')[iIndex].ToString();
+                        if (info.Contains('-'))
+                        {
+                            if (iTry == 0)
+                            {
+                                changeIP();
+                            }
+                            iTry++;
+                            if (iTry >= 3) iTry = 0;
+                            FaceBook fb = new FaceBook { Login = info.Split('-')[0].Trim(), Pass = info.Split('-')[1].Trim() };
+                            FaceBookController fbController = new FaceBookController();
+                            if (fbController.LoginMobile(fb))
+                            {
+                                PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, PackageID = 5 } };
+                                if (pkController.LoginMobile())
+                                {
+                                    Global.DBContext.Poker.Add(pkController.Models);
+                                    Global.DBContext.SaveChanges();
+                                    iTry = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    AddAccount addAccount = new AddAccount();
+                    addAccount.ShowDialog();
+                    FaceBook fb = addAccount.Model;
+                    if (fb != null)
+                    {
+                        //Global.DBContext.FaceBook.Add(fb);
+                        //Global.DBContext.SaveChanges();
+                        Package pack = txtPackNo.SelectedItem as Package;
+                        PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, Package = pack } };
+                        if (pkController.LoginMobile())
+                        {
+                            Global.DBContext.Poker.Add(pkController.Models);
+                            Global.DBContext.SaveChanges();
+                            dicPokers[pack.ID].Add(pkController);
+                            pkController.Status = "Thêm thành công";
+                            reloadGrid();
+                        }
                     }
                 }
             }
@@ -309,7 +492,18 @@ namespace PokerTexas.App_Present
                 if (isBusy) return;
                 isBusy = true;
                 btnCheckMobile.Enabled = false;
-                Task.Factory.StartNew(checkMobile);
+                if (!string.IsNullOrEmpty(AppSettings.Seft))
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        changeIP();
+                        checkMobile();
+                    });
+                }
+                else
+                {
+                    Task.Factory.StartNew(checkMobile);
+                }
             }
             catch (Exception ex)
             {
@@ -731,7 +925,16 @@ namespace PokerTexas.App_Present
                 if (!this.IsDisposed)
                 {
                     MethodInvoker action = delegate
-                    { btnCheckMobile.Enabled = true; };
+                    {
+                        btnCheckMobile.Enabled = true;
+                        System.Threading.Thread.Sleep(5000);
+                        if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                        {
+                            txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                            btnCheckMobile_Click(null, null);
+                        }
+
+                    };
                     this.BeginInvoke(action);
                 }
             }
@@ -923,6 +1126,23 @@ namespace PokerTexas.App_Present
             {
                 throw ex;
             }
+        }
+
+        private void changeIP()
+        {
+            MobileModermController.Disconnect();
+            MobileModermController.Connect();
+            string strIP = Utilities.GetMyIpAddress();
+            var t = Global.DBContext.IPAddress.ToList();
+            string strDate = DateTime.Today.ToString("yyyy-MM-dd");
+            while (Global.DBContext.IPAddress.Where(x => x.IP == strIP && x.Date == strDate).Count() > 0)
+            {
+                MobileModermController.Disconnect();
+                MobileModermController.Connect();
+                strIP = Utilities.GetMyIpAddress();
+            }
+            Global.DBContext.IPAddress.Add(new IPAddress { IP = strIP, Date = DateTime.Today.ToString("yyyy-MM-dd") });
+            Global.DBContext.SaveChanges();
         }
 
         #endregion

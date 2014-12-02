@@ -18,6 +18,7 @@ namespace PokerTexas.App_Context
         public DbSet<FaceBook> FaceBook { get; set; }
         public DbSet<Package> Package { get; set; }
         public DbSet<Poker> Poker { get; set; }
+        public DbSet<IPAddress> IPAddress { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Database does not pluralize table names

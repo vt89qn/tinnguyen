@@ -964,6 +964,229 @@ namespace PokerTexas.App_Controller
             }
         }
 
+        private int getPoint(string strCards)
+        {
+            List<string> listA = new List<string>();
+            List<string> listB = new List<string>();
+            List<string> listC = new List<string>();
+            List<string> listD = new List<string>();
+            Dictionary<string, int> countEachCard = new Dictionary<string, int>();
+            foreach (string strCard in strCards.Split('-'))
+            {
+                if (strCard.StartsWith("a"))
+                {
+                    listA.Add(strCard);
+                }
+                if (strCard.StartsWith("b"))
+                {
+                    listB.Add(strCard);
+                }
+                if (strCard.StartsWith("c"))
+                {
+                    listC.Add(strCard);
+                }
+                if (strCard.StartsWith("d"))
+                {
+                    listD.Add(strCard);
+                }
+                string strCardNumber = strCard.Substring(1);
+                string strCardType = strCard.Substring(0, 1);
+                if (countEachCard.ContainsKey(strCardNumber))
+                {
+                    countEachCard.Add(strCardNumber, 0);
+                }
+                countEachCard[strCardNumber]++;
+            }
+
+            if (listA.Count == 5)
+            {
+                foreach (KeyValuePair<string, int> card in countEachCard)
+                {
+                    bool bFind = true;
+                    for (int iINdex = 0; iINdex < 5; iINdex++)
+                    {
+                        if (!("-" + strCards + "-").Contains("-a" + (int.Parse(card.Key) + iINdex) + "-"))
+                        {
+                            bFind = false;
+                            break;
+                        }
+                    }
+                    if (bFind) return 9;
+                }
+            }
+            if (listB.Count == 5)
+            {
+                foreach (KeyValuePair<string, int> card in countEachCard)
+                {
+                    bool bFind = true;
+                    for (int iINdex = 0; iINdex < 5; iINdex++)
+                    {
+                        if (!("-" + strCards + "-").Contains("-b" + (int.Parse(card.Key) + iINdex) + "-"))
+                        {
+                            bFind = false;
+                            break;
+                        }
+                    }
+                    if (bFind) return 9;
+                }
+            }
+            if (listC.Count == 5)
+            {
+                foreach (KeyValuePair<string, int> card in countEachCard)
+                {
+                    bool bFind = true;
+                    for (int iINdex = 0; iINdex < 5; iINdex++)
+                    {
+                        if (!("-" + strCards + "-").Contains("-c" + (int.Parse(card.Key) + iINdex) + "-"))
+                        {
+                            bFind = false;
+                            break;
+                        }
+                    }
+                    if (bFind) return 9;
+                }
+            }
+            if (listD.Count == 5)
+            {
+                foreach (KeyValuePair<string, int> card in countEachCard)
+                {
+                    bool bFind = true;
+                    for (int iINdex = 0; iINdex < 5; iINdex++)
+                    {
+                        if (!("-" + strCards + "-").Contains("-d" + (int.Parse(card.Key) + iINdex) + "-"))
+                        {
+                            bFind = false;
+                            break;
+                        }
+                    }
+                    if (bFind) return 9;
+                }
+            }
+            bool bFind4 = false;
+            bool bFind3 = false;
+            bool bFind2 = false;
+            bool bFind2_2 = false;
+            foreach (KeyValuePair<string, int> card in countEachCard)
+            {
+                if (card.Value == 4) bFind4 = true;
+                if (card.Value == 3) bFind3 = true;
+                if (card.Value == 2 && bFind2) bFind2_2 = true;
+                if (card.Value == 2) bFind2 = true;
+            }
+            if (bFind4) return 8;
+            if (bFind3 && bFind2) return 7;
+            if (listA.Count == 5 || listB.Count == 5 || listC.Count == 5 || listD.Count == 5) return 6;
+            foreach (KeyValuePair<string, int> card in countEachCard)
+            {
+                bool bFind = true;
+                for (int iINdex = 0; iINdex < 5; iINdex++)
+                {
+                    if (!("-" + strCards + "-").Contains("-d" + (int.Parse(card.Key) + iINdex) + "-"))
+                    {
+                        bFind = false;
+                        break;
+                    }
+                }
+                if (bFind) return 5;
+            }
+            if (bFind3) return 4;
+            if (bFind2 && bFind2_2) return 3;
+            if (bFind2) return 2;
+            return 1;
+        }
+
+        public void PlayMiniGame()
+        {
+            try
+            {
+                if (!bWebLogedIn) return;
+                this.Status = "Bắt đầu chơi mini game";
+                string apik = Regex.Match(Models.WebLoginText, @"apik:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                WebClientEx client = new WebClientEx();
+                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+                client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+                string strChoose = "1";
+                for (int iIndex = 1; iIndex <= 6; iIndex++)
+                {
+                    NameValueCollection param = new NameValueCollection();
+                    if (iIndex == 1)
+                    {
+                        param.Add("cmd", "info");
+                        param.Add("apik", apik);
+                    }
+                    else if (iIndex > 1)
+                    {
+                        param.Add("cmd", "choose");
+                        param.Add("choose", strChoose);
+                        param.Add("apik", apik);
+
+                    }
+                    client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/noviceGame.php");
+                    Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    if (dicData.ContainsKey("ret"))
+                    {
+                        Dictionary<object, object> ret = dicData["ret"] as Dictionary<object, object>;
+                        string strCard1 = string.Empty;
+                        string strCard2 = string.Empty;
+                        ArrayList cardType = null;
+                        if (ret.ContainsKey("cardType"))
+                        {
+                            cardType = ret["cardType"] as ArrayList;
+                        }
+                        else if (ret.ContainsKey("nextArr"))
+                        {
+                            Dictionary<object, object> nextArr = ret["nextArr"] as Dictionary<object, object>;
+                            if (nextArr.ContainsKey("cardType"))
+                            {
+                                cardType = nextArr["cardType"] as ArrayList;
+                            }
+                        }
+                        if (cardType != null)
+                        {
+                            if (cardType.Count == 3)
+                            {
+                                strCard1 = cardType[0].ToString() + "-" + cardType[1];
+                                strCard2 = cardType[0].ToString() + "-" + cardType[2];
+                                int iPoint1 = getPoint(strCard1);
+                                int iPoint2 = getPoint(strCard2);
+                                if (iPoint1 < iPoint2) strChoose = "2";
+                                else strChoose = "1";
+
+                            }
+                            else if (cardType.Count == 4)
+                            {
+                                strCard1 = cardType[0].ToString() + "-" + cardType[2];
+                                strCard2 = cardType[0].ToString() + "-" + cardType[3];
+                                int iPoint1 = getPoint(strCard1);
+                                int iPoint2 = getPoint(strCard2);
+                                if (iPoint1 < iPoint2) strChoose = "1";
+                                else strChoose = "2";
+                            }
+                            else if (cardType.Count == 5)
+                            {
+                                strCard1 = cardType[0].ToString() + "-" + cardType[1] + "-" + cardType[3];
+                                strCard2 = cardType[0].ToString() + "-" + cardType[2];
+                                int iPoint1 = getPoint(strCard1);
+                                int iPoint2 = getPoint(strCard2);
+                                if (iPoint1 < iPoint2) strChoose = "2";
+                                else strChoose = "1";
+                            }
+                        }
+                    }
+                }
+                this.Status = "mini game xong";
+            }
+            catch (Exception ex)
+            {
+                this.Status = "Có lỗi trong quá trình chơi mini game";
+                throw ex;
+            }
+        }
+
         public void NhanThuongHangNgayWeb(string strStep)
         {
             try

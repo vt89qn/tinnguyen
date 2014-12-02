@@ -61,9 +61,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -83,9 +83,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
@@ -216,8 +216,6 @@
             // txtCheckCo4La
             // 
             this.txtCheckCo4La.AutoSize = true;
-            this.txtCheckCo4La.Checked = true;
-            this.txtCheckCo4La.CheckState = System.Windows.Forms.CheckState.Checked;
             this.txtCheckCo4La.Location = new System.Drawing.Point(222, 30);
             this.txtCheckCo4La.Name = "txtCheckCo4La";
             this.txtCheckCo4La.Size = new System.Drawing.Size(63, 17);
@@ -228,8 +226,6 @@
             // txtCheckChipMayMan
             // 
             this.txtCheckChipMayMan.AutoSize = true;
-            this.txtCheckChipMayMan.Checked = true;
-            this.txtCheckChipMayMan.CheckState = System.Windows.Forms.CheckState.Checked;
             this.txtCheckChipMayMan.Location = new System.Drawing.Point(222, 47);
             this.txtCheckChipMayMan.Name = "txtCheckChipMayMan";
             this.txtCheckChipMayMan.Size = new System.Drawing.Size(94, 17);

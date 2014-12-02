@@ -85,9 +85,13 @@ namespace PokerTexas.App_Common
 
         public static object ConvertBlobToObject(byte[] blob)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream(blob);
-            return bf.Deserialize(ms);
+            if (blob != null)
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                MemoryStream ms = new MemoryStream(blob);
+                return bf.Deserialize(ms);
+            }
+            return null;
         }
 
         public static string ConvertToUnSign3(string s)
@@ -543,11 +547,11 @@ Yên Sơn";
             string value = string.Empty;
             if (iType == 1)
             {
-                value = Regex.Match(input, "name=(\"|')" + key + "(\"|') value=(\"|')(?<val>[^'\"]+)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+                value = Regex.Match(input, "name=([\\\\]+|)(\"|')" + key + "([\\\\]+|)(\"|') value=([\\\\]+|)(\"|')(?<val>[^'\"\\\\]+)([\\\\]+|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
             }
             else if (iType == 2)
             {
-                value = Regex.Match(input, "(\\\\|)(\"|')" + key + "(\\\\|)(\"|')([\\s]+|):([\\s]+|)(\\\\|)(\"|')(?<val>[^'\"\\\\]+)(\\\\|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
+                value = Regex.Match(input, "([\\\\]+|)(\"|')" + key + "([\\\\]+|)(\"|')([\\s]+|):([\\s]+|)([\\\\]+|)(\"|')(?<val>[^'\"\\\\]+)([\\\\]+|)(\"|')", RegexOptions.IgnoreCase).Groups["val"].Value;
             }
             return value;
         }

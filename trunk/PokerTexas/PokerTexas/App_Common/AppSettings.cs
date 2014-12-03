@@ -15,6 +15,6 @@ namespace PokerTexas.App_Common
         public static readonly string URLToCopy = System.Configuration.ConfigurationManager.AppSettings["URLToCopy"];
         public static readonly string GetMoneyOnLoad = System.Configuration.ConfigurationManager.AppSettings["GetMoneyOnLoad"];
         public static readonly string Name3G = System.Configuration.ConfigurationManager.AppSettings["Name3G"];
-        public static readonly string Seft = System.Configuration.ConfigurationManager.AppSettings["Seft"];
+        public static readonly bool Seft = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["Seft"]);
     }
 }

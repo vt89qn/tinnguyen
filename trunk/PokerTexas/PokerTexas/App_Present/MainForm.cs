@@ -654,6 +654,7 @@ namespace PokerTexas.App_Present
                                     {
                                         if (AppSettings.Seft)
                                         {
+                                            pkSource.KyTen();
                                             pkSource.PlayMiniGame();
                                         }
                                         else

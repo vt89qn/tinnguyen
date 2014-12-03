@@ -938,7 +938,23 @@ namespace PokerTexas.App_Controller
                         client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/762/ajax.php");
                     }
                 }
-
+                if (AppSettings.Seft)
+                {//Ki ten than bai
+                    param = new NameValueCollection();
+                    param.Add("cmd", "init");
+                    param.Add("apik", apik);
+                    client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/471/ajax.php");
+                    if (!string.IsNullOrEmpty(client.ResponseText))
+                    {
+                        //if (!client.ResponseText.Contains("isSigned\":1"))
+                        {
+                            param = new NameValueCollection();
+                            param.Add("cmd", "sign");
+                            param.Add("apik", apik);
+                            client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/471/ajax.php");
+                        }
+                    }
+                }
                 //Chia se
                 param = new NameValueCollection();
                 param.Add("ref", "574");

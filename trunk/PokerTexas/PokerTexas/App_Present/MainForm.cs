@@ -636,87 +636,87 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                List<Task> tasks = new List<Task>();
-                List<string> listLink = new List<string>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    Task task = Task.Factory.StartNew(
-                        () =>
-                        {
-                            if (txtCheckKyTen.Checked || txtCheckCo4La.Checked || txtCheckChipMayMan.Checked)
-                            {
-                                pkSource.LoginWebApp();
-                                if (pkSource.bWebLogedIn)
-                                {
-                                    if (txtCheckKyTen.Checked)
-                                    {
-                                        if (AppSettings.Seft)
-                                        {
-                                            pkSource.KyTen();
-                                            pkSource.PlayMiniGame();
-                                        }
-                                        else
-                                        {
-                                            pkSource.KyTen();
-                                        }
-                                    }
-                                    if (txtCheckCo4La.Checked) pkSource.TangCo4La();
-                                    if (txtCheckChipMayMan.Checked)
-                                    {
-                                        string strLink = pkSource.ChiaSeChipMayMan();
-                                        if (!string.IsNullOrEmpty(strLink))
-                                        {
-                                            listLink.Add(strLink);
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    tasks.Add(task);
-                    task.Wait(3000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    System.Threading.Thread.Sleep(1000);
-                }
-                tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    List<string> listLinkForGet = new List<string>();
-                    for (int iPoker = 1; iPoker <= 3; iPoker++)
-                    {
-                        if (iIndex + iPoker < listLink.Count)
-                        {
-                            listLinkForGet.Add(listLink[iIndex + iPoker]);
-                        }
-                        else if (iIndex + iPoker - listLink.Count < listLink.Count)
-                        {
-                            listLinkForGet.Add(listLink[iIndex + iPoker - listLink.Count]);
-                        }
-                    }
-                    Task task = Task.Factory.StartNew(() =>
-                    {
-                        if (pkSource.bWebLogedIn)
-                        {
-                            if (txtCheckCo4La.Checked) pkSource.NhanCo4La();
-                            if (txtCheckChipMayMan.Checked && listLinkForGet.Count > 0) pkSource.NhanChipMayMan(listLinkForGet);
-                        }
-                    });
-                    tasks.Add(task);
-                    task.Wait(3000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    System.Threading.Thread.Sleep(1000);
-                }
-                if (Global.DBContext.ChangeTracker.HasChanges())
-                {
-                    Global.DBContext.SaveChanges();
-                }
+                //List<Task> tasks = new List<Task>();
+                //List<string> listLink = new List<string>();
+                //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                //{
+                //    if (this.IsDisposed) return;
+                //    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                //    Task task = Task.Factory.StartNew(
+                //        () =>
+                //        {
+                //            if (txtCheckKyTen.Checked || txtCheckCo4La.Checked || txtCheckChipMayMan.Checked)
+                //            {
+                //                pkSource.LoginWebApp();
+                //                if (pkSource.bWebLogedIn)
+                //                {
+                //                    if (txtCheckKyTen.Checked)
+                //                    {
+                //                        if (AppSettings.Seft)
+                //                        {
+                //                            pkSource.KyTen();
+                //                            pkSource.PlayMiniGame();
+                //                        }
+                //                        else
+                //                        {
+                //                            pkSource.KyTen();
+                //                        }
+                //                    }
+                //                    if (txtCheckCo4La.Checked) pkSource.TangCo4La();
+                //                    if (txtCheckChipMayMan.Checked)
+                //                    {
+                //                        string strLink = pkSource.ChiaSeChipMayMan();
+                //                        if (!string.IsNullOrEmpty(strLink))
+                //                        {
+                //                            listLink.Add(strLink);
+                //                        }
+                //                    }
+                //                }
+                //            }
+                //        });
+                //    tasks.Add(task);
+                //    task.Wait(3000);
+                //}
+                //while (tasks.Any(t => !t.IsCompleted))
+                //{
+                //    System.Threading.Thread.Sleep(1000);
+                //}
+                //tasks = new List<Task>();
+                //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                //{
+                //    if (this.IsDisposed) return;
+                //    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                //    List<string> listLinkForGet = new List<string>();
+                //    for (int iPoker = 1; iPoker <= 3; iPoker++)
+                //    {
+                //        if (iIndex + iPoker < listLink.Count)
+                //        {
+                //            listLinkForGet.Add(listLink[iIndex + iPoker]);
+                //        }
+                //        else if (iIndex + iPoker - listLink.Count < listLink.Count)
+                //        {
+                //            listLinkForGet.Add(listLink[iIndex + iPoker - listLink.Count]);
+                //        }
+                //    }
+                //    Task task = Task.Factory.StartNew(() =>
+                //    {
+                //        if (pkSource.bWebLogedIn)
+                //        {
+                //            if (txtCheckCo4La.Checked) pkSource.NhanCo4La();
+                //            if (txtCheckChipMayMan.Checked && listLinkForGet.Count > 0) pkSource.NhanChipMayMan(listLinkForGet);
+                //        }
+                //    });
+                //    tasks.Add(task);
+                //    task.Wait(3000);
+                //}
+                //while (tasks.Any(t => !t.IsCompleted))
+                //{
+                //    System.Threading.Thread.Sleep(1000);
+                //}
+                //if (Global.DBContext.ChangeTracker.HasChanges())
+                //{
+                //    Global.DBContext.SaveChanges();
+                //}
             }
             catch (Exception ex)
             {

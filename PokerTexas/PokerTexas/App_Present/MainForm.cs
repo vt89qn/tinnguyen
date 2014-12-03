@@ -127,7 +127,7 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                if (!string.IsNullOrEmpty(AppSettings.Seft))
+                if (AppSettings.Seft)
                 {
                     int iTry = 0;
                     string t = @"";
@@ -343,7 +343,7 @@ namespace PokerTexas.App_Present
                 if (isBusy) return;
                 isBusy = true;
                 btnCheckMobile.Enabled = false;
-                if (!string.IsNullOrEmpty(AppSettings.Seft))
+                if (AppSettings.Seft)
                 {
                     Task.Factory.StartNew(() =>
                     {
@@ -645,17 +645,30 @@ namespace PokerTexas.App_Present
                     Task task = Task.Factory.StartNew(
                         () =>
                         {
-                            pkSource.LoginWebApp();
-                            if (pkSource.bWebLogedIn)
+                            if (txtCheckKyTen.Checked || txtCheckCo4La.Checked || txtCheckChipMayMan.Checked)
                             {
-                                if (txtCheckKyTen.Checked) pkSource.PlayMiniGame();
-                                if (txtCheckCo4La.Checked) pkSource.TangCo4La();
-                                if (txtCheckChipMayMan.Checked)
+                                pkSource.LoginWebApp();
+                                if (pkSource.bWebLogedIn)
                                 {
-                                    string strLink = pkSource.ChiaSeChipMayMan();
-                                    if (!string.IsNullOrEmpty(strLink))
+                                    if (txtCheckKyTen.Checked)
                                     {
-                                        listLink.Add(strLink);
+                                        if (AppSettings.Seft)
+                                        {
+                                            pkSource.PlayMiniGame();
+                                        }
+                                        else
+                                        {
+                                            pkSource.KyTen();
+                                        }
+                                    }
+                                    if (txtCheckCo4La.Checked) pkSource.TangCo4La();
+                                    if (txtCheckChipMayMan.Checked)
+                                    {
+                                        string strLink = pkSource.ChiaSeChipMayMan();
+                                        if (!string.IsNullOrEmpty(strLink))
+                                        {
+                                            listLink.Add(strLink);
+                                        }
                                     }
                                 }
                             }
@@ -716,16 +729,19 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnCheckWeb.Enabled = true;
-                        System.Threading.Thread.Sleep(2000);
-                        try
+                        if (AppSettings.Seft)
                         {
-                            if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                            System.Threading.Thread.Sleep(2000);
+                            try
                             {
-                                txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
-                                btnCheckMobile_Click(null, null);
+                                if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                                {
+                                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                                    btnCheckMobile_Click(null, null);
+                                }
                             }
+                            catch { }
                         }
-                        catch { }
                     };
                     this.BeginInvoke(action);
                 }
@@ -790,8 +806,10 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnCheckMobile.Enabled = true;
-                        btnCheckWeb_Click(null, null);
-
+                        if (AppSettings.Seft)
+                        {
+                            btnCheckWeb_Click(null, null);
+                        }
                     };
                     this.BeginInvoke(action);
                 }

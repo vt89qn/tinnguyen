@@ -266,6 +266,7 @@ namespace PokerTexas.App_Controller
                     goto SetMoney;
                 }
                 #endregion
+                
 
                 this.Status = "Nhận thưởng hàng ngày thành công";
             }
@@ -274,6 +275,40 @@ namespace PokerTexas.App_Controller
                 this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
                 throw ex;
             }
+        }
+
+        public void KyTenMobile()
+        {
+            if (!bMBLogedIn && !bTryMBLogin)
+            {
+                LoginMobile();
+            }
+            if (!bMBLogedIn) return;
+            #region - Act.getAward -
+            SortedDictionary<string, object>  dic_param = new SortedDictionary<string, object>();
+            dic_param.Add("aVersion", "15739_2014120321170813#15761_2014120321170813#15782_2014120321170813#15815_2014120321170813#");
+            dic_param.Add("actID", "15815");
+            dic_param.Add("actVer", "2.1");
+            dic_param.Add("isGetAward", "0");
+            NameValueCollection param = new NameValueCollection();
+            param.Add("api", getAPIString("Act.getAward", dic_param));
+
+            WebClientEx client = new WebClientEx();
+            client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+
+            dic_param = new SortedDictionary<string, object>();
+            dic_param.Add("aVersion", "15739_2014120321170813#15761_2014120321170813#15782_2014120321170813#15815_2014120321170813#");
+            dic_param.Add("actID", "15815");
+            dic_param.Add("actVer", "2.1");
+            dic_param.Add("isGetAward", "1");
+            param = new NameValueCollection();
+            param.Add("api", getAPIString("Act.getAward", dic_param));
+
+            client = new WebClientEx();
+            client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            #endregion
         }
 
         public void TangQuaBiMat()
@@ -413,7 +448,7 @@ namespace PokerTexas.App_Controller
             dic.Add("sid", "110");
             dic.Add("time", Utilities.GetCurrentSecond());
             dic.Add("unid", "193");
-            dic.Add("version", "5.4.2");
+            dic.Add("version", "5.4.3");
             dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
             dic.Add("vmid", Models.PKID);
             dic.Add("param", param);

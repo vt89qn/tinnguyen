@@ -266,7 +266,7 @@ namespace PokerTexas.App_Controller
                     goto SetMoney;
                 }
                 #endregion
-                
+
 
                 this.Status = "Nhận thưởng hàng ngày thành công";
             }
@@ -285,29 +285,64 @@ namespace PokerTexas.App_Controller
             }
             if (!bMBLogedIn) return;
             #region - Act.getAward -
-            SortedDictionary<string, object>  dic_param = new SortedDictionary<string, object>();
-            dic_param.Add("aVersion", "15739_2014120321170813#15761_2014120321170813#15782_2014120321170813#15815_2014120321170813#");
-            dic_param.Add("actID", "15815");
+            SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
             dic_param.Add("actVer", "2.1");
-            dic_param.Add("isGetAward", "0");
+            dic_param.Add("allowLottery", "1");
+            dic_param.Add("allowType", "0|1|2|3");
+            dic_param.Add("isNew", "1");
             NameValueCollection param = new NameValueCollection();
-            param.Add("api", getAPIString("Act.getAward", dic_param));
-
+            param.Add("api", getAPIString("Act.getNowAct", dic_param));
             WebClientEx client = new WebClientEx();
             client.RequestType = WebClientEx.RequestTypeEnum.Poker;
             client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
+            {
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                string actID = string.Empty;
+                string aVersion = string.Empty;
+                if (dicInfo.ContainsKey("ret") && dicInfo["ret"] is ArrayList)
+                {
+                    foreach (Dictionary<string, object> dicRet in dicInfo["ret"] as ArrayList)
+                    {
+                        if (dicRet.ContainsKey("actType") && dicRet.ContainsKey("actID") && dicRet.ContainsKey("version"))
+                        {
+                            if (dicRet.ContainsKey("actType") && dicRet["actType"] != null && dicRet["actType"].ToString().Trim() == "0")
+                            {
+                                actID = dicRet["actID"].ToString().Trim();
+                            }
+                            aVersion += (string.IsNullOrEmpty(aVersion) ? "" : "#") + dicRet["version"].ToString().Trim();
+                        }
+                    }
+                }
+                if (!string.IsNullOrEmpty(aVersion) && !string.IsNullOrEmpty(actID))
+                {
+                    dic_param = new SortedDictionary<string, object>();
+                    dic_param.Add("aVersion", aVersion);
+                    dic_param.Add("actID", actID);
+                    dic_param.Add("actVer", "2.1");
+                    dic_param.Add("isGetAward", "0");
+                    param = new NameValueCollection();
+                    param.Add("api", getAPIString("Act.getAward", dic_param));
 
-            dic_param = new SortedDictionary<string, object>();
-            dic_param.Add("aVersion", "15739_2014120321170813#15761_2014120321170813#15782_2014120321170813#15815_2014120321170813#");
-            dic_param.Add("actID", "15815");
-            dic_param.Add("actVer", "2.1");
-            dic_param.Add("isGetAward", "1");
-            param = new NameValueCollection();
-            param.Add("api", getAPIString("Act.getAward", dic_param));
+                    client = new WebClientEx();
+                    client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    if (client.Error == null && client.ResponseText.Contains("isShowSubmit\":1"))
+                    {
+                        dic_param = new SortedDictionary<string, object>();
+                        dic_param.Add("aVersion", aVersion);
+                        dic_param.Add("actID", actID);
+                        dic_param.Add("actVer", "2.1");
+                        dic_param.Add("isGetAward", "1");
+                        param = new NameValueCollection();
+                        param.Add("api", getAPIString("Act.getAward", dic_param));
 
-            client = new WebClientEx();
-            client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        client = new WebClientEx();
+                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    }
+                }
+            }
             #endregion
         }
 

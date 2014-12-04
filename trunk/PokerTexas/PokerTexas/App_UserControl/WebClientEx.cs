@@ -65,9 +65,12 @@ namespace PokerTexas.App_UserControl
             catch (WebException ex)
             {
                 this.Error = ex;
-                using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                if (ex.Response != null)
                 {
-                    ResponseText = reader.ReadToEnd();
+                    using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                    {
+                        ResponseText = reader.ReadToEnd();
+                    }
                 }
             }
             catch (Exception ex)

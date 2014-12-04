@@ -127,9 +127,9 @@ namespace PokerTexas.App_Common
                 localObject1 = localObject1 + "T" + paramString + Regex.Replace(paramObject.ToString(), "[^0-9a-zA-Z]", string.Empty);
                 return localObject1;
             }
-            if (paramObject is SortedDictionary<string, object>)
+            if (paramObject is IDictionary<string, object>)
             {
-                foreach (KeyValuePair<string, object> item in paramObject as SortedDictionary<string, object>)
+                foreach (KeyValuePair<string, object> item in paramObject as IDictionary<string, object>)
                 {
                     localObject1 = localObject1 + item.Key + "=" + getSigPoker(item.Value, paramString);
                 }

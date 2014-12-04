@@ -317,35 +317,18 @@ namespace PokerTexas.App_Controller
                 }
                 if (!string.IsNullOrEmpty(aVersion) && !string.IsNullOrEmpty(actID))
                 {
-                    dic_param = new SortedDictionary<string, object>();
-                    dic_param.Add("aVersion", aVersion);
-                    dic_param.Add("actID", actID);
-                    dic_param.Add("actVer", "2.1");
-                    dic_param.Add("isGetAward", "0");
+                    Dictionary<string, object> dic_param2 = new Dictionary<string, object>();
+                    dic_param2 = new Dictionary<string, object>();
+                    dic_param2.Add("aVersion", aVersion);
+                    dic_param2.Add("actID", actID);
+                    dic_param2.Add("actVer", "2.1");
+                    dic_param2.Add("isGetAward", "1");
                     param = new NameValueCollection();
-                    param.Add("api", getAPIString("Act.getAward", dic_param));
+                    param.Add("api", getAPIString("Act.getAward", dic_param2));
 
                     client = new WebClientEx();
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    //client.X_TUNNEL_VERIFY = Models.X_TUNNEL_VERIFY;
-                    //client.SetAPIV8 = true;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                    if (client.Error == null && client.ResponseText.Contains("isShowSubmit\":1"))
-                    {
-                        dic_param = new SortedDictionary<string, object>();
-                        dic_param.Add("aVersion", aVersion);
-                        dic_param.Add("actID", actID);
-                        dic_param.Add("actVer", "2.1");
-                        dic_param.Add("isGetAward", "1");
-                        param = new NameValueCollection();
-                        param.Add("api", getAPIString("Act.getAward", dic_param));
-
-                        client = new WebClientEx();
-                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                        //client.X_TUNNEL_VERIFY = Models.X_TUNNEL_VERIFY;
-                        //client.SetAPIV8 = true;
-                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                    }
                 }
             }
             #endregion
@@ -473,7 +456,7 @@ namespace PokerTexas.App_Controller
             }
         }
 
-        private string getAPIString(string strMethod, SortedDictionary<string, object> param)
+        private string getAPIString(string strMethod, IDictionary<string, object> param)
         {
             Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.MBLoginText);
             string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();

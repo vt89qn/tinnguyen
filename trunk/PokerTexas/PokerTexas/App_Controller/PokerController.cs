@@ -125,7 +125,7 @@ namespace PokerTexas.App_Controller
                     dic.Add("sid", "110");
                     dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
                     dic.Add("unid", "193");
-                    dic.Add("version", "5.3.1");
+                    dic.Add("version", "5.4.3");
                     dic.Add("vkey", "");
                     dic.Add("vmid", "");
 
@@ -279,6 +279,7 @@ namespace PokerTexas.App_Controller
 
         public void KyTenMobile()
         {
+            this.Status = "Bắt đầu nhận ky ten mobile";
             if (!bMBLogedIn && !bTryMBLogin)
             {
                 LoginMobile();
@@ -310,7 +311,7 @@ namespace PokerTexas.App_Controller
                             {
                                 actID = dicRet["actID"].ToString().Trim();
                             }
-                            aVersion += (string.IsNullOrEmpty(aVersion) ? "" : "#") + dicRet["version"].ToString().Trim();
+                            aVersion += dicRet["version"].ToString().Trim() + "#";
                         }
                     }
                 }
@@ -326,6 +327,8 @@ namespace PokerTexas.App_Controller
 
                     client = new WebClientEx();
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    //client.X_TUNNEL_VERIFY = Models.X_TUNNEL_VERIFY;
+                    //client.SetAPIV8 = true;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     if (client.Error == null && client.ResponseText.Contains("isShowSubmit\":1"))
                     {
@@ -339,11 +342,14 @@ namespace PokerTexas.App_Controller
 
                         client = new WebClientEx();
                         client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                        //client.X_TUNNEL_VERIFY = Models.X_TUNNEL_VERIFY;
+                        //client.SetAPIV8 = true;
                         client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     }
                 }
             }
             #endregion
+            this.Status = "ket thuc nhận ky ten mobile";
         }
 
         public void TangQuaBiMat()
@@ -500,7 +506,7 @@ namespace PokerTexas.App_Controller
             SortedDictionary<string, string> treemap = new SortedDictionary<string, string>();
             treemap.Add("api", "62");
             treemap.Add("appID", "f61DAecVdKkJQ2l4nakA");
-            treemap.Add("appVer", "5.3.1");
+            treemap.Add("appVer", "5.4.3");
             treemap.Add("zSeed", iSeed.ToString());
             treemap.Add("zUid", string.Empty);
             treemap.Add("blistHash", string.Empty);
@@ -547,14 +553,14 @@ namespace PokerTexas.App_Controller
                             {
                                 strReturn += dicSigned["signedstring1"].ToString() + "&" + dicSigned["signedstring2"].ToString();
                                 return strReturn;
-                                break;
+                                //break;
                             }
                         }
                     }
                 }
                 System.Threading.Thread.Sleep(1000);
             }
-            return strReturn;
+            //return strReturn;
         }
 
         public void LoginWebAppCache()
@@ -629,10 +635,38 @@ namespace PokerTexas.App_Controller
                 }
                 bool bTryGo = false;
             FBeginAuthen: ;
-                client.DoGet(strLinkLogin);
-                if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("signed_request"))
+                //client.DoGet(strLinkLogin);
+                Models.WebAccessToken = string.Empty;
+                client.DoGet("https://www.facebook.com/connect/ping?client_id=179106755472856&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
+                if (client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
                 {
-                    Models.WebAccessToken = Utilities.GetRegexString(client.ResponseText, "signed_request", 1);
+                    //Not Authen
+                    client.DoGet("https://apps.facebook.com/dialog/oauth?display=async&domain=httpvntexas01.boyaagame.com&scope=email%2Cpublish_stream%2Cpublish_actions&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ftexas%252Ffacebookvn%252Floadingpage.php&state=f3993495d&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
+                    param = new NameValueCollection();
+                    param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
+                    param.Add("app_id", "179106755472856");
+                    param.Add("redirect_uri", "https://www.facebook.com/dialog/return/arbiter#origin=https%3A%2F%2Fhttpvntexas01.boyaagame.com%2Ftexas%2Ffacebookvn%2Floadingpage.php");
+                    param.Add("display", "async");
+                    param.Add("sdk", "joey");
+                    param.Add("from_post", "1");
+                    param.Add("audience[0][value]", "10");
+                    param.Add("GdpEmailBucket_grantEmailType", "contact_email");
+                    param.Add("readwrite", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
+                    //param.Add("gdp_version", "2.5");
+                    param.Add("seen_scopes", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
+                    param.Add("ref", "Default");
+                    param.Add("return_format", "signed_request,access_token,base_domain");
+                    param.Add("domain", "httpvntexas01.boyaagame.com");
+                    param.Add("__CONFIRM__", "1");
+                    param.Add("__user", Models.FaceBook.FBID.ToString());
+                    param.Add("__a", "1");
+                    client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
+                    client.DoGet("https://www.facebook.com/connect/ping?client_id=179106755472856&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
+                }
+                if (client.Response.ResponseUri.AbsoluteUri.Contains("signed_request"))
+                {
+                    Models.WebAccessToken = Regex.Match(client.Response.ResponseUri.AbsoluteUri, "signed_request=(?<val>[^&]+)").Groups["val"].Value;
+                    //Models.WebAccessToken = Utilities.GetRegexString(client.ResponseText, "signed_request", 1);
                     param = new NameValueCollection();
                     param.Add("signed_request", Models.WebAccessToken);
 
@@ -648,35 +682,33 @@ namespace PokerTexas.App_Controller
                         this.Status = "Authen Facebook Thành Công";
                         return;
                     }
-                    else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("loadingpage.php") && !bTryGo)
-                    {
-                        //Not Authen
-                        client.DoGet("https://apps.facebook.com/dialog/oauth?display=async&domain=httpvntexas01.boyaagame.com&scope=email%2Cpublish_stream%2Cpublish_actions&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ftexas%252Ffacebookvn%252Floadingpage.php&state=f3993495d&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
-                        param = new NameValueCollection();
-                        param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
-                        param.Add("app_id", "179106755472856");
-                        param.Add("redirect_uri", "https://www.facebook.com/dialog/return/arbiter#origin=https%3A%2F%2Fhttpvntexas01.boyaagame.com%2Ftexas%2Ffacebookvn%2Floadingpage.php");
-                        param.Add("display", "async");
-                        param.Add("sdk", "joey");
-                        param.Add("from_post", "1");
-                        param.Add("audience[0][value]", "10");
-                        param.Add("GdpEmailBucket_grantEmailType", "contact_email");
-                        param.Add("readwrite", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
-                        //param.Add("gdp_version", "2.5");
-                        param.Add("seen_scopes", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
-                        param.Add("ref", "Default");
-                        param.Add("return_format", "signed_request,access_token,base_domain");
-                        param.Add("domain", "httpvntexas01.boyaagame.com");
-                        param.Add("__CONFIRM__", "1");
-                        param.Add("__user", Models.FaceBook.FBID.ToString());
-                        param.Add("__a", "1");
-                        client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
-                        bTryGo = true;
-                        goto FBeginAuthen;
-
-
-                        //client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
-                    }
+                    //else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("loadingpage.php") && !bTryGo)
+                    //{
+                    //    //Not Authen
+                    //    client.DoGet("https://apps.facebook.com/dialog/oauth?display=async&domain=httpvntexas01.boyaagame.com&scope=email%2Cpublish_stream%2Cpublish_actions&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ftexas%252Ffacebookvn%252Floadingpage.php&state=f3993495d&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
+                    //    param = new NameValueCollection();
+                    //    param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
+                    //    param.Add("app_id", "179106755472856");
+                    //    param.Add("redirect_uri", "https://www.facebook.com/dialog/return/arbiter#origin=https%3A%2F%2Fhttpvntexas01.boyaagame.com%2Ftexas%2Ffacebookvn%2Floadingpage.php");
+                    //    param.Add("display", "async");
+                    //    param.Add("sdk", "joey");
+                    //    param.Add("from_post", "1");
+                    //    param.Add("audience[0][value]", "10");
+                    //    param.Add("GdpEmailBucket_grantEmailType", "contact_email");
+                    //    param.Add("readwrite", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
+                    //    //param.Add("gdp_version", "2.5");
+                    //    param.Add("seen_scopes", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
+                    //    param.Add("ref", "Default");
+                    //    param.Add("return_format", "signed_request,access_token,base_domain");
+                    //    param.Add("domain", "httpvntexas01.boyaagame.com");
+                    //    param.Add("__CONFIRM__", "1");
+                    //    param.Add("__user", Models.FaceBook.FBID.ToString());
+                    //    param.Add("__a", "1");
+                    //    client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
+                    //    bTryGo = true;
+                    //    goto FBeginAuthen;
+                    //    //client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
+                    //}
                 }
                 this.Status = "Kiểm tra lại tài khoản facebook này";
             }
@@ -980,7 +1012,7 @@ namespace PokerTexas.App_Controller
             }
         }
 
-        public void KyTen()
+        public void KyTenWeb()
         {
             try
             {
@@ -995,35 +1027,38 @@ namespace PokerTexas.App_Controller
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
                 NameValueCollection param = new NameValueCollection();
-                param.Add("cmd", "init");
+                param.Add("id", "2104");
+                param.Add("cmd[info][]", "A");
+                param.Add("cmd[info][]", "day");
                 param.Add("apik", apik);
-                client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/762/ajax.php");
+                client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
-                    if (!client.ResponseText.Contains("isSigned\":1"))
+                    //if (!client.ResponseText.Contains("isSigned\":1"))
                     {
                         param = new NameValueCollection();
-                        param.Add("cmd", "sign");
+                        param.Add("id", "2104");
+                        param.Add("cmd[change][3.2]", "1");
                         param.Add("apik", apik);
-                        client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/762/ajax.php");
+                        client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                     }
                 }
                 if (AppSettings.Seft)
                 {//Ki ten than bai
-                    param = new NameValueCollection();
-                    param.Add("cmd", "init");
-                    param.Add("apik", apik);
-                    client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/471/ajax.php");
-                    if (!string.IsNullOrEmpty(client.ResponseText))
-                    {
-                        //if (!client.ResponseText.Contains("isSigned\":1"))
-                        {
-                            param = new NameValueCollection();
-                            param.Add("cmd", "sign");
-                            param.Add("apik", apik);
-                            client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/471/ajax.php");
-                        }
-                    }
+                    //param = new NameValueCollection();
+                    //param.Add("cmd", "init");
+                    //param.Add("apik", apik);
+                    //client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/471/ajax.php");
+                    //if (!string.IsNullOrEmpty(client.ResponseText))
+                    //{
+                    //    //if (!client.ResponseText.Contains("isSigned\":1"))
+                    //    {
+                    //        param = new NameValueCollection();
+                    //        param.Add("cmd", "sign");
+                    //        param.Add("apik", apik);
+                    //        client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/act/471/ajax.php");
+                    //    }
+                    //}
                 }
                 //Chia se
                 param = new NameValueCollection();
@@ -1204,7 +1239,9 @@ namespace PokerTexas.App_Controller
                 string strserialCard = string.Empty;
                 Dictionary<string, string> dicDB = Utilities.DeSerializeObject("noviceGame.obj") as Dictionary<string, string>;
                 if (dicDB == null) dicDB = new Dictionary<string, string>();
-                for (int iIndex = 1; iIndex <= 7; iIndex++)
+                int iIndex = 1;
+                string isShowMoney = "";
+                for (; iIndex <= 10; iIndex++)
                 {
                     NameValueCollection param = new NameValueCollection();
                     if (iIndex == 1)
@@ -1220,85 +1257,130 @@ namespace PokerTexas.App_Controller
 
                     }
                     client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/noviceGame.php");
-                    Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                    if (dicData.ContainsKey("ret"))
+                    if (!string.IsNullOrEmpty(client.ResponseText))
                     {
-                        Dictionary<string, object> ret = dicData["ret"] as Dictionary<string, object>;
-                        string strCard1 = string.Empty;
-                        string strCard2 = string.Empty;
-                        ArrayList cardType = null;
+                        Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                        if (dicData.ContainsKey("ret"))
+                        {
+                            Dictionary<string, object> ret = dicData["ret"] as Dictionary<string, object>;
+                            string strCard1 = string.Empty;
+                            string strCard2 = string.Empty;
+                            ArrayList cardType = null;
+                            if (ret.ContainsKey("isShowMoney") && ret["isShowMoney"] != null)
+                            {
+                                isShowMoney = ret["isShowMoney"].ToString();
+                            }
+                            if (ret.ContainsKey("cardType"))
+                            {
+                                cardType = ret["cardType"] as ArrayList;
+                            }
+                            else if (ret.ContainsKey("nextArr"))
+                            {
+                                Dictionary<string, object> nextArr = ret["nextArr"] as Dictionary<string, object>;
+                                if (nextArr != null && nextArr.ContainsKey("cardType"))
+                                {
+                                    cardType = nextArr["cardType"] as ArrayList;
+                                }
+                            }
+                            if (cardType != null)
+                            {
+                                if (iIndex > 1 && !string.IsNullOrEmpty(strserialCard) && !dicDB.ContainsKey(strserialCard))
+                                {
+                                    dicDB.Add(strserialCard, strChoose);
+                                }
+                                strserialCard = new JavaScriptSerializer().Serialize(cardType);
+                                if (dicDB != null && dicDB.ContainsKey(strserialCard))
+                                {
+                                    strChoose = dicDB[strserialCard];
+                                }
+                                else
+                                {
+                                    if (cardType.Count == 3)
+                                    {
+                                        strCard1 = cardType[0].ToString() + "-" + cardType[1];
+                                        strCard2 = cardType[0].ToString() + "-" + cardType[2];
+                                        int iPoint1 = getPoint(strCard1);
+                                        int iPoint2 = getPoint(strCard2);
+                                        if (iPoint1 < iPoint2) strChoose = "2";
+                                        else if (iPoint1 > iPoint2) strChoose = "1";
+                                        else if (iPoint1 == 8) strChoose = "2";
 
-                        if (ret.ContainsKey("cardType"))
-                        {
-                            cardType = ret["cardType"] as ArrayList;
+                                    }
+                                    else if (cardType.Count == 4)
+                                    {
+                                        strCard1 = cardType[0].ToString() + "-" + cardType[2];
+                                        strCard2 = cardType[0].ToString() + "-" + cardType[3];
+                                        int iPoint1 = getPoint(strCard1);
+                                        int iPoint2 = getPoint(strCard2);
+                                        if (iPoint1 < iPoint2) strChoose = "1";
+                                        else strChoose = "2";
+                                    }
+                                    else if (cardType.Count == 5)
+                                    {
+                                        strCard1 = cardType[0].ToString() + "-" + cardType[1] + "-" + cardType[3];
+                                        strCard2 = cardType[0].ToString() + "-" + cardType[2];
+                                        int iPoint1 = getPoint(strCard1);
+                                        int iPoint2 = getPoint(strCard2);
+                                        if (iPoint1 < iPoint2) strChoose = "2";
+                                        else strChoose = "1";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(strserialCard))
+                                {
+                                    if (!string.IsNullOrEmpty(ret["err"] as string))
+                                    {
+                                        if (!dicDB.ContainsKey(strserialCard))
+                                        {
+                                            dicDB.Add(strserialCard, strChoose == "1" ? "2" : "1");
+                                        }
+                                        else
+                                        {
+                                            strChoose = strChoose == "1" ? "2" : "1";
+                                            if (dicDB[strserialCard] != strChoose)
+                                            {
+                                                dicDB[strserialCard] = strChoose;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!dicDB.ContainsKey(strserialCard))
+                                        {
+                                            dicDB.Add(strserialCard, strChoose);
+                                        }
+                                        else
+                                        {
+                                            if (dicDB[strserialCard] != strChoose)
+                                            {
+                                                dicDB[strserialCard] = strChoose;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            };
                         }
-                        else if (ret.ContainsKey("nextArr"))
-                        {
-                            Dictionary<string, object> nextArr = ret["nextArr"] as Dictionary<string, object>;
-                            if (nextArr != null && nextArr.ContainsKey("cardType"))
-                            {
-                                cardType = nextArr["cardType"] as ArrayList;
-                            }
-                        }
-                        if (cardType != null)
-                        {
-                            if (!string.IsNullOrEmpty(strserialCard) && !dicDB.ContainsKey(strserialCard))
-                            {
-                                dicDB.Add(strserialCard, strChoose);
-                            }
-                            strserialCard = new JavaScriptSerializer().Serialize(cardType);
-                            if (dicDB != null && dicDB.ContainsKey(strserialCard))
-                            {
-                                strChoose = dicDB[strserialCard];
-                            }
-                            if (cardType.Count == 3)
-                            {
-                                strCard1 = cardType[0].ToString() + "-" + cardType[1];
-                                strCard2 = cardType[0].ToString() + "-" + cardType[2];
-                                int iPoint1 = getPoint(strCard1);
-                                int iPoint2 = getPoint(strCard2);
-                                if (iPoint1 < iPoint2) strChoose = "2";
-                                else if (iPoint1 > iPoint2) strChoose = "1";
-                                else if (iPoint1 == 8) strChoose = "2";
-
-                            }
-                            else if (cardType.Count == 4)
-                            {
-                                strCard1 = cardType[0].ToString() + "-" + cardType[2];
-                                strCard2 = cardType[0].ToString() + "-" + cardType[3];
-                                int iPoint1 = getPoint(strCard1);
-                                int iPoint2 = getPoint(strCard2);
-                                if (iPoint1 < iPoint2) strChoose = "1";
-                                else strChoose = "2";
-                            }
-                            else if (cardType.Count == 5)
-                            {
-                                strCard1 = cardType[0].ToString() + "-" + cardType[1] + "-" + cardType[3];
-                                strCard2 = cardType[0].ToString() + "-" + cardType[2];
-                                int iPoint1 = getPoint(strCard1);
-                                int iPoint2 = getPoint(strCard2);
-                                if (iPoint1 < iPoint2) strChoose = "2";
-                                else strChoose = "1";
-                            }
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(strserialCard) && !string.IsNullOrEmpty(ret["err"] as string) && !dicDB.ContainsKey(strserialCard))
-                            {
-                                dicDB.Add(strserialCard, strChoose == "1" ? "2" : "1");
-                            }
-                            break;
-                        };
                     }
                 }
                 Dictionary<string, string> dicDB2 = Utilities.DeSerializeObject("noviceGame.obj") as Dictionary<string, string>;
                 if (dicDB2 == null) dicDB2 = new Dictionary<string, string>();
                 foreach (KeyValuePair<string, string> item in dicDB)
                 {
-                    if (!dicDB2.ContainsKey(item.Key)) dicDB2.Add(item.Key, item.Value);
+                    if (!dicDB2.ContainsKey(item.Key))
+                    {
+                        dicDB2.Add(item.Key, item.Value);
+                    }
+                    else if (dicDB2[item.Key] != item.Value)
+                    {
+                        string t = dicDB2[item.Key];
+                        dicDB2[item.Key] = item.Value;
+                    }
                 }
                 Utilities.SerializeObject("noviceGame.obj", dicDB2);
-                this.Status = "mini game xong";
+                this.Status = "mini game xong (round : " + iIndex + ", money : " + isShowMoney + " )";
             }
             catch (Exception ex)
             {

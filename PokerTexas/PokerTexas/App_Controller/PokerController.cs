@@ -1017,12 +1017,31 @@ namespace PokerTexas.App_Controller
                 client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
-                    //if (!client.ResponseText.Contains("isSigned\":1"))
+                    Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    if (dicData.ContainsKey("info"))
                     {
+                        Dictionary<string, object> info = dicData["info"] as Dictionary<string, object>;
                         param = new NameValueCollection();
                         param.Add("id", "2104");
-                        param.Add("cmd[change][3.2]", "1");
                         param.Add("apik", apik);
+                        int t = 1;
+                        if (!info.ContainsKey("A"))
+                        {
+                            t = 1;
+                            
+                        }
+                        else if (info["A"] is Dictionary<string, object>)
+                        {
+                            foreach (KeyValuePair<string, object> item in info["A"] as Dictionary<string, object>)
+                            {
+                                Match m = Regex.Match(item.Key, "t(?<val>[0-9]+)");
+                                if (m.Success && int.Parse(m.Groups["val"].Value.Trim()) > t)
+                                {
+                                    t = int.Parse(m.Groups["val"].Value.Trim());
+                                }
+                            }
+                        }
+                        param.Add("cmd[change][3." + t + "]", "1");
                         client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                     }
                 }

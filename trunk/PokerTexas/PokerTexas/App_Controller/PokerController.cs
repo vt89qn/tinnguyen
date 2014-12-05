@@ -108,11 +108,11 @@ namespace PokerTexas.App_Controller
                     Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
                     Models.MBAccessToken = dicLoginFaceBook["access_token"].ToString();
                 }
-                client = new WebClientEx();
-                client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
-                client.DoGet("https://graph.facebook.com/me?access_token=" + Models.MBAccessToken + "&format=json");
-                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                if (dicInfo.ContainsKey("id"))
+                //client = new WebClientEx();
+                //client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+                //client.DoGet("https://graph.facebook.com/me?access_token=" + Models.MBAccessToken + "&format=json");
+                //Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                //if (dicInfo.ContainsKey("id"))
                 {
                     #region - Members.Create -
                     SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
@@ -137,8 +137,8 @@ namespace PokerTexas.App_Controller
 
                     dic_param.Add("is_overseas", "1");
                     dic_param.Add("mbig", "");
-                    string name = dicInfo.ContainsKey("name") ? dicInfo["name"].ToString() : "";
-                    dic_param.Add("mnick", name);
+                    //string name = dicInfo.ContainsKey("name") ? dicInfo["name"].ToString() : "";
+                    dic_param.Add("mnick", Models.FaceBook.Login);
                     dic_param.Add("protocol", "1");
                     dic_param.Add("sitemid", Models.FaceBook.FBID);
                     dic_param.Add("token", Models.MBAccessToken);
@@ -159,7 +159,7 @@ namespace PokerTexas.App_Controller
                         && client.ResponseText.Contains("mtkey")
                         && client.ResponseText.Contains("vkey"))
                     {
-                        dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                        Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
                         Models.MBLoginText = client.ResponseText;
                         Models.PKID = (dicInfo["ret"] as Dictionary<string, object>)["mid"].ToString();
                         Models.X_TUNNEL_VERIFY = client.X_TUNNEL_VERIFY;
@@ -191,23 +191,23 @@ namespace PokerTexas.App_Controller
                     }
                     #endregion
                 }
-                else
-                {
-                    if (!bTryLoginFB)
-                    {
-                        bTryLoginFB = true;
-                        FaceBookController fbController = new FaceBookController();
-                        if (fbController.LoginMobile(Models.FaceBook))
-                        {
-                            Global.DBContext.SaveChanges();
-                            return LoginMobile();
-                        }
-                    }
-                }
+                //else
+                //{
+                //    if (!bTryLoginFB)
+                //    {
+                //        bTryLoginFB = true;
+                //        FaceBookController fbController = new FaceBookController();
+                //        if (fbController.LoginMobile(Models.FaceBook))
+                //        {
+                //            Global.DBContext.SaveChanges();
+                //            return LoginMobile();
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
-                throw ex;
+                //throw ex;
             }
             return false;
         }
@@ -273,7 +273,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -367,7 +367,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình Tặng quà bí mật";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -408,7 +408,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình nhận quà bí mật";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -562,7 +562,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình Authen Facebook";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -665,40 +665,18 @@ namespace PokerTexas.App_Controller
                         this.Status = "Authen Facebook Thành Công";
                         return;
                     }
-                    //else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("loadingpage.php") && !bTryGo)
-                    //{
-                    //    //Not Authen
-                    //    client.DoGet("https://apps.facebook.com/dialog/oauth?display=async&domain=httpvntexas01.boyaagame.com&scope=email%2Cpublish_stream%2Cpublish_actions&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ftexas%252Ffacebookvn%252Floadingpage.php&state=f3993495d&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
-                    //    param = new NameValueCollection();
-                    //    param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
-                    //    param.Add("app_id", "179106755472856");
-                    //    param.Add("redirect_uri", "https://www.facebook.com/dialog/return/arbiter#origin=https%3A%2F%2Fhttpvntexas01.boyaagame.com%2Ftexas%2Ffacebookvn%2Floadingpage.php");
-                    //    param.Add("display", "async");
-                    //    param.Add("sdk", "joey");
-                    //    param.Add("from_post", "1");
-                    //    param.Add("audience[0][value]", "10");
-                    //    param.Add("GdpEmailBucket_grantEmailType", "contact_email");
-                    //    param.Add("readwrite", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
-                    //    //param.Add("gdp_version", "2.5");
-                    //    param.Add("seen_scopes", "email,public_profile,user_friends,publish_stream,create_note,photo_upload,publish_checkins,share_item,status_update,video_upload,publish_actions,baseline");
-                    //    param.Add("ref", "Default");
-                    //    param.Add("return_format", "signed_request,access_token,base_domain");
-                    //    param.Add("domain", "httpvntexas01.boyaagame.com");
-                    //    param.Add("__CONFIRM__", "1");
-                    //    param.Add("__user", Models.FaceBook.FBID.ToString());
-                    //    param.Add("__a", "1");
-                    //    client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
-                    //    bTryGo = true;
-                    //    goto FBeginAuthen;
-                    //    //client.DoGet("https://www.facebook.com/connect/ping?client_id=373853122704634&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
-                    //}
+                }
+                if (!bTryGo)
+                {
+                    bTryGo = true;
+                    goto FBeginAuthen;
                 }
                 this.Status = "Kiểm tra lại tài khoản facebook này";
             }
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình Authen Facebook";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -744,7 +722,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình Chia sẻ chip may mắn";
-                throw ex;
+                //throw ex;
             }
             return href;
         }
@@ -798,7 +776,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình rút fan chip";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -865,7 +843,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình nhận chip may mắn";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -933,7 +911,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình tặng cỏ 4 lá";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -991,7 +969,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình tặng cỏ 4 lá";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -1006,15 +984,12 @@ namespace PokerTexas.App_Controller
                 string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
                 string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
                 string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                NameValueCollection param = new NameValueCollection();
-                param.Add("id", "2104");
-                param.Add("cmd[info][]", "A");
-                param.Add("cmd[info][]", "day");
-                param.Add("apik", apik);
-                client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
+                string textparam = "id=2104&cmd[info][]=A&cmd[info][]=day&apik=" + apik;
+                client.DoPost(textparam, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
                     Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -1023,12 +998,10 @@ namespace PokerTexas.App_Controller
                         Dictionary<string, object> info = dicData["info"] as Dictionary<string, object>;
                         param = new NameValueCollection();
                         param.Add("id", "2104");
-                        param.Add("apik", apik);
                         int t = 1;
                         if (!info.ContainsKey("A"))
                         {
                             t = 1;
-                            
                         }
                         else if (info["A"] is Dictionary<string, object>)
                         {
@@ -1040,8 +1013,13 @@ namespace PokerTexas.App_Controller
                                     t = int.Parse(m.Groups["val"].Value.Trim());
                                 }
                             }
+                            if (t >= 1)
+                            {
+                                t++;
+                            }
                         }
                         param.Add("cmd[change][3." + t + "]", "1");
+                        param.Add("apik", apik);
                         client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                     }
                 }
@@ -1084,7 +1062,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình Ký tên";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -1387,7 +1365,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình chơi mini game";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -1490,7 +1468,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
-                throw ex;
+                //throw ex;
             }
         }
 
@@ -1527,7 +1505,7 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 this.Status = "Có lỗi trong quá trình lấy ngày sinh";
-                throw ex;
+                //throw ex;
             }
         }
         #endregion

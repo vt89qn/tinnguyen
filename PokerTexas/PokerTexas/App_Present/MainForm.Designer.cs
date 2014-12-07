@@ -35,6 +35,7 @@
             this.menuGridData = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuCopyURL = new System.Windows.Forms.ToolStripMenuItem();
             this.menuXoaTK = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuLoginLaiFacebook = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
@@ -53,6 +54,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupRutfan = new System.Windows.Forms.GroupBox();
             this.btnAuthenNhanFanChip = new System.Windows.Forms.Button();
+            this.txtCheckTuDong = new System.Windows.Forms.CheckBox();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -100,24 +102,32 @@
             // 
             this.menuGridData.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuCopyURL,
-            this.menuXoaTK});
+            this.menuXoaTK,
+            this.menuLoginLaiFacebook});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(127, 48);
+            this.menuGridData.Size = new System.Drawing.Size(177, 70);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
             // 
             this.menuCopyURL.Name = "menuCopyURL";
-            this.menuCopyURL.Size = new System.Drawing.Size(126, 22);
+            this.menuCopyURL.Size = new System.Drawing.Size(176, 22);
             this.menuCopyURL.Text = "Copy URL";
             this.menuCopyURL.Click += new System.EventHandler(this.menuCopyURL_Click);
             // 
             // menuXoaTK
             // 
             this.menuXoaTK.Name = "menuXoaTK";
-            this.menuXoaTK.Size = new System.Drawing.Size(126, 22);
+            this.menuXoaTK.Size = new System.Drawing.Size(176, 22);
             this.menuXoaTK.Text = "Xóa TK";
             this.menuXoaTK.Click += new System.EventHandler(this.menuXoaTK_Click);
+            // 
+            // menuLoginLaiFacebook
+            // 
+            this.menuLoginLaiFacebook.Name = "menuLoginLaiFacebook";
+            this.menuLoginLaiFacebook.Size = new System.Drawing.Size(176, 22);
+            this.menuLoginLaiFacebook.Text = "Login Lại FaceBook";
+            this.menuLoginLaiFacebook.Click += new System.EventHandler(this.menuLoginLaiFacebook_Click);
             // 
             // lblPack
             // 
@@ -195,9 +205,9 @@
             // 
             // btnCheckWeb
             // 
-            this.btnCheckWeb.Location = new System.Drawing.Point(116, 12);
+            this.btnCheckWeb.Location = new System.Drawing.Point(84, 12);
             this.btnCheckWeb.Name = "btnCheckWeb";
-            this.btnCheckWeb.Size = new System.Drawing.Size(100, 50);
+            this.btnCheckWeb.Size = new System.Drawing.Size(65, 50);
             this.btnCheckWeb.TabIndex = 3;
             this.btnCheckWeb.Text = "Web(F2)";
             this.btnCheckWeb.UseVisualStyleBackColor = true;
@@ -207,7 +217,7 @@
             // 
             this.btnCheckMobile.Location = new System.Drawing.Point(12, 12);
             this.btnCheckMobile.Name = "btnCheckMobile";
-            this.btnCheckMobile.Size = new System.Drawing.Size(100, 50);
+            this.btnCheckMobile.Size = new System.Drawing.Size(65, 50);
             this.btnCheckMobile.TabIndex = 0;
             this.btnCheckMobile.Text = "Mobile(F1)";
             this.btnCheckMobile.UseVisualStyleBackColor = true;
@@ -216,7 +226,9 @@
             // txtCheckCo4La
             // 
             this.txtCheckCo4La.AutoSize = true;
-            this.txtCheckCo4La.Location = new System.Drawing.Point(222, 30);
+            this.txtCheckCo4La.Checked = true;
+            this.txtCheckCo4La.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckCo4La.Location = new System.Drawing.Point(155, 42);
             this.txtCheckCo4La.Name = "txtCheckCo4La";
             this.txtCheckCo4La.Size = new System.Drawing.Size(63, 17);
             this.txtCheckCo4La.TabIndex = 4;
@@ -226,7 +238,9 @@
             // txtCheckChipMayMan
             // 
             this.txtCheckChipMayMan.AutoSize = true;
-            this.txtCheckChipMayMan.Location = new System.Drawing.Point(222, 47);
+            this.txtCheckChipMayMan.Checked = true;
+            this.txtCheckChipMayMan.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckChipMayMan.Location = new System.Drawing.Point(155, 60);
             this.txtCheckChipMayMan.Name = "txtCheckChipMayMan";
             this.txtCheckChipMayMan.Size = new System.Drawing.Size(94, 17);
             this.txtCheckChipMayMan.TabIndex = 4;
@@ -238,7 +252,7 @@
             this.txtCheckKyTen.AutoSize = true;
             this.txtCheckKyTen.Checked = true;
             this.txtCheckKyTen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckKyTen.Location = new System.Drawing.Point(222, 12);
+            this.txtCheckKyTen.Location = new System.Drawing.Point(155, 24);
             this.txtCheckKyTen.Name = "txtCheckKyTen";
             this.txtCheckKyTen.Size = new System.Drawing.Size(60, 17);
             this.txtCheckKyTen.TabIndex = 4;
@@ -247,7 +261,7 @@
             // 
             // btnChuanBiRutFan
             // 
-            this.btnChuanBiRutFan.Location = new System.Drawing.Point(322, 12);
+            this.btnChuanBiRutFan.Location = new System.Drawing.Point(315, 12);
             this.btnChuanBiRutFan.Name = "btnChuanBiRutFan";
             this.btnChuanBiRutFan.Size = new System.Drawing.Size(100, 50);
             this.btnChuanBiRutFan.TabIndex = 3;
@@ -257,7 +271,8 @@
             // 
             // btnRutThuongFan
             // 
-            this.btnRutThuongFan.Location = new System.Drawing.Point(280, 12);
+            this.btnRutThuongFan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRutThuongFan.Location = new System.Drawing.Point(288, 12);
             this.btnRutThuongFan.Name = "btnRutThuongFan";
             this.btnRutThuongFan.Size = new System.Drawing.Size(60, 36);
             this.btnRutThuongFan.TabIndex = 3;
@@ -267,9 +282,11 @@
             // 
             // txtRutFanLink
             // 
+            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRutFanLink.Location = new System.Drawing.Point(6, 27);
             this.txtRutFanLink.Name = "txtRutFanLink";
-            this.txtRutFanLink.Size = new System.Drawing.Size(202, 20);
+            this.txtRutFanLink.Size = new System.Drawing.Size(210, 20);
             this.txtRutFanLink.TabIndex = 5;
             // 
             // label1
@@ -287,22 +304,35 @@
             this.groupRutfan.Controls.Add(this.btnAuthenNhanFanChip);
             this.groupRutfan.Controls.Add(this.btnRutThuongFan);
             this.groupRutfan.Controls.Add(this.label1);
-            this.groupRutfan.Location = new System.Drawing.Point(428, 7);
+            this.groupRutfan.Location = new System.Drawing.Point(421, 7);
             this.groupRutfan.Name = "groupRutfan";
-            this.groupRutfan.Size = new System.Drawing.Size(346, 55);
+            this.groupRutfan.Size = new System.Drawing.Size(354, 55);
             this.groupRutfan.TabIndex = 7;
             this.groupRutfan.TabStop = false;
             this.groupRutfan.Visible = false;
             // 
             // btnAuthenNhanFanChip
             // 
-            this.btnAuthenNhanFanChip.Location = new System.Drawing.Point(214, 12);
+            this.btnAuthenNhanFanChip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAuthenNhanFanChip.Location = new System.Drawing.Point(222, 12);
             this.btnAuthenNhanFanChip.Name = "btnAuthenNhanFanChip";
             this.btnAuthenNhanFanChip.Size = new System.Drawing.Size(60, 36);
             this.btnAuthenNhanFanChip.TabIndex = 3;
             this.btnAuthenNhanFanChip.Text = "Authen All";
             this.btnAuthenNhanFanChip.UseVisualStyleBackColor = true;
             this.btnAuthenNhanFanChip.Click += new System.EventHandler(this.btnAuthenNhanFanChip_Click);
+            // 
+            // txtCheckTuDong
+            // 
+            this.txtCheckTuDong.AutoSize = true;
+            this.txtCheckTuDong.Checked = true;
+            this.txtCheckTuDong.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckTuDong.Location = new System.Drawing.Point(155, 6);
+            this.txtCheckTuDong.Name = "txtCheckTuDong";
+            this.txtCheckTuDong.Size = new System.Drawing.Size(102, 17);
+            this.txtCheckTuDong.TabIndex = 4;
+            this.txtCheckTuDong.Text = "Check Tự Động";
+            this.txtCheckTuDong.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -311,6 +341,7 @@
             this.ClientSize = new System.Drawing.Size(786, 447);
             this.Controls.Add(this.groupRutfan);
             this.Controls.Add(this.txtCheckChipMayMan);
+            this.Controls.Add(this.txtCheckTuDong);
             this.Controls.Add(this.txtCheckKyTen);
             this.Controls.Add(this.txtCheckCo4La);
             this.Controls.Add(this.btnChuanBiRutFan);
@@ -361,6 +392,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupRutfan;
         private System.Windows.Forms.Button btnAuthenNhanFanChip;
+        private System.Windows.Forms.CheckBox txtCheckTuDong;
+        private System.Windows.Forms.ToolStripMenuItem menuLoginLaiFacebook;
 
     }
 }

@@ -43,14 +43,24 @@ namespace PokerTexas.App_Model
         public long PackageID { get; set; }
         public virtual Package Package { get; set; }
 
-        public string MBAccessToken { get; set; }
-        public string WebAccessToken { get; set; }
-
         public string MBLoginText { get; set; }
-        public string WebLoginText { get; set; }
 
         public byte[] WebCookie { get; set; }
         public string X_TUNNEL_VERIFY { get; set; }
+    }
+
+    public class PokerExData
+    {
+        public string m_vkey { get; set; }
+        public string m_mtkey { get; set; }
+        public string access_token { get; set; }
+        public string ip_address { get; set; }
+        public string apik { get; set; }
+        public string sid { get; set; }
+        public string mtkey { get; set; }
+        public string mnick { get; set; }
+        public string expLevel { get; set; }
+        public string loginkey { get; set; }
     }
 
     public class IPAddress

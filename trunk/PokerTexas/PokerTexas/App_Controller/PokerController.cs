@@ -15,6 +15,9 @@ using System.Net;
 using System.Collections;
 using System.Windows.Forms;
 using System.Drawing;
+using FluorineFx.Net;
+using FluorineFx;
+using FluorineFx.Messaging.Api.Service;
 
 namespace PokerTexas.App_Controller
 {
@@ -102,108 +105,93 @@ namespace PokerTexas.App_Controller
             try
             {
                 bTryMBLogin = true;
+                var exData = getExData();
+
+                if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
+
                 WebClientEx client = new WebClientEx();
-                //if (string.IsNullOrEmpty(Models.MBAccessToken))
+                client.IpHeader = exData.ip_address;
+                Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
+                exData.access_token = dicLoginFaceBook["access_token"].ToString();
+                #region - Members.Create -
+                SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
+                dic.Add("api", "62");
+                dic.Add("langtype", "13");
+                dic.Add("method", "Members.Create");
+                dic.Add("mid", "0");
+                dic.Add("mtkey", "");
+                dic.Add("protocol", "1");
+                dic.Add("sid", "110");
+                dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                dic.Add("unid", "193");
+                dic.Add("version", "5.4.3");
+                dic.Add("vkey", "");
+                dic.Add("vmid", "");
+
+
+                SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+                dic_param.Add("ANPSetting", "4");
+                dic_param.Add("appid", "1");
+                dic_param.Add("appkey", "");
+
+                dic_param.Add("is_overseas", "1");
+                dic_param.Add("mbig", "");
+                //string name = dicInfo.ContainsKey("name") ? dicInfo["name"].ToString() : "";
+                dic_param.Add("mnick", Models.FaceBook.Login);
+                dic_param.Add("protocol", "1");
+                dic_param.Add("sitemid", Models.FaceBook.FBID);
+                dic_param.Add("token", exData.access_token);
+                dic.Add("param", dic_param);
+
+                dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, string.Empty, "V")));
+
+
+                NameValueCollection param = new NameValueCollection();
+                string api = new JavaScriptSerializer().Serialize(dic);
+                param.Add("api", api);
+                client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
+                client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                client.X_TUNNEL_VERIFY = string.IsNullOrEmpty(Models.X_TUNNEL_VERIFY) ? Get_X_TUNNEL_VERIFY(Models.FaceBook.FBID) : Models.X_TUNNEL_VERIFY;
+                client.SetAPIV8 = true;
+                client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                if (!string.IsNullOrEmpty(client.ResponseText)
+                    && client.ResponseText.Contains("mtkey")
+                    && client.ResponseText.Contains("vkey"))
                 {
-                    Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
-                    Models.MBAccessToken = dicLoginFaceBook["access_token"].ToString();
-                }
-                //client = new WebClientEx();
-                //client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
-                //client.DoGet("https://graph.facebook.com/me?access_token=" + Models.MBAccessToken + "&format=json");
-                //Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                //if (dicInfo.ContainsKey("id"))
-                {
-                    #region - Members.Create -
-                    SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
-                    dic.Add("api", "62");
-                    dic.Add("langtype", "13");
-                    dic.Add("method", "Members.Create");
-                    dic.Add("mid", "0");
-                    dic.Add("mtkey", "");
-                    dic.Add("protocol", "1");
-                    dic.Add("sid", "110");
-                    dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
-                    dic.Add("unid", "193");
-                    dic.Add("version", "5.4.3");
-                    dic.Add("vkey", "");
-                    dic.Add("vmid", "");
+                    Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    Models.PKID = (dicInfo["ret"] as Dictionary<string, object>)["mid"].ToString();
+                    Models.X_TUNNEL_VERIFY = client.X_TUNNEL_VERIFY;
+                    string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
+                    string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
+                    exData.m_mtkey = mtkey;
+                    exData.m_vkey = vkey;
+                    setExData(exData);
+                    #region - System.loadInit -
+                    dic_param = new SortedDictionary<string, object>();
 
+                    param = new NameValueCollection();
+                    param.Add("api", getAPIString("System.loadInit", dic_param));
 
-                    SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
-                    dic_param.Add("ANPSetting", "4");
-                    dic_param.Add("appid", "1");
-                    dic_param.Add("appkey", "");
-
-                    dic_param.Add("is_overseas", "1");
-                    dic_param.Add("mbig", "");
-                    //string name = dicInfo.ContainsKey("name") ? dicInfo["name"].ToString() : "";
-                    dic_param.Add("mnick", Models.FaceBook.Login);
-                    dic_param.Add("protocol", "1");
-                    dic_param.Add("sitemid", Models.FaceBook.FBID);
-                    dic_param.Add("token", Models.MBAccessToken);
-                    dic.Add("param", dic_param);
-
-                    dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, string.Empty)));
-
-
-                    NameValueCollection param = new NameValueCollection();
-                    string api = new JavaScriptSerializer().Serialize(dic);
-                    param.Add("api", api);
                     client = new WebClientEx();
+                    client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    client.X_TUNNEL_VERIFY = string.IsNullOrEmpty(Models.X_TUNNEL_VERIFY) ? Get_X_TUNNEL_VERIFY(Models.FaceBook.FBID) : Models.X_TUNNEL_VERIFY;
-                    client.SetAPIV8 = true;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                    if (!string.IsNullOrEmpty(client.ResponseText)
-                        && client.ResponseText.Contains("mtkey")
-                        && client.ResponseText.Contains("vkey"))
+                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
                     {
-                        Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                        Models.MBLoginText = client.ResponseText;
-                        Models.PKID = (dicInfo["ret"] as Dictionary<string, object>)["mid"].ToString();
-                        Models.X_TUNNEL_VERIFY = client.X_TUNNEL_VERIFY;
-                        string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
-                        string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
-
-                        #region - System.loadInit -
-                        dic_param = new SortedDictionary<string, object>();
-
-                        param = new NameValueCollection();
-                        param.Add("api", getAPIString("System.loadInit", dic_param));
-
-                        client = new WebClientEx();
-                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                        if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
+                        dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                        string money = ((dicInfo["ret"] as Dictionary<string, object>)["aUser"] as Dictionary<string, object>)["mmoney"].ToString();
+                        decimal dmoney = 0;
+                        if (decimal.TryParse(money, out dmoney))
                         {
-                            dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                            string money = ((dicInfo["ret"] as Dictionary<string, object>)["aUser"] as Dictionary<string, object>)["mmoney"].ToString();
-                            decimal dmoney = 0;
-                            if (decimal.TryParse(money, out dmoney))
-                            {
-                                this.Money = dmoney;
-                            }
+                            this.Money = dmoney;
                         }
-                        #endregion
-                        bMBLogedIn = true;
-                        return true;
                     }
                     #endregion
+                    bMBLogedIn = true;
+                    return true;
                 }
-                //else
-                //{
-                //    if (!bTryLoginFB)
-                //    {
-                //        bTryLoginFB = true;
-                //        FaceBookController fbController = new FaceBookController();
-                //        if (fbController.LoginMobile(Models.FaceBook))
-                //        {
-                //            Global.DBContext.SaveChanges();
-                //            return LoginMobile();
-                //        }
-                //    }
-                //}
+                #endregion
             }
             catch (Exception ex)
             {
@@ -223,6 +211,7 @@ namespace PokerTexas.App_Controller
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
+                var exData = getExData();
                 #region - Members.phoneContinuous -
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 dic_param.Add("test", "0");
@@ -231,6 +220,7 @@ namespace PokerTexas.App_Controller
                 param.Add("api", getAPIString("Members.phoneContinuous", dic_param));
 
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                 #endregion
@@ -243,6 +233,7 @@ namespace PokerTexas.App_Controller
                 param = new NameValueCollection();
                 param.Add("api", getAPIString("Members.setMoney", dic_param));
                 client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 bool bTrySetMoney = false;
                 int iCount = 0;
@@ -285,6 +276,7 @@ namespace PokerTexas.App_Controller
                 LoginMobile();
             }
             if (!bMBLogedIn) return;
+            var exData = getExData();
             #region - Act.getAward -
             SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
             dic_param.Add("actVer", "2.1");
@@ -294,6 +286,7 @@ namespace PokerTexas.App_Controller
             NameValueCollection param = new NameValueCollection();
             param.Add("api", getAPIString("Act.getNowAct", dic_param));
             WebClientEx client = new WebClientEx();
+            client.IpHeader = exData.ip_address;
             client.RequestType = WebClientEx.RequestTypeEnum.Poker;
             client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
             if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
@@ -327,6 +320,7 @@ namespace PokerTexas.App_Controller
                     param.Add("api", getAPIString("Act.getAward", dic_param2));
 
                     client = new WebClientEx();
+                    client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                 }
@@ -345,6 +339,7 @@ namespace PokerTexas.App_Controller
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
+                var exData = getExData();
                 foreach (Poker to in this.Models.Package.Pokers)
                 {
                     if (to == this.Models) continue;
@@ -356,6 +351,7 @@ namespace PokerTexas.App_Controller
                     param.Add("api", getAPIString("Presents.post", dic_param));
 
                     WebClientEx client = new WebClientEx();
+                    client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     #endregion
@@ -378,7 +374,8 @@ namespace PokerTexas.App_Controller
                 this.Status = "Bắt đầu nhận quà bí mật";
                 foreach (Poker to in this.Models.Package.Pokers)
                 {
-                    if (to == this.Models) continue;
+                    if (to.PKID == this.Models.PKID) continue;
+                    var exData = getExData();
                     #region - Presents.get -
                     SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                     dic_param.Add("id", DateTime.Today.ToString("yyyyMMdd") + "|" + to.PKID);
@@ -387,6 +384,7 @@ namespace PokerTexas.App_Controller
                     param.Add("api", getAPIString("Presents.get", dic_param));
 
                     WebClientEx client = new WebClientEx();
+                    client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
@@ -420,6 +418,7 @@ namespace PokerTexas.App_Controller
                 {
                     this.Status = "Bắt đầu kiểm tra tiền";
                 }
+                var exData = getExData();
                 #region - Misc.getUserField -
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 dic_param.Add("fields", "-2147476476");
@@ -429,6 +428,7 @@ namespace PokerTexas.App_Controller
                 param.Add("api", getAPIString("Misc.getUserField", dic_param));
 
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
@@ -458,25 +458,23 @@ namespace PokerTexas.App_Controller
 
         private string getAPIString(string strMethod, IDictionary<string, object> param)
         {
-            Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.MBLoginText);
-            string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
-            string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
+            var exData = getExData();
 
             SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
             dic.Add("api", "62");
             dic.Add("langtype", "13");
             dic.Add("method", strMethod);
             dic.Add("mid", Models.PKID);
-            dic.Add("mtkey", mtkey);
+            dic.Add("mtkey", exData.m_mtkey);
             dic.Add("protocol", "1");
             dic.Add("sid", "110");
             dic.Add("time", Utilities.GetCurrentSecond());
             dic.Add("unid", "193");
             dic.Add("version", "5.4.3");
-            dic.Add("vkey", Utilities.GetMd5Hash(vkey + "M"));
+            dic.Add("vkey", Utilities.GetMd5Hash(exData.m_vkey + "M"));
             dic.Add("vmid", Models.PKID);
             dic.Add("param", param);
-            dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, mtkey)));
+            dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, exData.m_mtkey, "V")));
             return new JavaScriptSerializer().Serialize(dic);
         }
 
@@ -503,12 +501,6 @@ namespace PokerTexas.App_Controller
             treemap.Add("androidId", string.Empty);
 
             string jSon = new JavaScriptSerializer().Serialize(treemap);
-
-
-            //TPDataContext TPDB = new TPDataContext();
-            //TPDB.PK_SignStrings.InsertOnSubmit(new PK_SignString { String = jSon, Seed = iSeed });
-            //TPDB.SubmitChanges();
-            //System.Threading.Thread.Sleep(2000);
 
             WebClientEx client = new WebClientEx();
             NameValueCollection param = new NameValueCollection();
@@ -546,36 +538,9 @@ namespace PokerTexas.App_Controller
             //return strReturn;
         }
 
-        public void LoginWebAppCache()
-        {
-            try
-            {
-                this.Status = "Bắt đầu Authen Facebook";
-                WebClientEx client = new WebClientEx();
-                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
-                NameValueCollection param = new NameValueCollection();
-                if (!string.IsNullOrEmpty(Models.MBLoginText))
-                {
-
-                }
-            }
-            catch (Exception ex)
-            {
-                this.Status = "Có lỗi trong quá trình Authen Facebook";
-                //throw ex;
-            }
-        }
-
         public void LoginWebApp()
         {
-            if (DateTime.Today.Date == new DateTime(2014, 12, 01).Date)
-            {
-                LoginWebApp("https://apps.facebook.com/vntexas/?by_ref=27&by_langtype=13&by_mid=22666800&by_time=1417402559&by_sig=07e2e8ec4c2af82de1895c2139567f9e", true);
-            }
-            else
-            {
-                LoginWebApp("https://apps.facebook.com/vntexas/?by_ref=27&by_langtype=13&by_mid=22666800&by_time=1417402559&by_sig=07e2e8ec4c2af82de1895c2139567f9e", false);
-            }
+            LoginWebApp("https://apps.facebook.com/vntexas/?by_ref=27&by_langtype=13&by_mid=22666800&by_time=1417402559&by_sig=07e2e8ec4c2af82de1895c2139567f9e", false);
         }
 
         public void LoginWebApp(string strLinkLogin, bool bForceLogin)
@@ -584,22 +549,23 @@ namespace PokerTexas.App_Controller
             {
                 if (!bTryLogin) bTryLogin = true;
                 this.Status = "Bắt đầu Authen Facebook";
+                var exData = getExData();
+                if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 NameValueCollection param = new NameValueCollection();
+
                 if (!bForceLogin)
                 {
-                    if (!string.IsNullOrEmpty(Models.MBLoginText))
+                    if (!string.IsNullOrEmpty(exData.mtkey))
                     { //Check Logged-in
                         object objCookie = Utilities.ConvertBlobToObject(Models.WebCookie);
                         if (objCookie is CookieContainer)
                         {
                             client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                            string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                            string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                            string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                            client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + sid
-                                + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
+                            client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + exData.sid
+                                + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13");
                             if (client.ResponseText.Contains("\"ok\":1"))
                             {
                                 bWebLogedIn = true;
@@ -618,10 +584,8 @@ namespace PokerTexas.App_Controller
                 }
                 bool bTryGo = false;
             FBeginAuthen: ;
-                //client.DoGet(strLinkLogin);
-                Models.WebAccessToken = string.Empty;
                 client.DoGet("https://www.facebook.com/connect/ping?client_id=179106755472856&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
-                if (client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
+                if (client.Error == null && client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
                 {
                     //Not Authen
                     client.DoGet("https://apps.facebook.com/dialog/oauth?display=async&domain=httpvntexas01.boyaagame.com&scope=email%2Cpublish_stream%2Cpublish_actions&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ftexas%252Ffacebookvn%252Floadingpage.php&state=f3993495d&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
@@ -646,21 +610,37 @@ namespace PokerTexas.App_Controller
                     client.DoPost(param, "https://www.facebook.com/dialog/oauth/readwrite");
                     client.DoGet("https://www.facebook.com/connect/ping?client_id=179106755472856&domain=httpvntexas01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dhttpvntexas01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fhttpvntexas01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
                 }
-                if (client.Response.ResponseUri.AbsoluteUri.Contains("signed_request"))
+                if (client.Error == null && client.Response.ResponseUri.AbsoluteUri.Contains("signed_request"))
                 {
-                    Models.WebAccessToken = Regex.Match(client.Response.ResponseUri.AbsoluteUri, "signed_request=(?<val>[^&]+)").Groups["val"].Value;
+                    string signed_request = Regex.Match(client.Response.ResponseUri.AbsoluteUri, "signed_request=(?<val>[^&]+)").Groups["val"].Value;
                     //Models.WebAccessToken = Utilities.GetRegexString(client.ResponseText, "signed_request", 1);
                     param = new NameValueCollection();
-                    param.Add("signed_request", Models.WebAccessToken);
+                    param.Add("signed_request", signed_request);
 
                     Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
                     dicHeader.Add(HttpRequestHeader.Referer, strLinkLogin);
                     string strLinkPost = strLinkLogin.Substring(strLinkLogin.IndexOf("?"));
                     client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
-                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("apik"))
+                    if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("apik"))
                     {
                         Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
-                        Models.WebLoginText = client.ResponseText;
+
+                        string apik = Regex.Match(client.ResponseText, @"apik:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                        string mid = Regex.Match(client.ResponseText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                        string sid = Regex.Match(client.ResponseText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                        string mtkey = Regex.Match(client.ResponseText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                        string mnick = Regex.Match(client.ResponseText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                        string expLevel = Regex.Match(client.ResponseText, @"expLevel:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                        string loginkey = Regex.Match(client.ResponseText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+
+                        exData.apik = apik;
+                        exData.mnick = mnick;
+                        exData.mtkey = mtkey;
+                        exData.sid = sid;
+                        exData.expLevel = expLevel;
+                        exData.loginkey = loginkey;
+
+                        setExData(exData);
                         bWebLogedIn = true;
                         this.Status = "Authen Facebook Thành Công";
                         return;
@@ -687,22 +667,18 @@ namespace PokerTexas.App_Controller
             {
                 this.Status = "Bắt đầu chia sẻ chip may mắn";
                 if (!bWebLogedIn) return string.Empty;
-
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string expLevel = Regex.Match(Models.WebLoginText, @"expLevel:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                var exData = getExData();
                 NameValueCollection param = new NameValueCollection();
                 param.Add("ref", "27");
-                param.Add("mid", mid);
-                param.Add("sid", sid);
-                param.Add("mtkey", mtkey);
+                param.Add("mid", Models.PKID);
+                param.Add("sid", exData.sid);
+                param.Add("mtkey", exData.mtkey);
                 param.Add("sitemid", Models.FaceBook.FBID);
                 param.Add("langtype", "13");
-                param.Add("mnick", mnick);
-                param.Add("expLevel", expLevel);
+                param.Add("mnick", exData.mnick);
+                param.Add("expLevel", exData.expLevel);
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
                 Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
@@ -732,39 +708,23 @@ namespace PokerTexas.App_Controller
             try
             {
                 this.Status = "Bắt đầu nhận fan chip";
+                var exData = getExData();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-
-                //client.DoGet(strLink);
-                //Models.WebAccessToken = Regex.Match(client.ResponseText, "name=\"signed_request\" value=\"(?<val>[^\"]+)").Groups["val"].Value;
-
-                //param = new NameValueCollection();
-                //param.Add("signed_request", Models.WebAccessToken);
-
-                //dicHeader = new Dictionary<HttpRequestHeader, string>();
-                //dicHeader.Add(HttpRequestHeader.Referer, strLink);
-                //string strLinkPost = strLink.Substring(strLink.IndexOf("?"));
-                //client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
-
-                //Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
-                //Models.WebLoginText = client.ResponseText;
-
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string loginkey = Regex.Match(Models.WebLoginText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
 
                 param = new NameValueCollection();
                 param.Add("by_ref", "77");
                 string strRegex = Regex.Match(strLink, "sn=(?<val>[0-9a-zA-Z]+)").Groups["val"].Value.Trim();
                 param.Add("sn", strRegex);
-                param.Add("loginkey", loginkey);
+                param.Add("loginkey", exData.loginkey);
                 param.Add("act", "1003");
-                param.Add("mid", mid);
-                param.Add("sid", "110");
-                param.Add("mtkey", mtkey);
+                param.Add("mid", Models.PKID);
+                param.Add("sid", exData.sid);
+                param.Add("mtkey", exData.mtkey);
                 param.Add("sitemid", Models.FaceBook.FBID);
                 param.Add("langtype", "13");
 
@@ -786,29 +746,14 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu nhận chip may mắn";
+                var exData = getExData();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
 
-                //client.DoGet(listLink[0]);
-                //Models.WebAccessToken = Regex.Match(client.ResponseText, "name=\"signed_request\" value=\"(?<val>[^\"]+)").Groups["val"].Value;
-
-                //param = new NameValueCollection();
-                //param.Add("signed_request", Models.WebAccessToken);
-
-                //dicHeader = new Dictionary<HttpRequestHeader, string>();
-                //dicHeader.Add(HttpRequestHeader.Referer, listLink[0]);
-                //string strLinkPost = listLink[0].Substring(listLink[0].IndexOf("?"));
-                //client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
-
-                //Models.WebCookie = Utilities.ConvertObjectToBlob(client.CookieContainer);
-                //Models.WebLoginText = client.ResponseText;
-
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string loginkey = Regex.Match(Models.WebLoginText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
                 foreach (string strLink in listLink)
                 {
                     param = new NameValueCollection();
@@ -825,11 +770,11 @@ namespace PokerTexas.App_Controller
                     param.Add("by_time", strRegex);
                     strRegex = Regex.Match(strLink, "by_sig=(?<val>[0-9a-zA-Z]+)").Groups["val"].Value.Trim();
                     param.Add("by_sig", strRegex);
-                    param.Add("loginkey", loginkey);
+                    param.Add("loginkey", exData.loginkey);
                     param.Add("act", "1003");
-                    param.Add("mid", mid);
-                    param.Add("sid", "110");
-                    param.Add("mtkey", mtkey);
+                    param.Add("mid", Models.PKID);
+                    param.Add("sid", exData.sid);
+                    param.Add("mtkey", exData.mtkey);
                     param.Add("sitemid", Models.FaceBook.FBID);
                     param.Add("langtype", "13");
 
@@ -855,20 +800,18 @@ namespace PokerTexas.App_Controller
                 if (!bWebLogedIn) return;
                 //KyTen();
                 this.Status = "Bắt đầu tặng cỏ 4 lá";
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-
+                var exData = getExData();
                 NameValueCollection param = new NameValueCollection();
                 param.Add("ref", "30");
                 param.Add("act", "1001");
                 param.Add("tpl", "contain30");
-                param.Add("mid", mid);
-                param.Add("sid", sid);
-                param.Add("mtkey", mtkey);
+                param.Add("mid", Models.PKID);
+                param.Add("sid", exData.sid);
+                param.Add("mtkey", exData.mtkey);
                 param.Add("sitemid", Models.FaceBook.FBID);
                 param.Add("langtype", "13");
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
                 Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
@@ -880,7 +823,7 @@ namespace PokerTexas.App_Controller
                 {
                     System.Threading.Thread.Sleep(1000);
                     string strParams = string.Empty;
-                    strParams += "by_ref=30&by_mid=" + mid;
+                    strParams += "by_ref=30&by_mid=" + Models.PKID;
                     strParams += "&by_langtype=13";
 
                     string strRegex = Regex.Match(client.ResponseText, "by_time\":(?<val>[\\s0-9]+)").Groups["val"].Value.Trim();
@@ -895,9 +838,9 @@ namespace PokerTexas.App_Controller
                         if (pk.PKID == Models.PKID) continue;
                         strParams += "&to[]=" + pk.FaceBook.FBID;
                     }
-                    strParams += "&mid=" + mid;
-                    strParams += "&sid=" + sid;
-                    strParams += "&mtkey=" + mtkey;
+                    strParams += "&mid=" + Models.PKID;
+                    strParams += "&sid=" + exData.sid;
+                    strParams += "&mtkey=" + exData.mtkey;
                     strParams += "&sitemid=" + Models.FaceBook.FBID;
                     strParams += "&langtype=13";
                     client.DoPost(strParams, "https://httpvntexas01.boyaagame.com/texas/api/facebook/rest.php", dicHeader, "POST");
@@ -921,10 +864,9 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu nhận cỏ 4 lá";
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                var exData = getExData();
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
                 CookieCollection ckCollect = client.CookieContainer.GetCookies(new Uri("https://httpvntexas01.boyaagame.com/"));
@@ -935,7 +877,7 @@ namespace PokerTexas.App_Controller
                         ck.Expires = DateTime.Now.Subtract(TimeSpan.FromDays(1));
                     }
                 }
-                client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
+                client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13");
 
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
@@ -951,7 +893,7 @@ namespace PokerTexas.App_Controller
                             param.Add("msgid[]", strId);
                             int iCountfRequestCo4La = 0;
                         fRequestCo4La: ;
-                            client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
+                            client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/message.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13");
                             if (string.IsNullOrEmpty(client.ResponseText) || client.ResponseText.Contains("Error request"))
                             {
                                 if (iCountfRequestCo4La < 3)
@@ -979,16 +921,13 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu ký tên";
-                string apik = Regex.Match(Models.WebLoginText, @"apik:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                var exData = getExData();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                string textparam = "id=2104&cmd[info][]=A&cmd[info][]=day&apik=" + apik;
+                string textparam = "id=2104&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
                 client.DoPost(textparam, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
@@ -1007,10 +946,9 @@ namespace PokerTexas.App_Controller
                         {
                             foreach (KeyValuePair<string, object> item in info["A"] as Dictionary<string, object>)
                             {
-                                Match m = Regex.Match(item.Key, "t(?<val>[0-9]+)");
-                                if (m.Success && int.Parse(m.Groups["val"].Value.Trim()) > t)
+                                if (item.Key == "t1" && item.Value != null)
                                 {
-                                    t = int.Parse(m.Groups["val"].Value.Trim());
+                                    int.TryParse(item.Value.ToString(), out t);
                                 }
                             }
                             if (t >= 1)
@@ -1019,7 +957,7 @@ namespace PokerTexas.App_Controller
                             }
                         }
                         param.Add("cmd[change][3." + t + "]", "1");
-                        param.Add("apik", apik);
+                        param.Add("apik", exData.apik);
                         client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ac/api.php");
                     }
                 }
@@ -1043,19 +981,19 @@ namespace PokerTexas.App_Controller
                 //Chia se
                 param = new NameValueCollection();
                 param.Add("ref", "574");
-                param.Add("mid", mid);
-                param.Add("sid", sid);
-                param.Add("mtkey", mtkey);
+                param.Add("mid", Models.PKID);
+                param.Add("sid", exData.sid);
+                param.Add("mtkey", exData.mtkey);
                 param.Add("sitemid", Models.FaceBook.FBID);
                 param.Add("langtype", "13");
-                param.Add("mnick", mnick);
+                param.Add("mnick", exData.mnick);
                 param.Add("flag", "1");
                 client.DoPost(param, "http://httpvntexas01.boyaagame.com/texas/api/facebook/uis.php");
 
                 //Quay Vong
-                client.DoGet("http://httpvntexas01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13&cmd=goturn");
+                client.DoGet("http://httpvntexas01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
                 System.Threading.Thread.Sleep(2000);
-                client.DoGet("http://httpvntexas01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13&cmd=goturn");
+                client.DoGet("http://httpvntexas01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
 
                 this.Status = "Ký tên thành công";
             }
@@ -1207,12 +1145,14 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu chơi mini game";
-                string apik = Regex.Match(Models.WebLoginText, @"apik:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                var exData = getExData();
+                //string apik = data.apik;
+                //string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                //string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
+                //string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
+                //string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
                 WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
                 string strChoose = "1";
@@ -1227,13 +1167,13 @@ namespace PokerTexas.App_Controller
                     if (iIndex == 1)
                     {
                         param.Add("cmd", "info");
-                        param.Add("apik", apik);
+                        param.Add("apik", exData.apik);
                     }
                     else if (iIndex > 1)
                     {
                         param.Add("cmd", "choose");
                         param.Add("choose", strChoose);
-                        param.Add("apik", apik);
+                        param.Add("apik", exData.apik);
 
                     }
                     client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/noviceGame.php");
@@ -1369,143 +1309,173 @@ namespace PokerTexas.App_Controller
             }
         }
 
-        public void NhanThuongHangNgayWeb(string strStep)
-        {
-            try
-            {
-                if (strStep == "1")
-                {
-                    this.Status = "Bắt đầu nhận thưởng hàng ngày";
-                    this.ImageCaptcha = null;
-                    if (!bWebLogedIn)
-                    {
-                        if (!bTryLogin) LoginWebApp();
-                    }
-                    if (!bWebLogedIn) return;
-                    //KyTen();
-
-                    string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                    string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                    string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                    this.Status = "Request Captcha ...";
-                    //get day bonus
-                    WebClientEx client = new WebClientEx();
-                    client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
-                    client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                    client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/verifycode/verifyCode.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
-
-                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText == "{\"status\":0}")
-                    {
-                        client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/verifycode/verifycode.html?" + Convert.ToInt32(DateTime.Now.Subtract(new DateTime(1970, 1, 1, 7, 0, 0)).TotalSeconds));
-                    }
-                    else if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Trim() == "{\"status\":\"vip3\"}")
-                    {
-                        client.DoGet("https://httpvntexas01.boyaagame.com/texas/ajax/verifycode/getDaymoney.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
-                        this.Status = "Nhận Thưởng Thành Công";
-                        return;
-                    }
-                    else
-                    {
-                        this.Status = "Hôm nay đã nhận thưởng rồi !";
-                        return;
-                    }
-
-                    this.Status = "Request Captcha ...";
-                    int iCount = 0;
-                    while (this.ImageCaptcha == null && iCount < 3)
-                    {
-                        client.GetImage("http://httpvntexas01.boyaagame.com/texas/valid2.php?mid=" + mid + "&v=" + new Random().NextDouble());
-                        if (client.ResponseImage != null)
-                        {
-                            this.ImageCaptcha = client.ResponseImage;
-                            this.Status = "Request Captcha Thành Công";
-                        }
-                        iCount++;
-                    }
-                }
-                else
-                {
-                    if (!bWebLogedIn) return;
-                    string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                    string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
-                    string mtkey = Regex.Match(Models.WebLoginText, @"mtkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                    string mnick = Regex.Match(Models.WebLoginText, @"mnick:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
-                    WebClientEx client = new WebClientEx();
-                    client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
-                    client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                    client.DoGet("http://httpvntexas01.boyaagame.com/texas/ajax/verifycode/verifyCode.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13&vcc=d341c9&code=" + strStep);
-                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("suc"))
-                    {
-                        this.ImageCaptcha = null;
-                        client.DoGet("http://httpvntexas01.boyaagame.com/texas/ajax/verifycode/verifyCode.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mid + "&langtype=13");
-                        client.DoGet("http://httpvntexas01.boyaagame.com/texas/ajax/verifycode/getDaymoney.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13");
-                        this.Status = "Nhận Thưởng Thành Công";
-
-                        //Chia se
-                        NameValueCollection param = new NameValueCollection();
-                        param.Add("ref", "574");
-                        param.Add("mid", mid);
-                        param.Add("sid", sid);
-                        param.Add("mtkey", mtkey);
-                        param.Add("sitemid", Models.FaceBook.FBID);
-                        param.Add("langtype", "13");
-                        param.Add("mnick", mnick);
-                        param.Add("flag", "1");
-                        client.DoPost(param, "http://httpvntexas01.boyaagame.com/texas/api/facebook/uis.php");
-
-                        //Quay Vong
-                        client.DoGet("http://httpvntexas01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13&cmd=goturn");
-                        System.Threading.Thread.Sleep(2000);
-                        client.DoGet("http://httpvntexas01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + sid + "&mid=" + mid + "&mtkey=" + mtkey + "&langtype=13&cmd=goturn");
-                    }
-                    else
-                    {
-                        client.GetImage("http://httpvntexas01.boyaagame.com/texas/valid2.php?mid=" + mid + "&v=" + new Random().NextDouble());
-                        this.ImageCaptcha = client.ResponseImage;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
-                //throw ex;
-            }
-        }
-
         public void getBirthDayInfo()
         {
+            //try
+            //{
+            //    this.Status = "Bắt đầu lấy ngày sinh";
+            //    WebClientEx client = new WebClientEx();
+            //    client.IpHeader = exData.ip_address;
+            //    Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
+            //    if (dicData.ContainsKey("access_token"))
+            //    {
+            //        client.DoGet("https://graph.facebook.com/v2.1/me?access_token=" + dicData["access_token"] + "&format=json&method=get&pretty=0&suppress_http_code=1");
+            //        if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
+            //        {
+            //            dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+            //            if (dicData.ContainsKey("birthday"))
+            //            {
+            //                Models.FaceBook.BirthDay = dicData["birthday"].ToString();
+            //                this.Status = "lấy ngày sinh thành công";
+            //            }
+            //            else if (dicData.ContainsKey("error"))
+            //            {
+            //                this.Status = "kiểm tra lại account fb này";
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        this.Status = "kiểm tra lại account fb này";
+            //    }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    this.Status = "Có lỗi trong quá trình lấy ngày sinh";
+            //    //throw ex;
+            //}
+        }
+
+        private PokerExData getExData()
+        {
+            var exData = new JavaScriptSerializer().Deserialize<PokerExData>(Models.MBLoginText);
+            if (exData == null) exData = new PokerExData();
+            return exData;
+        }
+
+        private void setExData(PokerExData data)
+        {
+            Models.MBLoginText = new JavaScriptSerializer().Serialize(data);
+        }
+        /// <summary>
+        /// Send request from Model 1 to Model 2
+        /// </summary>
+        /// <param name="model1"></param>
+        /// <param name="model2"></param>
+        /// <returns></returns>
+        public bool SendFriendRequest(Poker to)
+        {
             try
             {
-                this.Status = "Bắt đầu lấy ngày sinh";
-                WebClientEx client = new WebClientEx();
-                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
-                if (dicData.ContainsKey("access_token"))
-                {
-                    client.DoGet("https://graph.facebook.com/v2.1/me?access_token=" + dicData["access_token"] + "&format=json&method=get&pretty=0&suppress_http_code=1");
-                    if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
-                    {
-                        dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                        if (dicData.ContainsKey("birthday"))
-                        {
-                            Models.FaceBook.BirthDay = dicData["birthday"].ToString();
-                            this.Status = "lấy ngày sinh thành công";
-                        }
-                        else if (dicData.ContainsKey("error"))
-                        {
-                            this.Status = "kiểm tra lại account fb này";
-                        }
-                    }
-                }
-                else
-                {
-                    this.Status = "kiểm tra lại account fb này";
-                }
+                NetConnection _connection = new NetConnection();
+                _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                _connection.Connect("http://httpvntexas01.boyaagame.com/texas/api/gateway.php");
 
+                var exData = getExData();
+
+
+                SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                dicA.Add("mid", Models.PKID);
+                dicA.Add("mtkey", exData.mtkey);
+                dicA.Add("time", Utilities.GetCurrentSecond());
+                SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+                dic_param.Add("tmid", to.PKID);
+                dic_param.Add("words", "");
+                dic_param.Add("ntid", 3);
+                dic_param.Add("fmid", Models.PKID);
+                dic_param.Add("fsid", 3);
+                dicA.Add("param", dic_param);
+                dicA.Add("count", 69);
+
+                dicA.Add("sid", 110);
+                dicA.Add("unid", 110);
+                dicA.Add("langtype", 13);
+                string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                dicA.Add("sig", sig);
+                _connection.Call("Members.friendRequest", new ServerHelloMsgHandler(), dicA);
             }
             catch (Exception ex)
             {
-                this.Status = "Có lỗi trong quá trình lấy ngày sinh";
-                //throw ex;
+                throw ex;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Model 1 accept friend Request from Model2
+        /// </summary>
+        /// <param name="model1"></param>
+        /// <param name="model2"></param>
+        /// <returns></returns>
+        public bool AcceptFriendRequest()
+        {
+            try
+            {
+                if (!bWebLogedIn)
+                {
+                    LoginWebApp();
+                }
+                if (!bWebLogedIn) return false;
+                var exData = getExData();
+                WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
+                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+                client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+
+                NameValueCollection param = new NameValueCollection();
+                param.Add("cmd", "info");
+                param.Add("p", "1");
+                param.Add("size", "10");
+                param.Add("apik", exData.apik);
+                client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/addFriends.php");
+                if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
+                {
+                    Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                    if (dicData.ContainsKey("ret") && dicData["ret"] is ArrayList)
+                    {
+                        foreach (object item in dicData["ret"] as ArrayList)
+                        {
+                            if (item is ArrayList)
+                            {
+                                string id = (item as ArrayList)[1].ToString();
+                                if ((item as ArrayList)[2].ToString() == "4")
+                                {
+                                    bool bTRy = false;
+                                TryGo: ;
+                                    param = new NameValueCollection();
+                                    param.Add("cmd", "deal");
+                                    param.Add("op", "1");
+                                    param.Add("msgid", id);
+                                    param.Add("apik", exData.apik);
+                                    client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/ajax/addFriends.php");
+                                    if (string.IsNullOrEmpty(client.ResponseText) || client.ResponseText.Contains("ok\":0"))
+                                    {
+                                        if (!bTRy)
+                                        {
+                                            bTRy = true;
+                                            goto TryGo;
+                                        }
+                                    }
+                                    System.Threading.Thread.Sleep(2000);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
+        }
+
+        public class ServerHelloMsgHandler : IPendingServiceCallback
+        {
+            public void ResultReceived(IPendingServiceCall call)
+            {
+                object result = call.Result;
             }
         }
         #endregion

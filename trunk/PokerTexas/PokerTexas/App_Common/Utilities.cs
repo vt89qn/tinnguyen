@@ -115,12 +115,12 @@ namespace PokerTexas.App_Common
             return s;
         }
 
-        public static string getSigPoker(object paramObject, string paramString)
+        public static string getSigPoker(object paramObject, string paramString, string skey)
         {
-            string localObject1 = "V";
+            string localObject1 = skey;
             if (((paramObject is bool)) || (paramObject == null) || ((paramObject is byte[])))
             {
-                return "V";
+                return localObject1;
             }
             if (((paramObject is string)) || ((paramObject is int)))
             {
@@ -131,7 +131,7 @@ namespace PokerTexas.App_Common
             {
                 foreach (KeyValuePair<string, object> item in paramObject as IDictionary<string, object>)
                 {
-                    localObject1 = localObject1 + item.Key + "=" + getSigPoker(item.Value, paramString);
+                    localObject1 = localObject1 + item.Key + "=" + getSigPoker(item.Value, paramString, skey);
                 }
             }
             return localObject1;
@@ -559,6 +559,18 @@ Yên Sơn";
         public static string GetMyIpAddress()
         {
             return new WebClientEx().DoGet("http://115.79.60.134:8082/api/ip.aspx");
+        }
+
+        public static string GenNewIpAddress()
+        {
+            string strIP = "183";
+            List<string> list = new List<string>() { "80", "81", "80", "81" };
+            strIP += "." + list[new Random().Next(0, list.Count)];
+            System.Threading.Thread.Sleep(5);
+            strIP += "." + new Random().Next(1, 127).ToString();
+            System.Threading.Thread.Sleep(5);
+            strIP += "." + new Random().Next(1, 254).ToString();
+            return strIP;
         }
         #endregion
     }

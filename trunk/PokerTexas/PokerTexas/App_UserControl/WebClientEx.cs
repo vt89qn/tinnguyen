@@ -31,6 +31,7 @@ namespace PokerTexas.App_UserControl
         public RequestTypeEnum RequestType = RequestTypeEnum.Nomal;
         public bool SetAPIV8 = false;
         public bool SetCookieV2 = false;
+        public string IpHeader = string.Empty;
         #endregion
 
         #region - METHOD -
@@ -225,6 +226,16 @@ namespace PokerTexas.App_UserControl
             if (SetCookieV2)
             {
                 this.Headers.Add("Cookie2", "$Version=1");
+            }
+            if (!string.IsNullOrEmpty(IpHeader))
+            {
+                this.Headers.Add("CLIENT-IP", IpHeader);
+                this.Headers.Add("X-FORWARDED-FOR", IpHeader);
+                this.Headers.Add("X-FORWARDED", IpHeader);
+                this.Headers.Add("X-CLUSTER-CLIENT-IP", IpHeader);
+                this.Headers.Add("FORWARDED-FOR", IpHeader);
+                this.Headers.Add("FORWARDED", IpHeader);
+                this.Headers.Add("VIA", IpHeader);
             }
             if (additionHeader != null)
             {

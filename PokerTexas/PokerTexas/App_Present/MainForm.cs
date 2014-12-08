@@ -113,11 +113,6 @@ namespace PokerTexas.App_Present
         private void MainForm_Load(object sender, EventArgs e)
         {
             getDataOnload();
-            if (AppSettings.Seft)
-            {
-                txtCheckChipMayMan.Checked = false;
-                txtCheckCo4La.Checked = false;
-            }
         }
 
         private void btnCapNhatNgaySinh_Click(object sender, EventArgs e)

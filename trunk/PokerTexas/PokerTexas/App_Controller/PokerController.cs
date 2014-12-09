@@ -1349,8 +1349,12 @@ namespace PokerTexas.App_Controller
 
         private PokerExData getExData()
         {
-            var exData = new JavaScriptSerializer().Deserialize<PokerExData>(Models.MBLoginText);
-            if (exData == null) exData = new PokerExData();
+            var exData = new PokerExData();
+            if (!string.IsNullOrEmpty(Models.MBLoginText))
+            {
+                exData = new JavaScriptSerializer().Deserialize<PokerExData>(Models.MBLoginText);
+                if (exData == null) exData = new PokerExData();
+            }
             return exData;
         }
 

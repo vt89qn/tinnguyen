@@ -361,14 +361,17 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                if (isBusy) return;
-                isBusy = true;
-                btnKetBan.Enabled = false;
-                Task.Factory.StartNew(() =>
+                if (AppSettings.Seft)
                 {
-                    changeIP();
-                    ketBan();
-                });
+                    if (isBusy) return;
+                    isBusy = true;
+                    btnKetBan.Enabled = false;
+                    Task.Factory.StartNew(() =>
+                    {
+                        changeIP();
+                        ketBan();
+                    });
+                }
             }
             catch (Exception ex)
             {

@@ -55,6 +55,8 @@
             this.groupRutfan = new System.Windows.Forms.GroupBox();
             this.btnAuthenNhanFanChip = new System.Windows.Forms.Button();
             this.txtCheckTuDong = new System.Windows.Forms.CheckBox();
+            this.txtCheckMobile = new System.Windows.Forms.CheckBox();
+            this.txtCheckWeb = new System.Windows.Forms.CheckBox();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -63,9 +65,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -85,9 +87,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
@@ -205,7 +207,7 @@
             // 
             // btnCheckWeb
             // 
-            this.btnCheckWeb.Location = new System.Drawing.Point(84, 12);
+            this.btnCheckWeb.Location = new System.Drawing.Point(76, 12);
             this.btnCheckWeb.Name = "btnCheckWeb";
             this.btnCheckWeb.Size = new System.Drawing.Size(65, 50);
             this.btnCheckWeb.TabIndex = 3;
@@ -228,7 +230,7 @@
             this.txtCheckCo4La.AutoSize = true;
             this.txtCheckCo4La.Checked = true;
             this.txtCheckCo4La.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckCo4La.Location = new System.Drawing.Point(155, 42);
+            this.txtCheckCo4La.Location = new System.Drawing.Point(252, 29);
             this.txtCheckCo4La.Name = "txtCheckCo4La";
             this.txtCheckCo4La.Size = new System.Drawing.Size(63, 17);
             this.txtCheckCo4La.TabIndex = 4;
@@ -240,7 +242,7 @@
             this.txtCheckChipMayMan.AutoSize = true;
             this.txtCheckChipMayMan.Checked = true;
             this.txtCheckChipMayMan.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckChipMayMan.Location = new System.Drawing.Point(155, 60);
+            this.txtCheckChipMayMan.Location = new System.Drawing.Point(252, 46);
             this.txtCheckChipMayMan.Name = "txtCheckChipMayMan";
             this.txtCheckChipMayMan.Size = new System.Drawing.Size(94, 17);
             this.txtCheckChipMayMan.TabIndex = 4;
@@ -252,7 +254,7 @@
             this.txtCheckKyTen.AutoSize = true;
             this.txtCheckKyTen.Checked = true;
             this.txtCheckKyTen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckKyTen.Location = new System.Drawing.Point(155, 24);
+            this.txtCheckKyTen.Location = new System.Drawing.Point(252, 12);
             this.txtCheckKyTen.Name = "txtCheckKyTen";
             this.txtCheckKyTen.Size = new System.Drawing.Size(60, 17);
             this.txtCheckKyTen.TabIndex = 4;
@@ -261,7 +263,7 @@
             // 
             // btnChuanBiRutFan
             // 
-            this.btnChuanBiRutFan.Location = new System.Drawing.Point(315, 12);
+            this.btnChuanBiRutFan.Location = new System.Drawing.Point(368, 13);
             this.btnChuanBiRutFan.Name = "btnChuanBiRutFan";
             this.btnChuanBiRutFan.Size = new System.Drawing.Size(100, 50);
             this.btnChuanBiRutFan.TabIndex = 3;
@@ -272,7 +274,7 @@
             // btnRutThuongFan
             // 
             this.btnRutThuongFan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRutThuongFan.Location = new System.Drawing.Point(288, 12);
+            this.btnRutThuongFan.Location = new System.Drawing.Point(235, 12);
             this.btnRutThuongFan.Name = "btnRutThuongFan";
             this.btnRutThuongFan.Size = new System.Drawing.Size(60, 36);
             this.btnRutThuongFan.TabIndex = 3;
@@ -282,11 +284,11 @@
             // 
             // txtRutFanLink
             // 
-            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRutFanLink.Location = new System.Drawing.Point(6, 27);
             this.txtRutFanLink.Name = "txtRutFanLink";
-            this.txtRutFanLink.Size = new System.Drawing.Size(210, 20);
+            this.txtRutFanLink.Size = new System.Drawing.Size(157, 20);
             this.txtRutFanLink.TabIndex = 5;
             // 
             // label1
@@ -304,9 +306,9 @@
             this.groupRutfan.Controls.Add(this.btnAuthenNhanFanChip);
             this.groupRutfan.Controls.Add(this.btnRutThuongFan);
             this.groupRutfan.Controls.Add(this.label1);
-            this.groupRutfan.Location = new System.Drawing.Point(421, 7);
+            this.groupRutfan.Location = new System.Drawing.Point(474, 7);
             this.groupRutfan.Name = "groupRutfan";
-            this.groupRutfan.Size = new System.Drawing.Size(354, 55);
+            this.groupRutfan.Size = new System.Drawing.Size(301, 55);
             this.groupRutfan.TabIndex = 7;
             this.groupRutfan.TabStop = false;
             this.groupRutfan.Visible = false;
@@ -314,7 +316,7 @@
             // btnAuthenNhanFanChip
             // 
             this.btnAuthenNhanFanChip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAuthenNhanFanChip.Location = new System.Drawing.Point(222, 12);
+            this.btnAuthenNhanFanChip.Location = new System.Drawing.Point(169, 12);
             this.btnAuthenNhanFanChip.Name = "btnAuthenNhanFanChip";
             this.btnAuthenNhanFanChip.Size = new System.Drawing.Size(60, 36);
             this.btnAuthenNhanFanChip.TabIndex = 3;
@@ -327,12 +329,36 @@
             this.txtCheckTuDong.AutoSize = true;
             this.txtCheckTuDong.Checked = true;
             this.txtCheckTuDong.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckTuDong.Location = new System.Drawing.Point(155, 6);
+            this.txtCheckTuDong.Location = new System.Drawing.Point(144, 12);
             this.txtCheckTuDong.Name = "txtCheckTuDong";
             this.txtCheckTuDong.Size = new System.Drawing.Size(102, 17);
             this.txtCheckTuDong.TabIndex = 4;
             this.txtCheckTuDong.Text = "Check Tự Động";
             this.txtCheckTuDong.UseVisualStyleBackColor = true;
+            // 
+            // txtCheckMobile
+            // 
+            this.txtCheckMobile.AutoSize = true;
+            this.txtCheckMobile.Checked = true;
+            this.txtCheckMobile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckMobile.Location = new System.Drawing.Point(144, 29);
+            this.txtCheckMobile.Name = "txtCheckMobile";
+            this.txtCheckMobile.Size = new System.Drawing.Size(57, 17);
+            this.txtCheckMobile.TabIndex = 4;
+            this.txtCheckMobile.Text = "Mobile";
+            this.txtCheckMobile.UseVisualStyleBackColor = true;
+            // 
+            // txtCheckWeb
+            // 
+            this.txtCheckWeb.AutoSize = true;
+            this.txtCheckWeb.Checked = true;
+            this.txtCheckWeb.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckWeb.Location = new System.Drawing.Point(144, 46);
+            this.txtCheckWeb.Name = "txtCheckWeb";
+            this.txtCheckWeb.Size = new System.Drawing.Size(49, 17);
+            this.txtCheckWeb.TabIndex = 4;
+            this.txtCheckWeb.Text = "Web";
+            this.txtCheckWeb.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -341,6 +367,8 @@
             this.ClientSize = new System.Drawing.Size(786, 447);
             this.Controls.Add(this.groupRutfan);
             this.Controls.Add(this.txtCheckChipMayMan);
+            this.Controls.Add(this.txtCheckWeb);
+            this.Controls.Add(this.txtCheckMobile);
             this.Controls.Add(this.txtCheckTuDong);
             this.Controls.Add(this.txtCheckKyTen);
             this.Controls.Add(this.txtCheckCo4La);
@@ -394,6 +422,8 @@
         private System.Windows.Forms.Button btnAuthenNhanFanChip;
         private System.Windows.Forms.CheckBox txtCheckTuDong;
         private System.Windows.Forms.ToolStripMenuItem menuLoginLaiFacebook;
+        private System.Windows.Forms.CheckBox txtCheckMobile;
+        private System.Windows.Forms.CheckBox txtCheckWeb;
 
     }
 }

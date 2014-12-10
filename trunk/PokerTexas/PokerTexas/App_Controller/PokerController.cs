@@ -270,6 +270,7 @@ namespace PokerTexas.App_Controller
 
         public void KyTenMobile()
         {
+            return;
             this.Status = "Bắt đầu nhận ky ten mobile";
             if (!bMBLogedIn && !bTryMBLogin)
             {
@@ -781,6 +782,7 @@ namespace PokerTexas.App_Controller
                     dicHeader = new Dictionary<HttpRequestHeader, string>();
                     dicHeader.Add(HttpRequestHeader.Referer, strLink.Replace("apps.facebook.com/vntexas", "httpvntexas01.boyaagame.com/texas/facebookvn"));
                     client.DoPost(param, "https://httpvntexas01.boyaagame.com/texas/api/facebook/rest.php", dicHeader);
+                    
                     System.Threading.Thread.Sleep(5000);
                 }
                 this.Status = "Nhận chip may mắn thành công";

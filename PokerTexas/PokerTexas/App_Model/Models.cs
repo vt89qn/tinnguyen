@@ -61,6 +61,7 @@ namespace PokerTexas.App_Model
         public string mnick { get; set; }
         public string expLevel { get; set; }
         public string loginkey { get; set; }
+        public int count_login_fail { get; set; }
     }
 
     public class IPAddress

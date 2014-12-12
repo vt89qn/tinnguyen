@@ -229,13 +229,13 @@ namespace PokerTexas.App_UserControl
             }
             if (!string.IsNullOrEmpty(IpHeader))
             {
-                this.Headers.Add("CLIENT-IP", IpHeader);
-                this.Headers.Add("X-FORWARDED-FOR", IpHeader);
-                this.Headers.Add("X-FORWARDED", IpHeader);
-                this.Headers.Add("X-CLUSTER-CLIENT-IP", IpHeader);
-                this.Headers.Add("FORWARDED-FOR", IpHeader);
-                this.Headers.Add("FORWARDED", IpHeader);
-                this.Headers.Add("VIA", IpHeader);
+                //this.Headers.Add("CLIENT-IP", IpHeader);
+                //this.Headers.Add("X-FORWARDED-FOR", IpHeader);
+                //this.Headers.Add("X-FORWARDED", IpHeader);
+                //this.Headers.Add("X-CLUSTER-CLIENT-IP", IpHeader);
+                //this.Headers.Add("FORWARDED-FOR", IpHeader);
+                //this.Headers.Add("FORWARDED", IpHeader);
+                //this.Headers.Add("VIA", IpHeader);
             }
             if (additionHeader != null)
             {

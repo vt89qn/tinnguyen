@@ -802,61 +802,65 @@ namespace PokerTexas.App_Present
                 if ((txtCheckTuDong.Checked && txtCheckMobile.Checked) || !txtCheckTuDong.Checked)
                 {
                     List<Task> tasks = new List<Task>();
-                    FaceBookController fbController = new FaceBookController();
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    if (txtCheckThuongHangNgay.Checked)
                     {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
-                        System.Threading.Thread.Sleep(1000);
+                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                        {
+                            if (this.IsDisposed) return;
+                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                            tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        while (tasks.Any(t => !t.IsCompleted))
+                        {
+                            Application.DoEvents();
+                            System.Threading.Thread.Sleep(1000);
+                        }
                     }
-                    while (tasks.Any(t => !t.IsCompleted))
+                    if (txtCheckChipBiMat.Checked)
                     {
-                        Application.DoEvents();
-                        System.Threading.Thread.Sleep(1000);
-                    }
+                        //tasks = new List<Task>();
+                        //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                        //{
+                        //    if (this.IsDisposed) return;
+                        //    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        //    tasks.Add(Task.Factory.StartNew(pkSource.KyTenMobile));
+                        //    System.Threading.Thread.Sleep(1000);
+                        //}
+                        //while (tasks.Any(t => !t.IsCompleted))
+                        //{
+                        //    Application.DoEvents();
+                        //    System.Threading.Thread.Sleep(1000);
+                        //}
 
-                    tasks = new List<Task>();
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        tasks.Add(Task.Factory.StartNew(pkSource.KyTenMobile));
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                    while (tasks.Any(t => !t.IsCompleted))
-                    {
-                        Application.DoEvents();
-                        System.Threading.Thread.Sleep(1000);
-                    }
+                        tasks = new List<Task>();
+                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                        {
+                            if (this.IsDisposed) return;
+                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                            tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        while (tasks.Any(t => !t.IsCompleted))
+                        {
+                            Application.DoEvents();
+                            System.Threading.Thread.Sleep(1000);
+                        }
 
-                    tasks = new List<Task>();
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
                         System.Threading.Thread.Sleep(1000);
-                    }
-                    while (tasks.Any(t => !t.IsCompleted))
-                    {
-                        Application.DoEvents();
-                        System.Threading.Thread.Sleep(1000);
-                    }
-
-                    System.Threading.Thread.Sleep(1000);
-                    tasks = new List<Task>();
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        tasks.Add(Task.Factory.StartNew(pkSource.NhanQuaBiMat));
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                    while (tasks.Any(t => !t.IsCompleted))
-                    {
-                        Application.DoEvents();
-                        System.Threading.Thread.Sleep(1000);
+                        tasks = new List<Task>();
+                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                        {
+                            if (this.IsDisposed) return;
+                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                            tasks.Add(Task.Factory.StartNew(pkSource.NhanQuaBiMat));
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        while (tasks.Any(t => !t.IsCompleted))
+                        {
+                            Application.DoEvents();
+                            System.Threading.Thread.Sleep(1000);
+                        }
                     }
                 }
             }

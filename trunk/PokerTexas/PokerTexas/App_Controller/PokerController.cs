@@ -1179,7 +1179,7 @@ namespace PokerTexas.App_Controller
                 if (dicDB == null) dicDB = new Dictionary<string, string>();
                 int iIndex = 1;
                 string isShowMoney = "";
-                for (; iIndex <= 10; iIndex++)
+                for (; iIndex <= 45; iIndex++)
                 {
                     NameValueCollection param = new NameValueCollection();
                     if (iIndex == 1)

@@ -57,8 +57,9 @@
             this.txtCheckTuDong = new System.Windows.Forms.CheckBox();
             this.txtCheckMobile = new System.Windows.Forms.CheckBox();
             this.txtCheckWeb = new System.Windows.Forms.CheckBox();
-            this.txtCheckThuongHangNgay = new System.Windows.Forms.CheckBox();
+            this.txtCheckDangNhapLT = new System.Windows.Forms.CheckBox();
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
+            this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -362,29 +363,41 @@
             this.txtCheckWeb.Text = "Web";
             this.txtCheckWeb.UseVisualStyleBackColor = true;
             // 
-            // txtCheckThuongHangNgay
+            // txtCheckDangNhapLT
             // 
-            this.txtCheckThuongHangNgay.AutoSize = true;
-            this.txtCheckThuongHangNgay.Checked = true;
-            this.txtCheckThuongHangNgay.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckThuongHangNgay.Location = new System.Drawing.Point(160, 12);
-            this.txtCheckThuongHangNgay.Name = "txtCheckThuongHangNgay";
-            this.txtCheckThuongHangNgay.Size = new System.Drawing.Size(105, 17);
-            this.txtCheckThuongHangNgay.TabIndex = 4;
-            this.txtCheckThuongHangNgay.Text = "Chip Đăng Nhập";
-            this.txtCheckThuongHangNgay.UseVisualStyleBackColor = true;
+            this.txtCheckDangNhapLT.AutoSize = true;
+            this.txtCheckDangNhapLT.Checked = true;
+            this.txtCheckDangNhapLT.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckDangNhapLT.Location = new System.Drawing.Point(160, 12);
+            this.txtCheckDangNhapLT.Name = "txtCheckDangNhapLT";
+            this.txtCheckDangNhapLT.Size = new System.Drawing.Size(97, 17);
+            this.txtCheckDangNhapLT.TabIndex = 4;
+            this.txtCheckDangNhapLT.Text = "Đăng Nhập LT";
+            this.txtCheckDangNhapLT.UseVisualStyleBackColor = true;
             // 
             // txtCheckChipBiMat
             // 
             this.txtCheckChipBiMat.AutoSize = true;
             this.txtCheckChipBiMat.Checked = true;
             this.txtCheckChipBiMat.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckChipBiMat.Location = new System.Drawing.Point(160, 29);
+            this.txtCheckChipBiMat.Location = new System.Drawing.Point(160, 46);
             this.txtCheckChipBiMat.Name = "txtCheckChipBiMat";
             this.txtCheckChipBiMat.Size = new System.Drawing.Size(82, 17);
             this.txtCheckChipBiMat.TabIndex = 4;
             this.txtCheckChipBiMat.Text = "Chip Bí Mật";
             this.txtCheckChipBiMat.UseVisualStyleBackColor = true;
+            // 
+            // txtCheckHangNgay
+            // 
+            this.txtCheckHangNgay.AutoSize = true;
+            this.txtCheckHangNgay.Checked = true;
+            this.txtCheckHangNgay.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.txtCheckHangNgay.Location = new System.Drawing.Point(160, 29);
+            this.txtCheckHangNgay.Name = "txtCheckHangNgay";
+            this.txtCheckHangNgay.Size = new System.Drawing.Size(98, 17);
+            this.txtCheckHangNgay.TabIndex = 4;
+            this.txtCheckHangNgay.Text = "Hằng Ngày 2M";
+            this.txtCheckHangNgay.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -397,7 +410,8 @@
             this.Controls.Add(this.txtCheckMobile);
             this.Controls.Add(this.txtCheckTuDong);
             this.Controls.Add(this.txtCheckChipBiMat);
-            this.Controls.Add(this.txtCheckThuongHangNgay);
+            this.Controls.Add(this.txtCheckHangNgay);
+            this.Controls.Add(this.txtCheckDangNhapLT);
             this.Controls.Add(this.txtCheckKyTen);
             this.Controls.Add(this.txtCheckCo4La);
             this.Controls.Add(this.btnCheckWeb);
@@ -452,8 +466,9 @@
         private System.Windows.Forms.ToolStripMenuItem menuLoginLaiFacebook;
         private System.Windows.Forms.CheckBox txtCheckMobile;
         private System.Windows.Forms.CheckBox txtCheckWeb;
-        private System.Windows.Forms.CheckBox txtCheckThuongHangNgay;
+        private System.Windows.Forms.CheckBox txtCheckDangNhapLT;
         private System.Windows.Forms.CheckBox txtCheckChipBiMat;
+        private System.Windows.Forms.CheckBox txtCheckHangNgay;
 
     }
 }

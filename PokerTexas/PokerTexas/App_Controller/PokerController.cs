@@ -104,6 +104,9 @@ namespace PokerTexas.App_Controller
         public Image ImageCaptcha { get; set; }
         #endregion
         #region - CONTRUCTOR -
+
+        #endregion
+        #region - METHOD -
         public bool LoginMobile()
         {
             try
@@ -203,8 +206,7 @@ namespace PokerTexas.App_Controller
             }
             return false;
         }
-        #endregion
-        #region - METHOD -
+
         public void NhanThuongHangNgayMobile()
         {
             try
@@ -228,39 +230,7 @@ namespace PokerTexas.App_Controller
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                 #endregion
-                #region - Members.setMoney -
-                dic_param = new SortedDictionary<string, object>();
-                dic_param.Add("sext", "");
-                dic_param.Add("sflag", "0");
-                dic_param.Add("stype", "0");
 
-                param = new NameValueCollection();
-                param.Add("api", getAPIString("Members.setMoney", dic_param));
-                client = new WebClientEx();
-                client.IpHeader = exData.ip_address;
-                client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                bool bTrySetMoney = false;
-                int iCount = 0;
-            SetMoney: ;
-                client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
-                {
-                    Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                    string money = (dicInfo["ret"] as Dictionary<string, object>)["mmoney"].ToString();
-                    decimal dmoney = 0;
-                    if (decimal.TryParse(money, out dmoney))
-                    {
-                        this.Money = dmoney;
-                        bTrySetMoney = true;
-                    }
-                }
-                if (!bTrySetMoney && iCount <= 4)
-                {
-                    System.Threading.Thread.Sleep(1000);
-                    iCount++;
-                    goto SetMoney;
-                }
-                #endregion
 
 
                 this.Status = "Nhận thưởng hàng ngày thành công";
@@ -270,6 +240,50 @@ namespace PokerTexas.App_Controller
                 this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
                 //throw ex;
             }
+        }
+
+        public void NhanThuong2MMobile()
+        {
+            if (!bMBLogedIn && !bTryMBLogin)
+            {
+                LoginMobile();
+            }
+            if (!bMBLogedIn) return;
+            var exData = getExData();
+            #region - Members.setMoney -
+            SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+            dic_param = new SortedDictionary<string, object>();
+            dic_param.Add("sext", "");
+            dic_param.Add("sflag", "0");
+            dic_param.Add("stype", "0");
+
+            NameValueCollection param = new NameValueCollection();
+            param.Add("api", getAPIString("Members.setMoney", dic_param));
+            WebClientEx client = new WebClientEx();
+            client.IpHeader = exData.ip_address;
+            client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+            bool bTrySetMoney = false;
+            int iCount = 0;
+        SetMoney: ;
+            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
+            {
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                string money = (dicInfo["ret"] as Dictionary<string, object>)["mmoney"].ToString();
+                decimal dmoney = 0;
+                if (decimal.TryParse(money, out dmoney))
+                {
+                    this.Money = dmoney;
+                    bTrySetMoney = true;
+                }
+            }
+            if (!bTrySetMoney && iCount <= 4)
+            {
+                System.Threading.Thread.Sleep(1000);
+                iCount++;
+                goto SetMoney;
+            }
+            #endregion
         }
 
         public void KyTenMobile()

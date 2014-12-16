@@ -34,7 +34,7 @@ import java.util.List;
 
 public class IGService extends Service {
     private boolean bStopped =false;
-
+    private int iCountGet =0;
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -42,19 +42,20 @@ public class IGService extends Service {
 
     @Override
     public void onCreate() {
-        Toast.makeText(this, "My Service Created", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "My Service Created", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "My Service Stopped", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "My Service Stopped", Toast.LENGTH_SHORT).show();
         bStopped = true;
     }
 
     @Override
     public void onStart(Intent intent, int startid) {
-        Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "My Service Started", Toast.LENGTH_SHORT).show();
         bStopped = false;
+        iCountGet =0;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -66,7 +67,7 @@ public class IGService extends Service {
     private void signIGString() {
         while (!bStopped) {
             try {
-                URL url = new URL("http://api.tinphuong.com/?stage=get");
+                URL url = new URL("http://115.79.60.134:8082/api/?stage=get");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
@@ -104,7 +105,7 @@ public class IGService extends Service {
                 }
                 if (listSignedString.length() > 0) {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://api.tinphuong.com/Default.aspx");
+                    HttpPost httppost = new HttpPost("http://115.79.60.134:8082/api/Default.aspx");
                     try {
                         // Add your data
                         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -120,11 +121,10 @@ public class IGService extends Service {
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
                     }
-
-                } else {
-                    Thread.sleep(3000);
                 }
-                Thread.sleep(1000);
+                iCountGet++;
+                Toast.makeText(this, "Count :"+iCountGet, Toast.LENGTH_SHORT).show();
+                Thread.sleep(3000);
 
             } catch (Exception e) {
                 e.printStackTrace();

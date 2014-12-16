@@ -92,7 +92,7 @@ public class IG extends Activity {
     private void signIGString() {
         while (!bStopped) {
             try {
-                URL url = new URL("http://api.tinphuong.com/?stage=get");
+                URL url = new URL("http://115.79.60.134:8082/api/?stage=get");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
@@ -130,7 +130,7 @@ public class IG extends Activity {
                 }
                 if (listSignedString.length() > 0) {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://api.tinphuong.com/Default.aspx");
+                    HttpPost httppost = new HttpPost("http://115.79.60.134:8082/api/Default.aspx");
                     try {
                         // Add your data
                         List<NameValuePair> params = new ArrayList<NameValuePair>();

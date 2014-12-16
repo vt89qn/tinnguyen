@@ -802,20 +802,27 @@ namespace PokerTexas.App_Present
                 if ((txtCheckTuDong.Checked && txtCheckMobile.Checked) || !txtCheckTuDong.Checked)
                 {
                     List<Task> tasks = new List<Task>();
-                    if (txtCheckThuongHangNgay.Checked)
+                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                     {
-                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                        if (this.IsDisposed) return;
+                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        tasks.Add(Task.Factory.StartNew(() =>
                         {
-                            if (this.IsDisposed) return;
-                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                            tasks.Add(Task.Factory.StartNew(pkSource.NhanThuongHangNgayMobile));
-                            System.Threading.Thread.Sleep(1000);
-                        }
-                        while (tasks.Any(t => !t.IsCompleted))
-                        {
-                            Application.DoEvents();
-                            System.Threading.Thread.Sleep(1000);
-                        }
+                            if (txtCheckDangNhapLT.Checked)
+                            {
+                                pkSource.NhanThuongHangNgayMobile();
+                            }
+                            if (txtCheckHangNgay.Checked)
+                            {
+                                pkSource.NhanThuong2MMobile();
+                            }
+                        }));
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    while (tasks.Any(t => !t.IsCompleted))
+                    {
+                        Application.DoEvents();
+                        System.Threading.Thread.Sleep(1000);
                     }
                     if (txtCheckChipBiMat.Checked)
                     {

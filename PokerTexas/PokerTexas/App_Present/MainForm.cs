@@ -1122,17 +1122,17 @@ namespace PokerTexas.App_Present
         {
             MobileModermController.Disconnect();
             MobileModermController.Connect();
-            string strIP = Utilities.GetMyIpAddress();
-            var t = Global.DBContext.IPAddress.ToList();
-            string strDate = DateTime.Today.ToString("yyyy-MM-dd");
-            while (Global.DBContext.IPAddress.Where(x => x.IP == strIP && x.Date == strDate).Count() > 0)
-            {
-                MobileModermController.Disconnect();
-                MobileModermController.Connect();
-                strIP = Utilities.GetMyIpAddress();
-            }
-            Global.DBContext.IPAddress.Add(new IPAddress { IP = strIP, Date = DateTime.Today.ToString("yyyy-MM-dd") });
-            Global.DBContext.SaveChanges();
+            //string strIP = Utilities.GetMyIpAddress();
+            //var t = Global.DBContext.IPAddress.ToList();
+            //string strDate = DateTime.Today.ToString("yyyy-MM-dd");
+            //while (Global.DBContext.IPAddress.Where(x => x.IP == strIP && x.Date == strDate).Count() > 0)
+            //{
+            //    MobileModermController.Disconnect();
+            //    MobileModermController.Connect();
+            //    strIP = Utilities.GetMyIpAddress();
+            //}
+            //Global.DBContext.IPAddress.Add(new IPAddress { IP = strIP, Date = DateTime.Today.ToString("yyyy-MM-dd") });
+            //Global.DBContext.SaveChanges();
         }
 
         #endregion

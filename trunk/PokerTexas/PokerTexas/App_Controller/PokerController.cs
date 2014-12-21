@@ -990,6 +990,7 @@ namespace PokerTexas.App_Controller
                         }
                         param.Add("cmd[change][3." + t + "]", "1");
                         param.Add("apik", exData.apik);
+                        System.Threading.Thread.Sleep(2000);
                         client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                     }
                 }
@@ -1209,6 +1210,7 @@ namespace PokerTexas.App_Controller
 
                     }
                     client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ajax/noviceGame.php");
+                    System.Threading.Thread.Sleep(2000);
                     if (!string.IsNullOrEmpty(client.ResponseText))
                     {
                         Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -1333,6 +1335,7 @@ namespace PokerTexas.App_Controller
                 }
                 Utilities.SerializeObject("noviceGame.obj", dicDB2);
                 this.Status = "mini game xong (round : " + iIndex + ", money : " + isShowMoney + " )";
+                System.Threading.Thread.Sleep(2000);
             }
             catch (Exception ex)
             {

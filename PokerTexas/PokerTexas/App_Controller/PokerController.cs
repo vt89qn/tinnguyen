@@ -859,21 +859,33 @@ namespace PokerTexas.App_Controller
                     strParams += "&by_sig=" + strRegex;
 
                     strParams += "&act=1002";
-                    int iFrom = 0;
-                    List<Poker> listPokers = Models.Package.Pokers.ToList();
-                    for (; iFrom < listPokers.Count; iFrom++)
+                    if (AppSettings.Seft)
                     {
-                        if (listPokers[iFrom].PKID == Models.PKID) break;
-                    }
-                    for (int iPoker = 1; iPoker <= 5; iPoker++)
-                    {
-                        if (iFrom + iPoker < listPokers.Count)
+                        int iFrom = 0;
+                        List<Poker> listPokers = Models.Package.Pokers.ToList();
+                        for (; iFrom < listPokers.Count; iFrom++)
                         {
-                            strParams += "&to[]=" + listPokers[iFrom + iPoker].FaceBook.FBID;
+                            if (listPokers[iFrom].PKID == Models.PKID) break;
                         }
-                        else if (iFrom + iPoker - listPokers.Count < listPokers.Count)
+                        for (int iPoker = 1; iPoker <= 5; iPoker++)
                         {
-                            strParams += "&to[]=" + listPokers[iFrom + iPoker - listPokers.Count].FaceBook.FBID;
+                            if (iFrom + iPoker < listPokers.Count)
+                            {
+                                strParams += "&to[]=" + listPokers[iFrom + iPoker].FaceBook.FBID;
+                            }
+                            else if (iFrom + iPoker - listPokers.Count < listPokers.Count)
+                            {
+                                strParams += "&to[]=" + listPokers[iFrom + iPoker - listPokers.Count].FaceBook.FBID;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        List<Poker> listPokers = Models.Package.Pokers.ToList();
+                        for (int iFrom = 0; iFrom < listPokers.Count; iFrom++)
+                        {
+                            if (listPokers[iFrom].PKID == Models.PKID) continue;
+                            strParams += "&to[]=" + listPokers[iFrom].FaceBook.FBID;
                         }
                     }
                     strParams += "&mid=" + Models.PKID;
@@ -1397,6 +1409,57 @@ namespace PokerTexas.App_Controller
         {
             Models.MBLoginText = new JavaScriptSerializer().Serialize(data);
         }
+
+        public List<string> ListFriend = new List<string>();
+        public void GetAllFriend()
+        {
+            try
+            {
+                NetConnection _connection = new NetConnection();
+                _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                var exData = getExData();
+
+
+                SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                dicA.Add("unid", 110);
+                dicA.Add("mid", Models.PKID);
+                dicA.Add("mtkey", exData.mtkey);
+                dicA.Add("param", null);
+                dicA.Add("time", Utilities.GetCurrentSecond());
+                dicA.Add("langtype", 13);
+                dicA.Add("count", 5);
+                dicA.Add("sid", 110);
+                string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                dicA.Add("sig", sig);
+                ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+                _connection.Call("Members.getFriendAllIds", rp, dicA);
+                int iCount = 0;
+                while (iCount < 10)
+                {
+                    System.Threading.Thread.Sleep(1000);
+                    if (rp.Result != null && rp.Result is Dictionary<string,object>)
+                    {
+                        Dictionary<string,object> dicRS = rp.Result as Dictionary<string,object>;
+                        ListFriend = new List<string>();
+                        if (dicRS.ContainsKey("ret") && dicRS["ret"] is object[])
+                        {
+                            foreach (object id in dicRS["ret"] as object[])
+                            {
+                                ListFriend.Add(id.ToString());
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// Send request from Model 1 to Model 2
         /// </summary>
@@ -1512,9 +1575,10 @@ namespace PokerTexas.App_Controller
 
         public class ServerHelloMsgHandler : IPendingServiceCallback
         {
+            public object Result { get; set; }
             public void ResultReceived(IPendingServiceCall call)
             {
-                object result = call.Result;
+                Result = call.Result;
             }
         }
         #endregion

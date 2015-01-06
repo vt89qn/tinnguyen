@@ -386,18 +386,7 @@ namespace PokerTexas.App_Present
                 if (isBusy) return;
                 isBusy = true;
                 btnCheckMobile.Enabled = false;
-                if (txtCheckTuDong.Checked)
-                {
-                    Task.Factory.StartNew(() =>
-                    {
-                        changeIP();
-                        checkMobile();
-                    });
-                }
-                else
-                {
-                    Task.Factory.StartNew(checkMobile);
-                }
+                Task.Factory.StartNew(checkMobile);
             }
             catch (Exception ex)
             {
@@ -410,7 +399,20 @@ namespace PokerTexas.App_Present
             if (isBusy) return;
             isBusy = true;
             btnCheckWeb.Enabled = false;
-            Task.Factory.StartNew(checkWeb);
+            if (txtCheckTuDong.Checked)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    changeIP();
+                    checkWeb();
+                });
+            }
+            else
+            {
+                Task.Factory.StartNew(checkWeb);
+            }
+
+
         }
 
         private void btnChuanBiRutFan_Click(object sender, EventArgs e)
@@ -681,6 +683,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
+                    ketBan2();
                     List<Task> tasks = new List<Task>();
                     List<string> listLink = new List<string>();
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -778,16 +781,7 @@ namespace PokerTexas.App_Present
                         btnCheckWeb.Enabled = true;
                         if (txtCheckTuDong.Checked)
                         {
-                            System.Threading.Thread.Sleep(2000);
-                            try
-                            {
-                                if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
-                                {
-                                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
-                                    btnCheckMobile_Click(null, null);
-                                }
-                            }
-                            catch { }
+                            btnCheckMobile_Click(null, null);
                         }
                     };
                     this.BeginInvoke(action);
@@ -885,13 +879,77 @@ namespace PokerTexas.App_Present
                         btnCheckMobile.Enabled = true;
                         if (txtCheckTuDong.Checked)
                         {
-                            btnCheckWeb_Click(null, null);
+                            System.Threading.Thread.Sleep(2000);
+                            try
+                            {
+                                if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                                {
+                                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                                    btnCheckWeb_Click(null, null);
+                                }
+                            }
+                            catch { }
                         }
                     };
                     this.BeginInvoke(action);
                 }
             }
         }
+
+        private void ketBan2()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                FaceBookController fbController = new FaceBookController();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    int iStart = iIndex;
+                    tasks.Add(
+                    Task.Factory.StartNew(() =>
+                    {
+                        pkSource.GetAllFriend();
+                        //Send FriendRequest
+                        for (int iSeed = iStart + 1; iSeed < gridData.Rows.Count; iSeed++)
+                        {
+                            if (this.IsDisposed) return;
+                            PokerController pkDes = gridData.Rows[iSeed].DataBoundItem as PokerController;
+                            if (pkSource.ListFriend.Contains(pkDes.Models.PKID)) continue;
+                            pkSource.SendFriendRequest(pkDes.Models);
+                            System.Threading.Thread.Sleep(2000);
+                        }
+                    }));
+                    System.Threading.Thread.Sleep(1000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                //System.Threading.Thread.Sleep(5000);
+                tasks = new List<Task>();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    tasks.Add(Task.Factory.StartNew(() =>
+                    {
+                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        pkSource.AcceptFriendRequest();
+                    }));
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch { }
+        }
+
 
         private void ketBan()
         {
@@ -904,13 +962,16 @@ namespace PokerTexas.App_Present
                     if (this.IsDisposed) return;
                     PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                     int iStart = iIndex;
-                    tasks.Add(Task.Factory.StartNew(() =>
+                    tasks.Add(
+                    Task.Factory.StartNew(() =>
                     {
+                        pkSource.GetAllFriend();
                         //Send FriendRequest
                         for (int iSeed = iStart + 1; iSeed < gridData.Rows.Count; iSeed++)
                         {
                             if (this.IsDisposed) return;
                             PokerController pkDes = gridData.Rows[iSeed].DataBoundItem as PokerController;
+                            if (pkSource.ListFriend.Contains(pkDes.Models.PKID)) continue;
                             if (pkSource.SendFriendRequest(pkDes.Models))
                             {
                                 pkSource.Status = "Gửi kết bạn thành công tới " + pkDes.Models.FaceBook.Login;

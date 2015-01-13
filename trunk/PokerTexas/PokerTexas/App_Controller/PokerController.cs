@@ -601,6 +601,8 @@ namespace PokerTexas.App_Controller
                 this.Status = "Bắt đầu Authen Facebook";
                 var exData = getExData();
                 if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
+                bool bTryStartOver = false;
+            StartOver: ;
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
@@ -704,6 +706,16 @@ namespace PokerTexas.App_Controller
                 {
                     bTryGo = true;
                     goto FBeginAuthen;
+                }
+                if (!bTryStartOver)
+                {
+                    bTryStartOver = true;
+                    FaceBookController fbController = new FaceBookController();
+                    if (fbController.LoginMobile(Models.FaceBook))
+                    {
+                        goto StartOver;
+                    }
+                    else Models.PackageID = 0;
                 }
                 exData.count_login_fail++;
                 setExData(exData);
@@ -1237,7 +1249,7 @@ namespace PokerTexas.App_Controller
                 if (dicDB == null) dicDB = new Dictionary<string, string>();
                 int iIndex = 1;
                 string isShowMoney = "";
-                for (; iIndex <= 45; iIndex++)
+                for (; iIndex <= 10; iIndex++)
                 {
                     NameValueCollection param = new NameValueCollection();
                     if (iIndex == 1)
@@ -1469,6 +1481,7 @@ namespace PokerTexas.App_Controller
                 int iCount = 0;
                 while (iCount < 10)
                 {
+                    iCount++;
                     System.Threading.Thread.Sleep(1000);
                     if (rp.Result != null && rp.Result is Dictionary<string, object>)
                     {

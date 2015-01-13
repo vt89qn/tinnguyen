@@ -117,9 +117,40 @@ namespace PokerTexas.App_Controller
                 if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
 
                 WebClientEx client = new WebClientEx();
-                client.IpHeader = exData.ip_address;
                 Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
-                exData.access_token = dicLoginFaceBook["access_token"].ToString();
+                if (!string.IsNullOrEmpty(exData.access_token))
+                {
+                    //Check valid accessToken
+                    client.DoGet("https://graph.facebook.com/app?access_token=" + exData.access_token);
+                    if (!client.ResponseText.Contains("179106755472856"))
+                    {
+                        exData.access_token = string.Empty;
+                    }
+                }
+                if (string.IsNullOrEmpty(exData.access_token))
+                {
+                    client = new WebClientEx();
+                    client.RequestType = WebClientEx.RequestTypeEnum.FaceBook;
+                    client.CookieContainer = new CookieContainer();
+                    foreach (Dictionary<string, object> dicCookie in dicLoginFaceBook["session_cookies"] as ArrayList)
+                    {
+                        client.CookieContainer.Add(new Cookie(dicCookie["name"].ToString(), dicCookie["value"].ToString()
+                            , dicCookie["path"].ToString(), dicCookie["domain"].ToString()));
+                    }
+                    client.DoGet("https://m.facebook.com/dialog/oauth?android_key=OxqiSpUjtzo3w7W4XydskZIzCFU%0A&calling_package_key=com.boyaa.vn&client_id=179106755472856&display=touch&redirect_uri=fbconnect%3A%2F%2Fsuccess&type=user_agent&refsrc=https%3A%2F%2Fm.facebook.com%2Fauth.php&_rdr"
+                    );
+                    exData.access_token = Regex.Match(client.ResponseText, "access_token=(?<val>[a-zA-Z0-9]+)", RegexOptions.IgnoreCase).Groups["val"].Value.Trim();
+                }
+                if (string.IsNullOrEmpty(exData.access_token))
+                {
+                    this.Status = "Không thể lấy token facebook,thử login lại";
+                    bMBLogedIn = false;
+                    return false;
+                }
+                client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
+
+
                 #region - Members.Create -
                 SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
                 dic.Add("api", "62");
@@ -138,6 +169,7 @@ namespace PokerTexas.App_Controller
 
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 dic_param.Add("ANPSetting", "4");
+                //dic_param.Add("APNSToken", "APA91bHQCDLRqHBRC3_8L6osr_Qro7kX0HvXdt8h6kfZiqeyTDqZtia45wXGLZ6GjvNldsXhI4oXDxVWfBDm7ZdjjyDmwl2sYa3ObeKcrl1dqqtF6RZcZ4qT3yfVtLvunuChsPMFPBYxOzNHOeNbEvjcB7HFMVjr8g");
                 dic_param.Add("appid", "1");
                 dic_param.Add("appkey", "");
 
@@ -151,7 +183,6 @@ namespace PokerTexas.App_Controller
                 dic.Add("param", dic_param);
 
                 dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, string.Empty, "V")));
-
 
                 NameValueCollection param = new NameValueCollection();
                 string api = new JavaScriptSerializer().Serialize(dic);
@@ -1439,9 +1470,9 @@ namespace PokerTexas.App_Controller
                 while (iCount < 10)
                 {
                     System.Threading.Thread.Sleep(1000);
-                    if (rp.Result != null && rp.Result is Dictionary<string,object>)
+                    if (rp.Result != null && rp.Result is Dictionary<string, object>)
                     {
-                        Dictionary<string,object> dicRS = rp.Result as Dictionary<string,object>;
+                        Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
                         ListFriend = new List<string>();
                         if (dicRS.ContainsKey("ret") && dicRS["ret"] is object[])
                         {

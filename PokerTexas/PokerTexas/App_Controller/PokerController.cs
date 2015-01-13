@@ -115,7 +115,7 @@ namespace PokerTexas.App_Controller
                 var exData = getExData();
 
                 if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
-
+                NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
                 Dictionary<string, object> dicLoginFaceBook = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(Models.FaceBook.MBLoginText);
                 if (!string.IsNullOrEmpty(exData.access_token))
@@ -137,9 +137,29 @@ namespace PokerTexas.App_Controller
                         client.CookieContainer.Add(new Cookie(dicCookie["name"].ToString(), dicCookie["value"].ToString()
                             , dicCookie["path"].ToString(), dicCookie["domain"].ToString()));
                     }
-                    client.DoGet("https://m.facebook.com/dialog/oauth?android_key=OxqiSpUjtzo3w7W4XydskZIzCFU%0A&calling_package_key=com.boyaa.vn&client_id=179106755472856&display=touch&redirect_uri=fbconnect%3A%2F%2Fsuccess&type=user_agent&refsrc=https%3A%2F%2Fm.facebook.com%2Fauth.php&_rdr"
-                    );
+                    client.DoGet("https://m.facebook.com/dialog/oauth?android_key=OxqiSpUjtzo3w7W4XydskZIzCFU%0A&calling_package_key=com.boyaa.vn&client_id=179106755472856&display=touch&redirect_uri=fbconnect%3A%2F%2Fsuccess&type=user_agent&refsrc=https%3A%2F%2Fm.facebook.com%2Fauth.php&_rdr");
                     exData.access_token = Regex.Match(client.ResponseText, "access_token=(?<val>[a-zA-Z0-9]+)", RegexOptions.IgnoreCase).Groups["val"].Value.Trim();
+                    if (string.IsNullOrEmpty(exData.access_token) && client.ResponseText.Contains("dialog/oauth/read"))
+                    {
+                        param = new NameValueCollection();
+                        param.Add("fb_dtsg", Utilities.GetRegexString(client.ResponseText, "fb_dtsg", 1));
+                        param.Add("charset_test", "€,´,€,´,水,Д,Є");
+                        param.Add("from_post", "1");
+                        param.Add("app_id", "179106755472856");
+                        param.Add("redirect_uri", "fbconnect://success");
+                        param.Add("display", "touch");
+                        param.Add("public_info_nux", "1");
+                        param.Add("read", "public_profile,user_friends,baseline");
+                        param.Add("gdp_version", "3");
+                        param.Add("seen_scopes", "public_profile,user_friends,baseline");
+                        param.Add("ref", "Default");
+                        param.Add("return_format", "access_token");
+                        param.Add("sso_device", "android");
+                        param.Add("ref", "Default");
+                        param.Add("__CONFIRM__", "OK");
+                        client.DoPost(param, "https://m.facebook.com/v1.0/dialog/oauth/read");
+                        exData.access_token = Regex.Match(client.ResponseText, "access_token=(?<val>[a-zA-Z0-9]+)", RegexOptions.IgnoreCase).Groups["val"].Value.Trim();
+                    }
                 }
                 if (string.IsNullOrEmpty(exData.access_token))
                 {
@@ -184,7 +204,7 @@ namespace PokerTexas.App_Controller
 
                 dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, string.Empty, "V")));
 
-                NameValueCollection param = new NameValueCollection();
+                param = new NameValueCollection();
                 string api = new JavaScriptSerializer().Serialize(dic);
                 param.Add("api", api);
                 client = new WebClientEx();

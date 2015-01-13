@@ -390,8 +390,6 @@
             // txtCheckHangNgay
             // 
             this.txtCheckHangNgay.AutoSize = true;
-            this.txtCheckHangNgay.Checked = true;
-            this.txtCheckHangNgay.CheckState = System.Windows.Forms.CheckState.Checked;
             this.txtCheckHangNgay.Location = new System.Drawing.Point(160, 29);
             this.txtCheckHangNgay.Name = "txtCheckHangNgay";
             this.txtCheckHangNgay.Size = new System.Drawing.Size(98, 17);

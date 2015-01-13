@@ -683,7 +683,10 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    ketBan2();
+                    if (AppSettings.Seft)
+                    {
+                        ketBan2();
+                    }
                     List<Task> tasks = new List<Task>();
                     List<string> listLink = new List<string>();
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -702,12 +705,12 @@ namespace PokerTexas.App_Present
                                         {
                                             if (AppSettings.Seft)
                                             {
-                                                pkSource.KyTenWeb();
+                                                //pkSource.KyTenWeb();
                                                 pkSource.PlayMiniGame();
                                             }
                                             else
                                             {
-                                                pkSource.KyTenWeb();
+                                                //pkSource.KyTenWeb();
                                             }
                                         }
                                         if (txtCheckCo4La.Checked) pkSource.TangCo4La();

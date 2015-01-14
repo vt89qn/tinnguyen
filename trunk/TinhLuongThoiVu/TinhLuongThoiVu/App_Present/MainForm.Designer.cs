@@ -100,7 +100,7 @@
             this.grbCaSang.Location = new System.Drawing.Point(10, 77);
             this.grbCaSang.Name = "grbCaSang";
             this.grbCaSang.Size = new System.Drawing.Size(243, 63);
-            this.grbCaSang.TabIndex = 2;
+            this.grbCaSang.TabIndex = 8;
             this.grbCaSang.TabStop = false;
             // 
             // txtKetThucCaSang
@@ -109,7 +109,7 @@
             this.txtKetThucCaSang.Mask = "00:00";
             this.txtKetThucCaSang.Name = "txtKetThucCaSang";
             this.txtKetThucCaSang.Size = new System.Drawing.Size(70, 20);
-            this.txtKetThucCaSang.TabIndex = 3;
+            this.txtKetThucCaSang.TabIndex = 1;
             this.txtKetThucCaSang.Text = "1130";
             this.txtKetThucCaSang.ValidatingType = typeof(System.DateTime);
             // 
@@ -119,7 +119,7 @@
             this.txtBatDauCaSang.Mask = "00:00";
             this.txtBatDauCaSang.Name = "txtBatDauCaSang";
             this.txtBatDauCaSang.Size = new System.Drawing.Size(70, 20);
-            this.txtBatDauCaSang.TabIndex = 3;
+            this.txtBatDauCaSang.TabIndex = 0;
             this.txtBatDauCaSang.Text = "0730";
             this.txtBatDauCaSang.ValidatingType = typeof(System.DateTime);
             // 
@@ -149,7 +149,7 @@
             this.chkCaSang.Location = new System.Drawing.Point(17, 75);
             this.chkCaSang.Name = "chkCaSang";
             this.chkCaSang.Size = new System.Drawing.Size(67, 17);
-            this.chkCaSang.TabIndex = 0;
+            this.chkCaSang.TabIndex = 4;
             this.chkCaSang.Text = "Ca Sáng";
             this.chkCaSang.UseVisualStyleBackColor = true;
             this.chkCaSang.CheckedChanged += new System.EventHandler(this.chkCaSang_CheckedChanged);
@@ -160,10 +160,11 @@
             this.grbCaChieu.Controls.Add(this.txtBatDauCaChieu);
             this.grbCaChieu.Controls.Add(this.label4);
             this.grbCaChieu.Controls.Add(this.label5);
+            this.grbCaChieu.Enabled = false;
             this.grbCaChieu.Location = new System.Drawing.Point(10, 159);
             this.grbCaChieu.Name = "grbCaChieu";
             this.grbCaChieu.Size = new System.Drawing.Size(243, 63);
-            this.grbCaChieu.TabIndex = 2;
+            this.grbCaChieu.TabIndex = 9;
             this.grbCaChieu.TabStop = false;
             // 
             // txtKetThucCaChieu
@@ -172,8 +173,8 @@
             this.txtKetThucCaChieu.Mask = "00:00";
             this.txtKetThucCaChieu.Name = "txtKetThucCaChieu";
             this.txtKetThucCaChieu.Size = new System.Drawing.Size(70, 20);
-            this.txtKetThucCaChieu.TabIndex = 3;
-            this.txtKetThucCaChieu.Text = "1130";
+            this.txtKetThucCaChieu.TabIndex = 1;
+            this.txtKetThucCaChieu.Text = "1700";
             this.txtKetThucCaChieu.ValidatingType = typeof(System.DateTime);
             // 
             // txtBatDauCaChieu
@@ -182,7 +183,7 @@
             this.txtBatDauCaChieu.Mask = "00:00";
             this.txtBatDauCaChieu.Name = "txtBatDauCaChieu";
             this.txtBatDauCaChieu.Size = new System.Drawing.Size(70, 20);
-            this.txtBatDauCaChieu.TabIndex = 3;
+            this.txtBatDauCaChieu.TabIndex = 0;
             this.txtBatDauCaChieu.Text = "1300";
             this.txtBatDauCaChieu.ValidatingType = typeof(System.DateTime);
             // 
@@ -210,7 +211,7 @@
             this.chkCaChieu.Location = new System.Drawing.Point(17, 157);
             this.chkCaChieu.Name = "chkCaChieu";
             this.chkCaChieu.Size = new System.Drawing.Size(69, 17);
-            this.chkCaChieu.TabIndex = 0;
+            this.chkCaChieu.TabIndex = 5;
             this.chkCaChieu.Text = "Ca Chiều";
             this.chkCaChieu.UseVisualStyleBackColor = true;
             this.chkCaChieu.CheckedChanged += new System.EventHandler(this.chkCaChieu_CheckedChanged);
@@ -229,7 +230,7 @@
             this.label6.Location = new System.Drawing.Point(10, 46);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(32, 13);
-            this.label6.TabIndex = 0;
+            this.label6.TabIndex = 2;
             this.label6.Text = "Ngày";
             // 
             // grbTangCa1
@@ -238,10 +239,11 @@
             this.grbTangCa1.Controls.Add(this.txtBatDauTC1);
             this.grbTangCa1.Controls.Add(this.label7);
             this.grbTangCa1.Controls.Add(this.label8);
+            this.grbTangCa1.Enabled = false;
             this.grbTangCa1.Location = new System.Drawing.Point(10, 241);
             this.grbTangCa1.Name = "grbTangCa1";
             this.grbTangCa1.Size = new System.Drawing.Size(243, 63);
-            this.grbTangCa1.TabIndex = 2;
+            this.grbTangCa1.TabIndex = 10;
             this.grbTangCa1.TabStop = false;
             // 
             // txtKetThucTC1
@@ -250,7 +252,7 @@
             this.txtKetThucTC1.Mask = "00:00";
             this.txtKetThucTC1.Name = "txtKetThucTC1";
             this.txtKetThucTC1.Size = new System.Drawing.Size(70, 20);
-            this.txtKetThucTC1.TabIndex = 3;
+            this.txtKetThucTC1.TabIndex = 1;
             this.txtKetThucTC1.Text = "2130";
             this.txtKetThucTC1.ValidatingType = typeof(System.DateTime);
             // 
@@ -260,7 +262,7 @@
             this.txtBatDauTC1.Mask = "00:00";
             this.txtBatDauTC1.Name = "txtBatDauTC1";
             this.txtBatDauTC1.Size = new System.Drawing.Size(70, 20);
-            this.txtBatDauTC1.TabIndex = 3;
+            this.txtBatDauTC1.TabIndex = 0;
             this.txtBatDauTC1.Text = "1730";
             this.txtBatDauTC1.ValidatingType = typeof(System.DateTime);
             // 
@@ -288,7 +290,7 @@
             this.chkTangCa1.Location = new System.Drawing.Point(17, 240);
             this.chkTangCa1.Name = "chkTangCa1";
             this.chkTangCa1.Size = new System.Drawing.Size(76, 17);
-            this.chkTangCa1.TabIndex = 0;
+            this.chkTangCa1.TabIndex = 6;
             this.chkTangCa1.Text = "Tăng Ca 1";
             this.chkTangCa1.UseVisualStyleBackColor = true;
             this.chkTangCa1.CheckedChanged += new System.EventHandler(this.chkTangCa1_CheckedChanged);
@@ -299,10 +301,11 @@
             this.grbTangCa2.Controls.Add(this.txtBatDauTC2);
             this.grbTangCa2.Controls.Add(this.label9);
             this.grbTangCa2.Controls.Add(this.label10);
+            this.grbTangCa2.Enabled = false;
             this.grbTangCa2.Location = new System.Drawing.Point(10, 323);
             this.grbTangCa2.Name = "grbTangCa2";
             this.grbTangCa2.Size = new System.Drawing.Size(243, 63);
-            this.grbTangCa2.TabIndex = 2;
+            this.grbTangCa2.TabIndex = 11;
             this.grbTangCa2.TabStop = false;
             // 
             // txtKetThucTC2
@@ -311,7 +314,7 @@
             this.txtKetThucTC2.Mask = "00:00";
             this.txtKetThucTC2.Name = "txtKetThucTC2";
             this.txtKetThucTC2.Size = new System.Drawing.Size(70, 20);
-            this.txtKetThucTC2.TabIndex = 3;
+            this.txtKetThucTC2.TabIndex = 1;
             this.txtKetThucTC2.Text = "2330";
             this.txtKetThucTC2.ValidatingType = typeof(System.DateTime);
             // 
@@ -321,7 +324,7 @@
             this.txtBatDauTC2.Mask = "00:00";
             this.txtBatDauTC2.Name = "txtBatDauTC2";
             this.txtBatDauTC2.Size = new System.Drawing.Size(70, 20);
-            this.txtBatDauTC2.TabIndex = 3;
+            this.txtBatDauTC2.TabIndex = 0;
             this.txtBatDauTC2.Text = "2130";
             this.txtBatDauTC2.ValidatingType = typeof(System.DateTime);
             // 
@@ -349,7 +352,7 @@
             this.chkTangCa2.Location = new System.Drawing.Point(17, 322);
             this.chkTangCa2.Name = "chkTangCa2";
             this.chkTangCa2.Size = new System.Drawing.Size(76, 17);
-            this.chkTangCa2.TabIndex = 0;
+            this.chkTangCa2.TabIndex = 7;
             this.chkTangCa2.Text = "Tăng Ca 2";
             this.chkTangCa2.UseVisualStyleBackColor = true;
             this.chkTangCa2.CheckedChanged += new System.EventHandler(this.chkTangCa2_CheckedChanged);
@@ -358,8 +361,8 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Ngay,
@@ -370,26 +373,28 @@
             this.ID});
             this.gridData.Location = new System.Drawing.Point(278, 93);
             this.gridData.Name = "gridData";
+            this.gridData.ReadOnly = true;
             this.gridData.RowHeadersVisible = false;
-            this.gridData.Size = new System.Drawing.Size(565, 293);
-            this.gridData.TabIndex = 4;
+            this.gridData.Size = new System.Drawing.Size(708, 293);
+            this.gridData.TabIndex = 14;
+            this.gridData.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridData_CellMouseDoubleClick);
             // 
             // btnThem
             // 
             this.btnThem.Location = new System.Drawing.Point(278, 46);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(120, 40);
-            this.btnThem.TabIndex = 5;
+            this.btnThem.TabIndex = 12;
             this.btnThem.Text = "THÊM";
             this.btnThem.UseVisualStyleBackColor = true;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // btnCapNhat
             // 
-            this.btnCapNhat.Location = new System.Drawing.Point(404, 47);
+            this.btnCapNhat.Location = new System.Drawing.Point(404, 46);
             this.btnCapNhat.Name = "btnCapNhat";
             this.btnCapNhat.Size = new System.Drawing.Size(120, 40);
-            this.btnCapNhat.TabIndex = 5;
+            this.btnCapNhat.TabIndex = 13;
             this.btnCapNhat.Text = "CẬP NHẬT";
             this.btnCapNhat.UseVisualStyleBackColor = true;
             this.btnCapNhat.Click += new System.EventHandler(this.btnCapNhat_Click);
@@ -398,38 +403,48 @@
             // 
             this.Ngay.HeaderText = "Ngày";
             this.Ngay.Name = "Ngay";
+            this.Ngay.ReadOnly = true;
             // 
             // CaSang
             // 
             this.CaSang.HeaderText = "Ca Sáng";
             this.CaSang.Name = "CaSang";
+            this.CaSang.ReadOnly = true;
+            this.CaSang.Width = 150;
             // 
             // CaChieu
             // 
             this.CaChieu.HeaderText = "Ca Chiều";
             this.CaChieu.Name = "CaChieu";
+            this.CaChieu.ReadOnly = true;
+            this.CaChieu.Width = 150;
             // 
             // TangCa1
             // 
             this.TangCa1.HeaderText = "Tăng Ca 1";
             this.TangCa1.Name = "TangCa1";
+            this.TangCa1.ReadOnly = true;
+            this.TangCa1.Width = 150;
             // 
             // TangCa2
             // 
             this.TangCa2.HeaderText = "Tăng Ca 2";
             this.TangCa2.Name = "TangCa2";
+            this.TangCa2.ReadOnly = true;
+            this.TangCa2.Width = 150;
             // 
             // ID
             // 
             this.ID.HeaderText = "ID";
             this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
             this.ID.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(855, 447);
+            this.ClientSize = new System.Drawing.Size(998, 447);
             this.Controls.Add(this.btnCapNhat);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.gridData);

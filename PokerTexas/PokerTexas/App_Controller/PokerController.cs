@@ -1528,11 +1528,19 @@ namespace PokerTexas.App_Controller
         {
             try
             {
+                var exData = getExData();
+
+                WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
+                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+                client.DoGet("https://pclpvdpk01.boyaagame.com/texas/includes/isfans.php?sid=110&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&isfans=1&t=" + Utilities.GetCurrentSecond());
+
+
                 NetConnection _connection = new NetConnection();
                 _connection.ObjectEncoding = ObjectEncoding.AMF3;
                 _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
 
-                var exData = getExData();
+
 
                 SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
                 dicA.Add("unid", 110);

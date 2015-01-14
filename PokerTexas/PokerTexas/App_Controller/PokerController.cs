@@ -1524,6 +1524,35 @@ namespace PokerTexas.App_Controller
             }
         }
 
+        public void NhanTraiTim()
+        {
+            try
+            {
+                NetConnection _connection = new NetConnection();
+                _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                var exData = getExData();
+
+                SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                dicA.Add("unid", 110);
+                dicA.Add("mid", Models.PKID);
+                dicA.Add("mtkey", exData.mtkey);
+                dicA.Add("langtype", 13);
+                dicA.Add("count", 16);
+                dicA.Add("time", Utilities.GetCurrentSecond());
+                dicA.Add("param", null);
+                dicA.Add("sid", 110);
+                string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                dicA.Add("sig", sig);
+                _connection.Call("Gifts.getNewFansChips", new ServerHelloMsgHandler(), dicA);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// Send request from Model 1 to Model 2
         /// </summary>

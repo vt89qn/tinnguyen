@@ -712,6 +712,7 @@ namespace PokerTexas.App_Present
                                             {
                                                 //pkSource.KyTenWeb();
                                             }
+                                            pkSource.NhanTraiTim();
                                         }
                                         if (txtCheckCo4La.Checked) pkSource.TangCo4La();
                                         if (txtCheckChipMayMan.Checked)

@@ -1049,21 +1049,21 @@ namespace PokerTexas.App_Controller
                         {
                             t = 1;
                         }
-                        else if (info["A"] is Dictionary<string, object>)
-                        {
-                            foreach (KeyValuePair<string, object> item in info["A"] as Dictionary<string, object>)
-                            {
-                                if (item.Key == "t1" && item.Value != null)
-                                {
-                                    int.TryParse(item.Value.ToString(), out t);
-                                }
-                            }
-                            if (t >= 1)
-                            {
-                                t++;
-                            }
-                        }
-                        param.Add("cmd[change][3." + t + "]", "1");
+                        //else if (info["A"] is Dictionary<string, object>)
+                        //{
+                        //    foreach (KeyValuePair<string, object> item in info["A"] as Dictionary<string, object>)
+                        //    {
+                        //        if (item.Key == "t1" && item.Value != null)
+                        //        {
+                        //            int.TryParse(item.Value.ToString(), out t);
+                        //        }
+                        //    }
+                        //    if (t >= 1)
+                        //    {
+                        //        t++;
+                        //    }
+                        //}
+                        param.Add("cmd[change][c." + t + "]", "1");
                         param.Add("apik", exData.apik);
                         System.Threading.Thread.Sleep(2000);
                         client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");

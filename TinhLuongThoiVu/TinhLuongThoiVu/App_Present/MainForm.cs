@@ -783,7 +783,6 @@ namespace TinhLuongThoiVu.App_Present
                             {
                                 iCountHeight = 0;
                                 excel.SetPageBreak(iRow + 7);
-                                iRow++;
                             }
                         }
                         excel.SetWidth(1, 1);

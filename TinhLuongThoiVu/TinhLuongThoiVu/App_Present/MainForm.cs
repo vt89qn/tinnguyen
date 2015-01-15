@@ -41,6 +41,8 @@ namespace TinhLuongThoiVu.App_Present
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //var x = new { Ten = "Trần Văn An" };
+            //string t = x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' ')).Replace(" ", "");
             CreateEventSuggestComboBox(txtTenNhanVien);
             reloadComboBox();
 
@@ -314,7 +316,7 @@ namespace TinhLuongThoiVu.App_Present
             if (txtTenNhanVien.SelectedItem is NhanVien)
             {
                 NhanVien selectedNhanVien = txtTenNhanVien.SelectedItem as NhanVien;
-                List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.OrderByDescending(x => x.Ngay).ToList();
+                List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.OrderBy(x => x.Ngay).ToList();
                 double tongluong = 0;
                 foreach (ThoiGianLamViec thoigian in listThoigian)
                 {
@@ -367,11 +369,11 @@ namespace TinhLuongThoiVu.App_Present
                             , tc.TotalHours.ToString("0.#"));
                     }
                     double luongngay = 0;
-                    if (giotangca > 4 && giochinhthuc >= 8)
+                    if (giotangca >= 4 && giochinhthuc >= 8)
                     {
                         luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.2;
                     }
-                    else if (giotangca > 3 && giochinhthuc >= 8)
+                    else if (giotangca >= 3 && giochinhthuc >= 8)
                     {
                         luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.1;
                     }
@@ -591,46 +593,78 @@ namespace TinhLuongThoiVu.App_Present
                 if (excel.CreateNewObject(strFileName))
                 {
                     List<NhanVien> listNhanVien = Global.DBContext.NhanVien.ToList();
-                    listNhanVien = listNhanVien.OrderBy(x => x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' '))).ToList();
+                    listNhanVien = listNhanVien.OrderBy(x => x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' ')).Replace(" ", "")).ToList();
                     DateTime dateMin = DateTime.MaxValue;
                     DateTime dateMax = DateTime.MinValue;
                     listNhanVien.ForEach(x => x.ThoiGianLamViecs.ToList().ForEach(a => { DateTime date = DateTime.ParseExact(a.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" }); if (date > dateMax) dateMax = date; if (date < dateMin) dateMin = date; }));
                     if (dateMax.Subtract(dateMin).TotalDays <= 40)
                     {
-                        excel.Merge("A1", "A2");
+                        #region - Sheet Tong -
                         int iCol = 1, iRow = 1;
-
+                        excel.Merge("A1", "A2");
                         excel.SetWidth(iCol, 25);
                         excel.SetValueWithFormat(iRow, iCol++, "Tên Nhân Viên", true, false, false);
                         for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
                         {
                             iCol = 2 + date.Subtract(dateMin).Days * 3;
-                            excel.SetWidth(iCol, 3); excel.SetWidth(iCol + 1, 3); excel.SetWidth(iCol + 2, 3);
+                            excel.SetWidth(iCol, 4); excel.SetWidth(iCol + 1, 4); excel.SetWidth(iCol + 2, 4);
                             excel.SetValueWithFormat(iRow + 1, iCol, "S", true, false, false);
                             excel.SetValueWithFormat(iRow + 1, iCol + 1, "C", true, false, false);
                             excel.SetValueWithFormat(iRow + 1, iCol + 2, "OT", true, false, false);
                             excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol + 2) + 1);
-                            excel.SetValueWithFormat(iRow, iCol++, "'" + date.ToString("dd/MM/yyyy"), true, false, false);
+                            excel.SetValueWithFormat(iRow, iCol, "'" + date.ToString("dd/MM/yyyy"), true, false, false);
                         }
+                        iCol += 3;
+                        excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol) + 2);
+                        excel.SetWidth(iCol, 10);
+                        excel.SetValueWithFormat(iRow, iCol++, "Ngày Công", true, false, false);
+
+                        excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol) + 2);
+                        excel.SetWidth(iCol, 10);
+                        excel.SetValueWithFormat(iRow, iCol++, "Giờ Tăng Ca", true, false, false);
+
+                        excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol) + 2);
+                        excel.SetWidth(iCol, 10);
+                        excel.SetValueWithFormat(iRow, iCol++, "Phụ Cấp", true, false, false);
+
+                        excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol) + 2);
+                        excel.SetWidth(iCol, 10);
+                        excel.SetValueWithFormat(iRow, iCol++, "Tổng Lương", true, false, false);
+
+                        excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol) + 2);
+                        excel.SetWidth(iCol, 10);
+                        excel.SetValueWithFormat(iRow, iCol++, "Tạm Ứng", true, false, false);
+
+                        excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol) + 2);
+                        excel.SetWidth(iCol, 10);
+                        excel.SetValueWithFormat(iRow, iCol++, "Thực Lãnh", true, false, false);
+
                         iRow++;
+                        Dictionary<NhanVien, List<double>> dicThongTinTungNhanVienAll = new Dictionary<NhanVien, List<double>>();
                         foreach (NhanVien nv in listNhanVien)
                         {
                             iRow++;
                             excel.SetValueWithFormat(iRow, 1, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(nv.Ten), true, false, false);
+                            Dictionary<DateTime, List<double>> dicTongTien = new Dictionary<DateTime, List<double>>();
                             foreach (ThoiGianLamViec thoigian in nv.ThoiGianLamViecs)
                             {
                                 DateTime date = DateTime.ParseExact(thoigian.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" });
                                 iCol = 2 + date.Subtract(dateMin).Days * 3;
-
+                                if (!dicTongTien.ContainsKey(date))
+                                {
+                                    dicTongTien.Add(date, new List<double> { 0, 0, 0 });
+                                }
                                 if (thoigian.GioBatDauCaSang.HasValue && thoigian.GioKetThucCaSang.HasValue)
                                 {
                                     TimeSpan sang = new TimeSpan((int)thoigian.GioKetThucCaSang.Value, (int)thoigian.PhutKetThucCaSang.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaSang.Value, (int)thoigian.PhutBatDauCaSang.Value, 0));
-                                    excel.SetValue(iRow, iCol, "'" + sang.TotalHours.ToString("0.#"));
+                                    excel.SetValue(iRow, iCol, sang.TotalHours);
+                                    dicTongTien[date][0] = sang.TotalHours;
                                 }
                                 if (thoigian.GioBatDauCaChieu.HasValue && thoigian.GioKetThucCaChieu.HasValue)
                                 {
                                     TimeSpan chieu = new TimeSpan((int)thoigian.GioKetThucCaChieu.Value, (int)thoigian.PhutKetThucCaChieu.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaChieu.Value, (int)thoigian.PhutBatDauCaChieu.Value, 0));
-                                    excel.SetValue(iRow, iCol + 1, "'" + chieu.TotalHours.ToString("0.#"));
+                                    excel.SetValue(iRow, iCol + 1, chieu.TotalHours);
+                                    dicTongTien[date][1] = chieu.TotalHours;
                                 }
                                 if (thoigian.GioBatDauTC1.HasValue && thoigian.GioKetThucTC1.HasValue)
                                 {
@@ -644,20 +678,123 @@ namespace TinhLuongThoiVu.App_Present
                                     {
                                         tc = new TimeSpan(1, (int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
                                     }
-                                    excel.SetValue(iRow, iCol + 2, "'" + tc.TotalHours.ToString("0.#"));
+                                    excel.SetValue(iRow, iCol + 2, tc.TotalHours);
+                                    dicTongTien[date][2] = tc.TotalHours;
                                 }
                             }
+                            double tongtien = 0;
+                            double tonggiolam = 0;
+                            double tonggiotangca = 0;
+                            double tongphucap = 0;
+                            double tamung = 0;
+                            foreach (KeyValuePair<DateTime, List<double>> item in dicTongTien)
+                            {
+                                double luongngay = 0;
+                                double giochinhthuc = item.Value[0] + item.Value[1];
+                                double giotangca = item.Value[2];
+                                if (giotangca >= 4 && giochinhthuc >= 8)
+                                {
+                                    luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.2;
+                                }
+                                else if (giotangca >= 3 && giochinhthuc >= 8)
+                                {
+                                    luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.1;
+                                }
+                                else
+                                {
+                                    luongngay = (giochinhthuc + giotangca) * dLuongCanBan;
+                                }
+                                if (giochinhthuc >= 8)
+                                {
+                                    luongngay += 20000;
+                                }
+                                tongtien += luongngay;
+                                tonggiolam += giochinhthuc;
+                                tonggiotangca += giotangca;
+                            }
+
+                            iCol = 5 + dateMax.Subtract(dateMin).Days * 3;
+                            excel.SetValue(iRow, iCol++, (tonggiolam / 8));
+                            excel.SetValue(iRow, iCol++, tonggiotangca);
+                            excel.SetValue(iRow, iCol++, tongphucap);
+                            excel.SetValue(iRow, iCol++, tongtien + tongphucap);
+                            excel.SetValue(iRow, iCol++, tamung);
+                            excel.SetValue(iRow, iCol, "=" + excel.GetColumnName(iCol - 2) + iRow + "-" + excel.GetColumnName(iCol - 2) + iRow);
+
+                            dicThongTinTungNhanVienAll.Add(nv, new List<double> { tonggiolam / 8, tonggiotangca, tongphucap, tongtien + tongphucap, tamung });
                         }
                         for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
                         {
                             iCol = 2 + date.Subtract(dateMin).Days * 3;
                             excel.SetBackgroundColor(excel.GetColumnName(iCol) + 2, excel.GetColumnName(iCol) + iRow, Color.FromArgb(1, 240, 240, 240));
                         }
-
-                        excel.Border_Range("A1", excel.GetColumnName(4 + dateMax.Subtract(dateMin).Days * 3) + iRow, Color.Black);
-                        excel.SetFont("A1", excel.GetColumnName(4 + dateMax.Subtract(dateMin).Days * 3) + iRow, 10);
-                        excel.setAlignAndValign("A1", excel.GetColumnName(4 + dateMax.Subtract(dateMin).Days * 3) + iRow, off.XlHAlign.xlHAlignCenter, off.XlVAlign.xlVAlignCenter);
+                        iCol += 3;
+                        iRow++;
+                        excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
+                        excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
+                        excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
+                        excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
+                        excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
+                        excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
+                        iRow--;
+                        excel.Border_Range("A1", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + iRow, Color.Black);
+                        excel.SetFontSize("A1", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + iRow, 10);
+                        excel.setAlignAndValign("A1", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + iRow, off.XlHAlign.xlHAlignCenter, off.XlVAlign.xlVAlignCenter);
                         excel.setAlignAndValign("A2", "A" + iRow, off.XlHAlign.xlHAlignLeft, off.XlVAlign.xlVAlignCenter);
+                        excel.SetFormatCell("B3", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + (iRow + 1), "#,##0.00");
+                        excel.SetSheetName("Bảng Lương");
+                        #endregion
+                        #region - Phieu Luong -
+                        excel.SetActiveSheet(2);
+                        int iCount = 0;
+                        int iCountHeight = 0;
+                        iRow = 2;
+                        foreach (KeyValuePair<NhanVien, List<double>> item in dicThongTinTungNhanVienAll)
+                        {
+                            iCount++;
+                            if (iCount > 3)
+                            {
+                                iCount = 1;
+                                iRow += 8;
+                            }
+                            iCol = iCount * 3 - 1;
+                            excel.SetWidth(iCol, 12); excel.SetWidth(iCol + 1, 12);
+                            excel.Merge(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + iRow);
+                            excel.SetValueWithFormat(iRow, iCol, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(item.Key.Ten), true, false, false);
+                            excel.SetValue(iRow + 1, iCol, "Ngày Công");
+                            excel.SetValue(iRow + 1, iCol + 1, item.Value[0]);
+                            excel.SetValue(iRow + 2, iCol, "Giờ Tăng Ca");
+                            excel.SetValue(iRow + 2, iCol + 1, item.Value[1]);
+                            excel.SetValue(iRow + 3, iCol, "Phụ Cấp");
+                            excel.SetValue(iRow + 3, iCol + 1, item.Value[2]);
+                            excel.SetValue(iRow + 4, iCol, "Tổng Lương");
+                            excel.SetValue(iRow + 4, iCol + 1, item.Value[3]);
+                            excel.SetValue(iRow + 5, iCol, "Tạm Ứng");
+                            excel.SetValue(iRow + 5, iCol + 1, item.Value[4]);
+                            excel.SetValue(iRow + 6, iCol, "Thực Lãnh");
+                            excel.SetValue(iRow + 6, iCol + 1, "=" + excel.GetColumnName(iCol + 1) + (iRow + 4) + "-" + excel.GetColumnName(iCol + 1) + (iRow + 5));
+
+                            excel.Border_Range(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + (iRow + 6), Color.Black);
+                            excel.SetFontSize(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + (iRow + 6), 10);
+                            excel.setAlignAndValign(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + (iRow + 6), off.XlHAlign.xlHAlignCenter, off.XlVAlign.xlVAlignCenter);
+                            excel.SetFormatCell(excel.GetColumnName(iCol + 1) + (iRow + 1), excel.GetColumnName(iCol + 1) + (iRow + 6), "#,##0.00");
+                            iCountHeight++;
+                            if (iCountHeight == 18)
+                            {
+                                iCountHeight = 0;
+                                excel.SetPageBreak(iRow + 7);
+                                iRow++;
+                            }
+                        }
+                        excel.SetWidth(1, 1);
+                        excel.SetWidth(4, 2);
+                        excel.SetWidth(7, 2);
+                        excel.SetWidth(10, 2);
+                        excel.SetWidth(10, 1);
+                        excel.SetSheetName("Phiếu Lương");
+
+                        #endregion
+
                         excel.End_Write();
                         if (File.Exists(strFileName))
                         {

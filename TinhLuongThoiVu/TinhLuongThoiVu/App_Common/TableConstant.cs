@@ -11,6 +11,6 @@ namespace TableConstants
         public const string CaSang = "CaSang";
         public const string CaChieu = "CaChieu";
         public const string TangCa1 = "TangCa1";
-        public const string TangCa2 = "TangCa2";
+        public const string LuongNgay = "LuongNgay";
     }
 }

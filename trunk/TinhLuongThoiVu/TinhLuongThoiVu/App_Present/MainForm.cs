@@ -312,7 +312,7 @@ namespace TinhLuongThoiVu.App_Present
             if (txtTenNhanVien.SelectedItem is NhanVien)
             {
                 NhanVien selectedNhanVien = txtTenNhanVien.SelectedItem as NhanVien;
-                List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.ToList();
+                List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.OrderByDescending(x => x.Ngay).ToList();
                 double tongluong = 0;
                 foreach (ThoiGianLamViec thoigian in listThoigian)
                 {

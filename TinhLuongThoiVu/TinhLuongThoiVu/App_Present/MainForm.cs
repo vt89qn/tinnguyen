@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Configuration;
+using off = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
 using TableConstants;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using System.Globalization;
 using System.Collections.Specialized;
 using TinhLuongThoiVu.App_Model;
 using TinhLuongThoiVu.App_Common;
+using System.IO;
 
 namespace TinhLuongThoiVu.App_Present
 {
@@ -579,10 +581,101 @@ namespace TinhLuongThoiVu.App_Present
                 }
             }
         }
+
+        private void btnXuatExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Vnit.Excel.ExcelEngine excel = new Vnit.Excel.ExcelEngine();
+                string strFileName = string.Format("D:\\LuongThoiVu{0}.xls", DateTime.Now.Ticks);
+                if (excel.CreateNewObject(strFileName))
+                {
+                    List<NhanVien> listNhanVien = Global.DBContext.NhanVien.ToList();
+                    listNhanVien = listNhanVien.OrderBy(x => x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' '))).ToList();
+                    DateTime dateMin = DateTime.MaxValue;
+                    DateTime dateMax = DateTime.MinValue;
+                    listNhanVien.ForEach(x => x.ThoiGianLamViecs.ToList().ForEach(a => { DateTime date = DateTime.ParseExact(a.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" }); if (date > dateMax) dateMax = date; if (date < dateMin) dateMin = date; }));
+                    if (dateMax.Subtract(dateMin).TotalDays <= 40)
+                    {
+                        excel.Merge("A1", "A2");
+                        int iCol = 1, iRow = 1;
+
+                        excel.SetWidth(iCol, 25);
+                        excel.SetValueWithFormat(iRow, iCol++, "Tên Nhân Viên", true, false, false);
+                        for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
+                        {
+                            iCol = 2 + date.Subtract(dateMin).Days * 3;
+                            excel.SetWidth(iCol, 3); excel.SetWidth(iCol + 1, 3); excel.SetWidth(iCol + 2, 3);
+                            excel.SetValueWithFormat(iRow + 1, iCol, "S", true, false, false);
+                            excel.SetValueWithFormat(iRow + 1, iCol + 1, "C", true, false, false);
+                            excel.SetValueWithFormat(iRow + 1, iCol + 2, "OT", true, false, false);
+                            excel.Merge(excel.GetColumnName(iCol) + 1, excel.GetColumnName(iCol + 2) + 1);
+                            excel.SetValueWithFormat(iRow, iCol++, "'" + date.ToString("dd/MM/yyyy"), true, false, false);
+                        }
+                        iRow++;
+                        foreach (NhanVien nv in listNhanVien)
+                        {
+                            iRow++;
+                            excel.SetValueWithFormat(iRow, 1, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(nv.Ten), true, false, false);
+                            foreach (ThoiGianLamViec thoigian in nv.ThoiGianLamViecs)
+                            {
+                                DateTime date = DateTime.ParseExact(thoigian.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" });
+                                iCol = 2 + date.Subtract(dateMin).Days * 3;
+
+                                if (thoigian.GioBatDauCaSang.HasValue && thoigian.GioKetThucCaSang.HasValue)
+                                {
+                                    TimeSpan sang = new TimeSpan((int)thoigian.GioKetThucCaSang.Value, (int)thoigian.PhutKetThucCaSang.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaSang.Value, (int)thoigian.PhutBatDauCaSang.Value, 0));
+                                    excel.SetValue(iRow, iCol, "'" + sang.TotalHours.ToString("0.#"));
+                                }
+                                if (thoigian.GioBatDauCaChieu.HasValue && thoigian.GioKetThucCaChieu.HasValue)
+                                {
+                                    TimeSpan chieu = new TimeSpan((int)thoigian.GioKetThucCaChieu.Value, (int)thoigian.PhutKetThucCaChieu.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaChieu.Value, (int)thoigian.PhutBatDauCaChieu.Value, 0));
+                                    excel.SetValue(iRow, iCol + 1, "'" + chieu.TotalHours.ToString("0.#"));
+                                }
+                                if (thoigian.GioBatDauTC1.HasValue && thoigian.GioKetThucTC1.HasValue)
+                                {
+                                    TimeSpan tc = new TimeSpan();
+                                    if (thoigian.GioKetThucTC1.Value > thoigian.GioBatDauTC1.Value)
+                                    {
+                                        tc = new TimeSpan((int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
+
+                                    }
+                                    else
+                                    {
+                                        tc = new TimeSpan(1, (int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
+                                    }
+                                    excel.SetValue(iRow, iCol + 2, "'" + tc.TotalHours.ToString("0.#"));
+                                }
+                            }
+                        }
+                        for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
+                        {
+                            iCol = 2 + date.Subtract(dateMin).Days * 3;
+                            excel.SetBackgroundColor(excel.GetColumnName(iCol) + 2, excel.GetColumnName(iCol) + iRow, Color.FromArgb(1, 240, 240, 240));
+                        }
+
+                        excel.Border_Range("A1", excel.GetColumnName(4 + dateMax.Subtract(dateMin).Days * 3) + iRow, Color.Black);
+                        excel.SetFont("A1", excel.GetColumnName(4 + dateMax.Subtract(dateMin).Days * 3) + iRow, 10);
+                        excel.setAlignAndValign("A1", excel.GetColumnName(4 + dateMax.Subtract(dateMin).Days * 3) + iRow, off.XlHAlign.xlHAlignCenter, off.XlVAlign.xlVAlignCenter);
+                        excel.setAlignAndValign("A2", "A" + iRow, off.XlHAlign.xlHAlignLeft, off.XlVAlign.xlVAlignCenter);
+                        excel.End_Write();
+                        if (File.Exists(strFileName))
+                        {
+                            Process.Start(strFileName);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(string.Format("Min : {0} - Max {1}", dateMin.ToString("dd/MM/yyyy"), dateMax.ToString("dd/MM/yyyy")));
+                    }
+                }
+            }
+            catch { }
+
+        }
+
         //ngay du 8h thi 100 + 20k tien com
         //ngay du 8h + >4h tang ca tong gio X1.2 + 20k com
         //ngay du 8h + > 3h tang ca tong gio x1.1 +20k com
-
-
     }
 }

@@ -703,15 +703,8 @@ namespace PokerTexas.App_Present
                                     {
                                         if (txtCheckKyTen.Checked)
                                         {
-                                            if (AppSettings.Seft)
-                                            {
-                                                pkSource.KyTenWeb();
-                                                pkSource.PlayMiniGame();
-                                            }
-                                            else
-                                            {
-                                                //pkSource.KyTenWeb();
-                                            }
+                                            pkSource.KyTenWeb();
+                                            pkSource.PlayMiniGame();
                                             pkSource.NhanTraiTim();
                                         }
                                         if (txtCheckCo4La.Checked) pkSource.TangCo4La();

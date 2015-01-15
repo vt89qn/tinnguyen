@@ -65,19 +65,9 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(3, 2));
-                if (thoigian.GioKetThucCaSang >= 21 && thoigian.PhutKetThucCaSang > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
 
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucCaSang;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucCaSang;
-
-                    thoigian.GioKetThucCaSang = 21;
-                    thoigian.PhutKetThucCaSang = 30;
-                }
-
-                if (thoigian.GioKetThucCaSang >= 17 && thoigian.PhutKetThucCaSang > 30)
+                if (thoigian.GioKetThucCaSang > 17
+                    || (thoigian.GioKetThucCaSang == 17 && thoigian.PhutKetThucCaSang > 30))
                 {
                     thoigian.GioBatDauTC1 = 17;
                     thoigian.PhutBatDauTC1 = 30;
@@ -89,7 +79,8 @@ namespace TinhLuongThoiVu.App_Present
                     thoigian.PhutKetThucCaSang = 30;
                 }
 
-                if (thoigian.GioKetThucCaSang >= 13 && thoigian.PhutKetThucCaSang > 0)
+                if (thoigian.GioKetThucCaSang > 13
+                    || (thoigian.GioKetThucCaSang == 13 && thoigian.PhutKetThucCaSang > 0))
                 {
                     thoigian.GioBatDauCaChieu = 13;
                     thoigian.PhutBatDauCaChieu = 0;
@@ -108,19 +99,9 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(3, 2));
-                if (thoigian.GioKetThucCaChieu >= 21 && thoigian.PhutKetThucCaChieu > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
 
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucCaChieu;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucCaChieu;
-
-                    thoigian.GioKetThucCaChieu = 21;
-                    thoigian.PhutKetThucCaChieu = 30;
-                }
-
-                if (thoigian.GioKetThucCaChieu >= 17 && thoigian.PhutKetThucCaChieu > 30)
+                if (thoigian.GioKetThucCaChieu > 17
+                    || (thoigian.GioKetThucCaChieu == 17 && thoigian.PhutKetThucCaChieu > 30))
                 {
                     thoigian.GioBatDauTC1 = 17;
                     thoigian.PhutBatDauTC1 = 30;
@@ -139,19 +120,8 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucTC1 = long.Parse(txtKetThucTC1.Text.Substring(0, 2));
                 thoigian.PhutKetThucTC1 = long.Parse(txtKetThucTC1.Text.Substring(3, 2));
-
-                if (thoigian.GioKetThucTC1 >= 21 && thoigian.PhutKetThucTC1 > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
-
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucTC1;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucTC1;
-
-                    thoigian.GioKetThucTC1 = 21;
-                    thoigian.PhutKetThucTC1 = 30;
-                }
             }
+
             Global.DBContext.ThoiGianLamViec.Add(thoigian);
             Global.DBContext.SaveChanges();
             reloadComboBox();
@@ -191,6 +161,7 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian = gridData[GridConst.ID, gridData.CurrentCell.RowIndex].Value as ThoiGianLamViec;
             }
             thoigian.Ngay = txtNgay.Value.ToString("dd/MM/yyyy");
+
             if (chkCaSang.Checked)
             {
                 thoigian.GioBatDauCaSang = long.Parse(txtBatDauCaSang.Text.Substring(0, 2));
@@ -198,19 +169,9 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(3, 2));
-                if (thoigian.GioKetThucCaSang >= 21 && thoigian.PhutKetThucCaSang > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
 
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucCaSang;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucCaSang;
-
-                    thoigian.GioKetThucCaSang = 21;
-                    thoigian.PhutKetThucCaSang = 30;
-                }
-
-                if (thoigian.GioKetThucCaSang >= 17 && thoigian.PhutKetThucCaSang > 30)
+                if (thoigian.GioKetThucCaSang > 17
+                    || (thoigian.GioKetThucCaSang == 17 && thoigian.PhutKetThucCaSang > 30))
                 {
                     thoigian.GioBatDauTC1 = 17;
                     thoigian.PhutBatDauTC1 = 30;
@@ -222,7 +183,8 @@ namespace TinhLuongThoiVu.App_Present
                     thoigian.PhutKetThucCaSang = 30;
                 }
 
-                if (thoigian.GioKetThucCaSang >= 13 && thoigian.PhutKetThucCaSang > 0)
+                if (thoigian.GioKetThucCaSang > 13
+                    || (thoigian.GioKetThucCaSang == 13 && thoigian.PhutKetThucCaSang > 0))
                 {
                     thoigian.GioBatDauCaChieu = 13;
                     thoigian.PhutBatDauCaChieu = 0;
@@ -242,6 +204,7 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucCaSang = null;
                 thoigian.PhutKetThucCaSang = null;
             }
+
             if (chkCaChieu.Checked)
             {
                 thoigian.GioBatDauCaChieu = long.Parse(txtBatDauCaChieu.Text.Substring(0, 2));
@@ -249,19 +212,9 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(3, 2));
-                if (thoigian.GioKetThucCaChieu >= 21 && thoigian.PhutKetThucCaChieu > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
 
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucCaChieu;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucCaChieu;
-
-                    thoigian.GioKetThucCaChieu = 21;
-                    thoigian.PhutKetThucCaChieu = 30;
-                }
-
-                if (thoigian.GioKetThucCaChieu >= 17 && thoigian.PhutKetThucCaChieu > 30)
+                if (thoigian.GioKetThucCaChieu > 17
+                    || (thoigian.GioKetThucCaChieu == 17 && thoigian.PhutKetThucCaChieu > 30))
                 {
                     thoigian.GioBatDauTC1 = 17;
                     thoigian.PhutBatDauTC1 = 30;
@@ -281,6 +234,7 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucCaChieu = null;
                 thoigian.PhutKetThucCaChieu = null;
             }
+
             if (chkTangCa1.Checked)
             {
                 thoigian.GioBatDauTC1 = long.Parse(txtBatDauTC1.Text.Substring(0, 2));
@@ -288,18 +242,6 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucTC1 = long.Parse(txtKetThucTC1.Text.Substring(0, 2));
                 thoigian.PhutKetThucTC1 = long.Parse(txtKetThucTC1.Text.Substring(3, 2));
-
-                if (thoigian.GioKetThucTC1 >= 21 && thoigian.PhutKetThucTC1 > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
-
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucTC1;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucTC1;
-
-                    thoigian.GioKetThucTC1 = 21;
-                    thoigian.PhutKetThucTC1 = 30;
-                }
             }
             else
             {

@@ -58,14 +58,15 @@
             this.label10 = new System.Windows.Forms.Label();
             this.chkTangCa2 = new System.Windows.Forms.CheckBox();
             this.gridData = new System.Windows.Forms.DataGridView();
-            this.btnThem = new System.Windows.Forms.Button();
-            this.btnCapNhat = new System.Windows.Forms.Button();
             this.Ngay = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CaSang = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CaChieu = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TangCa1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TangCa2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnThem = new System.Windows.Forms.Button();
+            this.btnCapNhat = new System.Windows.Forms.Button();
+            this.btnXoa = new System.Windows.Forms.Button();
             this.grbCaSang.SuspendLayout();
             this.grbCaChieu.SuspendLayout();
             this.grbTangCa1.SuspendLayout();
@@ -90,6 +91,7 @@
             this.txtTenNhanVien.Size = new System.Drawing.Size(161, 21);
             this.txtTenNhanVien.TabIndex = 1;
             this.txtTenNhanVien.SelectedIndexChanged += new System.EventHandler(this.txtTenNhanVien_SelectedIndexChanged);
+            this.txtTenNhanVien.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtTenNhanVien_KeyUp);
             // 
             // grbCaSang
             // 
@@ -112,6 +114,7 @@
             this.txtKetThucCaSang.TabIndex = 1;
             this.txtKetThucCaSang.Text = "1130";
             this.txtKetThucCaSang.ValidatingType = typeof(System.DateTime);
+            this.txtKetThucCaSang.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // txtBatDauCaSang
             // 
@@ -122,6 +125,7 @@
             this.txtBatDauCaSang.TabIndex = 0;
             this.txtBatDauCaSang.Text = "0730";
             this.txtBatDauCaSang.ValidatingType = typeof(System.DateTime);
+            this.txtBatDauCaSang.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // label3
             // 
@@ -176,6 +180,7 @@
             this.txtKetThucCaChieu.TabIndex = 1;
             this.txtKetThucCaChieu.Text = "1700";
             this.txtKetThucCaChieu.ValidatingType = typeof(System.DateTime);
+            this.txtKetThucCaChieu.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // txtBatDauCaChieu
             // 
@@ -186,6 +191,7 @@
             this.txtBatDauCaChieu.TabIndex = 0;
             this.txtBatDauCaChieu.Text = "1300";
             this.txtBatDauCaChieu.ValidatingType = typeof(System.DateTime);
+            this.txtBatDauCaChieu.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // label4
             // 
@@ -255,6 +261,7 @@
             this.txtKetThucTC1.TabIndex = 1;
             this.txtKetThucTC1.Text = "2130";
             this.txtKetThucTC1.ValidatingType = typeof(System.DateTime);
+            this.txtKetThucTC1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // txtBatDauTC1
             // 
@@ -265,6 +272,7 @@
             this.txtBatDauTC1.TabIndex = 0;
             this.txtBatDauTC1.Text = "1730";
             this.txtBatDauTC1.ValidatingType = typeof(System.DateTime);
+            this.txtBatDauTC1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // label7
             // 
@@ -317,6 +325,7 @@
             this.txtKetThucTC2.TabIndex = 1;
             this.txtKetThucTC2.Text = "2330";
             this.txtKetThucTC2.ValidatingType = typeof(System.DateTime);
+            this.txtKetThucTC2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // txtBatDauTC2
             // 
@@ -327,6 +336,7 @@
             this.txtBatDauTC2.TabIndex = 0;
             this.txtBatDauTC2.Text = "2130";
             this.txtBatDauTC2.ValidatingType = typeof(System.DateTime);
+            this.txtBatDauTC2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtBatDauCaSang_KeyUp);
             // 
             // label9
             // 
@@ -361,8 +371,8 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Ngay,
@@ -378,26 +388,6 @@
             this.gridData.Size = new System.Drawing.Size(708, 293);
             this.gridData.TabIndex = 14;
             this.gridData.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridData_CellMouseDoubleClick);
-            // 
-            // btnThem
-            // 
-            this.btnThem.Location = new System.Drawing.Point(278, 46);
-            this.btnThem.Name = "btnThem";
-            this.btnThem.Size = new System.Drawing.Size(120, 40);
-            this.btnThem.TabIndex = 12;
-            this.btnThem.Text = "THÊM";
-            this.btnThem.UseVisualStyleBackColor = true;
-            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
-            // 
-            // btnCapNhat
-            // 
-            this.btnCapNhat.Location = new System.Drawing.Point(404, 46);
-            this.btnCapNhat.Name = "btnCapNhat";
-            this.btnCapNhat.Size = new System.Drawing.Size(120, 40);
-            this.btnCapNhat.TabIndex = 13;
-            this.btnCapNhat.Text = "CẬP NHẬT";
-            this.btnCapNhat.UseVisualStyleBackColor = true;
-            this.btnCapNhat.Click += new System.EventHandler(this.btnCapNhat_Click);
             // 
             // Ngay
             // 
@@ -440,11 +430,42 @@
             this.ID.ReadOnly = true;
             this.ID.Visible = false;
             // 
+            // btnThem
+            // 
+            this.btnThem.Location = new System.Drawing.Point(278, 46);
+            this.btnThem.Name = "btnThem";
+            this.btnThem.Size = new System.Drawing.Size(120, 40);
+            this.btnThem.TabIndex = 12;
+            this.btnThem.Text = "THÊM";
+            this.btnThem.UseVisualStyleBackColor = true;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
+            // 
+            // btnCapNhat
+            // 
+            this.btnCapNhat.Location = new System.Drawing.Point(404, 46);
+            this.btnCapNhat.Name = "btnCapNhat";
+            this.btnCapNhat.Size = new System.Drawing.Size(120, 40);
+            this.btnCapNhat.TabIndex = 13;
+            this.btnCapNhat.Text = "CẬP NHẬT";
+            this.btnCapNhat.UseVisualStyleBackColor = true;
+            this.btnCapNhat.Click += new System.EventHandler(this.btnCapNhat_Click);
+            // 
+            // btnXoa
+            // 
+            this.btnXoa.Location = new System.Drawing.Point(530, 46);
+            this.btnXoa.Name = "btnXoa";
+            this.btnXoa.Size = new System.Drawing.Size(120, 40);
+            this.btnXoa.TabIndex = 13;
+            this.btnXoa.Text = "XÓA";
+            this.btnXoa.UseVisualStyleBackColor = true;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(998, 447);
+            this.Controls.Add(this.btnXoa);
             this.Controls.Add(this.btnCapNhat);
             this.Controls.Add(this.btnThem);
             this.Controls.Add(this.gridData);
@@ -521,6 +542,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TangCa1;
         private System.Windows.Forms.DataGridViewTextBoxColumn TangCa2;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.Button btnXoa;
 
 
     }

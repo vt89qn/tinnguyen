@@ -176,6 +176,20 @@ namespace TinhLuongThoiVu.App_Present
             reloadComboBox();
             txtTenNhanVien.SelectedItem = selectedNhanVien;
             reloadGrid();
+            txtTenNhanVien.Focus();
+            txtTenNhanVien.SelectAll();
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+
+            if (gridData.CurrentCell != null && gridData[GridConst.ID, gridData.CurrentCell.RowIndex].Value is ThoiGianLamViec)
+            {
+                ThoiGianLamViec thoigian = gridData[GridConst.ID, gridData.CurrentCell.RowIndex].Value as ThoiGianLamViec;
+                Global.DBContext.ThoiGianLamViec.Remove(thoigian);
+                Global.DBContext.SaveChanges();
+                reloadGrid();
+            }
         }
 
         private void btnCapNhat_Click(object sender, EventArgs e)
@@ -239,6 +253,14 @@ namespace TinhLuongThoiVu.App_Present
                     thoigian.PhutKetThucCaSang = 30;
                 }
             }
+            else
+            {
+                thoigian.GioBatDauCaSang = null;
+                thoigian.PhutBatDauCaSang = null;
+
+                thoigian.GioKetThucCaSang = null;
+                thoigian.PhutKetThucCaSang = null;
+            }
             if (chkCaChieu.Checked)
             {
                 thoigian.GioBatDauCaChieu = long.Parse(txtBatDauCaChieu.Text.Substring(0, 2));
@@ -270,6 +292,14 @@ namespace TinhLuongThoiVu.App_Present
                     thoigian.PhutKetThucCaChieu = 30;
                 }
             }
+            else
+            {
+                thoigian.GioBatDauCaChieu = null;
+                thoigian.PhutBatDauCaChieu = null;
+
+                thoigian.GioKetThucCaChieu = null;
+                thoigian.PhutKetThucCaChieu = null;
+            }
             if (chkTangCa1.Checked)
             {
                 thoigian.GioBatDauTC1 = long.Parse(txtBatDauTC1.Text.Substring(0, 2));
@@ -290,6 +320,14 @@ namespace TinhLuongThoiVu.App_Present
                     thoigian.PhutKetThucTC1 = 30;
                 }
             }
+            else
+            {
+                thoigian.GioBatDauTC1 = null;
+                thoigian.PhutBatDauTC1 = null;
+
+                thoigian.GioKetThucTC1 = null;
+                thoigian.PhutKetThucTC1 = null;
+            }
             if (chkTangCa2.Checked)
             {
                 thoigian.GioBatDauTC2 = long.Parse(txtBatDauTC2.Text.Substring(0, 2));
@@ -309,6 +347,14 @@ namespace TinhLuongThoiVu.App_Present
                     thoigian.GioKetThucTC1 = 21;
                     thoigian.PhutKetThucTC1 = 30;
                 }
+            }
+            else
+            {
+                thoigian.GioBatDauTC2 = null;
+                thoigian.PhutBatDauTC2 = null;
+
+                thoigian.GioKetThucTC2 = null;
+                thoigian.PhutKetThucTC2 = null;
             }
             Global.DBContext.SaveChanges();
             reloadComboBox();
@@ -334,6 +380,36 @@ namespace TinhLuongThoiVu.App_Present
         private void chkTangCa2_CheckedChanged(object sender, EventArgs e)
         {
             grbTangCa2.Enabled = chkTangCa2.Checked;
+        }
+        private void txtTenNhanVien_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                if (!string.IsNullOrEmpty(txtTenNhanVien.Text.Trim()))
+                {
+                    txtTenNhanVien.DroppedDown = false;
+                    List<NhanVien> listNhanVien = Global.DBContext.NhanVien.Where(x => x.Ten.ToLower().Contains(txtTenNhanVien.Text.Trim().ToLower())).ToList();
+                    if (listNhanVien.Count > 0)
+                    {
+                        BindingSource bindingNhanVien = new BindingSource { DataSource = listNhanVien };
+                        txtTenNhanVien.DataSource = bindingNhanVien;
+                        txtTenNhanVien.DisplayMember = "Ten";
+                        txtTenNhanVien.ValueMember = "ID";
+                        if (listNhanVien.Count == 1)
+                        {
+                            txtTenNhanVien.SelectedItem = listNhanVien[0];
+                        }
+                        else
+                        {
+                            txtTenNhanVien.DroppedDown = true;
+                        }
+                    }
+                    else
+                    {
+                        txtTenNhanVien.DataSource = null;
+                    }
+                }
+            }
         }
         #endregion
 
@@ -539,7 +615,7 @@ namespace TinhLuongThoiVu.App_Present
             {
                 if (listSource != null && listSource.Count > 0)
                 {
-                    control.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+                    control.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
                     control.AutoCompleteSource = AutoCompleteSource.CustomSource;
                     control.AutoCompleteCustomSource.Clear();
                     string[] arrstr = new string[listSource.Count];
@@ -565,5 +641,21 @@ namespace TinhLuongThoiVu.App_Present
         {
             control.DropDown += new EventHandler(Combo_SetAutoWidth);
         }
+
+        private void txtBatDauCaSang_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                btnThem_Click(null, null);
+            }
+        }
+
+
+
+        //ngay du 8h thi 100 + 20k tien com
+        //ngay du 8h + >4h tang ca tong gio X1.2 + 20k com
+        //ngay du 8h + > 3h tang ca tong gio x1.1 +20k com
+
+
     }
 }

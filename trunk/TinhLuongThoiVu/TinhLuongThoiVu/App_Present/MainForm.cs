@@ -21,6 +21,7 @@ namespace TinhLuongThoiVu.App_Present
     public partial class MainForm : Form
     {
         #region - DECLARE -
+        double dLuongCanBan = 100000 / 8;
         #endregion
 
         #region - CONTRUCTOR -
@@ -138,26 +139,6 @@ namespace TinhLuongThoiVu.App_Present
 
                 thoigian.GioKetThucTC1 = long.Parse(txtKetThucTC1.Text.Substring(0, 2));
                 thoigian.PhutKetThucTC1 = long.Parse(txtKetThucTC1.Text.Substring(3, 2));
-
-                if (thoigian.GioKetThucTC1 >= 21 && thoigian.PhutKetThucTC1 > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
-
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucTC1;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucTC1;
-
-                    thoigian.GioKetThucTC1 = 21;
-                    thoigian.PhutKetThucTC1 = 30;
-                }
-            }
-            if (chkTangCa2.Checked)
-            {
-                thoigian.GioBatDauTC2 = long.Parse(txtBatDauTC2.Text.Substring(0, 2));
-                thoigian.PhutBatDauTC2 = long.Parse(txtBatDauTC2.Text.Substring(3, 2));
-
-                thoigian.GioKetThucTC2 = long.Parse(txtKetThucTC2.Text.Substring(0, 2));
-                thoigian.PhutKetThucTC2 = long.Parse(txtKetThucTC2.Text.Substring(3, 2));
 
                 if (thoigian.GioKetThucTC1 >= 21 && thoigian.PhutKetThucTC1 > 30)
                 {
@@ -328,34 +309,6 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucTC1 = null;
                 thoigian.PhutKetThucTC1 = null;
             }
-            if (chkTangCa2.Checked)
-            {
-                thoigian.GioBatDauTC2 = long.Parse(txtBatDauTC2.Text.Substring(0, 2));
-                thoigian.PhutBatDauTC2 = long.Parse(txtBatDauTC2.Text.Substring(3, 2));
-
-                thoigian.GioKetThucTC2 = long.Parse(txtKetThucTC2.Text.Substring(0, 2));
-                thoigian.PhutKetThucTC2 = long.Parse(txtKetThucTC2.Text.Substring(3, 2));
-
-                if (thoigian.GioKetThucTC1 >= 21 && thoigian.PhutKetThucTC1 > 30)
-                {
-                    thoigian.GioBatDauTC2 = 21;
-                    thoigian.PhutBatDauTC2 = 30;
-
-                    thoigian.GioKetThucTC2 = thoigian.GioKetThucTC1;
-                    thoigian.PhutKetThucTC2 = thoigian.PhutKetThucTC1;
-
-                    thoigian.GioKetThucTC1 = 21;
-                    thoigian.PhutKetThucTC1 = 30;
-                }
-            }
-            else
-            {
-                thoigian.GioBatDauTC2 = null;
-                thoigian.PhutBatDauTC2 = null;
-
-                thoigian.GioKetThucTC2 = null;
-                thoigian.PhutKetThucTC2 = null;
-            }
             Global.DBContext.SaveChanges();
             reloadComboBox();
             txtTenNhanVien.SelectedItem = selectedNhanVien;
@@ -377,10 +330,6 @@ namespace TinhLuongThoiVu.App_Present
             grbTangCa1.Enabled = chkTangCa1.Checked;
         }
 
-        private void chkTangCa2_CheckedChanged(object sender, EventArgs e)
-        {
-            grbTangCa2.Enabled = chkTangCa2.Checked;
-        }
         private void txtTenNhanVien_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
@@ -406,7 +355,8 @@ namespace TinhLuongThoiVu.App_Present
                     }
                     else
                     {
-                        txtTenNhanVien.DataSource = null;
+                        txtTenNhanVien.DataSource = new BindingSource { DataSource = new List<NhanVien>() };
+                        reloadGrid();
                     }
                 }
             }
@@ -421,61 +371,82 @@ namespace TinhLuongThoiVu.App_Present
             {
                 NhanVien selectedNhanVien = txtTenNhanVien.SelectedItem as NhanVien;
                 List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.ToList();
+                double tongluong = 0;
                 foreach (ThoiGianLamViec thoigian in listThoigian)
                 {
                     gridData.Rows.Add();
                     int iCount = gridData.Rows.Count - 1;
                     gridData[GridConst.Ngay, iCount].Value = thoigian.Ngay;
                     gridData[GridConst.ID, iCount].Value = thoigian;
+                    double giochinhthuc = 0;
+                    double giotangca = 0;
                     if (thoigian.GioBatDauCaSang.HasValue && thoigian.GioKetThucCaSang.HasValue)
                     {
+                        TimeSpan sang = new TimeSpan((int)thoigian.GioKetThucCaSang.Value, (int)thoigian.PhutKetThucCaSang.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaSang.Value, (int)thoigian.PhutBatDauCaSang.Value, 0));
+                        giochinhthuc += sang.TotalHours;
                         gridData[GridConst.CaSang, iCount].Value = string.Format("{0}:{1} - {2}:{3} = {4} giờ"
                             , thoigian.GioBatDauCaSang.Value.ToString("00")
                             , thoigian.PhutBatDauCaSang.Value.ToString("00")
                             , thoigian.GioKetThucCaSang.Value.ToString("00")
                             , thoigian.PhutKetThucCaSang.Value.ToString("00")
-                            , new TimeSpan((int)thoigian.GioKetThucCaSang.Value, (int)thoigian.PhutKetThucCaSang.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaSang.Value, (int)thoigian.PhutBatDauCaSang.Value, 0)).TotalHours.ToString("0.#"));
+                            , sang.TotalHours.ToString("0.#"));
                     }
                     if (thoigian.GioBatDauCaChieu.HasValue && thoigian.GioKetThucCaChieu.HasValue)
                     {
+                        TimeSpan chieu = new TimeSpan((int)thoigian.GioKetThucCaChieu.Value, (int)thoigian.PhutKetThucCaChieu.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaChieu.Value, (int)thoigian.PhutBatDauCaChieu.Value, 0));
+                        giochinhthuc += chieu.TotalHours;
                         gridData[GridConst.CaChieu, iCount].Value = string.Format("{0}:{1} - {2}:{3} = {4} giờ"
                             , thoigian.GioBatDauCaChieu.Value.ToString("00")
                             , thoigian.PhutBatDauCaChieu.Value.ToString("00")
                             , thoigian.GioKetThucCaChieu.Value.ToString("00")
                             , thoigian.PhutKetThucCaChieu.Value.ToString("00")
-                            , new TimeSpan((int)thoigian.GioKetThucCaChieu.Value, (int)thoigian.PhutKetThucCaChieu.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauCaChieu.Value, (int)thoigian.PhutBatDauCaChieu.Value, 0)).TotalHours.ToString("0.#"));
+                            , chieu.TotalHours.ToString("0.#"));
                     }
                     if (thoigian.GioBatDauTC1.HasValue && thoigian.GioKetThucTC1.HasValue)
                     {
+                        TimeSpan tc = new TimeSpan();
+                        if (thoigian.GioKetThucTC1.Value > thoigian.GioBatDauTC1.Value)
+                        {
+                            tc = new TimeSpan((int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
+
+                        }
+                        else
+                        {
+                            tc = new TimeSpan(1, (int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
+                        }
+                        giotangca = tc.TotalHours;
                         gridData[GridConst.TangCa1, iCount].Value = string.Format("{0}:{1} - {2}:{3} = {4} giờ"
                             , thoigian.GioBatDauTC1.Value.ToString("00")
                             , thoigian.PhutBatDauTC1.Value.ToString("00")
                             , thoigian.GioKetThucTC1.Value.ToString("00")
                             , thoigian.PhutKetThucTC1.Value.ToString("00")
-                            , new TimeSpan((int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0)).TotalHours.ToString("0.#"));
+                            , tc.TotalHours.ToString("0.#"));
                     }
-                    if (thoigian.GioBatDauTC2.HasValue && thoigian.GioKetThucTC2.HasValue)
+                    double luongngay = 0;
+                    if (giotangca > 4 && giochinhthuc >= 8)
                     {
-                        if (thoigian.GioKetThucTC2.Value > thoigian.GioBatDauTC2.Value)
-                        {
-                            gridData[GridConst.TangCa2, iCount].Value = string.Format("{0}:{1} - {2}:{3} = {4} giờ"
-                                , thoigian.GioBatDauTC2.Value.ToString("00")
-                                , thoigian.PhutBatDauTC2.Value.ToString("00")
-                                , thoigian.GioKetThucTC2.Value.ToString("00")
-                                , thoigian.PhutKetThucTC2.Value.ToString("00")
-                                , new TimeSpan((int)thoigian.GioKetThucTC2.Value, (int)thoigian.PhutKetThucTC2.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC2.Value, (int)thoigian.PhutBatDauTC2.Value, 0)).TotalHours.ToString("0.#"));
-                        }
-                        else
-                        {
-                            gridData[GridConst.TangCa2, iCount].Value = string.Format("{0}:{1} - {2}:{3} = {4} giờ"
-                                , thoigian.GioBatDauTC2.Value.ToString("00")
-                                , thoigian.PhutBatDauTC2.Value.ToString("00")
-                                , thoigian.GioKetThucTC2.Value.ToString("00")
-                                , thoigian.PhutKetThucTC2.Value.ToString("00")
-                                , new TimeSpan(1, (int)thoigian.GioKetThucTC2.Value, (int)thoigian.PhutKetThucTC2.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC2.Value, (int)thoigian.PhutBatDauTC2.Value, 0)).TotalHours.ToString("0.#"));
-                        }
+                        luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.2;
                     }
+                    else if (giotangca > 3 && giochinhthuc >= 8)
+                    {
+                        luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.1;
+                    }
+                    else
+                    {
+                        luongngay = (giochinhthuc + giotangca) * dLuongCanBan;
+                    }
+                    if (giochinhthuc >= 8)
+                    {
+                        luongngay += 20000;
+                    }
+                    tongluong += luongngay;
+                    gridData[GridConst.LuongNgay, iCount].Value = luongngay.ToString("#,###");
                 }
+                lblTongLuong.Text = "Tổng Lương : " + tongluong.ToString("#,###");
+            }
+            else
+            {
+                lblTongLuong.Text = "Tổng Lương ";
             }
         }
 
@@ -488,13 +459,13 @@ namespace TinhLuongThoiVu.App_Present
             txtTenNhanVien.ValueMember = "ID";
             List<string> listSource = new List<string>();
             listNhanVien.ForEach(x => listSource.Add(x.Ten));
-            CreateSuggestComboBox(listSource, txtTenNhanVien);
+            //CreateSuggestComboBox(listSource, txtTenNhanVien);
         }
         #endregion
 
         private void txtTenNhanVien_SelectedIndexChanged(object sender, EventArgs e)
         {
-            reloadGrid();
+            //reloadGrid();
         }
 
         private void gridData_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -539,16 +510,6 @@ namespace TinhLuongThoiVu.App_Present
                     {
                         chkTangCa1.Checked = false;
                     }
-                    if (thoigian.GioBatDauTC2.HasValue && thoigian.GioKetThucTC2.HasValue)
-                    {
-                        txtBatDauTC2.Text = thoigian.GioBatDauTC2.Value.ToString("00") + thoigian.PhutBatDauTC2.Value.ToString("00");
-                        txtKetThucTC2.Text = thoigian.GioKetThucTC2.Value.ToString("00") + thoigian.PhutKetThucTC2.Value.ToString("00");
-                        chkTangCa2.Checked = true;
-                    }
-                    else
-                    {
-                        chkTangCa2.Checked = false;
-                    }
                 }
             }
         }
@@ -562,17 +523,18 @@ namespace TinhLuongThoiVu.App_Present
                 {
                     ((ComboBox)sender).AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
                 }
-                else if ((!((ComboBox)sender).DroppedDown && ((ComboBox)sender).AutoCompleteMode != System.Windows.Forms.AutoCompleteMode.SuggestAppend))
+                else if ((!((ComboBox)sender).DroppedDown && ((ComboBox)sender).AutoCompleteMode != System.Windows.Forms.AutoCompleteMode.Suggest))
                 {
                     if (((ComboBox)sender).AutoCompleteCustomSource.Count > 0)
                     {
-                        ((ComboBox)sender).AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+                        ((ComboBox)sender).AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
                         ((ComboBox)sender).Select(((ComboBox)sender).Text.Trim().Length, 0);
                     }
 
                 }
             }
         }
+
         private static void Combo_DropDown(object sender, EventArgs e)
         {
             if (sender is ComboBox && ((ComboBox)sender).AutoCompleteMode != System.Windows.Forms.AutoCompleteMode.None)
@@ -580,6 +542,7 @@ namespace TinhLuongThoiVu.App_Present
                 ((ComboBox)sender).AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.None;
             }
         }
+
         private static void Combo_SetAutoWidth(object sender, EventArgs e)
         {
             if (sender is ComboBox)
@@ -609,6 +572,7 @@ namespace TinhLuongThoiVu.App_Present
                 senderComboBox.DropDownWidth = width;
             }
         }
+
         public static void CreateSuggestComboBox(List<string> listSource, ComboBox control)
         {
             try
@@ -632,11 +596,13 @@ namespace TinhLuongThoiVu.App_Present
             }
             catch { }
         }
+
         public static void CreateEventSuggestComboBox(ComboBox control)
         {
             control.DropDown += new EventHandler(Combo_DropDown);
             control.KeyUp += new KeyEventHandler(Combo_KeyUp);
         }
+
         public static void SetAutoWidthComboBox(ComboBox control)
         {
             control.DropDown += new EventHandler(Combo_SetAutoWidth);
@@ -646,12 +612,31 @@ namespace TinhLuongThoiVu.App_Present
         {
             if (e.KeyData == Keys.Enter)
             {
+                txtBatDauCaSang_Leave(sender, null);
                 btnThem_Click(null, null);
             }
         }
 
+        private void txtTenNhanVien_SelectedValueChanged(object sender, EventArgs e)
+        {
+            reloadGrid();
+        }
 
-
+        private void txtBatDauCaSang_Leave(object sender, EventArgs e)
+        {
+            if (sender is MaskedTextBox)
+            {
+                var txt = sender as MaskedTextBox;
+                if (txt.Text.Length != 5)
+                {
+                    int iHours = 0;
+                    int iMinutes = 0;
+                    int.TryParse(txt.Text.Split(':')[0].Trim(), out iHours);
+                    int.TryParse(txt.Text.Split(':')[1].Trim(), out iMinutes);
+                    txt.Text = iHours.ToString("00") + ":" + iMinutes.ToString("00");
+                }
+            }
+        }
         //ngay du 8h thi 100 + 20k tien com
         //ngay du 8h + >4h tang ca tong gio X1.2 + 20k com
         //ngay du 8h + > 3h tang ca tong gio x1.1 +20k com

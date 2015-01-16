@@ -342,6 +342,8 @@
             // txtCheckMobile
             // 
             this.txtCheckMobile.AutoSize = true;
+            this.txtCheckMobile.Checked = true;
+            this.txtCheckMobile.CheckState = System.Windows.Forms.CheckState.Checked;
             this.txtCheckMobile.Location = new System.Drawing.Point(8, 29);
             this.txtCheckMobile.Name = "txtCheckMobile";
             this.txtCheckMobile.Size = new System.Drawing.Size(57, 17);
@@ -364,8 +366,6 @@
             // txtCheckDangNhapLT
             // 
             this.txtCheckDangNhapLT.AutoSize = true;
-            this.txtCheckDangNhapLT.Checked = true;
-            this.txtCheckDangNhapLT.CheckState = System.Windows.Forms.CheckState.Checked;
             this.txtCheckDangNhapLT.Location = new System.Drawing.Point(160, 12);
             this.txtCheckDangNhapLT.Name = "txtCheckDangNhapLT";
             this.txtCheckDangNhapLT.Size = new System.Drawing.Size(97, 17);

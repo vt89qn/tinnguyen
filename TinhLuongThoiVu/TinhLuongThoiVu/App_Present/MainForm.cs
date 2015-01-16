@@ -764,18 +764,24 @@ namespace TinhLuongThoiVu.App_Present
                             excel.SetWidth(iCol, 12); excel.SetWidth(iCol + 1, 12);
                             excel.Merge(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + iRow);
                             excel.SetValueWithFormat(iRow, iCol, "='Bảng Lương'!" + excel.GetColumnName(1) + item.Value, true, false, false);
-                            excel.SetValue(iRow + 1, iCol, "Ngày Công");
+
+                            excel.SetValue(iRow + 1, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol) + 1);
                             excel.SetValue(iRow + 1, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol) + item.Value);
-                            excel.SetValue(iRow + 2, iCol, "Giờ Tăng Ca");
+
+                            excel.SetValue(iRow + 2, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + 1);
                             excel.SetValue(iRow + 2, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + item.Value);
-                            excel.SetValue(iRow + 3, iCol, "Phụ Cấp");
+
+                            excel.SetValue(iRow + 3, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + 1);
                             excel.SetValue(iRow + 3, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 2) + item.Value);
-                            excel.SetValue(iRow + 4, iCol, "Tổng Lương");
+
+                            excel.SetValue(iRow + 4, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 3) + 1);
                             excel.SetValue(iRow + 4, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 3) + item.Value);
-                            excel.SetValue(iRow + 5, iCol, "Tạm Ứng");
+
+                            excel.SetValue(iRow + 5, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 4) + 1);
                             excel.SetValue(iRow + 5, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 4) + item.Value);
-                            excel.SetValue(iRow + 6, iCol, "Thực Lãnh");
-                            excel.SetValue(iRow + 6, iCol + 1, "=" + excel.GetColumnName(iCol + 1) + (iRow + 4) + "-" + excel.GetColumnName(iCol + 1) + (iRow + 5));
+
+                            excel.SetValue(iRow + 6, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 5) + 1);
+                            excel.SetValue(iRow + 6, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 5) + item.Value);
 
                             excel.Border_Range(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + (iRow + 6), Color.Black);
                             excel.SetFontSize(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + (iRow + 6), 10);

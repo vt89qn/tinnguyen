@@ -600,6 +600,8 @@ namespace TinhLuongThoiVu.App_Present
                     if (dateMax.Subtract(dateMin).TotalDays <= 40)
                     {
                         #region - Sheet Tong -
+                        excel.CopySheet();
+                        excel.SetActiveSheet(1);
                         int iCol = 1, iRow = 1;
                         excel.Merge("A1", "A2");
                         excel.SetWidth(iCol, 25);
@@ -640,7 +642,7 @@ namespace TinhLuongThoiVu.App_Present
                         excel.SetValueWithFormat(iRow, iCol++, "Thực Lãnh", true, false, false);
 
                         iRow++;
-                        Dictionary<NhanVien, List<double>> dicThongTinTungNhanVienAll = new Dictionary<NhanVien, List<double>>();
+                        Dictionary<NhanVien, int> dicThongTinTungNhanVienAll = new Dictionary<NhanVien, int>();
                         foreach (NhanVien nv in listNhanVien)
                         {
                             iRow++;
@@ -719,9 +721,9 @@ namespace TinhLuongThoiVu.App_Present
                             excel.SetValue(iRow, iCol++, tongphucap);
                             excel.SetValue(iRow, iCol++, tongtien + tongphucap);
                             excel.SetValue(iRow, iCol++, tamung);
-                            excel.SetValue(iRow, iCol, "=" + excel.GetColumnName(iCol - 2) + iRow + "-" + excel.GetColumnName(iCol - 2) + iRow);
+                            excel.SetValue(iRow, iCol, "=" + excel.GetColumnName(iCol - 2) + iRow + "-" + excel.GetColumnName(iCol - 1) + iRow);
 
-                            dicThongTinTungNhanVienAll.Add(nv, new List<double> { tonggiolam / 8, tonggiotangca, tongphucap, tongtien + tongphucap, tamung });
+                            dicThongTinTungNhanVienAll.Add(nv, iRow);
                         }
                         for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
                         {
@@ -748,8 +750,9 @@ namespace TinhLuongThoiVu.App_Present
                         excel.SetActiveSheet(2);
                         int iCount = 0;
                         int iCountHeight = 0;
+                        int iTotalCol = 5 + dateMax.Subtract(dateMin).Days * 3;
                         iRow = 2;
-                        foreach (KeyValuePair<NhanVien, List<double>> item in dicThongTinTungNhanVienAll)
+                        foreach (KeyValuePair<NhanVien, int> item in dicThongTinTungNhanVienAll)
                         {
                             iCount++;
                             if (iCount > 3)
@@ -760,17 +763,17 @@ namespace TinhLuongThoiVu.App_Present
                             iCol = iCount * 3 - 1;
                             excel.SetWidth(iCol, 12); excel.SetWidth(iCol + 1, 12);
                             excel.Merge(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + iRow);
-                            excel.SetValueWithFormat(iRow, iCol, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(item.Key.Ten), true, false, false);
+                            excel.SetValueWithFormat(iRow, iCol, "='Bảng Lương'!" + excel.GetColumnName(1) + item.Value, true, false, false);
                             excel.SetValue(iRow + 1, iCol, "Ngày Công");
-                            excel.SetValue(iRow + 1, iCol + 1, item.Value[0]);
+                            excel.SetValue(iRow + 1, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol) + item.Value);
                             excel.SetValue(iRow + 2, iCol, "Giờ Tăng Ca");
-                            excel.SetValue(iRow + 2, iCol + 1, item.Value[1]);
+                            excel.SetValue(iRow + 2, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + item.Value);
                             excel.SetValue(iRow + 3, iCol, "Phụ Cấp");
-                            excel.SetValue(iRow + 3, iCol + 1, item.Value[2]);
+                            excel.SetValue(iRow + 3, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 2) + item.Value);
                             excel.SetValue(iRow + 4, iCol, "Tổng Lương");
-                            excel.SetValue(iRow + 4, iCol + 1, item.Value[3]);
+                            excel.SetValue(iRow + 4, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 3) + item.Value);
                             excel.SetValue(iRow + 5, iCol, "Tạm Ứng");
-                            excel.SetValue(iRow + 5, iCol + 1, item.Value[4]);
+                            excel.SetValue(iRow + 5, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 4) + item.Value);
                             excel.SetValue(iRow + 6, iCol, "Thực Lãnh");
                             excel.SetValue(iRow + 6, iCol + 1, "=" + excel.GetColumnName(iCol + 1) + (iRow + 4) + "-" + excel.GetColumnName(iCol + 1) + (iRow + 5));
 
@@ -806,7 +809,9 @@ namespace TinhLuongThoiVu.App_Present
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
         }
 

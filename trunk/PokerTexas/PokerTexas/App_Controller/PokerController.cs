@@ -399,7 +399,7 @@ namespace PokerTexas.App_Controller
             this.Status = "ket thuc nhận ky ten mobile";
         }
 
-        public void TangQuaBiMat()
+        public void TangQuaBiMat_OLD()
         {
             try
             {
@@ -410,13 +410,26 @@ namespace PokerTexas.App_Controller
                 }
                 if (!bMBLogedIn) return;
                 var exData = getExData();
-                foreach (Poker to in this.Models.Package.Pokers)
+                int iFrom = 0;
+                List<Poker> listPokers = Models.Package.Pokers.ToList();
+                for (; iFrom < listPokers.Count; iFrom++)
                 {
-                    if (to == this.Models) continue;
+                    if (listPokers[iFrom].PKID == Models.PKID) break;
+                }
+                for (int iPoker = 1; iPoker <= 6; iPoker++)
+                {
                     #region - Presents.post -
                     SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
-                    dic_param.Add("to", to.PKID);
-
+                    Poker p = new Poker();
+                    if (iFrom + iPoker < listPokers.Count)
+                    {
+                        p = listPokers[iFrom + iPoker];
+                    }
+                    else if (iFrom + iPoker - listPokers.Count < listPokers.Count)
+                    {
+                        p = listPokers[iFrom + iPoker - listPokers.Count];
+                    }
+                    dic_param.Add("to", p.PKID);
                     NameValueCollection param = new NameValueCollection();
                     param.Add("api", getAPIString("Presents.post", dic_param));
 
@@ -426,7 +439,7 @@ namespace PokerTexas.App_Controller
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     #endregion
 
-                    this.Status = "Tặng quà bí mật thành công cho " + to.FaceBook.Login;
+                    this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
                     System.Threading.Thread.Sleep(4000);
                 }
             }
@@ -442,36 +455,148 @@ namespace PokerTexas.App_Controller
             try
             {
                 this.Status = "Bắt đầu nhận quà bí mật";
-                foreach (Poker to in this.Models.Package.Pokers)
+                if (!bMBLogedIn && !bTryMBLogin)
                 {
-                    if (to.PKID == this.Models.PKID) continue;
-                    var exData = getExData();
-                    #region - Presents.get -
-                    SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
-                    dic_param.Add("id", DateTime.Today.ToString("yyyyMMdd") + "|" + to.PKID);
+                    LoginMobile();
+                }
+                if (!bMBLogedIn) return;
+                var exData = getExData();
+                SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+                NameValueCollection param = new NameValueCollection();
+                WebClientEx client = new WebClientEx();
+                List<Dictionary<string, object>> listPresents = new List<Dictionary<string, object>>();
+                {
+                    #region - Presents.lists -
+                    dic_param = new SortedDictionary<string, object>();
+                    dic_param.Add("sid", "110");
+                    param = new NameValueCollection();
+                    param.Add("api", getAPIString("Presents.lists", dic_param));
 
-                    NameValueCollection param = new NameValueCollection();
-                    param.Add("api", getAPIString("Presents.get", dic_param));
-
-                    WebClientEx client = new WebClientEx();
+                    client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
+                    if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("ret"))
                     {
                         Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                        string money = (dicInfo["ret"] as Dictionary<string, object>)["money"].ToString();
-                        decimal dmoney = 0;
-                        if (decimal.TryParse(money, out dmoney))
+                        Dictionary<string, object> ret = (dicInfo["ret"] as Dictionary<string, object>);
+                        if (ret.ContainsKey("lists") && ret["lists"] is ICollection)
                         {
-                            this.Money += dmoney;
+                            foreach (Dictionary<string, object> diclist in ret["lists"] as ICollection)
+                            {
+                                listPresents.Add(diclist);
+                            }
                         }
                     }
                     #endregion
-
-                    this.Status = "Nhận quà bí mật thành công từ " + to.FaceBook.Login;
-                    System.Threading.Thread.Sleep(4000);
                 }
+
+                int iFrom = 0;
+                List<Poker> listPokers = Models.Package.Pokers.ToList();
+
+                for (; iFrom < listPokers.Count; iFrom++)
+                {
+                    if (listPokers[iFrom].PKID == Models.PKID) break;
+                }
+                for (int iPoker = 1; iPoker <= 6; iPoker++)
+                {
+                    Poker p = new Poker();
+                    if (iFrom + iPoker < listPokers.Count)
+                    {
+                        p = listPokers[iFrom + iPoker];
+                    }
+                    else if (iFrom + iPoker - listPokers.Count < listPokers.Count)
+                    {
+                        p = listPokers[iFrom + iPoker - listPokers.Count];
+                    }
+                    string id_presents = string.Empty;
+                    foreach (Dictionary<string, object> diclist in listPresents)
+                    {
+                        if (diclist.ContainsKey("from") && diclist["from"].ToString() == p.PKID)
+                        {
+                            id_presents = diclist["id"].ToString();
+                            listPresents.Remove(diclist);
+                            break;
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(id_presents))
+                    {
+                        System.Threading.Thread.Sleep(2000);
+                        #region - Presents.get -
+                        dic_param = new SortedDictionary<string, object>();
+                        dic_param.Add("id", id_presents);
+
+                        param = new NameValueCollection();
+                        param.Add("api", getAPIString("Presents.get", dic_param));
+
+                        client = new WebClientEx();
+                        client.IpHeader = exData.ip_address;
+                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
+                        {
+                            Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                            string money = (dicInfo["ret"] as Dictionary<string, object>)["money"].ToString();
+                            decimal dmoney = 0;
+                            if (decimal.TryParse(money, out dmoney))
+                            {
+                                this.Money += dmoney;
+                            }
+                        }
+                        #endregion
+
+                        this.Status = "Nhận quà bí mật thành công từ " + p.FaceBook.Login;
+                        
+                    }
+
+                    System.Threading.Thread.Sleep(2000);
+
+                    #region - Presents.post -
+                    dic_param = new SortedDictionary<string, object>();
+                    dic_param.Add("to", p.PKID);
+                    param = new NameValueCollection();
+                    param.Add("api", getAPIString("Presents.post", dic_param));
+
+                    client = new WebClientEx();
+                    client.IpHeader = exData.ip_address;
+                    client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    #endregion
+
+                    this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
+                    
+                }
+
+                foreach (Dictionary<string, object> diclist in listPresents)
+                {
+                    if (diclist.ContainsKey("from"))
+                    {
+                        System.Threading.Thread.Sleep(2000);
+                        #region - Presents.get -
+                        dic_param = new SortedDictionary<string, object>();
+                        dic_param.Add("id", diclist["id"].ToString());
+
+                        param = new NameValueCollection();
+                        param.Add("api", getAPIString("Presents.get", dic_param));
+
+                        client = new WebClientEx();
+                        client.IpHeader = exData.ip_address;
+                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
+                        {
+                            Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                            string money = (dicInfo["ret"] as Dictionary<string, object>)["money"].ToString();
+                            decimal dmoney = 0;
+                            if (decimal.TryParse(money, out dmoney))
+                            {
+                                this.Money += dmoney;
+                            }
+                        }
+                        #endregion
+                    }
+                }
+
             }
             catch (Exception ex)
             {

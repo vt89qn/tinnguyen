@@ -732,7 +732,7 @@ namespace PokerTexas.App_Present
                         if (this.IsDisposed) return;
                         PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                         List<string> listLinkForGet = new List<string>();
-                        for (int iPoker = 1; iPoker <= 3; iPoker++)
+                        for (int iPoker = 1; iPoker <= 4; iPoker++)
                         {
                             if (iIndex + iPoker < listLink.Count)
                             {
@@ -793,27 +793,30 @@ namespace PokerTexas.App_Present
                 if ((txtCheckTuDong.Checked && txtCheckMobile.Checked) || !txtCheckTuDong.Checked)
                 {
                     List<Task> tasks = new List<Task>();
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked)
                     {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        tasks.Add(Task.Factory.StartNew(() =>
+                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                         {
-                            if (txtCheckDangNhapLT.Checked)
+                            if (this.IsDisposed) return;
+                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                            tasks.Add(Task.Factory.StartNew(() =>
                             {
-                                pkSource.NhanThuongHangNgayMobile();
-                            }
-                            if (txtCheckHangNgay.Checked)
-                            {
-                                pkSource.NhanThuong2MMobile();
-                            }
-                        }));
-                        System.Threading.Thread.Sleep(1000);
-                    }
-                    while (tasks.Any(t => !t.IsCompleted))
-                    {
-                        Application.DoEvents();
-                        System.Threading.Thread.Sleep(1000);
+                                if (txtCheckDangNhapLT.Checked)
+                                {
+                                    pkSource.NhanThuongHangNgayMobile();
+                                }
+                                if (txtCheckHangNgay.Checked)
+                                {
+                                    pkSource.NhanThuong2MMobile();
+                                }
+                            }));
+                            System.Threading.Thread.Sleep(1000);
+                        }
+                        while (tasks.Any(t => !t.IsCompleted))
+                        {
+                            Application.DoEvents();
+                            System.Threading.Thread.Sleep(1000);
+                        }
                     }
                     if (txtCheckChipBiMat.Checked)
                     {
@@ -832,18 +835,18 @@ namespace PokerTexas.App_Present
                         //}
 
                         tasks = new List<Task>();
-                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                        {
-                            if (this.IsDisposed) return;
-                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                            tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
-                            System.Threading.Thread.Sleep(1000);
-                        }
-                        while (tasks.Any(t => !t.IsCompleted))
-                        {
-                            Application.DoEvents();
-                            System.Threading.Thread.Sleep(1000);
-                        }
+                        //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                        //{
+                        //    if (this.IsDisposed) return;
+                        //    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        //    tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
+                        //    System.Threading.Thread.Sleep(1000);
+                        //}
+                        //while (tasks.Any(t => !t.IsCompleted))
+                        //{
+                        //    Application.DoEvents();
+                        //    System.Threading.Thread.Sleep(1000);
+                        //}
 
                         System.Threading.Thread.Sleep(1000);
                         tasks = new List<Task>();
@@ -874,6 +877,10 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnCheckMobile.Enabled = true;
+                        if (AppSettings.Seft && txtPackNo.SelectedIndex >= 10)
+                        {
+                            txtCheckMobile.Checked = false;
+                        }
                         if (txtCheckTuDong.Checked)
                         {
                             System.Threading.Thread.Sleep(2000);

@@ -732,7 +732,7 @@ namespace PokerTexas.App_Present
                         if (this.IsDisposed) return;
                         PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
                         List<string> listLinkForGet = new List<string>();
-                        for (int iPoker = 1; iPoker <= 4; iPoker++)
+                        for (int iPoker = 1; iPoker <= 3; iPoker++)
                         {
                             if (iIndex + iPoker < listLink.Count)
                             {

@@ -1055,7 +1055,7 @@ namespace PokerTexas.App_Controller
                         {
                             if (listPokers[iFrom].PKID == Models.PKID) break;
                         }
-                        for (int iPoker = 1; iPoker <= 6; iPoker++)
+                        for (int iPoker = 1; iPoker <= 5; iPoker++)
                         {
                             if (iFrom + iPoker < listPokers.Count)
                             {

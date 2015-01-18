@@ -11,10 +11,11 @@ namespace FooLike.Controllers
     {
         //
         // GET: /Home/
-        [HttpGet]
+        //[HttpGet]
         public ActionResult Index()
         {
-            return Json(new DBDataContext().Accounts.ToList(), JsonRequestBehavior.AllowGet);
+            return View();
+            //return Json(new DBDataContext().Accounts.ToList(), JsonRequestBehavior.AllowGet);
         }
 
     }

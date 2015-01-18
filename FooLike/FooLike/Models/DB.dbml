@@ -1,3 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB" Class="DBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="foolike_com_db" Class="DBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="WebSettings" ConnectionString="Data Source=tinphuong.com\MSSQLSERVER2012;Initial Catalog=foolike_com_db;Persist Security Info=True;User ID=vtt" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Account" Member="Accounts">
+    <Type Name="Account">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Login" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Pass" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="FBToken" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="FBID" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="FBName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="RealName" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="LastLinkedTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="LastLoginTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Account_Session" Member="Sessions" ThisKey="ID" OtherKey="AccountID" Type="Session" />
+      <Association Name="Account_SessionLink" Member="SessionLinks" ThisKey="ID" OtherKey="AccountID" Type="SessionLink" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Session" Member="Sessions">
+    <Type Name="Session">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="FBID" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NoOfLink" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CurrentLink" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="FinishedTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Session_SessionLink" Member="SessionLinks" ThisKey="ID" OtherKey="SessionID" Type="SessionLink" />
+      <Association Name="Account_Session" Member="Account" ThisKey="AccountID" OtherKey="ID" Type="Account" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SessionLink" Member="SessionLinks">
+    <Type Name="SessionLink">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SessionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LinkedTime" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Account_SessionLink" Member="Account" ThisKey="AccountID" OtherKey="ID" Type="Account" IsForeignKey="true" />
+      <Association Name="Session_SessionLink" Member="Session" ThisKey="SessionID" OtherKey="ID" Type="Session" IsForeignKey="true" />
+    </Type>
+  </Table>
 </Database>

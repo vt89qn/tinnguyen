@@ -22,7 +22,7 @@ namespace FooLike.Models
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="foolike_com_db")]
 	public partial class DBDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,6 +30,15 @@ namespace FooLike.Models
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertAccount(Account instance);
+    partial void UpdateAccount(Account instance);
+    partial void DeleteAccount(Account instance);
+    partial void InsertSession(Session instance);
+    partial void UpdateSession(Session instance);
+    partial void DeleteSession(Session instance);
+    partial void InsertSessionLink(SessionLink instance);
+    partial void UpdateSessionLink(SessionLink instance);
+    partial void DeleteSessionLink(SessionLink instance);
     #endregion
 		
 		public DBDataContext() : 
@@ -60,6 +69,927 @@ namespace FooLike.Models
 				base(connection, mappingSource)
 		{
 			OnCreated();
+		}
+		
+		public System.Data.Linq.Table<Account> Accounts
+		{
+			get
+			{
+				return this.GetTable<Account>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Session> Sessions
+		{
+			get
+			{
+				return this.GetTable<Session>();
+			}
+		}
+		
+		public System.Data.Linq.Table<SessionLink> SessionLinks
+		{
+			get
+			{
+				return this.GetTable<SessionLink>();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Account")]
+	public partial class Account : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private string _Login;
+		
+		private string _Pass;
+		
+		private string _Email;
+		
+		private string _FBToken;
+		
+		private string _FBID;
+		
+		private string _FBName;
+		
+		private string _RealName;
+		
+		private System.DateTime _LastLinkedTime;
+		
+		private System.DateTime _CreatedTime;
+		
+		private System.DateTime _LastLoginTime;
+		
+		private EntitySet<Session> _Sessions;
+		
+		private EntitySet<SessionLink> _SessionLinks;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnLoginChanging(string value);
+    partial void OnLoginChanged();
+    partial void OnPassChanging(string value);
+    partial void OnPassChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    partial void OnFBTokenChanging(string value);
+    partial void OnFBTokenChanged();
+    partial void OnFBIDChanging(string value);
+    partial void OnFBIDChanged();
+    partial void OnFBNameChanging(string value);
+    partial void OnFBNameChanged();
+    partial void OnRealNameChanging(string value);
+    partial void OnRealNameChanged();
+    partial void OnLastLinkedTimeChanging(System.DateTime value);
+    partial void OnLastLinkedTimeChanged();
+    partial void OnCreatedTimeChanging(System.DateTime value);
+    partial void OnCreatedTimeChanged();
+    partial void OnLastLoginTimeChanging(System.DateTime value);
+    partial void OnLastLoginTimeChanged();
+    #endregion
+		
+		public Account()
+		{
+			this._Sessions = new EntitySet<Session>(new Action<Session>(this.attach_Sessions), new Action<Session>(this.detach_Sessions));
+			this._SessionLinks = new EntitySet<SessionLink>(new Action<SessionLink>(this.attach_SessionLinks), new Action<SessionLink>(this.detach_SessionLinks));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Login", DbType="VarChar(MAX)")]
+		public string Login
+		{
+			get
+			{
+				return this._Login;
+			}
+			set
+			{
+				if ((this._Login != value))
+				{
+					this.OnLoginChanging(value);
+					this.SendPropertyChanging();
+					this._Login = value;
+					this.SendPropertyChanged("Login");
+					this.OnLoginChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Pass", DbType="VarChar(MAX)")]
+		public string Pass
+		{
+			get
+			{
+				return this._Pass;
+			}
+			set
+			{
+				if ((this._Pass != value))
+				{
+					this.OnPassChanging(value);
+					this.SendPropertyChanging();
+					this._Pass = value;
+					this.SendPropertyChanged("Pass");
+					this.OnPassChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(MAX)")]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FBToken", DbType="VarChar(MAX)")]
+		public string FBToken
+		{
+			get
+			{
+				return this._FBToken;
+			}
+			set
+			{
+				if ((this._FBToken != value))
+				{
+					this.OnFBTokenChanging(value);
+					this.SendPropertyChanging();
+					this._FBToken = value;
+					this.SendPropertyChanged("FBToken");
+					this.OnFBTokenChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FBID", DbType="VarChar(MAX)")]
+		public string FBID
+		{
+			get
+			{
+				return this._FBID;
+			}
+			set
+			{
+				if ((this._FBID != value))
+				{
+					this.OnFBIDChanging(value);
+					this.SendPropertyChanging();
+					this._FBID = value;
+					this.SendPropertyChanged("FBID");
+					this.OnFBIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FBName", DbType="VarChar(MAX)")]
+		public string FBName
+		{
+			get
+			{
+				return this._FBName;
+			}
+			set
+			{
+				if ((this._FBName != value))
+				{
+					this.OnFBNameChanging(value);
+					this.SendPropertyChanging();
+					this._FBName = value;
+					this.SendPropertyChanged("FBName");
+					this.OnFBNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RealName", DbType="VarChar(MAX)")]
+		public string RealName
+		{
+			get
+			{
+				return this._RealName;
+			}
+			set
+			{
+				if ((this._RealName != value))
+				{
+					this.OnRealNameChanging(value);
+					this.SendPropertyChanging();
+					this._RealName = value;
+					this.SendPropertyChanged("RealName");
+					this.OnRealNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastLinkedTime", DbType="DateTime NOT NULL")]
+		public System.DateTime LastLinkedTime
+		{
+			get
+			{
+				return this._LastLinkedTime;
+			}
+			set
+			{
+				if ((this._LastLinkedTime != value))
+				{
+					this.OnLastLinkedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._LastLinkedTime = value;
+					this.SendPropertyChanged("LastLinkedTime");
+					this.OnLastLinkedTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedTime", DbType="DateTime NOT NULL")]
+		public System.DateTime CreatedTime
+		{
+			get
+			{
+				return this._CreatedTime;
+			}
+			set
+			{
+				if ((this._CreatedTime != value))
+				{
+					this.OnCreatedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedTime = value;
+					this.SendPropertyChanged("CreatedTime");
+					this.OnCreatedTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastLoginTime", DbType="DateTime NOT NULL")]
+		public System.DateTime LastLoginTime
+		{
+			get
+			{
+				return this._LastLoginTime;
+			}
+			set
+			{
+				if ((this._LastLoginTime != value))
+				{
+					this.OnLastLoginTimeChanging(value);
+					this.SendPropertyChanging();
+					this._LastLoginTime = value;
+					this.SendPropertyChanged("LastLoginTime");
+					this.OnLastLoginTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_Session", Storage="_Sessions", ThisKey="ID", OtherKey="AccountID")]
+		public EntitySet<Session> Sessions
+		{
+			get
+			{
+				return this._Sessions;
+			}
+			set
+			{
+				this._Sessions.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_SessionLink", Storage="_SessionLinks", ThisKey="ID", OtherKey="AccountID")]
+		public EntitySet<SessionLink> SessionLinks
+		{
+			get
+			{
+				return this._SessionLinks;
+			}
+			set
+			{
+				this._SessionLinks.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Sessions(Session entity)
+		{
+			this.SendPropertyChanging();
+			entity.Account = this;
+		}
+		
+		private void detach_Sessions(Session entity)
+		{
+			this.SendPropertyChanging();
+			entity.Account = null;
+		}
+		
+		private void attach_SessionLinks(SessionLink entity)
+		{
+			this.SendPropertyChanging();
+			entity.Account = this;
+		}
+		
+		private void detach_SessionLinks(SessionLink entity)
+		{
+			this.SendPropertyChanging();
+			entity.Account = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Session")]
+	public partial class Session : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _AccountID;
+		
+		private string _FBID;
+		
+		private int _Type;
+		
+		private int _NoOfLink;
+		
+		private int _CurrentLink;
+		
+		private int _Status;
+		
+		private System.DateTime _CreatedTime;
+		
+		private System.Nullable<System.DateTime> _FinishedTime;
+		
+		private EntitySet<SessionLink> _SessionLinks;
+		
+		private EntityRef<Account> _Account;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnAccountIDChanging(int value);
+    partial void OnAccountIDChanged();
+    partial void OnFBIDChanging(string value);
+    partial void OnFBIDChanged();
+    partial void OnTypeChanging(int value);
+    partial void OnTypeChanged();
+    partial void OnNoOfLinkChanging(int value);
+    partial void OnNoOfLinkChanged();
+    partial void OnCurrentLinkChanging(int value);
+    partial void OnCurrentLinkChanged();
+    partial void OnStatusChanging(int value);
+    partial void OnStatusChanged();
+    partial void OnCreatedTimeChanging(System.DateTime value);
+    partial void OnCreatedTimeChanged();
+    partial void OnFinishedTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnFinishedTimeChanged();
+    #endregion
+		
+		public Session()
+		{
+			this._SessionLinks = new EntitySet<SessionLink>(new Action<SessionLink>(this.attach_SessionLinks), new Action<SessionLink>(this.detach_SessionLinks));
+			this._Account = default(EntityRef<Account>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccountID", DbType="Int NOT NULL")]
+		public int AccountID
+		{
+			get
+			{
+				return this._AccountID;
+			}
+			set
+			{
+				if ((this._AccountID != value))
+				{
+					if (this._Account.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAccountIDChanging(value);
+					this.SendPropertyChanging();
+					this._AccountID = value;
+					this.SendPropertyChanged("AccountID");
+					this.OnAccountIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FBID", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string FBID
+		{
+			get
+			{
+				return this._FBID;
+			}
+			set
+			{
+				if ((this._FBID != value))
+				{
+					this.OnFBIDChanging(value);
+					this.SendPropertyChanging();
+					this._FBID = value;
+					this.SendPropertyChanged("FBID");
+					this.OnFBIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="Int NOT NULL")]
+		public int Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NoOfLink", DbType="Int NOT NULL")]
+		public int NoOfLink
+		{
+			get
+			{
+				return this._NoOfLink;
+			}
+			set
+			{
+				if ((this._NoOfLink != value))
+				{
+					this.OnNoOfLinkChanging(value);
+					this.SendPropertyChanging();
+					this._NoOfLink = value;
+					this.SendPropertyChanged("NoOfLink");
+					this.OnNoOfLinkChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CurrentLink", DbType="Int NOT NULL")]
+		public int CurrentLink
+		{
+			get
+			{
+				return this._CurrentLink;
+			}
+			set
+			{
+				if ((this._CurrentLink != value))
+				{
+					this.OnCurrentLinkChanging(value);
+					this.SendPropertyChanging();
+					this._CurrentLink = value;
+					this.SendPropertyChanged("CurrentLink");
+					this.OnCurrentLinkChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int NOT NULL")]
+		public int Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this.OnStatusChanging(value);
+					this.SendPropertyChanging();
+					this._Status = value;
+					this.SendPropertyChanged("Status");
+					this.OnStatusChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedTime", DbType="DateTime NOT NULL")]
+		public System.DateTime CreatedTime
+		{
+			get
+			{
+				return this._CreatedTime;
+			}
+			set
+			{
+				if ((this._CreatedTime != value))
+				{
+					this.OnCreatedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedTime = value;
+					this.SendPropertyChanged("CreatedTime");
+					this.OnCreatedTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FinishedTime", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FinishedTime
+		{
+			get
+			{
+				return this._FinishedTime;
+			}
+			set
+			{
+				if ((this._FinishedTime != value))
+				{
+					this.OnFinishedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._FinishedTime = value;
+					this.SendPropertyChanged("FinishedTime");
+					this.OnFinishedTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Session_SessionLink", Storage="_SessionLinks", ThisKey="ID", OtherKey="SessionID")]
+		public EntitySet<SessionLink> SessionLinks
+		{
+			get
+			{
+				return this._SessionLinks;
+			}
+			set
+			{
+				this._SessionLinks.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_Session", Storage="_Account", ThisKey="AccountID", OtherKey="ID", IsForeignKey=true)]
+		public Account Account
+		{
+			get
+			{
+				return this._Account.Entity;
+			}
+			set
+			{
+				Account previousValue = this._Account.Entity;
+				if (((previousValue != value) 
+							|| (this._Account.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Account.Entity = null;
+						previousValue.Sessions.Remove(this);
+					}
+					this._Account.Entity = value;
+					if ((value != null))
+					{
+						value.Sessions.Add(this);
+						this._AccountID = value.ID;
+					}
+					else
+					{
+						this._AccountID = default(int);
+					}
+					this.SendPropertyChanged("Account");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_SessionLinks(SessionLink entity)
+		{
+			this.SendPropertyChanging();
+			entity.Session = this;
+		}
+		
+		private void detach_SessionLinks(SessionLink entity)
+		{
+			this.SendPropertyChanging();
+			entity.Session = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SessionLink")]
+	public partial class SessionLink : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ID;
+		
+		private int _SessionID;
+		
+		private int _AccountID;
+		
+		private int _LinkedTime;
+		
+		private EntityRef<Account> _Account;
+		
+		private EntityRef<Session> _Session;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
+    partial void OnSessionIDChanging(int value);
+    partial void OnSessionIDChanged();
+    partial void OnAccountIDChanging(int value);
+    partial void OnAccountIDChanged();
+    partial void OnLinkedTimeChanging(int value);
+    partial void OnLinkedTimeChanged();
+    #endregion
+		
+		public SessionLink()
+		{
+			this._Account = default(EntityRef<Account>);
+			this._Session = default(EntityRef<Session>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this.OnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SessionID", DbType="Int NOT NULL")]
+		public int SessionID
+		{
+			get
+			{
+				return this._SessionID;
+			}
+			set
+			{
+				if ((this._SessionID != value))
+				{
+					if (this._Session.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSessionIDChanging(value);
+					this.SendPropertyChanging();
+					this._SessionID = value;
+					this.SendPropertyChanged("SessionID");
+					this.OnSessionIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccountID", DbType="Int NOT NULL")]
+		public int AccountID
+		{
+			get
+			{
+				return this._AccountID;
+			}
+			set
+			{
+				if ((this._AccountID != value))
+				{
+					if (this._Account.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAccountIDChanging(value);
+					this.SendPropertyChanging();
+					this._AccountID = value;
+					this.SendPropertyChanged("AccountID");
+					this.OnAccountIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LinkedTime", DbType="Int NOT NULL")]
+		public int LinkedTime
+		{
+			get
+			{
+				return this._LinkedTime;
+			}
+			set
+			{
+				if ((this._LinkedTime != value))
+				{
+					this.OnLinkedTimeChanging(value);
+					this.SendPropertyChanging();
+					this._LinkedTime = value;
+					this.SendPropertyChanged("LinkedTime");
+					this.OnLinkedTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_SessionLink", Storage="_Account", ThisKey="AccountID", OtherKey="ID", IsForeignKey=true)]
+		public Account Account
+		{
+			get
+			{
+				return this._Account.Entity;
+			}
+			set
+			{
+				Account previousValue = this._Account.Entity;
+				if (((previousValue != value) 
+							|| (this._Account.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Account.Entity = null;
+						previousValue.SessionLinks.Remove(this);
+					}
+					this._Account.Entity = value;
+					if ((value != null))
+					{
+						value.SessionLinks.Add(this);
+						this._AccountID = value.ID;
+					}
+					else
+					{
+						this._AccountID = default(int);
+					}
+					this.SendPropertyChanged("Account");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Session_SessionLink", Storage="_Session", ThisKey="SessionID", OtherKey="ID", IsForeignKey=true)]
+		public Session Session
+		{
+			get
+			{
+				return this._Session.Entity;
+			}
+			set
+			{
+				Session previousValue = this._Session.Entity;
+				if (((previousValue != value) 
+							|| (this._Session.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Session.Entity = null;
+						previousValue.SessionLinks.Remove(this);
+					}
+					this._Session.Entity = value;
+					if ((value != null))
+					{
+						value.SessionLinks.Add(this);
+						this._SessionID = value.ID;
+					}
+					else
+					{
+						this._SessionID = default(int);
+					}
+					this.SendPropertyChanged("Session");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

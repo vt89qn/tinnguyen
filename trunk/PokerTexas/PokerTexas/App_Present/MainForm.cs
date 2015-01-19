@@ -134,7 +134,7 @@ namespace PokerTexas.App_Present
                     for (int iIndex = 0; iIndex < t.Split('\n').Length; iIndex++)
                     {
                         string info = t.Split('\n')[iIndex].ToString();
-                        if (info.Contains('-'))
+                        if (info.Contains('|'))
                         {
                             if (iTry == 0)
                             {
@@ -146,8 +146,8 @@ namespace PokerTexas.App_Present
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {
-                                Package p = Global.DBContext.Package.OrderByDescending(x => x.ID).FirstOrDefault();
-                                if (p == null || p.Pokers.Count == 10)
+                                Package p = Global.DBContext.Package.Where(x => x.Pokers.Count < 10).FirstOrDefault();
+                                if (p == null)
                                 {
                                     p = new Package();
                                     Global.DBContext.Package.Add(p);

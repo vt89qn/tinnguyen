@@ -136,13 +136,13 @@ namespace PokerTexas.App_Present
                         string info = t.Split('\n')[iIndex].ToString();
                         if (info.Contains('|'))
                         {
-                            if (iTry == 0)
+                            //if (iTry == 0)
                             {
                                 changeIP();
                             }
                             iTry++;
                             if (iTry >= 3) iTry = 0;
-                            FaceBook fb = new FaceBook { Login = info.Split('-')[0].Trim(), Pass = info.Split('-')[1].Trim() };
+                            FaceBook fb = new FaceBook { Login = info.Split('|')[0].Trim(), Pass = info.Split('|')[1].Trim() };
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {

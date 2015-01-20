@@ -914,18 +914,22 @@ namespace PokerTexas.App_Present
                     tasks.Add(
                     Task.Factory.StartNew(() =>
                     {
-                        pkSource.GetAllFriend();
-                        //Send FriendRequest
-                        for (int iSeed = iStart + 1; iSeed < gridData.Rows.Count; iSeed++)
+                        pkSource.LoginWebApp();
+                        if (pkSource.bWebLogedIn)
                         {
-                            if (this.IsDisposed) return;
-                            PokerController pkDes = gridData.Rows[iSeed].DataBoundItem as PokerController;
-                            if (pkSource.ListFriend.Contains(pkDes.Models.PKID)) continue;
-                            pkSource.SendFriendRequest(pkDes.Models);
-                            System.Threading.Thread.Sleep(2000);
+                            pkSource.GetAllFriend();
+                            //Send FriendRequest
+                            for (int iSeed = iStart + 1; iSeed < gridData.Rows.Count; iSeed++)
+                            {
+                                if (this.IsDisposed) return;
+                                PokerController pkDes = gridData.Rows[iSeed].DataBoundItem as PokerController;
+                                if (pkSource.ListFriend.Contains(pkDes.Models.PKID)) continue;
+                                pkSource.SendFriendRequest(pkDes.Models);
+                                System.Threading.Thread.Sleep(2000);
+                            }
                         }
                     }));
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(4000);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -959,68 +963,7 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                List<Task> tasks = new List<Task>();
-                FaceBookController fbController = new FaceBookController();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    int iStart = iIndex;
-                    tasks.Add(
-                    Task.Factory.StartNew(() =>
-                    {
-                        pkSource.GetAllFriend();
-                        //Send FriendRequest
-                        for (int iSeed = iStart + 1; iSeed < gridData.Rows.Count; iSeed++)
-                        {
-                            if (this.IsDisposed) return;
-                            PokerController pkDes = gridData.Rows[iSeed].DataBoundItem as PokerController;
-                            if (pkSource.ListFriend.Contains(pkDes.Models.PKID)) continue;
-                            if (pkSource.SendFriendRequest(pkDes.Models))
-                            {
-                                pkSource.Status = "Gửi kết bạn thành công tới " + pkDes.Models.FaceBook.Login;
-                            }
-                            else
-                            {
-                                pkSource.Status = "Gửi kết bạn KHÔNG thành công tới " + pkDes.Models.FaceBook.Login;
-                            }
-                            System.Threading.Thread.Sleep(2000);
-                        }
-                    }));
-                    System.Threading.Thread.Sleep(1000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-                System.Threading.Thread.Sleep(5000);
-
-                tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    int iStart = iIndex;
-                    tasks.Add(Task.Factory.StartNew(() =>
-                    {
-                        PokerController pkSource = gridData.Rows[iStart].DataBoundItem as PokerController;
-                        if (pkSource.AcceptFriendRequest())
-                        {
-                            pkSource.Status = "Chấp nhận bạn thành công";
-                        }
-                        else
-                        {
-                            pkSource.Status = "Chấp nhận bạn KHÔNG thành công";
-                        }
-                    }));
-                    System.Threading.Thread.Sleep(1000);
-                }
-
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
+                ketBan2();
             }
             catch (Exception ex)
             {
@@ -1034,15 +977,18 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnKetBan.Enabled = true;
-                        try
+                        if (txtCheckTuDong.Checked)
                         {
-                            if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                            try
                             {
-                                txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
-                                btnKetBan_Click(null, null);
+                                if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
+                                {
+                                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
+                                    btnKetBan_Click(null, null);
+                                }
                             }
+                            catch { }
                         }
-                        catch { }
                     };
                     this.BeginInvoke(action);
                 }

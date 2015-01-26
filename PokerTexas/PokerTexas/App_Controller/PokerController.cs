@@ -546,7 +546,7 @@ namespace PokerTexas.App_Controller
                         #endregion
 
                         this.Status = "Nhận quà bí mật thành công từ " + p.FaceBook.Login;
-                        
+
                     }
 
                     System.Threading.Thread.Sleep(2000);
@@ -564,7 +564,7 @@ namespace PokerTexas.App_Controller
                     #endregion
 
                     this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
-                    
+
                 }
 
                 foreach (Dictionary<string, object> diclist in listPresents)
@@ -1167,8 +1167,7 @@ namespace PokerTexas.App_Controller
                     if (dicData.ContainsKey("info"))
                     {
                         Dictionary<string, object> info = dicData["info"] as Dictionary<string, object>;
-                        param = new NameValueCollection();
-                        param.Add("id", "2104");
+
                         int t = 1;
                         if (!info.ContainsKey("A"))
                         {
@@ -1186,10 +1185,43 @@ namespace PokerTexas.App_Controller
                                 }
                             }
                         }
-                        param.Add("cmd[change][c." + t + "]", "1");
-                        param.Add("apik", exData.apik);
-                        System.Threading.Thread.Sleep(2000);
-                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                        if (AppSettings.Seft)
+                        {
+                            if (Models.PackageID <= 30)
+                            {
+                                if (t <= 30)
+                                {
+                                    for (int iIndex = t; iIndex <= 30; iIndex++)
+                                    {
+                                        param = new NameValueCollection();
+                                        param.Add("id", "2104");
+                                        param.Add("cmd[change][c." + iIndex + "]", "1");
+                                        param.Add("apik", exData.apik);
+                                        System.Threading.Thread.Sleep(2000);
+                                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                                    }
+                                }
+                                else
+                                {
+                                    t = 4;
+                                    param = new NameValueCollection();
+                                    param.Add("id", "2104");
+                                    param.Add("cmd[change][c." + t + "]", "1");
+                                    param.Add("apik", exData.apik);
+                                    System.Threading.Thread.Sleep(2000);
+                                    client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            param = new NameValueCollection();
+                            param.Add("id", "2104");
+                            param.Add("cmd[change][c." + t + "]", "1");
+                            param.Add("apik", exData.apik);
+                            System.Threading.Thread.Sleep(2000);
+                            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                        }
                     }
                 }
                 if (AppSettings.Seft)

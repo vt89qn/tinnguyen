@@ -240,6 +240,7 @@ namespace PokerTexas.App_Present
                     //if (MessageBox.Show("Bạn muốn xóa các TK được chọn ?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
                         List<PokerController> list = new List<PokerController>();
+                        List<Poker> listDie = new List<Poker>();
                         for (int iIndex = 0; iIndex < gridData.SelectedCells.Count; iIndex++)
                         {
                             PokerController pkController = gridData.Rows[gridData.SelectedCells[iIndex].RowIndex].DataBoundItem as PokerController;
@@ -248,7 +249,21 @@ namespace PokerTexas.App_Present
                         }
                         foreach (PokerController pk in list)
                         {
-                            new FaceBookController().LoginMobile(pk.Models.FaceBook);
+                            changeIP();
+                            if (!new FaceBookController().LoginMobile(pk.Models.FaceBook))
+                            {
+                                listDie.Add(pk.Models);
+                            }
+                        }
+                        if (listDie.Count > 0)
+                        {
+                            if (MessageBox.Show("Bạn muốn xóa các TK khong login duoc ?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                foreach (Poker pk in listDie)
+                                {
+                                    Global.DBContext.Poker.Remove(pk);
+                                }
+                            }
                         }
                         Global.DBContext.SaveChanges();
                         reloadGrid();
@@ -683,7 +698,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-01-14")
+                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-01-23")
                     {
                         ketBan2();
                     }

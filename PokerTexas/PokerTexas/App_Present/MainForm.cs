@@ -146,7 +146,15 @@ namespace PokerTexas.App_Present
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {
-                                Package p = Global.DBContext.Package.Where(x => x.Pokers.Count < 10).FirstOrDefault();
+                                FaceBook pexist = Global.DBContext.FaceBook.Where(x => x.FBID == fb.FBID).FirstOrDefault();
+                                if (pexist != null)
+                                {
+                                    pexist.MBLoginText = fb.MBLoginText;
+                                    pexist.Login = fb.Login;
+                                    pexist.Pass = fb.Pass;
+                                    fb = pexist;
+                                }
+                                Package p = Global.DBContext.Package.Where(x => x.Pokers.Count < 10 && x.Pack > 0).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();
@@ -698,6 +706,12 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
+                    FaceBookController fb = new FaceBookController();
+                    FaceBook newacc = fb.RegNewAccount();
+                    if (newacc != null)
+                    {
+                        Global.DBContext.FaceBook.Add(newacc);
+                    }
                     if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-01-23")
                     {
                         ketBan2();
@@ -892,7 +906,7 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnCheckMobile.Enabled = true;
-                        if (AppSettings.Seft && txtPackNo.SelectedIndex >= 10)
+                        if (AppSettings.Seft && txtPackNo.SelectedIndex >= 30)
                         {
                             txtCheckMobile.Checked = false;
                         }

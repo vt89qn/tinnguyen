@@ -112,7 +112,7 @@ namespace PokerTexas.App_Controller
             try
             {
                 bTryMBLogin = true;
-                var exData = getExData();
+                var exData = GetExData();
 
                 if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
                 NameValueCollection param = new NameValueCollection();
@@ -243,6 +243,8 @@ namespace PokerTexas.App_Controller
                         if (decimal.TryParse(money, out dmoney))
                         {
                             this.Money = dmoney;
+                            exData.money = dmoney;
+                            setExData(exData);
                         }
                     }
                     #endregion
@@ -268,7 +270,7 @@ namespace PokerTexas.App_Controller
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
-                var exData = getExData();
+                var exData = GetExData();
                 #region - Members.phoneContinuous -
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 dic_param.Add("test", "0");
@@ -300,7 +302,7 @@ namespace PokerTexas.App_Controller
                 LoginMobile();
             }
             if (!bMBLogedIn) return;
-            var exData = getExData();
+            var exData = GetExData();
             #region - Members.setMoney -
             SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
             dic_param = new SortedDictionary<string, object>();
@@ -346,7 +348,7 @@ namespace PokerTexas.App_Controller
                 LoginMobile();
             }
             if (!bMBLogedIn) return;
-            var exData = getExData();
+            var exData = GetExData();
             #region - Act.getAward -
             SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
             dic_param.Add("actVer", "2.1");
@@ -409,7 +411,7 @@ namespace PokerTexas.App_Controller
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
-                var exData = getExData();
+                var exData = GetExData();
                 int iFrom = 0;
                 List<Poker> listPokers = Models.Package.Pokers.ToList();
                 for (; iFrom < listPokers.Count; iFrom++)
@@ -460,7 +462,7 @@ namespace PokerTexas.App_Controller
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
-                var exData = getExData();
+                var exData = GetExData();
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
@@ -613,7 +615,7 @@ namespace PokerTexas.App_Controller
                 {
                     this.Status = "Bắt đầu kiểm tra tiền";
                 }
-                var exData = getExData();
+                var exData = GetExData();
                 #region - Misc.getUserField -
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 dic_param.Add("fields", "-2147476476");
@@ -634,6 +636,8 @@ namespace PokerTexas.App_Controller
                     if (decimal.TryParse(money, out dmoney))
                     {
                         this.Money = dmoney;
+                        exData.money = dmoney;
+                        setExData(exData);
                     }
                 }
                 if (bShowStatus)
@@ -653,7 +657,7 @@ namespace PokerTexas.App_Controller
 
         private string getAPIString(string strMethod, IDictionary<string, object> param)
         {
-            var exData = getExData();
+            var exData = GetExData();
 
             SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
             dic.Add("api", "62");
@@ -744,7 +748,7 @@ namespace PokerTexas.App_Controller
             {
                 if (!bTryLogin) bTryLogin = true;
                 this.Status = "Bắt đầu Authen Facebook";
-                var exData = getExData();
+                var exData = GetExData();
                 if (string.IsNullOrEmpty(exData.ip_address)) exData.ip_address = Utilities.GenNewIpAddress();
                 bool bTryStartOver = false;
             StartOver: ;
@@ -880,7 +884,7 @@ namespace PokerTexas.App_Controller
             {
                 this.Status = "Bắt đầu chia sẻ chip may mắn";
                 if (!bWebLogedIn) return string.Empty;
-                var exData = getExData();
+                var exData = GetExData();
                 NameValueCollection param = new NameValueCollection();
                 param.Add("ref", "27");
                 param.Add("mid", Models.PKID);
@@ -921,7 +925,7 @@ namespace PokerTexas.App_Controller
             try
             {
                 this.Status = "Bắt đầu nhận fan chip";
-                var exData = getExData();
+                var exData = GetExData();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
@@ -959,7 +963,7 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu nhận chip may mắn";
-                var exData = getExData();
+                var exData = GetExData();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
@@ -1014,7 +1018,7 @@ namespace PokerTexas.App_Controller
                 if (!bWebLogedIn) return;
                 //KyTen();
                 this.Status = "Bắt đầu tặng cỏ 4 lá";
-                var exData = getExData();
+                var exData = GetExData();
                 NameValueCollection param = new NameValueCollection();
                 param.Add("ref", "30");
                 param.Add("act", "1001");
@@ -1102,7 +1106,7 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu nhận cỏ 4 lá";
-                var exData = getExData();
+                var exData = GetExData();
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
@@ -1153,7 +1157,7 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu ký tên";
-                var exData = getExData();
+                var exData = GetExData();
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
@@ -1408,7 +1412,7 @@ namespace PokerTexas.App_Controller
             {
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu chơi mini game";
-                var exData = getExData();
+                var exData = GetExData();
                 //string apik = data.apik;
                 //string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
                 //string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
@@ -1612,7 +1616,7 @@ namespace PokerTexas.App_Controller
             //}
         }
 
-        private PokerExData getExData()
+        public PokerExData GetExData()
         {
             var exData = new PokerExData();
             if (!string.IsNullOrEmpty(Models.MBLoginText))
@@ -1637,7 +1641,7 @@ namespace PokerTexas.App_Controller
                 _connection.ObjectEncoding = ObjectEncoding.AMF3;
                 _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
 
-                var exData = getExData();
+                var exData = GetExData();
 
 
                 SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
@@ -1683,7 +1687,7 @@ namespace PokerTexas.App_Controller
         {
             try
             {
-                var exData = getExData();
+                var exData = GetExData();
 
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
@@ -1730,7 +1734,7 @@ namespace PokerTexas.App_Controller
                 _connection.ObjectEncoding = ObjectEncoding.AMF3;
                 _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
 
-                var exData = getExData();
+                var exData = GetExData();
 
 
                 SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
@@ -1775,7 +1779,7 @@ namespace PokerTexas.App_Controller
                     LoginWebApp();
                 }
                 if (!bWebLogedIn) return false;
-                var exData = getExData();
+                var exData = GetExData();
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;

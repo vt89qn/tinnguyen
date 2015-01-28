@@ -610,6 +610,10 @@ namespace PokerTexas.App_Present
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
                 }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
             }
             catch (Exception ex)
             {
@@ -892,6 +896,10 @@ namespace PokerTexas.App_Present
                             System.Threading.Thread.Sleep(1000);
                         }
                     }
+                    if (Global.DBContext.ChangeTracker.HasChanges())
+                    {
+                        Global.DBContext.SaveChanges();
+                    }
                 }
             }
             catch (Exception ex)
@@ -1039,6 +1047,8 @@ namespace PokerTexas.App_Present
                     foreach (Poker poker in (txtPackNo.SelectedItem as Package).Pokers)
                     {
                         PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
+                        PokerExData exData = newPokerController.GetExData();
+                        if (exData.money.HasValue) newPokerController.Money = exData.money.Value;
                         newPokerController.GridContainer = gridData;
                         if (AppSettings.GetMoneyOnLoad == "1")
                         {

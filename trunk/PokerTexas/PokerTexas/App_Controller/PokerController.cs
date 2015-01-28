@@ -224,7 +224,6 @@ namespace PokerTexas.App_Controller
                     string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
                     exData.m_mtkey = mtkey;
                     exData.m_vkey = vkey;
-                    setExData(exData);
                     #region - System.loadInit -
                     dic_param = new SortedDictionary<string, object>();
 
@@ -243,11 +242,10 @@ namespace PokerTexas.App_Controller
                         if (decimal.TryParse(money, out dmoney))
                         {
                             this.Money = dmoney;
-                            exData.money = dmoney;
-                            setExData(exData);
                         }
                     }
                     #endregion
+                    SetExData(exData);
                     bMBLogedIn = true;
                     return true;
                 }
@@ -636,8 +634,6 @@ namespace PokerTexas.App_Controller
                     if (decimal.TryParse(money, out dmoney))
                     {
                         this.Money = dmoney;
-                        exData.money = dmoney;
-                        setExData(exData);
                     }
                 }
                 if (bShowStatus)
@@ -845,7 +841,7 @@ namespace PokerTexas.App_Controller
                         exData.expLevel = expLevel;
                         exData.loginkey = loginkey;
                         exData.count_login_fail = 0;
-                        setExData(exData);
+                        SetExData(exData);
                         bWebLogedIn = true;
                         this.Status = "Authen Facebook Thành Công";
                         return;
@@ -867,7 +863,7 @@ namespace PokerTexas.App_Controller
                     else Models.PackageID = 0;
                 }
                 exData.count_login_fail++;
-                setExData(exData);
+                SetExData(exData);
                 this.Status = "Kiểm tra lại tài khoản facebook này";
             }
             catch (Exception ex)
@@ -1627,7 +1623,7 @@ namespace PokerTexas.App_Controller
             return exData;
         }
 
-        private void setExData(PokerExData data)
+        public void SetExData(PokerExData data)
         {
             Models.MBLoginText = new JavaScriptSerializer().Serialize(data);
         }

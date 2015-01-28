@@ -610,6 +610,15 @@ namespace PokerTexas.App_Present
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(1000);
                 }
+                //Set Money After Check
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerExData exData = pkSource.GetExData();
+                    exData.money = pkSource.Money;
+                    pkSource.SetExData(exData);
+                }
                 if (Global.DBContext.ChangeTracker.HasChanges())
                 {
                     Global.DBContext.SaveChanges();
@@ -710,11 +719,14 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    FaceBookController fb = new FaceBookController();
-                    FaceBook newacc = fb.RegNewAccount();
-                    if (newacc != null)
+                    if (AppSettings.Seft)
                     {
-                        Global.DBContext.FaceBook.Add(newacc);
+                        FaceBookController fb = new FaceBookController();
+                        FaceBook newacc = fb.RegNewAccount();
+                        if (newacc != null)
+                        {
+                            Global.DBContext.FaceBook.Add(newacc);
+                        }
                     }
                     if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-01-23")
                     {
@@ -853,34 +865,6 @@ namespace PokerTexas.App_Present
                     }
                     if (txtCheckChipBiMat.Checked)
                     {
-                        //tasks = new List<Task>();
-                        //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                        //{
-                        //    if (this.IsDisposed) return;
-                        //    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        //    tasks.Add(Task.Factory.StartNew(pkSource.KyTenMobile));
-                        //    System.Threading.Thread.Sleep(1000);
-                        //}
-                        //while (tasks.Any(t => !t.IsCompleted))
-                        //{
-                        //    Application.DoEvents();
-                        //    System.Threading.Thread.Sleep(1000);
-                        //}
-
-                        tasks = new List<Task>();
-                        //for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                        //{
-                        //    if (this.IsDisposed) return;
-                        //    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        //    tasks.Add(Task.Factory.StartNew(pkSource.TangQuaBiMat));
-                        //    System.Threading.Thread.Sleep(1000);
-                        //}
-                        //while (tasks.Any(t => !t.IsCompleted))
-                        //{
-                        //    Application.DoEvents();
-                        //    System.Threading.Thread.Sleep(1000);
-                        //}
-
                         System.Threading.Thread.Sleep(1000);
                         tasks = new List<Task>();
                         for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -895,6 +879,15 @@ namespace PokerTexas.App_Present
                             Application.DoEvents();
                             System.Threading.Thread.Sleep(1000);
                         }
+                    }
+                    //Set Money After Check
+                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    {
+                        if (this.IsDisposed) return;
+                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        PokerExData exData = pkSource.GetExData();
+                        exData.money = pkSource.Money;
+                        pkSource.SetExData(exData);
                     }
                     if (Global.DBContext.ChangeTracker.HasChanges())
                     {

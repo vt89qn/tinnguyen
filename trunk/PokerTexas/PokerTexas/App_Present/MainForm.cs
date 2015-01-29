@@ -1027,120 +1027,133 @@ namespace PokerTexas.App_Present
 
         private void reloadGrid()
         {
-            if (txtPackNo.SelectedItem is Package)
+            try
             {
-                Package selectedPackage = txtPackNo.SelectedItem as Package;
-                BindingList<PokerController> listController = new BindingList<PokerController>();
-                if (dicPokers.ContainsKey(selectedPackage.ID))
+                if (txtPackNo.SelectedItem is Package)
                 {
-                    listController = dicPokers[selectedPackage.ID];
+                    Package selectedPackage = txtPackNo.SelectedItem as Package;
+                    BindingList<PokerController> listController = new BindingList<PokerController>();
+                    if (dicPokers.ContainsKey(selectedPackage.ID))
+                    {
+                        foreach (var pk in dicPokers[selectedPackage.ID])
+                        {
+                            if (pk != null && pk.Models != null && pk.Models.PackageID == selectedPackage.ID)
+                            {
+                                listController = dicPokers[selectedPackage.ID];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (Poker poker in (txtPackNo.SelectedItem as Package).Pokers)
+                        {
+                            PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
+                            PokerExData exData = newPokerController.GetExData();
+                            if (exData.money.HasValue) newPokerController.Money = exData.money.Value;
+                            newPokerController.GridContainer = gridData;
+                            if (AppSettings.GetMoneyOnLoad == "1")
+                            {
+                                newPokerController.GetInitMoney(false);
+                            }
+                            listController.Add(newPokerController);
+                        }
+                        dicPokers.Add(selectedPackage.ID, listController);
+                    }
+                    BindingSource bindingGrid = new BindingSource { DataSource = listController };
+                    gridData.DataSource = bindingGrid;
+                    for (int iIndex = 0; iIndex < gridData.Columns.Count; iIndex++)
+                    {
+                        gridData.Columns[iIndex].Visible = false;
+                    }
+                    gridData.Columns[GridMainFormConst.Status].Visible = true;
+                    gridData.Columns[GridMainFormConst.Status].Width = 300;
+                    gridData.Columns[GridMainFormConst.Status].SortMode = DataGridViewColumnSortMode.NotSortable;
+
+                    gridData.Columns[GridMainFormConst.Money].Visible = true;
+                    gridData.Columns[GridMainFormConst.Money].Width = 100;
+                    gridData.Columns[GridMainFormConst.Money].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    gridData.Columns[GridMainFormConst.Money].DefaultCellStyle = new DataGridViewCellStyle();
+                    gridData.Columns[GridMainFormConst.Money].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+
+                    gridData.Columns[GridMainFormConst.EarnToday].Visible = true;
+                    gridData.Columns[GridMainFormConst.EarnToday].HeaderText = "Earn Today";
+                    gridData.Columns[GridMainFormConst.EarnToday].Width = 100;
+                    gridData.Columns[GridMainFormConst.EarnToday].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle = new DataGridViewCellStyle();
+                    gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+
+                    DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
+                    colStt.Name = GridMainFormConst.STT;
+                    colStt.HeaderText = GridMainFormConst.STT;
+                    colStt.Width = 50;
+                    colStt.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    gridData.Columns.Insert(0, colStt);
+
+                    DataGridViewTextBoxColumn colAccount = new DataGridViewTextBoxColumn();
+                    colAccount.Name = TableFaceBookConst.Login;
+                    colAccount.HeaderText = TableFaceBookConst.Login;
+                    colAccount.Width = 150;
+                    colAccount.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    gridData.Columns.Insert(1, colAccount);
+
+                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    {
+                        PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
+                        gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
+                    }
                 }
                 else
                 {
-                    foreach (Poker poker in (txtPackNo.SelectedItem as Package).Pokers)
+                    Package selectedPackage = txtPackNo.SelectedItem as Package;
+                    BindingList<PokerController> listController = new BindingList<PokerController>();
+                    foreach (Package p in Global.DBContext.Package.ToList())
                     {
-                        PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
-                        PokerExData exData = newPokerController.GetExData();
-                        if (exData.money.HasValue) newPokerController.Money = exData.money.Value;
-                        newPokerController.GridContainer = gridData;
-                        if (AppSettings.GetMoneyOnLoad == "1")
+                        if (p.Pack <= 5)
                         {
-                            newPokerController.GetInitMoney(false);
+                            foreach (Poker poker in p.Pokers)
+                            {
+                                PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
+                                newPokerController.GridContainer = gridData;
+                                listController.Add(newPokerController);
+                            }
                         }
-                        listController.Add(newPokerController);
                     }
-                    dicPokers.Add(selectedPackage.ID, listController);
-                }
-                BindingSource bindingGrid = new BindingSource { DataSource = listController };
-                gridData.DataSource = bindingGrid;
-                for (int iIndex = 0; iIndex < gridData.Columns.Count; iIndex++)
-                {
-                    gridData.Columns[iIndex].Visible = false;
-                }
-                gridData.Columns[GridMainFormConst.Status].Visible = true;
-                gridData.Columns[GridMainFormConst.Status].Width = 300;
-                gridData.Columns[GridMainFormConst.Status].SortMode = DataGridViewColumnSortMode.NotSortable;
+                    BindingSource bindingGrid = new BindingSource { DataSource = listController };
+                    gridData.DataSource = bindingGrid;
+                    for (int iIndex = 0; iIndex < gridData.Columns.Count; iIndex++)
+                    {
+                        gridData.Columns[iIndex].Visible = false;
+                    }
+                    gridData.Columns[GridMainFormConst.Status].Visible = true;
+                    gridData.Columns[GridMainFormConst.Status].Width = 300;
+                    gridData.Columns[GridMainFormConst.Status].SortMode = DataGridViewColumnSortMode.NotSortable;
 
-                gridData.Columns[GridMainFormConst.Money].Visible = true;
-                gridData.Columns[GridMainFormConst.Money].Width = 100;
-                gridData.Columns[GridMainFormConst.Money].SortMode = DataGridViewColumnSortMode.NotSortable;
-                gridData.Columns[GridMainFormConst.Money].DefaultCellStyle = new DataGridViewCellStyle();
-                gridData.Columns[GridMainFormConst.Money].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+                    DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
+                    colStt.Name = GridMainFormConst.STT;
+                    colStt.HeaderText = GridMainFormConst.STT;
+                    colStt.Width = 50;
+                    colStt.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    gridData.Columns.Insert(0, colStt);
 
-                gridData.Columns[GridMainFormConst.EarnToday].Visible = true;
-                gridData.Columns[GridMainFormConst.EarnToday].HeaderText = "Earn Today";
-                gridData.Columns[GridMainFormConst.EarnToday].Width = 100;
-                gridData.Columns[GridMainFormConst.EarnToday].SortMode = DataGridViewColumnSortMode.NotSortable;
-                gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle = new DataGridViewCellStyle();
-                gridData.Columns[GridMainFormConst.EarnToday].DefaultCellStyle.Format = string.Format("#{0}###", CultureInfo.CurrentCulture.NumberFormat.CurrencyGroupSeparator);
+                    DataGridViewTextBoxColumn colAccount = new DataGridViewTextBoxColumn();
+                    colAccount.Name = TableFaceBookConst.Login;
+                    colAccount.HeaderText = TableFaceBookConst.Login;
+                    colAccount.Width = 150;
+                    colAccount.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    gridData.Columns.Insert(1, colAccount);
 
-                DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
-                colStt.Name = GridMainFormConst.STT;
-                colStt.HeaderText = GridMainFormConst.STT;
-                colStt.Width = 50;
-                colStt.SortMode = DataGridViewColumnSortMode.NotSortable;
-                gridData.Columns.Insert(0, colStt);
-
-                DataGridViewTextBoxColumn colAccount = new DataGridViewTextBoxColumn();
-                colAccount.Name = TableFaceBookConst.Login;
-                colAccount.HeaderText = TableFaceBookConst.Login;
-                colAccount.Width = 150;
-                colAccount.SortMode = DataGridViewColumnSortMode.NotSortable;
-                gridData.Columns.Insert(1, colAccount);
-
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
-                    gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
+                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    {
+                        PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
+                        gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Package selectedPackage = txtPackNo.SelectedItem as Package;
-                BindingList<PokerController> listController = new BindingList<PokerController>();
-                foreach (Package p in Global.DBContext.Package.ToList())
-                {
-                    if (p.Pack <= 5)
-                    {
-                        foreach (Poker poker in p.Pokers)
-                        {
-                            PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
-                            newPokerController.GridContainer = gridData;
-                            listController.Add(newPokerController);
-                        }
-                    }
-                }
-                BindingSource bindingGrid = new BindingSource { DataSource = listController };
-                gridData.DataSource = bindingGrid;
-                for (int iIndex = 0; iIndex < gridData.Columns.Count; iIndex++)
-                {
-                    gridData.Columns[iIndex].Visible = false;
-                }
-                gridData.Columns[GridMainFormConst.Status].Visible = true;
-                gridData.Columns[GridMainFormConst.Status].Width = 300;
-                gridData.Columns[GridMainFormConst.Status].SortMode = DataGridViewColumnSortMode.NotSortable;
-
-                DataGridViewTextBoxColumn colStt = new DataGridViewTextBoxColumn();
-                colStt.Name = GridMainFormConst.STT;
-                colStt.HeaderText = GridMainFormConst.STT;
-                colStt.Width = 50;
-                colStt.SortMode = DataGridViewColumnSortMode.NotSortable;
-                gridData.Columns.Insert(0, colStt);
-
-                DataGridViewTextBoxColumn colAccount = new DataGridViewTextBoxColumn();
-                colAccount.Name = TableFaceBookConst.Login;
-                colAccount.HeaderText = TableFaceBookConst.Login;
-                colAccount.Width = 150;
-                colAccount.SortMode = DataGridViewColumnSortMode.NotSortable;
-                gridData.Columns.Insert(1, colAccount);
-
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
-                    gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
-                }
+                throw ex;
             }
         }
 

@@ -218,12 +218,24 @@ namespace PokerTexas.App_Controller
                     && client.ResponseText.Contains("vkey"))
                 {
                     Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                    Models.PKID = (dicInfo["ret"] as Dictionary<string, object>)["mid"].ToString();
+                    Dictionary<string, object> ret = dicInfo["ret"] as Dictionary<string, object>;
+                    Models.PKID = ret["mid"].ToString();
                     Models.X_TUNNEL_VERIFY = client.X_TUNNEL_VERIFY;
-                    string mtkey = (dicInfo["ret"] as Dictionary<string, object>)["mtkey"].ToString();
-                    string vkey = (dicInfo["ret"] as Dictionary<string, object>)["vkey"].ToString();
+                    string mtkey = ret["mtkey"].ToString();
+                    string vkey = ret["vkey"].ToString();
                     exData.m_mtkey = mtkey;
                     exData.m_vkey = vkey;
+
+                    if (ret.ContainsKey("mmoney"))
+                    {                        
+                        string money = ret["mmoney"].ToString();
+                        decimal dmoney = 0;
+                        if (decimal.TryParse(money, out dmoney))
+                        {
+                            this.Money = dmoney;
+                        }
+                    }
+
                     #region - System.loadInit -
                     dic_param = new SortedDictionary<string, object>();
 

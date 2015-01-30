@@ -60,6 +60,7 @@
             this.txtCheckDangNhapLT = new System.Windows.Forms.CheckBox();
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
+            this.menuCopyIP = new System.Windows.Forms.ToolStripMenuItem();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -68,9 +69,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -90,9 +91,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
@@ -108,9 +109,10 @@
             this.menuGridData.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuCopyURL,
             this.menuXoaTK,
-            this.menuLoginLaiFacebook});
+            this.menuLoginLaiFacebook,
+            this.menuCopyIP});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(177, 70);
+            this.menuGridData.Size = new System.Drawing.Size(177, 114);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
@@ -287,8 +289,8 @@
             // 
             // txtRutFanLink
             // 
-            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRutFanLink.Location = new System.Drawing.Point(6, 27);
             this.txtRutFanLink.Name = "txtRutFanLink";
             this.txtRutFanLink.Size = new System.Drawing.Size(99, 20);
@@ -395,6 +397,13 @@
             this.txtCheckHangNgay.Text = "Hằng Ngày 2M";
             this.txtCheckHangNgay.UseVisualStyleBackColor = true;
             // 
+            // menuCopyIP
+            // 
+            this.menuCopyIP.Name = "menuCopyIP";
+            this.menuCopyIP.Size = new System.Drawing.Size(176, 22);
+            this.menuCopyIP.Text = "Copy IP";
+            this.menuCopyIP.Click += new System.EventHandler(this.menuCopyIP_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -465,6 +474,7 @@
         private System.Windows.Forms.CheckBox txtCheckDangNhapLT;
         private System.Windows.Forms.CheckBox txtCheckChipBiMat;
         private System.Windows.Forms.CheckBox txtCheckHangNgay;
+        private System.Windows.Forms.ToolStripMenuItem menuCopyIP;
 
     }
 }

@@ -644,11 +644,14 @@ namespace TinhLuongThoiVu.App_Present
                         excel.SetActiveSheet(1);
                         int iCol = 1, iRow = 1;
                         excel.Merge("A1", "A2");
+                        excel.SetWidth(iCol, 4);
+                        excel.SetValueWithFormat(iRow, iCol++, "STT", true, false, false);
+                        excel.Merge("B1", "B2");
                         excel.SetWidth(iCol, 25);
                         excel.SetValueWithFormat(iRow, iCol++, "Tên Nhân Viên", true, false, false);
                         for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
                         {
-                            iCol = 2 + date.Subtract(dateMin).Days * 3;
+                            iCol = 3 + date.Subtract(dateMin).Days * 3;
                             excel.SetWidth(iCol, 4); excel.SetWidth(iCol + 1, 4); excel.SetWidth(iCol + 2, 4);
                             excel.SetValueWithFormat(iRow + 1, iCol, "S", true, false, false);
                             excel.SetValueWithFormat(iRow + 1, iCol + 1, "C", true, false, false);
@@ -686,12 +689,13 @@ namespace TinhLuongThoiVu.App_Present
                         foreach (NhanVien nv in listNhanVien)
                         {
                             iRow++;
-                            excel.SetValueWithFormat(iRow, 1, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase((string.IsNullOrEmpty(nv.STT) ? "" : (nv.STT + ".")) + nv.Ten), true, false, false);
+                            excel.SetValueWithFormat(iRow, 1, nv.STT, true, false, false);
+                            excel.SetValueWithFormat(iRow, 2, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(nv.Ten), true, false, false);
                             Dictionary<DateTime, List<double>> dicTongTien = new Dictionary<DateTime, List<double>>();
                             foreach (ThoiGianLamViec thoigian in nv.ThoiGianLamViecs.Where(ngay => ngay.Ngay.Contains("/01/")).ToList())
                             {
                                 DateTime date = DateTime.ParseExact(thoigian.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" });
-                                iCol = 2 + date.Subtract(dateMin).Days * 3;
+                                iCol = 3 + date.Subtract(dateMin).Days * 3;
                                 if (!dicTongTien.ContainsKey(date))
                                 {
                                     dicTongTien.Add(date, new List<double> { 0, 0, 0 });
@@ -755,7 +759,7 @@ namespace TinhLuongThoiVu.App_Present
                                 tonggiotangca += giotangca;
                             }
 
-                            iCol = 5 + dateMax.Subtract(dateMin).Days * 3;
+                            iCol = 6 + dateMax.Subtract(dateMin).Days * 3;
                             excel.SetValue(iRow, iCol++, (tonggiolam / 8));
                             excel.SetValue(iRow, iCol++, tonggiotangca);
                             excel.SetValue(iRow, iCol++, tongphucap);
@@ -767,7 +771,7 @@ namespace TinhLuongThoiVu.App_Present
                         }
                         for (DateTime date = dateMin; date <= dateMax; date = date.AddDays(1))
                         {
-                            iCol = 2 + date.Subtract(dateMin).Days * 3;
+                            iCol = 3 + date.Subtract(dateMin).Days * 3;
                             excel.SetBackgroundColor(excel.GetColumnName(iCol) + 2, excel.GetColumnName(iCol) + iRow, Color.FromArgb(1, 240, 240, 240));
                         }
                         iCol += 3;
@@ -779,18 +783,18 @@ namespace TinhLuongThoiVu.App_Present
                         excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
                         excel.SetValueWithFormat(iRow, iCol, "=SUM(" + excel.GetColumnName(iCol) + "2:" + excel.GetColumnName(iCol++) + (iRow - 1), true, false, false);
                         iRow--;
-                        excel.Border_Range("A1", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + iRow, Color.Black);
-                        excel.SetFontSize("A1", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + iRow, 10);
-                        excel.setAlignAndValign("A1", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + iRow, off.XlHAlign.xlHAlignCenter, off.XlVAlign.xlVAlignCenter);
+                        excel.Border_Range("A1", excel.GetColumnName(11 + dateMax.Subtract(dateMin).Days * 3) + iRow, Color.Black);
+                        excel.SetFontSize("A1", excel.GetColumnName(11 + dateMax.Subtract(dateMin).Days * 3) + iRow, 10);
+                        excel.setAlignAndValign("A1", excel.GetColumnName(11 + dateMax.Subtract(dateMin).Days * 3) + iRow, off.XlHAlign.xlHAlignCenter, off.XlVAlign.xlVAlignCenter);
                         excel.setAlignAndValign("A2", "A" + iRow, off.XlHAlign.xlHAlignLeft, off.XlVAlign.xlVAlignCenter);
-                        excel.SetFormatCell("B3", excel.GetColumnName(10 + dateMax.Subtract(dateMin).Days * 3) + (iRow + 1), "#,##0.00");
+                        excel.SetFormatCell("C3", excel.GetColumnName(11 + dateMax.Subtract(dateMin).Days * 3) + (iRow + 1), "#,##0.00");
                         excel.SetSheetName("Bảng Lương");
                         #endregion
                         #region - Phieu Luong -
                         excel.SetActiveSheet(2);
                         int iCount = 0;
                         int iCountHeight = 0;
-                        int iTotalCol = 5 + dateMax.Subtract(dateMin).Days * 3;
+                        int iTotalCol = 6 + dateMax.Subtract(dateMin).Days * 3;
                         iRow = 2;
                         foreach (KeyValuePair<NhanVien, int> item in dicThongTinTungNhanVienAll)
                         {
@@ -803,7 +807,8 @@ namespace TinhLuongThoiVu.App_Present
                             iCol = iCount * 3 - 1;
                             excel.SetWidth(iCol, 12); excel.SetWidth(iCol + 1, 12);
                             excel.Merge(excel.GetColumnName(iCol) + iRow, excel.GetColumnName(iCol + 1) + iRow);
-                            excel.SetValueWithFormat(iRow, iCol, "='Bảng Lương'!" + excel.GetColumnName(1) + item.Value, true, false, false);
+
+                            excel.SetValueWithFormat(iRow, iCol, "=CONCATENATE('Bảng Lương'!" + excel.GetColumnName(1) + item.Value + ",\".\",'Bảng Lương'!" + excel.GetColumnName(2) + item.Value + ")", true, false, false);
 
                             excel.SetValue(iRow + 1, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol) + 1);
                             excel.SetValue(iRow + 1, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol) + item.Value);

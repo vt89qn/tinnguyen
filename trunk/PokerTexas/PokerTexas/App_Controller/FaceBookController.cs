@@ -224,9 +224,9 @@ namespace PokerTexas.App_Controller
                 System.Threading.Thread.Sleep(34);
                 param.Add("format", "json");
                 param.Add("gender", "M");
-                param.Add("lastname", strName.Split(' ')[0]);
-                //param.Add("phone", phoneNumber);
-                param.Add("email", email);
+                param.Add("lastname", strName.Split(' ')[0] +" "+ strName.Split(' ')[2]);
+                param.Add("phone", phoneNumber);
+                //param.Add("email", email);
                 param.Add("locale", "en_US");
                 param.Add("method", "user.register");
                 param.Add("password", phoneNumber.Replace("+84", "0"));

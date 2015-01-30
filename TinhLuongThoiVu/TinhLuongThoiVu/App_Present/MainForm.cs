@@ -389,11 +389,11 @@ namespace TinhLuongThoiVu.App_Present
                             , tc.TotalHours.ToString("0.#"));
                     }
                     double luongngay = 0;
-                    if (giotangca >= 4 && giochinhthuc >= 8)
+                    if (giotangca >= 3.5 && giochinhthuc >= 8)
                     {
                         luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.2;
                     }
-                    else if (giotangca >= 3 && giochinhthuc >= 8)
+                    else if (giotangca >= 2.5 && giochinhthuc >= 8)
                     {
                         luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.1;
                     }
@@ -686,7 +686,7 @@ namespace TinhLuongThoiVu.App_Present
                         foreach (NhanVien nv in listNhanVien)
                         {
                             iRow++;
-                            excel.SetValueWithFormat(iRow, 1, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(nv.Ten), true, false, false);
+                            excel.SetValueWithFormat(iRow, 1, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase((string.IsNullOrEmpty(nv.STT) ? "" : (nv.STT + ".")) + nv.Ten), true, false, false);
                             Dictionary<DateTime, List<double>> dicTongTien = new Dictionary<DateTime, List<double>>();
                             foreach (ThoiGianLamViec thoigian in nv.ThoiGianLamViecs.Where(ngay => ngay.Ngay.Contains("/01/")).ToList())
                             {
@@ -734,11 +734,11 @@ namespace TinhLuongThoiVu.App_Present
                                 double luongngay = 0;
                                 double giochinhthuc = item.Value[0] + item.Value[1];
                                 double giotangca = item.Value[2];
-                                if (giotangca >= 4 && giochinhthuc >= 8)
+                                if (giotangca >= 3.5 && giochinhthuc >= 8)
                                 {
                                     luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.2;
                                 }
-                                else if (giotangca >= 3 && giochinhthuc >= 8)
+                                else if (giotangca >= 2.5 && giochinhthuc >= 8)
                                 {
                                     luongngay = (giochinhthuc + giotangca) * dLuongCanBan * 1.1;
                                 }

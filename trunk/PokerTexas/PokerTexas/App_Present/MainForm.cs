@@ -299,6 +299,19 @@ namespace PokerTexas.App_Present
             }
         }
 
+        private void menuCopyIP_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
+                PokerExData exData = pkController.GetExData();
+                if (exData != null && !string.IsNullOrEmpty(exData.ip_address))
+                {
+                    Clipboard.SetText(exData.ip_address);
+                }
+            }
+        }
+
         bool bOpenByPressAppKey = false;
         private void menuGridData_Opening(object sender, CancelEventArgs e)
         {

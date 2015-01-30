@@ -17,6 +17,7 @@ namespace TinhLuongThoiVu.App_Context
         }
         public DbSet<NhanVien> NhanVien { get; set; }
         public DbSet<ThoiGianLamViec> ThoiGianLamViec { get; set; }
+        public DbSet<TamUngPhuCap> TamUngPhuCap { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Database does not pluralize table names

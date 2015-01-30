@@ -24,6 +24,7 @@ namespace TinhLuongThoiVu.App_Present
     {
         #region - DECLARE -
         double dLuongCanBan = 100000 / 8;
+        ThoiGianLamViec tglv = null;
         #endregion
 
         #region - CONTRUCTOR -
@@ -43,6 +44,7 @@ namespace TinhLuongThoiVu.App_Present
         {
             //var x = new { Ten = "Trần Văn An" };
             //string t = x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' ')).Replace(" ", "");
+            txtThang.DataSource = new List<string> { "12", "01" };
             CreateEventSuggestComboBox(txtTenNhanVien);
             reloadComboBox();
 
@@ -61,6 +63,7 @@ namespace TinhLuongThoiVu.App_Present
                 Global.DBContext.NhanVien.Add(selectedNhanVien);
             }
             ThoiGianLamViec thoigian = new ThoiGianLamViec { NhanVien = selectedNhanVien };
+            tglv = thoigian;
             thoigian.Ngay = txtNgay.Value.ToString("dd/MM/yyyy");
             if (chkCaSang.Checked)
             {
@@ -70,11 +73,11 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(3, 2));
 
-                if (thoigian.GioKetThucCaSang > 17
-                    || (thoigian.GioKetThucCaSang == 17 && thoigian.PhutKetThucCaSang > 30))
+                if (thoigian.GioKetThucCaSang > 18
+                    || (thoigian.GioKetThucCaSang == 18 && thoigian.PhutKetThucCaSang > 0))
                 {
-                    thoigian.GioBatDauTC1 = 17;
-                    thoigian.PhutBatDauTC1 = 30;
+                    thoigian.GioBatDauTC1 = 18;
+                    thoigian.PhutBatDauTC1 = 0;
 
                     thoigian.GioKetThucTC1 = thoigian.GioKetThucCaSang;
                     thoigian.PhutKetThucTC1 = thoigian.PhutKetThucCaSang;
@@ -104,11 +107,11 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(3, 2));
 
-                if (thoigian.GioKetThucCaChieu > 17
-                    || (thoigian.GioKetThucCaChieu == 17 && thoigian.PhutKetThucCaChieu > 30))
+                if (thoigian.GioKetThucCaChieu > 18
+                    || (thoigian.GioKetThucCaChieu == 18 && thoigian.PhutKetThucCaChieu > 0))
                 {
-                    thoigian.GioBatDauTC1 = 17;
-                    thoigian.PhutBatDauTC1 = 30;
+                    thoigian.GioBatDauTC1 = 18;
+                    thoigian.PhutBatDauTC1 = 0;
 
                     thoigian.GioKetThucTC1 = thoigian.GioKetThucCaChieu;
                     thoigian.PhutKetThucTC1 = thoigian.PhutKetThucCaChieu;
@@ -131,8 +134,8 @@ namespace TinhLuongThoiVu.App_Present
             reloadComboBox();
             txtTenNhanVien.SelectedItem = selectedNhanVien;
             reloadGrid();
-            txtTenNhanVien.Focus();
-            txtTenNhanVien.SelectAll();
+            txtSTT.Focus();
+            txtSTT.SelectAll();
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
@@ -164,6 +167,7 @@ namespace TinhLuongThoiVu.App_Present
             {
                 thoigian = gridData[GridConst.ID, gridData.CurrentCell.RowIndex].Value as ThoiGianLamViec;
             }
+            tglv = thoigian;
             thoigian.Ngay = txtNgay.Value.ToString("dd/MM/yyyy");
 
             if (chkCaSang.Checked)
@@ -174,17 +178,17 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaSang = long.Parse(txtKetThucCaSang.Text.Substring(3, 2));
 
-                if (thoigian.GioKetThucCaSang > 17
-                    || (thoigian.GioKetThucCaSang == 17 && thoigian.PhutKetThucCaSang > 30))
+                if (thoigian.GioKetThucCaSang > 18
+                    || (thoigian.GioKetThucCaSang == 18 && thoigian.PhutKetThucCaSang > 0))
                 {
-                    thoigian.GioBatDauTC1 = 17;
-                    thoigian.PhutBatDauTC1 = 30;
+                    thoigian.GioBatDauTC1 = 18;
+                    thoigian.PhutBatDauTC1 = 0;
 
                     thoigian.GioKetThucTC1 = thoigian.GioKetThucCaSang;
                     thoigian.PhutKetThucTC1 = thoigian.PhutKetThucCaSang;
 
-                    thoigian.GioKetThucCaSang = 17;
-                    thoigian.PhutKetThucCaSang = 30;
+                    thoigian.GioKetThucCaSang = 18;
+                    thoigian.PhutKetThucCaSang = 0;
                 }
 
                 if (thoigian.GioKetThucCaSang > 13
@@ -217,11 +221,11 @@ namespace TinhLuongThoiVu.App_Present
                 thoigian.GioKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(0, 2));
                 thoigian.PhutKetThucCaChieu = long.Parse(txtKetThucCaChieu.Text.Substring(3, 2));
 
-                if (thoigian.GioKetThucCaChieu > 17
-                    || (thoigian.GioKetThucCaChieu == 17 && thoigian.PhutKetThucCaChieu > 30))
+                if (thoigian.GioKetThucCaChieu > 18
+                    || (thoigian.GioKetThucCaChieu == 18 && thoigian.PhutKetThucCaChieu > 0))
                 {
-                    thoigian.GioBatDauTC1 = 17;
-                    thoigian.PhutBatDauTC1 = 30;
+                    thoigian.GioBatDauTC1 = 18;
+                    thoigian.PhutBatDauTC1 = 0;
 
                     thoigian.GioKetThucTC1 = thoigian.GioKetThucCaChieu;
                     thoigian.PhutKetThucTC1 = thoigian.PhutKetThucCaChieu;
@@ -259,6 +263,8 @@ namespace TinhLuongThoiVu.App_Present
             reloadComboBox();
             txtTenNhanVien.SelectedItem = selectedNhanVien;
             reloadGrid();
+            txtSTT.Focus();
+            txtSTT.SelectAll();
         }
 
         private void chkCaSang_CheckedChanged(object sender, EventArgs e)
@@ -313,10 +319,24 @@ namespace TinhLuongThoiVu.App_Present
         private void reloadGrid()
         {
             gridData.Rows.Clear();
+            txtSTT.Text = "";
             if (txtTenNhanVien.SelectedItem is NhanVien)
             {
+                string strThang = txtThang.Text;
+
                 NhanVien selectedNhanVien = txtTenNhanVien.SelectedItem as NhanVien;
-                List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.OrderBy(x => x.Ngay).ToList();
+                txtSTT.Text = string.IsNullOrEmpty(selectedNhanVien.STT) ? "" : selectedNhanVien.STT;
+                List<ThoiGianLamViec> listThoigian = selectedNhanVien.ThoiGianLamViecs.Where(x => x.Ngay.Contains("/" + strThang + "/")).OrderBy(x => DateTime.ParseExact(x.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" })).ToList();
+                TamUngPhuCap pc = selectedNhanVien.TamUngPhuCaps.Where(x => x.Thang == strThang).FirstOrDefault();
+                bool bFind = false;
+                foreach (ThoiGianLamViec thoigian in listThoigian)
+                {
+                    if (thoigian == tglv) { bFind = true; listThoigian.Remove(thoigian); break; };
+                }
+                if (bFind)
+                {
+                    listThoigian.Insert(0, tglv);
+                }
                 double tongluong = 0;
                 foreach (ThoiGianLamViec thoigian in listThoigian)
                 {
@@ -388,11 +408,29 @@ namespace TinhLuongThoiVu.App_Present
                     tongluong += luongngay;
                     gridData[GridConst.LuongNgay, iCount].Value = luongngay.ToString("#,###");
                 }
-                lblTongLuong.Text = "Tổng Lương : " + tongluong.ToString("#,###");
+                long thuclanh = (long)tongluong;
+                txtPhuCap.Text = "";
+                txtTamUng.Text = "";
+                if (pc != null)
+                {
+                    if (pc.PhuCap.HasValue)
+                    {
+                        thuclanh += pc.PhuCap.Value;
+                        txtPhuCap.Text = pc.PhuCap.Value.ToString("#,###");
+                    }
+                    if (pc.TamUng.HasValue)
+                    {
+                        thuclanh -= pc.TamUng.Value;
+                        txtTamUng.Text = pc.TamUng.Value.ToString("#,###");
+                    }
+                }
+                lblTongLuong.Text = "Lương : " + tongluong.ToString("#,###");
+                lblThucLanh.Text = "Thực Lãnh : " + thuclanh.ToString("#,###");
             }
             else
             {
-                lblTongLuong.Text = "Tổng Lương ";
+                lblTongLuong.Text = "Lương ";
+                lblThucLanh.Text = "Thực Lãnh";
             }
         }
 
@@ -403,16 +441,11 @@ namespace TinhLuongThoiVu.App_Present
             txtTenNhanVien.DataSource = bindingNhanVien;
             txtTenNhanVien.DisplayMember = "Ten";
             txtTenNhanVien.ValueMember = "ID";
-            List<string> listSource = new List<string>();
-            listNhanVien.ForEach(x => listSource.Add(x.Ten));
+            //List<string> listSource = new List<string>();
+            //listNhanVien.ForEach(x => listSource.Add(x.Ten));
             //CreateSuggestComboBox(listSource, txtTenNhanVien);
         }
         #endregion
-
-        private void txtTenNhanVien_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //reloadGrid();
-        }
 
         private void gridData_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -563,6 +596,11 @@ namespace TinhLuongThoiVu.App_Present
             }
         }
 
+        private void txtThang_SelectedValueChanged(object sender, EventArgs e)
+        {
+            reloadGrid();
+        }
+
         private void txtTenNhanVien_SelectedValueChanged(object sender, EventArgs e)
         {
             reloadGrid();
@@ -592,11 +630,13 @@ namespace TinhLuongThoiVu.App_Present
                 string strFileName = string.Format("D:\\LuongThoiVu{0}.xls", DateTime.Now.Ticks);
                 if (excel.CreateNewObject(strFileName))
                 {
-                    List<NhanVien> listNhanVien = Global.DBContext.NhanVien.ToList();
+                    List<NhanVien> listNhanVien = (from tg in Global.DBContext.ThoiGianLamViec
+                                                   where tg.Ngay.Contains("/01/")
+                                                   select tg.NhanVien).Distinct().ToList();
                     listNhanVien = listNhanVien.OrderBy(x => x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' ')).Replace(" ", "")).ToList();
                     DateTime dateMin = DateTime.MaxValue;
                     DateTime dateMax = DateTime.MinValue;
-                    listNhanVien.ForEach(x => x.ThoiGianLamViecs.ToList().ForEach(a => { DateTime date = DateTime.ParseExact(a.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" }); if (date > dateMax) dateMax = date; if (date < dateMin) dateMin = date; }));
+                    listNhanVien.ForEach(x => x.ThoiGianLamViecs.Where(ngay => ngay.Ngay.Contains("/01/")).ToList().ForEach(a => { DateTime date = DateTime.ParseExact(a.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" }); if (date > dateMax) dateMax = date; if (date < dateMin) dateMin = date; }));
                     if (dateMax.Subtract(dateMin).TotalDays <= 40)
                     {
                         #region - Sheet Tong -
@@ -648,7 +688,7 @@ namespace TinhLuongThoiVu.App_Present
                             iRow++;
                             excel.SetValueWithFormat(iRow, 1, System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(nv.Ten), true, false, false);
                             Dictionary<DateTime, List<double>> dicTongTien = new Dictionary<DateTime, List<double>>();
-                            foreach (ThoiGianLamViec thoigian in nv.ThoiGianLamViecs)
+                            foreach (ThoiGianLamViec thoigian in nv.ThoiGianLamViecs.Where(ngay => ngay.Ngay.Contains("/01/")).ToList())
                             {
                                 DateTime date = DateTime.ParseExact(thoigian.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" });
                                 iCol = 2 + date.Subtract(dateMin).Days * 3;
@@ -771,7 +811,7 @@ namespace TinhLuongThoiVu.App_Present
                             excel.SetValue(iRow + 2, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + 1);
                             excel.SetValue(iRow + 2, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + item.Value);
 
-                            excel.SetValue(iRow + 3, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 1) + 1);
+                            excel.SetValue(iRow + 3, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 2) + 1);
                             excel.SetValue(iRow + 3, iCol + 1, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 2) + item.Value);
 
                             excel.SetValue(iRow + 4, iCol, "='Bảng Lương'!" + excel.GetColumnName(iTotalCol + 3) + 1);
@@ -820,6 +860,120 @@ namespace TinhLuongThoiVu.App_Present
             }
 
         }
+
+        private void txtGioHanhChinh_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                double d = 0;
+                if (double.TryParse(txtGioHanhChinh.Text.Trim(), out d))
+                {
+                    if (d > 0)
+                    {
+                        txtBatDauCaSang.Text = "08:00";
+                        if (d <= 3.5)
+                        {
+                            txtKetThucCaSang.Text = new DateTime(2014, 1, 1, 8, 00, 0).AddHours(d).ToString("HH:mm");
+                            chkCaChieu.Checked = false;
+                        }
+                        else
+                        {
+                            chkCaChieu.Checked = true;
+                            txtBatDauCaChieu.Text = "13:00";
+                            txtKetThucCaSang.Text = "11:30";
+                            txtKetThucCaChieu.Text = new DateTime(2014, 1, 1, 13, 0, 0).AddHours(d - 3.5).ToString("HH:mm");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void txtGioTangCa_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                double d = 0;
+                if (double.TryParse(txtGioTangCa.Text.Trim(), out d))
+                {
+                    if (d > 0)
+                    {
+                        txtBatDauTC1.Text = "18:00";
+                        txtKetThucTC1.Text = new DateTime(2014, 1, 1, 18, 00, 0).AddHours(d).ToString("HH:mm");
+                        //chkCaChieu.Checked = false;
+                    }
+                }
+            }
+        }
+
+        private void txtSTT_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                string strSTT = txtSTT.Text.Trim();
+                NhanVien nv = Global.DBContext.NhanVien.Where(x => x.STT == strSTT).FirstOrDefault();
+                if (nv != null)
+                {
+                    BindingSource bindingNhanVien = new BindingSource { DataSource = new List<NhanVien> { nv } };
+                    txtTenNhanVien.DataSource = bindingNhanVien;
+                    txtTenNhanVien.DisplayMember = "Ten";
+                    txtTenNhanVien.ValueMember = "ID";
+                    txtTenNhanVien.SelectedItem = nv;
+                }
+                else
+                {
+                    txtTenNhanVien.DataSource = new BindingSource { DataSource = new List<NhanVien>() };
+                    reloadGrid();
+                }
+            }
+        }
+
+        private void txtPhuCap_Leave(object sender, EventArgs e)
+        {
+            if (txtTenNhanVien.SelectedItem is NhanVien)
+            {
+                string strThang = txtThang.Text.Trim();
+                NhanVien selectedNhanVien = txtTenNhanVien.SelectedItem as NhanVien;
+                long tamung = 0;
+                long phucap = 0;
+                long.TryParse(txtPhuCap.Text.Trim().Replace(",", ""), out phucap);
+                long.TryParse(txtTamUng.Text.Trim().Replace(",", ""), out tamung);
+
+                TamUngPhuCap pc = selectedNhanVien.TamUngPhuCaps.Where(x => x.Thang == strThang).FirstOrDefault();
+                if (pc == null)
+                {
+                    pc = new TamUngPhuCap { NhanVien = selectedNhanVien, Thang = strThang };
+                    Global.DBContext.TamUngPhuCap.Add(pc);
+                }
+                pc.TamUng = tamung;
+                pc.PhuCap = phucap;
+                Global.DBContext.SaveChanges();
+                reloadGrid();
+            }
+        }
+
+        private void btnCapNhatSTT_Click(object sender, EventArgs e)
+        {
+            if (txtTenNhanVien.SelectedItem is NhanVien)
+            {
+                string strThang = txtThang.Text;
+                NhanVien selectedNhanVien = txtTenNhanVien.SelectedItem as NhanVien;
+                if (selectedNhanVien.STT != txtSTT.Text.Trim())
+                {
+                    selectedNhanVien.STT = txtSTT.Text.Trim();
+                    Global.DBContext.SaveChanges();
+                }
+            }
+            else
+            {
+                NhanVien nv = new NhanVien { Ten = txtTenNhanVien.Text.Trim(), STT = txtSTT.Text.Trim() };
+                Global.DBContext.NhanVien.Add(nv);
+                Global.DBContext.SaveChanges();
+                reloadComboBox();
+                txtTenNhanVien.SelectedItem = nv;
+            }
+        }
+
+
 
         //ngay du 8h thi 100 + 20k tien com
         //ngay du 8h + >4h tang ca tong gio X1.2 + 20k com

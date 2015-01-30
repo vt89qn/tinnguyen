@@ -134,8 +134,8 @@ namespace TinhLuongThoiVu.App_Present
             reloadComboBox();
             txtTenNhanVien.SelectedItem = selectedNhanVien;
             reloadGrid();
-            txtSTT.Focus();
-            txtSTT.SelectAll();
+            txtTenNhanVien.Focus();
+            txtTenNhanVien.SelectAll();
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
@@ -263,8 +263,8 @@ namespace TinhLuongThoiVu.App_Present
             reloadComboBox();
             txtTenNhanVien.SelectedItem = selectedNhanVien;
             reloadGrid();
-            txtSTT.Focus();
-            txtSTT.SelectAll();
+            txtTenNhanVien.Focus();
+            txtTenNhanVien.SelectAll();
         }
 
         private void chkCaSang_CheckedChanged(object sender, EventArgs e)
@@ -311,6 +311,10 @@ namespace TinhLuongThoiVu.App_Present
                         reloadGrid();
                     }
                 }
+            }
+            else if (e.KeyCode == Keys.F12)
+            {
+                btnThem_Click(null, null);
             }
         }
         #endregion
@@ -371,7 +375,7 @@ namespace TinhLuongThoiVu.App_Present
                     if (thoigian.GioBatDauTC1.HasValue && thoigian.GioKetThucTC1.HasValue)
                     {
                         TimeSpan tc = new TimeSpan();
-                        if (thoigian.GioKetThucTC1.Value > thoigian.GioBatDauTC1.Value)
+                        if (thoigian.GioKetThucTC1.Value > thoigian.GioBatDauTC1.Value || (thoigian.GioKetThucTC1.Value == thoigian.GioBatDauTC1.Value && thoigian.PhutKetThucTC1.Value > thoigian.PhutBatDauTC1.Value))
                         {
                             tc = new TimeSpan((int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
 
@@ -633,7 +637,7 @@ namespace TinhLuongThoiVu.App_Present
                     List<NhanVien> listNhanVien = (from tg in Global.DBContext.ThoiGianLamViec
                                                    where tg.Ngay.Contains("/01/")
                                                    select tg.NhanVien).Distinct().ToList();
-                    listNhanVien = listNhanVien.OrderBy(x => x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' ')).Replace(" ", "")).ToList();
+                    listNhanVien = listNhanVien.OrderBy(x => x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Contains(" ") ? x.Ten.Trim().LastIndexOf(' ') : 0).Replace(" ", "")).ToList();
                     DateTime dateMin = DateTime.MaxValue;
                     DateTime dateMax = DateTime.MinValue;
                     listNhanVien.ForEach(x => x.ThoiGianLamViecs.Where(ngay => ngay.Ngay.Contains("/01/")).ToList().ForEach(a => { DateTime date = DateTime.ParseExact(a.Ngay, "dd/MM/yyyy", new DateTimeFormatInfo { FullDateTimePattern = "dd/MM/yyyy" }); if (date > dateMax) dateMax = date; if (date < dateMin) dateMin = date; }));
@@ -715,7 +719,7 @@ namespace TinhLuongThoiVu.App_Present
                                 if (thoigian.GioBatDauTC1.HasValue && thoigian.GioKetThucTC1.HasValue)
                                 {
                                     TimeSpan tc = new TimeSpan();
-                                    if (thoigian.GioKetThucTC1.Value > thoigian.GioBatDauTC1.Value)
+                                    if (thoigian.GioKetThucTC1.Value > thoigian.GioBatDauTC1.Value || (thoigian.GioKetThucTC1.Value == thoigian.GioBatDauTC1.Value && thoigian.PhutKetThucTC1.Value > thoigian.PhutBatDauTC1.Value))
                                     {
                                         tc = new TimeSpan((int)thoigian.GioKetThucTC1.Value, (int)thoigian.PhutKetThucTC1.Value, 0).Subtract(new TimeSpan((int)thoigian.GioBatDauTC1.Value, (int)thoigian.PhutBatDauTC1.Value, 0));
 
@@ -728,11 +732,16 @@ namespace TinhLuongThoiVu.App_Present
                                     dicTongTien[date][2] = tc.TotalHours;
                                 }
                             }
+                            TamUngPhuCap tupc = nv.TamUngPhuCaps.Where(x => x.Thang == "01").FirstOrDefault();
                             double tongtien = 0;
                             double tonggiolam = 0;
                             double tonggiotangca = 0;
                             double tongphucap = 0;
                             double tamung = 0;
+                            if (tupc != null)
+                            {
+                                tamung = tupc.TamUng.HasValue ? (double)tupc.TamUng.Value : tamung;
+                            }
                             foreach (KeyValuePair<DateTime, List<double>> item in dicTongTien)
                             {
                                 double luongngay = 0;

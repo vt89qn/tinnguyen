@@ -10,10 +10,25 @@ namespace TinhLuongThoiVu.App_Model
         public NhanVien()
         {
             ThoiGianLamViecs = new List<ThoiGianLamViec>();
+            TamUngPhuCaps = new List<TamUngPhuCap>();
         }
         public long ID { get; set; }
         public string Ten { get; set; }
+        public string STT { get; set; }
+
         public virtual ICollection<ThoiGianLamViec> ThoiGianLamViecs { get; set; }
+        public virtual ICollection<TamUngPhuCap> TamUngPhuCaps { get; set; }
+    }
+
+    public class TamUngPhuCap
+    {
+        public long ID { get; set; }
+        public long NhanVienID { get; set; }
+        public virtual NhanVien NhanVien { get; set; }
+
+        public long? TamUng { get; set; }
+        public long? PhuCap { get; set; }
+        public string Thang { get; set; }
     }
 
     public class ThoiGianLamViec
@@ -22,7 +37,7 @@ namespace TinhLuongThoiVu.App_Model
 
         public long NhanVienID { get; set; }
         public virtual NhanVien NhanVien { get; set; }
-        
+
         public string Ngay { get; set; }
         public long? GioBatDauCaSang { get; set; }
         public long? PhutBatDauCaSang { get; set; }

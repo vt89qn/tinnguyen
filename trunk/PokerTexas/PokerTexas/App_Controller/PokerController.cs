@@ -227,7 +227,7 @@ namespace PokerTexas.App_Controller
                     exData.m_vkey = vkey;
 
                     if (ret.ContainsKey("mmoney"))
-                    {                        
+                    {
                         string money = ret["mmoney"].ToString();
                         decimal dmoney = 0;
                         if (decimal.TryParse(money, out dmoney))
@@ -1199,30 +1199,35 @@ namespace PokerTexas.App_Controller
                         }
                         if (AppSettings.Seft)
                         {
-                            if (Models.PackageID <= 30)
+
+                            if (t <= 30)
                             {
-                                if (t <= 30)
+                                for (int iIndex = t; iIndex <= 30; iIndex++)
                                 {
-                                    for (int iIndex = t; iIndex <= 30; iIndex++)
-                                    {
-                                        param = new NameValueCollection();
-                                        param.Add("id", "2104");
-                                        param.Add("cmd[change][c." + iIndex + "]", "1");
-                                        param.Add("apik", exData.apik);
-                                        System.Threading.Thread.Sleep(2000);
-                                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
-                                    }
-                                }
-                                else
-                                {
-                                    t = 4;
                                     param = new NameValueCollection();
                                     param.Add("id", "2104");
-                                    param.Add("cmd[change][c." + t + "]", "1");
+                                    param.Add("cmd[change][c." + iIndex + "]", "1");
                                     param.Add("apik", exData.apik);
                                     System.Threading.Thread.Sleep(2000);
                                     client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                                 }
+                            }
+                            else
+                            {
+                                if (Models.PackageID <= 30)
+                                {
+                                    t = 20;
+                                }
+                                else
+                                {
+                                    t = 4;
+                                }
+                                param = new NameValueCollection();
+                                param.Add("id", "2104");
+                                param.Add("cmd[change][c." + t + "]", "1");
+                                param.Add("apik", exData.apik);
+                                System.Threading.Thread.Sleep(2000);
+                                client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                             }
                         }
                         else

@@ -1216,12 +1216,48 @@ namespace PokerTexas.App_Controller
                             {
                                 if (Models.PackageID <= 30)
                                 {
-                                    t = 20;
+                                    foreach (int iIndex in new[] { 5, 7, 9, 10, 11, 13, 15, 17, 19, 20, 21, 23, 25, 27, 29 })
+                                    {
+                                        param = new NameValueCollection();
+                                        param.Add("id", "2104");
+                                        param.Add("cmd[change][c." + iIndex + "]", "1");
+                                        param.Add("apik", exData.apik);
+                                        System.Threading.Thread.Sleep(2000);
+                                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                                    }
                                 }
                                 else
                                 {
-                                    t = 4;
+                                    foreach (int iIndex in new[] { 4, 5, 7, 9, 10, 11, 13, 15, 17, 19, 20, 21, 23, 25, 27, 29 })
+                                    {
+                                        param = new NameValueCollection();
+                                        param.Add("id", "2104");
+                                        param.Add("cmd[change][c." + iIndex + "]", "1");
+                                        param.Add("apik", exData.apik);
+                                        System.Threading.Thread.Sleep(2000);
+                                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                                    }
                                 }
+                                         
+                            }
+                        }
+                        else
+                        {
+                            if (t <= 30)
+                            {
+                                for (int iIndex = t; iIndex <= 30; iIndex++)
+                                {
+                                    param = new NameValueCollection();
+                                    param.Add("id", "2104");
+                                    param.Add("cmd[change][c." + iIndex + "]", "1");
+                                    param.Add("apik", exData.apik);
+                                    System.Threading.Thread.Sleep(2000);
+                                    client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                                }
+                            }
+                            else
+                            {
+                                t = 4;
                                 param = new NameValueCollection();
                                 param.Add("id", "2104");
                                 param.Add("cmd[change][c." + t + "]", "1");
@@ -1229,15 +1265,6 @@ namespace PokerTexas.App_Controller
                                 System.Threading.Thread.Sleep(2000);
                                 client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                             }
-                        }
-                        else
-                        {
-                            param = new NameValueCollection();
-                            param.Add("id", "2104");
-                            param.Add("cmd[change][c." + t + "]", "1");
-                            param.Add("apik", exData.apik);
-                            System.Threading.Thread.Sleep(2000);
-                            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                         }
                     }
                 }
@@ -1844,6 +1871,87 @@ namespace PokerTexas.App_Controller
                 throw ex;
             }
             return false;
+        }
+
+        public void Bet()
+        {
+            bool bWin = false;
+            bool bRed = false;
+            int iCountFail = 0;
+            while (true)
+            {
+                if (bWin)
+                {
+                    bWin = Bet(bRed);
+                }
+                else
+                {
+                    bRed = !bRed;
+                    bWin = Bet(bRed);
+                }
+                if (!bWin)
+                {
+                    iCountFail++;
+                    if (iCountFail >= 2)
+                    {
+                        bWin = true;
+                        iCountFail = 0;
+                    }
+                }
+                else iCountFail = 0;
+                System.Threading.Thread.Sleep(3000);
+            }
+        }
+
+        private bool Bet(bool bRed)
+        {
+            try
+            {
+                NetConnection _connection = new NetConnection();
+                _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                Dictionary<string, object> dicA = new Dictionary<string, object>();
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                int betmoney = -100000000;
+                param.Add("money",betmoney);
+                param.Add("bet", new int[] { bRed ? betmoney : 0, bRed ? 0 : betmoney, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                dicA.Add("param", param);
+                dicA.Add("sid", 110);
+                dicA.Add("langtype", 13);
+                dicA.Add("count", 110);
+                dicA.Add("unid", 110);
+                dicA.Add("mid", 19350592);
+                dicA.Add("time", Utilities.GetCurrentSecond());
+                dicA.Add("mtkey", "S9jFoes91bQiCc3WW9ZOG2qPlfnOrP");
+
+                string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, "S9jFoes91bQiCc3WW9ZOG2qPlfnOrP", "M"));
+                dicA.Add("sig", sig);
+                ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+                _connection.Call("Funcs.playThreeCards", rp, dicA);
+                int iCount = 0;
+                while (iCount < 10)
+                {
+                    iCount++;
+                    System.Threading.Thread.Sleep(1000);
+                    if (rp.Result != null && rp.Result is Dictionary<string, object>)
+                    {
+                        Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
+                        ListFriend = new List<string>();
+                        if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                        {
+                            var reward = (dicRS["ret"] as Dictionary<string, object>)["reward"];
+                            if (reward != null && reward.ToString() != "0") return true;
+                        }
+                        break;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public class ServerHelloMsgHandler : IPendingServiceCallback

@@ -341,6 +341,14 @@ namespace PokerTexas.App_Present
                 {
                     bOpenByPressAppKey = true;
                 }
+                else if (e.KeyCode == Keys.F11)
+                {
+                    menuCopyURL_Click(null, null);
+                }
+                else if (e.KeyCode == Keys.F12)
+                {
+                    menuCopyIP_Click(null, null);
+                }
             }
         }
 

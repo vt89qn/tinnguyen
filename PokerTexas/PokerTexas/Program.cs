@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using PokerTexas.App_Controller;
 
 namespace PokerTexas
 {
@@ -16,7 +17,7 @@ namespace PokerTexas
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (DateTime.Today >= new DateTime(2015, 02, 01))
+            if (DateTime.Today >= new DateTime(2015, 03, 01))
             {
                 return;
             }

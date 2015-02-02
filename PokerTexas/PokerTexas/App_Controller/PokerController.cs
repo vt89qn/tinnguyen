@@ -1216,7 +1216,7 @@ namespace PokerTexas.App_Controller
                             {
                                 if (Models.PackageID <= 30)
                                 {
-                                    foreach (int iIndex in new[] { 5, 7, 9, 10, 11, 13, 15, 17, 19, 20, 21, 23, 25, 27, 29 })
+                                    foreach (int iIndex in new[] { 5, 10, 11, 19, 20, 21,29 })
                                     {
                                         param = new NameValueCollection();
                                         param.Add("id", "2104");
@@ -1228,7 +1228,7 @@ namespace PokerTexas.App_Controller
                                 }
                                 else
                                 {
-                                    foreach (int iIndex in new[] { 4, 5, 7, 9, 10, 11, 13, 15, 17, 19, 20, 21, 23, 25, 27, 29 })
+                                    foreach (int iIndex in new[] { 4, 5, 10, 11, 19, 20, 21, 29 })
                                     {
                                         param = new NameValueCollection();
                                         param.Add("id", "2104");

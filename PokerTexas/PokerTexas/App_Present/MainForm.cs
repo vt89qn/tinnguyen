@@ -290,7 +290,8 @@ namespace PokerTexas.App_Present
             {
                 PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
                 FaceBookController fbController = new FaceBookController();
-                string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy);
+                PokerExData exData = pkController.GetExData();
+                string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy + "?kkk=" + exData.ip_address);
                 if (!string.IsNullOrEmpty(strURL))
                 {
                     Clipboard.SetText(strURL);

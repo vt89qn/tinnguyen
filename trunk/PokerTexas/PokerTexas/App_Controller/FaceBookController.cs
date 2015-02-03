@@ -510,5 +510,23 @@ namespace PokerTexas.App_Controller
             catch { }
             return string.Empty;
         }
+
+        public void Like(FaceBook model, string id)
+        {
+            try
+            {
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(model.MBLoginText);
+                NameValueCollection param = new NameValueCollection();
+                param.Add("access_token", dicData["access_token"].ToString());
+                param.Add("format", "json");
+                param.Add("method", "post");
+                param.Add("pretty", "0");
+                param.Add("suppress_http_code", "1");
+                WebClientEx clientAPI = new WebClientEx();
+                clientAPI.DoPost(param, "https://graph.facebook.com/v2.1/" + id + "/likes");
+
+            }
+            catch { }
+        }
     }
 }

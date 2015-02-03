@@ -311,6 +311,7 @@ namespace PokerTexas.App_Present
                 if (sender == null)
                 { //Press F11
                     strURL += "?ip=" + exData.ip_address;
+                    gridData.Rows[gridData.CurrentCell.RowIndex].DefaultCellStyle.BackColor = Color.DarkGray;
                 }
                 if (!string.IsNullOrEmpty(strURL))
                 {

@@ -36,6 +36,7 @@
             this.menuCopyURL = new System.Windows.Forms.ToolStripMenuItem();
             this.menuXoaTK = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoginLaiFacebook = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCopyIP = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
@@ -60,7 +61,6 @@
             this.txtCheckDangNhapLT = new System.Windows.Forms.CheckBox();
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
-            this.menuCopyIP = new System.Windows.Forms.ToolStripMenuItem();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -112,7 +112,7 @@
             this.menuLoginLaiFacebook,
             this.menuCopyIP});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(177, 114);
+            this.menuGridData.Size = new System.Drawing.Size(177, 92);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
@@ -135,6 +135,13 @@
             this.menuLoginLaiFacebook.Size = new System.Drawing.Size(176, 22);
             this.menuLoginLaiFacebook.Text = "Login Lại FaceBook";
             this.menuLoginLaiFacebook.Click += new System.EventHandler(this.menuLoginLaiFacebook_Click);
+            // 
+            // menuCopyIP
+            // 
+            this.menuCopyIP.Name = "menuCopyIP";
+            this.menuCopyIP.Size = new System.Drawing.Size(176, 22);
+            this.menuCopyIP.Text = "Copy IP";
+            this.menuCopyIP.Click += new System.EventHandler(this.menuCopyIP_Click);
             // 
             // lblPack
             // 
@@ -368,6 +375,8 @@
             // txtCheckDangNhapLT
             // 
             this.txtCheckDangNhapLT.AutoSize = true;
+            this.txtCheckDangNhapLT.Checked = true;
+            this.txtCheckDangNhapLT.CheckState = System.Windows.Forms.CheckState.Checked;
             this.txtCheckDangNhapLT.Location = new System.Drawing.Point(160, 12);
             this.txtCheckDangNhapLT.Name = "txtCheckDangNhapLT";
             this.txtCheckDangNhapLT.Size = new System.Drawing.Size(97, 17);
@@ -396,13 +405,6 @@
             this.txtCheckHangNgay.TabIndex = 4;
             this.txtCheckHangNgay.Text = "Hằng Ngày 2M";
             this.txtCheckHangNgay.UseVisualStyleBackColor = true;
-            // 
-            // menuCopyIP
-            // 
-            this.menuCopyIP.Name = "menuCopyIP";
-            this.menuCopyIP.Size = new System.Drawing.Size(176, 22);
-            this.menuCopyIP.Text = "Copy IP";
-            this.menuCopyIP.Click += new System.EventHandler(this.menuCopyIP_Click);
             // 
             // MainForm
             // 

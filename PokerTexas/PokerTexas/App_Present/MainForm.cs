@@ -26,12 +26,28 @@ namespace PokerTexas.App_Present
         #region - DECLARE -
         Dictionary<long, BindingList<PokerController>> dicPokers = new Dictionary<long, BindingList<PokerController>>();
         private bool isBusy = false;
+        bool bProcessed = false;
         #endregion
 
         #region - CONTRUCTOR -
         public MainForm()
         {
             InitializeComponent();
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval = 60000;
+            timer.Tick += (objs, obje) => 
+            {
+                if (!bProcessed && !isBusy)
+                {
+                    if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1)
+                    {
+                        bProcessed = true;
+                        btnCheckWeb_Click(null, null);
+                    }
+                }
+                
+            };
+            timer.Start();
         }
         #endregion
 
@@ -134,7 +150,7 @@ namespace PokerTexas.App_Present
                     for (int iIndex = 0; iIndex < t.Split('\n').Length; iIndex++)
                     {
                         string info = t.Split('\n')[iIndex].ToString();
-                        if (info.Contains('|'))
+                        if (!string.IsNullOrEmpty(info))
                         {
                             //if (iTry == 0)
                             {
@@ -142,7 +158,7 @@ namespace PokerTexas.App_Present
                             }
                             iTry++;
                             if (iTry >= 3) iTry = 0;
-                            FaceBook fb = new FaceBook { Login = info.Split('|')[0].Trim(), Pass = info.Split('|')[1].Trim() };
+                            FaceBook fb = new FaceBook { Login = info.Trim(), Pass = "khong9999" };
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {
@@ -154,7 +170,7 @@ namespace PokerTexas.App_Present
                                     pexist.Pass = fb.Pass;
                                     fb = pexist;
                                 }
-                                Package p = Global.DBContext.Package.Where(x => x.Pokers.Count < 10 && x.Pack > 0).FirstOrDefault();
+                                Package p = Global.DBContext.Package.Where(x => x.ID == 76).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();
@@ -291,7 +307,11 @@ namespace PokerTexas.App_Present
                 PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
                 FaceBookController fbController = new FaceBookController();
                 PokerExData exData = pkController.GetExData();
-                string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy + "?kkk=" + exData.ip_address);
+                string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy);
+                if (sender == null)
+                { //Press F11
+                    strURL += "?ip=" + exData.ip_address;
+                }
                 if (!string.IsNullOrEmpty(strURL))
                 {
                     Clipboard.SetText(strURL);
@@ -741,16 +761,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft)
-                    {
-                        FaceBookController fb = new FaceBookController();
-                        FaceBook newacc = fb.RegNewAccount();
-                        if (newacc != null)
-                        {
-                            Global.DBContext.FaceBook.Add(newacc);
-                        }
-                    }
-                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-01-23")
+                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-02-03")
                     {
                         ketBan2();
                     }
@@ -929,7 +940,7 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnCheckMobile.Enabled = true;
-                        if (AppSettings.Seft && txtPackNo.SelectedIndex >= 30)
+                        if (AppSettings.Seft && txtPackNo.SelectedIndex >= 51)
                         {
                             txtCheckMobile.Checked = false;
                         }
@@ -1059,9 +1070,9 @@ namespace PokerTexas.App_Present
                     {
                         foreach (var pk in dicPokers[selectedPackage.ID])
                         {
-                            if (pk != null && pk.Models != null && pk.Models.PackageID == selectedPackage.ID)
+                            if (pk != null && pk.Models != null && pk.Models.FaceBook != null && pk.Models.PackageID == selectedPackage.ID)
                             {
-                                listController = dicPokers[selectedPackage.ID];
+                                listController.Add(pk);
                             }
                         }
                     }

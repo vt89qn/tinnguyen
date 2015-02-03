@@ -33,21 +33,24 @@ namespace PokerTexas.App_Present
         public MainForm()
         {
             InitializeComponent();
-            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            timer.Interval = 60000;
-            timer.Tick += (objs, obje) => 
+            if (AppSettings.Seft)
             {
-                if (!bProcessed && !isBusy)
+                System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+                timer.Interval = 60000;
+                timer.Tick += (objs, obje) =>
                 {
-                    if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1)
+                    if (!bProcessed && !isBusy)
                     {
-                        bProcessed = true;
-                        btnCheckWeb_Click(null, null);
+                        if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1)
+                        {
+                            bProcessed = true;
+                            btnCheckWeb_Click(null, null);
+                        }
                     }
-                }
-                
-            };
-            timer.Start();
+
+                };
+                timer.Start();
+            }
         }
         #endregion
 

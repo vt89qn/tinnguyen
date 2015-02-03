@@ -944,9 +944,17 @@ namespace PokerTexas.App_Present
                     MethodInvoker action = delegate
                     {
                         btnCheckMobile.Enabled = true;
-                        if (AppSettings.Seft && txtPackNo.SelectedIndex >= 51)
+
+                        if (AppSettings.Seft)
                         {
-                            txtCheckMobile.Checked = false;
+                            if (txtPackNo.SelectedIndex >= 20)
+                            {
+                                txtCheckDangNhapLT.Checked = false;
+                            }
+                            if (txtPackNo.SelectedIndex >= 51)
+                            {
+                                txtCheckMobile.Checked = false;
+                            }
                         }
                         if (txtCheckTuDong.Checked)
                         {

@@ -1264,6 +1264,14 @@ namespace PokerTexas.App_Controller
                                 param.Add("apik", exData.apik);
                                 System.Threading.Thread.Sleep(2000);
                                 client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+
+                                t = 20;
+                                param = new NameValueCollection();
+                                param.Add("id", "2104");
+                                param.Add("cmd[change][c." + t + "]", "1");
+                                param.Add("apik", exData.apik);
+                                System.Threading.Thread.Sleep(2000);
+                                client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                             }
                         }
                     }

@@ -855,6 +855,50 @@ namespace PokerTexas.App_Controller
                         exData.count_login_fail = 0;
                         SetExData(exData);
                         bWebLogedIn = true;
+
+                        #region - System.GetInit -
+                        NetConnection _connection = new NetConnection();
+                        _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                        _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                        SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                        dicA.Add("unid", 110);
+                        dicA.Add("mid", Models.PKID);
+                        dicA.Add("mtkey", exData.mtkey);
+                        dicA.Add("param", null);
+                        dicA.Add("time", Utilities.GetCurrentSecond());
+                        dicA.Add("langtype", 13);
+                        dicA.Add("count", 35);
+                        dicA.Add("sid", 110);
+                        string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                        dicA.Add("sig", sig);
+                        ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+                        int iCount = 0;
+                        _connection.Call("System.loadInit", rp, dicA);
+                        iCount = 0;
+                        while (iCount < 10)
+                        {
+                            iCount++;
+                            System.Threading.Thread.Sleep(1000);
+                            if (rp.Result != null && rp.Result is Dictionary<string, object>)
+                            {
+                                Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
+                                if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                                {
+                                    Dictionary<string, object> ret = dicRS["ret"] as Dictionary<string, object>;
+                                    if (ret.ContainsKey("aUser") && ret["aUser"] is Dictionary<string, object>)
+                                    { 
+                                        Dictionary<string, object> aUser = ret["aUser"] as Dictionary<string, object>;
+                                        if (aUser.ContainsKey("mmoney") && aUser["mmoney"] is int)
+                                        {
+                                            this.Money = Convert.ToDecimal(aUser["mmoney"]);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        #endregion
                         this.Status = "Authen Facebook Thành Công";
                         return;
                     }
@@ -1690,34 +1734,34 @@ namespace PokerTexas.App_Controller
             client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
 
             #region - An Kim Cuong -
-            //param = new NameValueCollection();
-            //param.Add("cmd", "init");
-            //param.Add("apik", exData.apik);
-            //client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
-            //if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("num"))
-            //{
-            //    Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-            //    object num = dicInfo["num"];
-            //    int iNum = Convert.ToInt16(num);
-            //    if (iNum >= 13)
-            //    {
-            //        System.Threading.Thread.Sleep(3000);
-            //        param = new NameValueCollection();
-            //        param.Add("cmd", "reward");
-            //        param.Add("type", "356");
-            //        param.Add("num", "1");
-            //        param.Add("apik", exData.apik);
-            //        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
-            //    }
-            //}
+            param = new NameValueCollection();
+            param.Add("cmd", "init");
+            param.Add("apik", exData.apik);
+            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+            if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("num"))
+            {
+                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                object num = dicInfo["num"];
+                int iNum = Convert.ToInt16(num);
+                if (iNum >= 13)
+                {
+                    System.Threading.Thread.Sleep(3000);
+                    param = new NameValueCollection();
+                    param.Add("cmd", "reward");
+                    param.Add("type", "356");
+                    param.Add("num", "1");
+                    param.Add("apik", exData.apik);
+                    client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+                }
+            }
 
             NetConnection _connection = new NetConnection();
             _connection.ObjectEncoding = ObjectEncoding.AMF3;
             _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
-
+           
             SortedDictionary<string, object> dicParam = new SortedDictionary<string, object>();
-            dicParam.Add("type",0);
-            dicParam.Add("pg",0);
+            dicParam.Add("type", 0);
+            dicParam.Add("pg", 0);
             dicParam.Add("fmid", int.Parse(Models.PKID));
             SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
             dicA.Add("unid", 110);
@@ -1731,9 +1775,10 @@ namespace PokerTexas.App_Controller
             string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
             dicA.Add("sig", sig);
             ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+            int iCount = 0;
             _connection.Call("Gifts.getUserPropList", rp, dicA);
             object listItem = null;
-            int iCount = 0;
+            iCount = 0;
             while (iCount < 10)
             {
                 iCount++;
@@ -1748,9 +1793,54 @@ namespace PokerTexas.App_Controller
                     break;
                 }
             }
-            if (listItem != null)
-            { 
-                
+
+            if (listItem is object[])
+            {
+                foreach (object item in listItem as object[])
+                {
+                    if (item is object[])
+                    {
+                        object[] items = item as object[];
+                        object id = items[0];
+                        if (id is int && (int)id == 356)
+                        {
+                            System.Threading.Thread.Sleep(3000);
+                            _connection = new NetConnection();
+                            _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                            _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                            dicParam = new SortedDictionary<string, object>();
+                            dicParam.Add("money", 0);
+                            dicParam.Add("ddcard", 356);
+                            dicParam.Add("endtime", items[14]);
+                            dicA = new SortedDictionary<string, object>();
+                            dicA.Add("unid", 110);
+                            dicA.Add("mid", Models.PKID);
+                            dicA.Add("mtkey", exData.mtkey);
+                            dicA.Add("param", dicParam);
+                            dicA.Add("time", Utilities.GetCurrentSecond());
+                            dicA.Add("langtype", 13);
+                            dicA.Add("count", 37);
+                            dicA.Add("sid", 110);
+                            sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                            dicA.Add("sig", sig);
+                            rp = new ServerHelloMsgHandler();
+                            _connection.Call("Gifts.useProperty", rp, dicA);
+
+                            iCount = 0;
+                            while (iCount < 10)
+                            {
+                                iCount++;
+                                System.Threading.Thread.Sleep(1000);
+                                if (rp.Result != null && rp.Result is Dictionary<string, object>)
+                                {
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
             }
 
             #endregion

@@ -1680,6 +1680,87 @@ namespace PokerTexas.App_Controller
             Models.MBLoginText = new JavaScriptSerializer().Serialize(data);
         }
 
+        public void AnKimCuongVaNhanThuongLinhMoi()
+        {
+            var exData = GetExData();
+            NameValueCollection param = new NameValueCollection();
+            WebClientEx client = new WebClientEx();
+            client.IpHeader = exData.ip_address;
+            client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+            client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+
+            #region - An Kim Cuong -
+            //param = new NameValueCollection();
+            //param.Add("cmd", "init");
+            //param.Add("apik", exData.apik);
+            //client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+            //if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("num"))
+            //{
+            //    Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+            //    object num = dicInfo["num"];
+            //    int iNum = Convert.ToInt16(num);
+            //    if (iNum >= 13)
+            //    {
+            //        System.Threading.Thread.Sleep(3000);
+            //        param = new NameValueCollection();
+            //        param.Add("cmd", "reward");
+            //        param.Add("type", "356");
+            //        param.Add("num", "1");
+            //        param.Add("apik", exData.apik);
+            //        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+            //    }
+            //}
+
+            NetConnection _connection = new NetConnection();
+            _connection.ObjectEncoding = ObjectEncoding.AMF3;
+            _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+            SortedDictionary<string, object> dicParam = new SortedDictionary<string, object>();
+            dicParam.Add("type",0);
+            dicParam.Add("pg",0);
+            dicParam.Add("fmid", int.Parse(Models.PKID));
+            SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+            dicA.Add("unid", 110);
+            dicA.Add("mid", Models.PKID);
+            dicA.Add("mtkey", exData.mtkey);
+            dicA.Add("param", dicParam);
+            dicA.Add("time", Utilities.GetCurrentSecond());
+            dicA.Add("langtype", 13);
+            dicA.Add("count", 35);
+            dicA.Add("sid", 110);
+            string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+            dicA.Add("sig", sig);
+            ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+            _connection.Call("Gifts.getUserPropList", rp, dicA);
+            object listItem = null;
+            int iCount = 0;
+            while (iCount < 10)
+            {
+                iCount++;
+                System.Threading.Thread.Sleep(1000);
+                if (rp.Result != null && rp.Result is Dictionary<string, object>)
+                {
+                    Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
+                    if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                    {
+                        listItem = (dicRS["ret"] as Dictionary<string, object>)["list"];
+                    }
+                    break;
+                }
+            }
+            if (listItem != null)
+            { 
+                
+            }
+
+            #endregion
+
+            #region - Linh Thuong Linh moi -
+
+            #endregion
+
+        }
+
         public List<string> ListFriend = new List<string>();
         public void GetAllFriend()
         {

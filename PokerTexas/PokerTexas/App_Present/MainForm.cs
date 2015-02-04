@@ -1033,12 +1033,43 @@ namespace PokerTexas.App_Present
             catch { }
         }
 
+        private void AnKimCuongVaNhanThuongLinhMoi()
+        {
+            try
+            {
+                List<Task> tasks = new List<Task>();
+                FaceBookController fbController = new FaceBookController();
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    int iStart = iIndex;
+                    tasks.Add(
+                    Task.Factory.StartNew(() =>
+                    {
+                        pkSource.LoginWebApp();
+                        if (pkSource.bWebLogedIn)
+                        {
+                            pkSource.AnKimCuongVaNhanThuongLinhMoi();
+                        }
+                    }));
+                    tasks[tasks.Count - 1].Wait();
+                    System.Threading.Thread.Sleep(4000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            catch { }
+        }
 
         private void ketBan()
         {
             try
             {
-                ketBan2();
+                AnKimCuongVaNhanThuongLinhMoi();
             }
             catch (Exception ex)
             {

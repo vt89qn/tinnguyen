@@ -857,45 +857,48 @@ namespace PokerTexas.App_Controller
                         bWebLogedIn = true;
 
                         #region - System.GetInit -
-                        NetConnection _connection = new NetConnection();
-                        _connection.ObjectEncoding = ObjectEncoding.AMF3;
-                        _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
-
-                        SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
-                        dicA.Add("unid", 110);
-                        dicA.Add("mid", Models.PKID);
-                        dicA.Add("mtkey", exData.mtkey);
-                        dicA.Add("param", null);
-                        dicA.Add("time", Utilities.GetCurrentSecond());
-                        dicA.Add("langtype", 13);
-                        dicA.Add("count", 35);
-                        dicA.Add("sid", 110);
-                        string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
-                        dicA.Add("sig", sig);
-                        ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
-                        int iCount = 0;
-                        _connection.Call("System.loadInit", rp, dicA);
-                        iCount = 0;
-                        while (iCount < 10)
+                        if (AppSettings.Seft)
                         {
-                            iCount++;
-                            System.Threading.Thread.Sleep(1000);
-                            if (rp.Result != null && rp.Result is Dictionary<string, object>)
+                            NetConnection _connection = new NetConnection();
+                            _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                            _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                            SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                            dicA.Add("unid", 110);
+                            dicA.Add("mid", Models.PKID);
+                            dicA.Add("mtkey", exData.mtkey);
+                            dicA.Add("param", null);
+                            dicA.Add("time", Utilities.GetCurrentSecond());
+                            dicA.Add("langtype", 13);
+                            dicA.Add("count", 35);
+                            dicA.Add("sid", 110);
+                            string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                            dicA.Add("sig", sig);
+                            ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+                            int iCount = 0;
+                            _connection.Call("System.loadInit", rp, dicA);
+                            iCount = 0;
+                            while (iCount < 10)
                             {
-                                Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
-                                if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                                iCount++;
+                                System.Threading.Thread.Sleep(1000);
+                                if (rp.Result != null && rp.Result is Dictionary<string, object>)
                                 {
-                                    Dictionary<string, object> ret = dicRS["ret"] as Dictionary<string, object>;
-                                    if (ret.ContainsKey("aUser") && ret["aUser"] is Dictionary<string, object>)
-                                    { 
-                                        Dictionary<string, object> aUser = ret["aUser"] as Dictionary<string, object>;
-                                        if (aUser.ContainsKey("mmoney") && aUser["mmoney"] is int)
+                                    Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
+                                    if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                                    {
+                                        Dictionary<string, object> ret = dicRS["ret"] as Dictionary<string, object>;
+                                        if (ret.ContainsKey("aUser") && ret["aUser"] is Dictionary<string, object>)
                                         {
-                                            this.Money = Convert.ToDecimal(aUser["mmoney"]);
+                                            Dictionary<string, object> aUser = ret["aUser"] as Dictionary<string, object>;
+                                            if (aUser.ContainsKey("mmoney") && aUser["mmoney"] is int)
+                                            {
+                                                this.Money = Convert.ToDecimal(aUser["mmoney"]);
+                                            }
                                         }
                                     }
+                                    break;
                                 }
-                                break;
                             }
                         }
                         #endregion

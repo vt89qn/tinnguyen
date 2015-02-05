@@ -33,6 +33,7 @@ namespace PokerTexas.App_Present
         public MainForm()
         {
             InitializeComponent();
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(new System.ComponentModel.ComponentResourceManager(typeof(MainForm)).GetObject("$this.Icon")));
             if (AppSettings.Seft)
             {
                 System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
@@ -480,8 +481,6 @@ namespace PokerTexas.App_Present
             {
                 Task.Factory.StartNew(checkWeb);
             }
-
-
         }
 
         private void btnChuanBiRutFan_Click(object sender, EventArgs e)
@@ -508,6 +507,23 @@ namespace PokerTexas.App_Present
             isBusy = true;
             btnAuthenNhanFanChip.Enabled = false;
             Task.Factory.StartNew(authenRutThuongFan);
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Visible = false;
+                this.notifyIcon1.Visible = true;
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Visible = true;
+            this.notifyIcon1.Visible = false;
+            this.Activate();
+            this.WindowState = FormWindowState.Normal;
         }
         #endregion
 
@@ -1069,7 +1085,7 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                AnKimCuongVaNhanThuongLinhMoi();
+                ketBan2();
             }
             catch (Exception ex)
             {
@@ -1268,5 +1284,7 @@ namespace PokerTexas.App_Present
         }
 
         #endregion
+
+
     }
 }

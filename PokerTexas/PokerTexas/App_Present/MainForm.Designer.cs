@@ -61,6 +61,7 @@
             this.txtCheckDangNhapLT = new System.Windows.Forms.CheckBox();
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -406,6 +407,11 @@
             this.txtCheckHangNgay.Text = "Hằng Ngày 2M";
             this.txtCheckHangNgay.UseVisualStyleBackColor = true;
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "PTV Nuker - Tinnv@VNIT Solutions";
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -433,6 +439,7 @@
             this.Text = "PTV Nuker - Tinnv@VNIT Solutions";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.groupData.ResumeLayout(false);
             this.groupData.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).EndInit();
@@ -477,6 +484,7 @@
         private System.Windows.Forms.CheckBox txtCheckChipBiMat;
         private System.Windows.Forms.CheckBox txtCheckHangNgay;
         private System.Windows.Forms.ToolStripMenuItem menuCopyIP;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
 
     }
 }

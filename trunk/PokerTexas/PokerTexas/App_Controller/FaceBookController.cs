@@ -8,7 +8,6 @@ using System.Collections.Specialized;
 using System.Data.SQLite;
 using PokerTexas.App_Model;
 using System.Web.Script.Serialization;
-using OpenPop.Pop3;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Drawing;

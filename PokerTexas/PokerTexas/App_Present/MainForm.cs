@@ -511,10 +511,13 @@ namespace PokerTexas.App_Present
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized)
+            if (!AppSettings.Seft)
             {
-                this.Visible = false;
-                this.notifyIcon1.Visible = true;
+                if (this.WindowState == FormWindowState.Minimized)
+                {
+                    this.Visible = false;
+                    this.notifyIcon1.Visible = true;
+                }
             }
         }
 

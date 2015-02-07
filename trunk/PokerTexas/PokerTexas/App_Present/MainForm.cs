@@ -42,7 +42,7 @@ namespace PokerTexas.App_Present
                 {
                     if (!bProcessed && !isBusy)
                     {
-                        if (DateTime.Now.Hour == 1 && DateTime.Now.Minute >= 1)
+                        if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1)
                         {
                             bProcessed = true;
                             btnCheckWeb_Click(null, null);

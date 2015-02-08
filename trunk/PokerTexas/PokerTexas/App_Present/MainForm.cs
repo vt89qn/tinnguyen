@@ -26,7 +26,6 @@ namespace PokerTexas.App_Present
         #region - DECLARE -
         Dictionary<long, BindingList<PokerController>> dicPokers = new Dictionary<long, BindingList<PokerController>>();
         private bool isBusy = false;
-        bool bProcessed = false;
         #endregion
 
         #region - CONTRUCTOR -
@@ -37,18 +36,20 @@ namespace PokerTexas.App_Present
             if (AppSettings.Seft)
             {
                 System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+                DateTime dateLastRun = DateTime.Today;
                 timer.Interval = 60000;
                 timer.Tick += (objs, obje) =>
                 {
-                    if (!bProcessed && !isBusy)
+                    if (!isBusy)
                     {
-                        if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1)
+                        if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
                         {
-                            bProcessed = true;
+                            dateLastRun = DateTime.Today;
+                            txtPackNo.SelectedValue = 1;
+                            dicPokers = new Dictionary<long, BindingList<PokerController>>();
                             btnCheckWeb_Click(null, null);
                         }
                     }
-
                 };
                 timer.Start();
             }
@@ -804,7 +805,7 @@ namespace PokerTexas.App_Present
                                     {
                                         if (txtCheckKyTen.Checked)
                                         {
-                                            pkSource.KyTenWeb();
+                                            //pkSource.KyTenWeb();
                                             pkSource.PlayMiniGame();
                                             pkSource.NhanTraiTim();
                                         }

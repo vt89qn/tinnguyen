@@ -900,6 +900,28 @@ namespace PokerTexas.App_Controller
                                     break;
                                 }
                             }
+
+                            param = new NameValueCollection();
+                            param.Add("cmd", "init");
+                            param.Add("apik", exData.apik);
+                            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+                            if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("num"))
+                            {
+                                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                                object num = dicInfo["num"];
+                                int iNum = Convert.ToInt16(num);
+                                if (iNum >= 13)
+                                {
+                                    System.Threading.Thread.Sleep(2000);
+                                    param = new NameValueCollection();
+                                    param.Add("cmd", "reward");
+                                    param.Add("type", "356");
+                                    param.Add("num", "1");
+                                    param.Add("apik", exData.apik);
+                                    client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+                                }
+                            }
+
                         }
                         #endregion
                         this.Status = "Authen Facebook Thành Công";
@@ -1263,7 +1285,7 @@ namespace PokerTexas.App_Controller
                             {
                                 if (Models.PackageID <= 30)
                                 {
-                                    foreach (int iIndex in new[] { 5, 10, 11, 19, 20, 21,29 })
+                                    foreach (int iIndex in new[] { 5, 10, 11, 19, 20, 21, 29 })
                                     {
                                         param = new NameValueCollection();
                                         param.Add("id", "2104");
@@ -1285,7 +1307,7 @@ namespace PokerTexas.App_Controller
                                         client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                                     }
                                 }
-                                         
+
                             }
                         }
                         else
@@ -1761,7 +1783,7 @@ namespace PokerTexas.App_Controller
             NetConnection _connection = new NetConnection();
             _connection.ObjectEncoding = ObjectEncoding.AMF3;
             _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
-           
+
             SortedDictionary<string, object> dicParam = new SortedDictionary<string, object>();
             dicParam.Add("type", 0);
             dicParam.Add("pg", 0);
@@ -2057,35 +2079,16 @@ namespace PokerTexas.App_Controller
 
         public void Bet()
         {
-            bool bWin = false;
-            bool bRed = false;
-            int iCountFail = 0;
-            while (true)
+            if (!bWebLogedIn)
             {
-                if (bWin)
-                {
-                    bWin = Bet(bRed);
-                }
-                else
-                {
-                    bRed = !bRed;
-                    bWin = Bet(bRed);
-                }
-                if (!bWin)
-                {
-                    iCountFail++;
-                    if (iCountFail >= 2)
-                    {
-                        bWin = true;
-                        iCountFail = 0;
-                    }
-                }
-                else iCountFail = 0;
-                System.Threading.Thread.Sleep(3000);
+                LoginWebApp();
             }
+            if (!bWebLogedIn) return;
+            var exData = GetExData();
+            Bet(100000, exData);
         }
 
-        private bool Bet(bool bRed)
+        private bool Bet(int betmoney, PokerExData exData)
         {
             try
             {
@@ -2093,24 +2096,43 @@ namespace PokerTexas.App_Controller
                 _connection.ObjectEncoding = ObjectEncoding.AMF3;
                 _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
 
-                Dictionary<string, object> dicA = new Dictionary<string, object>();
-                Dictionary<string, object> param = new Dictionary<string, object>();
-                int betmoney = -100000000;
-                param.Add("money",betmoney);
-                param.Add("bet", new int[] { bRed ? betmoney : 0, bRed ? 0 : betmoney, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                SortedDictionary<string, object> param = new SortedDictionary<string, object>();
+                //param.Add("money", betmoney);
+                //param.Add("bet", new int[] { betmoney, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
                 dicA.Add("param", param);
                 dicA.Add("sid", 110);
                 dicA.Add("langtype", 13);
-                dicA.Add("count", 110);
+                dicA.Add("count", 30);
                 dicA.Add("unid", 110);
-                dicA.Add("mid", 19350592);
+                dicA.Add("mid", Models.PKID);
                 dicA.Add("time", Utilities.GetCurrentSecond());
-                dicA.Add("mtkey", "S9jFoes91bQiCc3WW9ZOG2qPlfnOrP");
+                dicA.Add("mtkey", exData.mtkey);
 
-                string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, "S9jFoes91bQiCc3WW9ZOG2qPlfnOrP", "M"));
+                string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
                 dicA.Add("sig", sig);
                 ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
-                _connection.Call("Funcs.playThreeCards", rp, dicA);
+                _connection.Call("Funcs.getThreeCards", rp, dicA);
+
+
+
+                //SortedDictionary<string, object> dicA = new SortedDictionary<string, object>();
+                //SortedDictionary<string, object> param = new SortedDictionary<string, object>();
+                //param.Add("money", betmoney);
+                //param.Add("bet", new int[] { betmoney, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                //dicA.Add("param", param);
+                //dicA.Add("sid", 110);
+                //dicA.Add("langtype", 13);
+                //dicA.Add("count", 30);
+                //dicA.Add("unid", 110);
+                //dicA.Add("mid", Models.PKID);
+                //dicA.Add("time", Utilities.GetCurrentSecond());
+                //dicA.Add("mtkey", exData.mtkey);
+
+                //string sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, exData.mtkey, "M"));
+                //dicA.Add("sig", sig);
+                //ServerHelloMsgHandler rp = new ServerHelloMsgHandler();
+                //_connection.Call("Funcs.playThreeCards", rp, dicA);
                 int iCount = 0;
                 while (iCount < 10)
                 {
@@ -2118,16 +2140,59 @@ namespace PokerTexas.App_Controller
                     System.Threading.Thread.Sleep(1000);
                     if (rp.Result != null && rp.Result is Dictionary<string, object>)
                     {
-                        Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
-                        ListFriend = new List<string>();
-                        if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
-                        {
-                            var reward = (dicRS["ret"] as Dictionary<string, object>)["reward"];
-                            if (reward != null && reward.ToString() != "0") return true;
-                        }
+                        //Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
+                        //ListFriend = new List<string>();
+                        //if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                        //{
+                        //    var reward = (dicRS["ret"] as Dictionary<string, object>)["reward"];
+                        //    if (reward != null && reward.ToString() != "0") return true;
+                        //}
                         break;
                     }
                 }
+                 _connection = new NetConnection();
+                _connection.ObjectEncoding = ObjectEncoding.AMF3;
+                _connection.Connect("http://pclpvdpk01.boyaagame.com/texas/api/gateway.php");
+
+                dicA = new SortedDictionary<string, object>();
+                SortedDictionary<string, object> param2 = new SortedDictionary<string, object>();
+                param2.Add("money", betmoney);
+                param2.Add("bet", new int[] { betmoney, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                dicA.Add("param", param2);
+                dicA.Add("sid", 110);
+                dicA.Add("langtype", 13);
+                dicA.Add("count", 15);
+                dicA.Add("unid", 110);
+                dicA.Add("mid", "19350592");
+                dicA.Add("time", "1423407533");
+                dicA.Add("mtkey", "hMoiu2Blr4VDmvgdqjViTHv2qEVDKc");
+
+                sig = Utilities.GetMd5Hash(Utilities.getSigPoker(dicA, "hMoiu2Blr4VDmvgdqjViTHv2qEVDKc", "M"));
+                dicA.Add("sig", sig);
+
+
+
+                rp = new ServerHelloMsgHandler();
+                _connection.Call("Funcs.playThreeCards", rp, dicA);
+
+                iCount = 0;
+                while (iCount < 10)
+                {
+                    iCount++;
+                    System.Threading.Thread.Sleep(1000);
+                    if (rp.Result != null && rp.Result is Dictionary<string, object>)
+                    {
+                        //Dictionary<string, object> dicRS = rp.Result as Dictionary<string, object>;
+                        //ListFriend = new List<string>();
+                        //if (dicRS.ContainsKey("ret") && dicRS["ret"] is Dictionary<string, object>)
+                        //{
+                        //    var reward = (dicRS["ret"] as Dictionary<string, object>)["reward"];
+                        //    if (reward != null && reward.ToString() != "0") return true;
+                        //}
+                        break;
+                    }
+                }
+
                 return false;
             }
             catch (Exception ex)

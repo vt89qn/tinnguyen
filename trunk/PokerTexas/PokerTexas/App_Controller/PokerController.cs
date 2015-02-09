@@ -450,7 +450,6 @@ namespace PokerTexas.App_Controller
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     #endregion
-
                     this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
                     System.Threading.Thread.Sleep(4000);
                 }
@@ -510,7 +509,8 @@ namespace PokerTexas.App_Controller
                 {
                     if (listPokers[iFrom].PKID == Models.PKID) break;
                 }
-                for (int iPoker = 1; iPoker <= 6; iPoker++)
+                int iNoOfGift = AppSettings.Seft && listPokers.Count >= 7 ? 6 : listPokers.Count - 1;
+                for (int iPoker = 1; iPoker <= iNoOfGift; iPoker++)
                 {
                     Poker p = new Poker();
                     if (iFrom + iPoker < listPokers.Count)
@@ -556,13 +556,9 @@ namespace PokerTexas.App_Controller
                             }
                         }
                         #endregion
-
                         this.Status = "Nhận quà bí mật thành công từ " + p.FaceBook.Login;
-
                     }
-
                     System.Threading.Thread.Sleep(2000);
-
                     #region - Presents.post -
                     dic_param = new SortedDictionary<string, object>();
                     dic_param.Add("to", p.PKID);
@@ -574,11 +570,8 @@ namespace PokerTexas.App_Controller
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                     client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
                     #endregion
-
                     this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
-
                 }
-
                 foreach (Dictionary<string, object> diclist in listPresents)
                 {
                     if (diclist.ContainsKey("from"))
@@ -1136,7 +1129,8 @@ namespace PokerTexas.App_Controller
                         {
                             if (listPokers[iFrom].PKID == Models.PKID) break;
                         }
-                        for (int iPoker = 1; iPoker <= 5; iPoker++)
+                        int iNoOfGift = listPokers.Count >= 6 ? 5 : listPokers.Count - 1;
+                        for (int iPoker = 1; iPoker <= iNoOfGift; iPoker++)
                         {
                             if (iFrom + iPoker < listPokers.Count)
                             {

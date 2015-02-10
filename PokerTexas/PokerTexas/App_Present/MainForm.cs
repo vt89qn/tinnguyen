@@ -18,6 +18,7 @@ using System.Threading;
 using System.Globalization;
 using System.Collections.Specialized;
 using FB.App_Common;
+using System.Net;
 
 namespace PokerTexas.App_Present
 {
@@ -42,7 +43,7 @@ namespace PokerTexas.App_Present
                 {
                     if (!isBusy)
                     {
-                        if (DateTime.Now.Hour == 2 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
+                        if (DateTime.Now.Hour == 4 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
                         {
                             dateLastRun = DateTime.Today;
                             txtPackNo.SelectedValue = 1;
@@ -402,8 +403,10 @@ namespace PokerTexas.App_Present
             }
         }
 
+        bool bEnableSelectedValueChange = true;
         private void txtPackNo_SelectedValueChanged(object sender, EventArgs e)
         {
+            if (!bEnableSelectedValueChange) return;
             reloadGrid();
         }
 
@@ -1260,9 +1263,11 @@ namespace PokerTexas.App_Present
                 //Load Package
                 List<Package> listPackage = Global.DBContext.Package.Where(x => x.Pokers.Count > 0).ToList();
                 BindingSource bindingPackage = new BindingSource { DataSource = listPackage };
-                txtPackNo.DataSource = bindingPackage;
+                bEnableSelectedValueChange = false;
                 txtPackNo.DisplayMember = TablePackageConst.Pack;
                 txtPackNo.ValueMember = TablePackageConst.ID;
+                bEnableSelectedValueChange = true;
+                txtPackNo.DataSource = bindingPackage;
             }
             catch (Exception ex)
             {
@@ -1288,7 +1293,5 @@ namespace PokerTexas.App_Present
         }
 
         #endregion
-
-
     }
 }

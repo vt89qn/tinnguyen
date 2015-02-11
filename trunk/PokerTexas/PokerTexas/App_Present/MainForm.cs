@@ -176,7 +176,7 @@ namespace PokerTexas.App_Present
                                     pexist.Pass = fb.Pass;
                                     fb = pexist;
                                 }
-                                Package p = Global.DBContext.Package.Where(x => x.ID == 102).FirstOrDefault();
+                                Package p = Global.DBContext.Package.Where(x => x.ID == 120).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();
@@ -788,7 +788,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-02-04")
+                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-02-11")
                     {
                         ketBan2();
                     }

@@ -788,7 +788,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && DateTime.Today.ToString("yyyy-MM-dd") == "2015-02-11")
+                    if (AppSettings.Seft && new List<string>() { "2015-02-12", "2015-02-13" }.Contains(DateTime.Today.ToString("yyyy-MM-dd")))
                     {
                         ketBan2();
                     }

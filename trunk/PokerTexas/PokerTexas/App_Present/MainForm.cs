@@ -43,10 +43,10 @@ namespace PokerTexas.App_Present
                 {
                     if (!isBusy)
                     {
-                        if (DateTime.Now.Hour == 4 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
+                        if (DateTime.Now.Hour == 3 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
                         {
                             dateLastRun = DateTime.Today;
-                            txtPackNo.SelectedValue = 1;
+                            txtPackNo.SelectedIndex = 1;
                             dicPokers = new Dictionary<long, BindingList<PokerController>>();
                             btnCheckWeb_Click(null, null);
                         }
@@ -863,6 +863,15 @@ namespace PokerTexas.App_Present
                     {
                         System.Threading.Thread.Sleep(1000);
                     }
+                    //Set Money After Check
+                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    {
+                        if (this.IsDisposed) return;
+                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        PokerExData exData = pkSource.GetExData();
+                        exData.money = pkSource.Money;
+                        pkSource.SetExData(exData);
+                    }
                     if (Global.DBContext.ChangeTracker.HasChanges())
                     {
                         Global.DBContext.SaveChanges();
@@ -970,14 +979,14 @@ namespace PokerTexas.App_Present
 
                         if (AppSettings.Seft)
                         {
-                            if (txtPackNo.SelectedIndex >= 20)
+                            if (txtPackNo.SelectedIndex >= 50)
                             {
                                 txtCheckDangNhapLT.Checked = false;
                             }
-                            if (txtPackNo.SelectedIndex >= 51)
-                            {
-                                txtCheckMobile.Checked = false;
-                            }
+                            //if (txtPackNo.SelectedIndex >= 66)
+                            //{
+                            //    txtCheckMobile.Checked = false;
+                            //}
                         }
                         if (txtCheckTuDong.Checked)
                         {

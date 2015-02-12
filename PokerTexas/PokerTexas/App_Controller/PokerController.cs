@@ -1277,7 +1277,7 @@ namespace PokerTexas.App_Controller
                             }
                             else
                             {
-                                foreach (int iIndex in new[] { 1, 2, 4, 5, 10, 11, 13, 16, 29, 20 })
+                                foreach (int iIndex in new[] { 1, 2, 4, 5, 10, 11, 13, 16, 29, 30 })
                                 {
                                     param = new NameValueCollection();
                                     param.Add("id", "2226");

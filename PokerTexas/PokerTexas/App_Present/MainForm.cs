@@ -808,7 +808,7 @@ namespace PokerTexas.App_Present
                                     {
                                         if (txtCheckKyTen.Checked)
                                         {
-                                            //pkSource.KyTenWeb();
+                                            pkSource.KyTenWeb();
                                             pkSource.PlayMiniGame();
                                             pkSource.NhanTraiTim();
                                         }

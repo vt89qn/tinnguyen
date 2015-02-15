@@ -788,7 +788,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && new List<string>() { "2015-02-12", "2015-02-13" }.Contains(DateTime.Today.ToString("yyyy-MM-dd")))
+                    if (AppSettings.Seft && new List<string>() { "2015-02-16", "2015-02-17" }.Contains(DateTime.Today.ToString("yyyy-MM-dd")))
                     {
                         ketBan2();
                     }
@@ -979,10 +979,10 @@ namespace PokerTexas.App_Present
 
                         if (AppSettings.Seft)
                         {
-                            if (txtPackNo.SelectedIndex >= 50)
-                            {
-                                txtCheckDangNhapLT.Checked = false;
-                            }
+                            //if (txtPackNo.SelectedIndex >= 50)
+                            //{
+                            //    txtCheckDangNhapLT.Checked = false;
+                            //}
                             //if (txtPackNo.SelectedIndex >= 66)
                             //{
                             //    txtCheckMobile.Checked = false;

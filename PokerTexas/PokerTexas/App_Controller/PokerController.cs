@@ -894,26 +894,26 @@ namespace PokerTexas.App_Controller
                                 }
                             }
 
-                            param = new NameValueCollection();
-                            param.Add("cmd", "init");
-                            param.Add("apik", exData.apik);
-                            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
-                            if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("num"))
-                            {
-                                Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
-                                object num = dicInfo["num"];
-                                int iNum = Convert.ToInt16(num);
-                                if (iNum >= 13)
-                                {
-                                    System.Threading.Thread.Sleep(2000);
-                                    param = new NameValueCollection();
-                                    param.Add("cmd", "reward");
-                                    param.Add("type", "356");
-                                    param.Add("num", "1");
-                                    param.Add("apik", exData.apik);
-                                    client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
-                                }
-                            }
+                            //param = new NameValueCollection();
+                            //param.Add("cmd", "init");
+                            //param.Add("apik", exData.apik);
+                            //client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+                            //if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("num"))
+                            //{
+                            //    Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                            //    object num = dicInfo["num"];
+                            //    int iNum = Convert.ToInt16(num);
+                            //    if (iNum >= 13)
+                            //    {
+                            //        System.Threading.Thread.Sleep(2000);
+                            //        param = new NameValueCollection();
+                            //        param.Add("cmd", "reward");
+                            //        param.Add("type", "356");
+                            //        param.Add("num", "1");
+                            //        param.Add("apik", exData.apik);
+                            //        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
+                            //    }
+                            //}
 
                         }
                         #endregion
@@ -1288,6 +1288,11 @@ namespace PokerTexas.App_Controller
                                 }
                             }
                         }
+
+                        param = new NameValueCollection();
+                        param.Add("apik", exData.apik);
+                        System.Threading.Thread.Sleep(2000);
+                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php?cmd=signreward");
 
                     }
                 }

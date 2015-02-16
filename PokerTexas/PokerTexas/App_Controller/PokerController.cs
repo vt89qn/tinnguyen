@@ -26,6 +26,7 @@ namespace PokerTexas.App_Controller
         #region - INTERFACE METHOD -
         public event PropertyChangedEventHandler PropertyChanged;
         public Control GridContainer;
+        delegate void NotifyPropertyChangedCallback(string name);
         private void NotifyPropertyChanged(string name)
         {
             if (PropertyChanged != null)
@@ -33,9 +34,21 @@ namespace PokerTexas.App_Controller
                 try
                 {
                     //If the Proxy object is living in a non-UI thread, use invoke
+                    //if (GridContainer != null && GridContainer.InvokeRequired)
+                    //{
+                    //    GridContainer.BeginInvoke(new Action(() => PropertyChanged(this, new PropertyChangedEventArgs(name))));
+                    //}
+                    //////Otherwise update directly
+                    //else
+                    //{
+                    //    PropertyChanged(this, new PropertyChangedEventArgs(name));
+                    //}
+
+                    //If the Proxy object is living in a non-UI thread, use invoke
                     if (GridContainer != null && GridContainer.InvokeRequired)
                     {
-                        GridContainer.BeginInvoke(new Action(() => PropertyChanged(this, new PropertyChangedEventArgs(name))));
+                        NotifyPropertyChangedCallback d = new NotifyPropertyChangedCallback(NotifyPropertyChanged);
+                        GridContainer.Parent.Parent.Invoke(d, new object[] { name });
                     }
                     ////Otherwise update directly
                     else

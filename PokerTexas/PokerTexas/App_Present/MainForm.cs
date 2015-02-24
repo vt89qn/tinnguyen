@@ -37,7 +37,7 @@ namespace PokerTexas.App_Present
             if (AppSettings.Seft)
             {
                 System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-                DateTime dateLastRun = DateTime.Today;
+                DateTime dateLastRun = DateTime.MinValue;
                 timer.Interval = 60000;
                 timer.Tick += (objs, obje) =>
                 {
@@ -54,6 +54,7 @@ namespace PokerTexas.App_Present
                 };
                 timer.Start();
             }
+            gridData.DataError += (objs, obje) => { };
         }
         #endregion
 

@@ -546,7 +546,7 @@ namespace PokerTexas.App_Controller
                     }
                     if (!string.IsNullOrEmpty(id_presents))
                     {
-                        System.Threading.Thread.Sleep(2000);
+                        System.Threading.Thread.Sleep(4000);
                         #region - Presents.get -
                         dic_param = new SortedDictionary<string, object>();
                         dic_param.Add("id", id_presents);
@@ -589,7 +589,7 @@ namespace PokerTexas.App_Controller
                 {
                     if (diclist.ContainsKey("from"))
                     {
-                        System.Threading.Thread.Sleep(2000);
+                        System.Threading.Thread.Sleep(4000);
                         #region - Presents.get -
                         dic_param = new SortedDictionary<string, object>();
                         dic_param.Add("id", diclist["id"].ToString());
@@ -1305,7 +1305,7 @@ namespace PokerTexas.App_Controller
                         param = new NameValueCollection();
                         param.Add("apik", exData.apik);
                         System.Threading.Thread.Sleep(2000);
-                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php?cmd=signreward");
+                        //client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php?cmd=signreward");
 
                     }
                 }

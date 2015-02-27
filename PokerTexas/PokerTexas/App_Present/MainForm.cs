@@ -43,7 +43,7 @@ namespace PokerTexas.App_Present
                 {
                     if (!isBusy)
                     {
-                        if (DateTime.Now.Hour == 3 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
+                        if (DateTime.Now.Hour == 1 && DateTime.Now.Minute >= 1 && DateTime.Today > dateLastRun)
                         {
                             dateLastRun = DateTime.Today;
                             txtPackNo.SelectedIndex = 1;

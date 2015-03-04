@@ -546,7 +546,7 @@ namespace PokerTexas.App_Controller
                     }
                     if (!string.IsNullOrEmpty(id_presents))
                     {
-                        System.Threading.Thread.Sleep(6000);
+                        System.Threading.Thread.Sleep(5000);
                         #region - Presents.get -
                         dic_param = new SortedDictionary<string, object>();
                         dic_param.Add("id", id_presents);
@@ -571,7 +571,7 @@ namespace PokerTexas.App_Controller
                         #endregion
                         this.Status = "Nhận quà bí mật thành công từ " + p.FaceBook.Login;
                     }
-                    System.Threading.Thread.Sleep(6000);
+                    System.Threading.Thread.Sleep(5000);
                     #region - Presents.post -
                     dic_param = new SortedDictionary<string, object>();
                     dic_param.Add("to", p.PKID);
@@ -589,7 +589,7 @@ namespace PokerTexas.App_Controller
                 {
                     if (diclist.ContainsKey("from"))
                     {
-                        System.Threading.Thread.Sleep(6000);
+                        System.Threading.Thread.Sleep(5000);
                         #region - Presents.get -
                         dic_param = new SortedDictionary<string, object>();
                         dic_param.Add("id", diclist["id"].ToString());

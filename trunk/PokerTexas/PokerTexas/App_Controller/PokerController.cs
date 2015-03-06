@@ -1210,7 +1210,7 @@ namespace PokerTexas.App_Controller
                     MatchCollection mc = Regex.Matches(client.ResponseText, "id\":[0-9]+,\"cid\":\"1\",\"type\":1");
                     if (mc.Count > 0)
                     {
-                        for (int iIndex = 0; iIndex < 12 && iIndex < mc.Count; iIndex++)
+                        for (int iIndex = mc.Count - 1; iIndex >= 0 && iIndex >= mc.Count - 12; iIndex--)
                         {
                             string strId = Regex.Match(mc[iIndex].Value, "id\":[0-9]+").Value;
                             strId = strId.Replace("id\":", string.Empty).Trim();
@@ -1327,6 +1327,43 @@ namespace PokerTexas.App_Controller
                     //}
                 }
                 //Chia se
+                //param = new NameValueCollection();
+                //param.Add("ref", "574");
+                //param.Add("mid", Models.PKID);
+                //param.Add("sid", exData.sid);
+                //param.Add("mtkey", exData.mtkey);
+                //param.Add("sitemid", Models.FaceBook.FBID);
+                //param.Add("langtype", "13");
+                //param.Add("mnick", exData.mnick);
+                //param.Add("flag", "1");
+                //client.DoPost(param, "http://pclpvdpk01.boyaagame.com/texas/api/facebook/uis.php");
+
+                ////Quay Vong
+                //client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
+                //System.Threading.Thread.Sleep(2000);
+                //client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
+
+                this.Status = "Ký tên thành công";
+            }
+            catch (Exception ex)
+            {
+                this.Status = "Có lỗi trong quá trình Ký tên";
+                //throw ex;
+            }
+        }
+
+        public void QuayVong()
+        {
+            try
+            {
+                if (!bWebLogedIn) return;
+                var exData = GetExData();
+                NameValueCollection param = new NameValueCollection();
+                WebClientEx client = new WebClientEx();
+                client.IpHeader = exData.ip_address;
+                client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+                client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+                //Chia se
                 param = new NameValueCollection();
                 param.Add("ref", "574");
                 param.Add("mid", Models.PKID);
@@ -1340,15 +1377,11 @@ namespace PokerTexas.App_Controller
 
                 //Quay Vong
                 client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
-                System.Threading.Thread.Sleep(2000);
-                client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
-
-                this.Status = "Ký tên thành công";
+                //System.Threading.Thread.Sleep(2000);
+                //client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
             }
-            catch (Exception ex)
+            catch { }
             {
-                this.Status = "Có lỗi trong quá trình Ký tên";
-                //throw ex;
             }
         }
 

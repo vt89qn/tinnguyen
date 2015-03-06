@@ -19,6 +19,7 @@ using System.Globalization;
 using System.Collections.Specialized;
 using FB.App_Common;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace PokerTexas.App_Present
 {
@@ -27,6 +28,7 @@ namespace PokerTexas.App_Present
         #region - DECLARE -
         Dictionary<long, BindingList<PokerController>> dicPokers = new Dictionary<long, BindingList<PokerController>>();
         private bool isBusy = false;
+        long selectedPackageID = 0;
         #endregion
 
         #region - CONTRUCTOR -
@@ -241,7 +243,7 @@ namespace PokerTexas.App_Present
                         List<PokerController> list = new List<PokerController>();
                         for (int iIndex = 0; iIndex < gridData.SelectedCells.Count; iIndex++)
                         {
-                            PokerController pkController = gridData.Rows[gridData.SelectedCells[iIndex].RowIndex].DataBoundItem as PokerController;
+                            PokerController pkController = dicPokers[selectedPackageID][gridData.SelectedCells[iIndex].RowIndex];
                             if (list.Contains(pkController)) continue;
                             list.Add(pkController);
                         }
@@ -274,7 +276,7 @@ namespace PokerTexas.App_Present
                         List<Poker> listDie = new List<Poker>();
                         for (int iIndex = 0; iIndex < gridData.SelectedCells.Count; iIndex++)
                         {
-                            PokerController pkController = gridData.Rows[gridData.SelectedCells[iIndex].RowIndex].DataBoundItem as PokerController;
+                            PokerController pkController = dicPokers[selectedPackageID][gridData.SelectedCells[iIndex].RowIndex];
                             if (list.Contains(pkController)) continue;
                             list.Add(pkController);
                         }
@@ -311,7 +313,7 @@ namespace PokerTexas.App_Present
         {
             if (gridData.Rows.Count > 0)
             {
-                PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
+                PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
                 FaceBookController fbController = new FaceBookController();
                 PokerExData exData = pkController.GetExData();
                 string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy);
@@ -332,7 +334,7 @@ namespace PokerTexas.App_Present
         {
             if (gridData.Rows.Count > 0)
             {
-                PokerController pkController = gridData.Rows[gridData.CurrentCell.RowIndex].DataBoundItem as PokerController;
+                PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
                 PokerExData exData = pkController.GetExData();
                 if (exData != null && !string.IsNullOrEmpty(exData.ip_address))
                 {
@@ -545,7 +547,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     Task task = Task.Factory.StartNew(
                         () =>
                         {
@@ -588,7 +590,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     Task task = Task.Factory.StartNew(
                         () =>
                         {
@@ -630,7 +632,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     Task t = Task.Factory.StartNew(() => pkSource.getBirthDayInfo());
                     tasks.Add(t);
                     t.Wait();
@@ -670,7 +672,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     //pkSource.TangQuaBiMat();
                     tasks.Add(Task.Factory.StartNew(() => pkSource.GetInitMoney(true)));
                     System.Threading.Thread.Sleep(1000);
@@ -684,7 +686,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     PokerExData exData = pkSource.GetExData();
                     exData.money = pkSource.Money;
                     pkSource.SetExData(exData);
@@ -710,79 +712,6 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void tangChipMayMan()
-        {
-            try
-            {
-                List<string> listLink = new List<string>();
-                List<Task> tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                    Task task = Task.Factory.StartNew(() =>
-                    {
-                        string strLink = pkSource.ChiaSeChipMayMan();
-                        if (!string.IsNullOrEmpty(strLink))
-                        {
-                            listLink.Add(strLink);
-                        }
-                    });
-                    tasks.Add(task);
-                    task.Wait(3000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-                tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    List<string> listLinkForGet = new List<string>();
-                    for (int iPoker = 1; iPoker <= 4; iPoker++)
-                    {
-                        if (iIndex + iPoker < listLink.Count)
-                        {
-                            listLinkForGet.Add(listLink[iIndex + iPoker]);
-                        }
-                        else if (iIndex + iPoker - listLink.Count < listLink.Count)
-                        {
-                            listLinkForGet.Add(listLink[iIndex + iPoker - listLink.Count]);
-                        }
-                    }
-                    if (listLinkForGet.Count > 0)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        Task task = Task.Factory.StartNew(() => pkSource.NhanChipMayMan(listLinkForGet));
-                        tasks.Add(task);
-                        task.Wait(3000);
-                    }
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                //if (!this.IsDisposed)
-                //{
-                //    MethodInvoker action = delegate
-                //    { btnNhanChipMayMan.Enabled = true; };
-                //    this.BeginInvoke(action);
-                //}
-            }
-        }
-
         private void checkWeb()
         {
             try
@@ -795,10 +724,20 @@ namespace PokerTexas.App_Present
                     //}
                     List<Task> tasks = new List<Task>();
                     List<string> listLink = new List<string>();
+                    List<string> listLinkChipMayMan = Utilities.DeSerializeObject("linkLuckyChip.obj") as List<string>;
+                    if (listLinkChipMayMan == null) listLinkChipMayMan = new List<string>();
+                    Dictionary<string,int> dicLinkOfPackage = new Dictionary<string,int>();
+                    foreach (string link in listLinkChipMayMan)
+                    {
+                        if (link.Contains(":p:" + selectedPackageID))
+                        {
+                            dicLinkOfPackage.Add(link, 0);
+                        }
+                    }
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                     {
                         if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                         Task task = Task.Factory.StartNew(
                             () =>
                             {
@@ -807,21 +746,63 @@ namespace PokerTexas.App_Present
                                     pkSource.LoginWebApp();
                                     if (pkSource.bWebLogedIn)
                                     {
+                                        pkSource.QuayVong();
                                         if (txtCheckKyTen.Checked)
                                         {
+                                            System.Threading.Thread.Sleep(2000);
                                             pkSource.KyTenWeb();
+                                            System.Threading.Thread.Sleep(1000);
                                             pkSource.PlayMiniGame();
+                                            System.Threading.Thread.Sleep(1000);
                                             pkSource.NhanTraiTim();
                                         }
-                                        if (txtCheckCo4La.Checked) pkSource.TangCo4La();
+
+                                        if (txtCheckCo4La.Checked)
+                                        {
+                                            System.Threading.Thread.Sleep(2000);
+                                            pkSource.TangCo4La();
+                                            pkSource.NhanCo4La();
+                                        }
+
                                         if (txtCheckChipMayMan.Checked)
                                         {
+                                            System.Threading.Thread.Sleep(2000);
                                             string strLink = pkSource.ChiaSeChipMayMan();
                                             if (!string.IsNullOrEmpty(strLink))
                                             {
-                                                listLink.Add(strLink);
+                                                listLink.Add(":p:" + selectedPackageID + ":pk:" + pkSource.Models.PKID + ":l:" + strLink);
+                                            }
+                                            //Nhan chip may man
+                                            List<string> listLinkForGet = new List<string>();
+                                            for (int iCount = 0; iCount < 3; iCount++)
+                                            {
+                                                int iMinCount = int.MaxValue;
+                                                string strMinLink = "";
+                                                foreach (var item in dicLinkOfPackage)
+                                                {
+                                                    if (item.Value < iMinCount)
+                                                    {
+                                                        iMinCount = item.Value;
+                                                        strMinLink = item.Key;
+                                                    }
+                                                }
+                                                if (!string.IsNullOrEmpty(strMinLink))
+                                                {
+                                                    dicLinkOfPackage[strMinLink]++;
+                                                    strMinLink = Regex.Match(strMinLink, ":l:(?<val>.+)").Groups["val"].Value;
+                                                    if (!string.IsNullOrEmpty(strMinLink))
+                                                    {
+                                                        listLinkForGet.Add(strMinLink);
+                                                    }
+                                                }
+                                            }
+                                            if (listLinkForGet.Count > 0)
+                                            {
+                                                pkSource.NhanChipMayMan(listLinkForGet);
                                             }
                                         }
+                                        System.Threading.Thread.Sleep(2000);
+                                        pkSource.GetInitMoney(false);
                                     }
                                 }
                             });
@@ -832,43 +813,21 @@ namespace PokerTexas.App_Present
                     {
                         System.Threading.Thread.Sleep(1000);
                     }
-                    tasks = new List<Task>();
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                    foreach (var item in dicLinkOfPackage)
                     {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        List<string> listLinkForGet = new List<string>();
-                        for (int iPoker = 1; iPoker <= 3; iPoker++)
-                        {
-                            if (iIndex + iPoker < listLink.Count)
-                            {
-                                listLinkForGet.Add(listLink[iIndex + iPoker]);
-                            }
-                            else if (iIndex + iPoker - listLink.Count < listLink.Count)
-                            {
-                                listLinkForGet.Add(listLink[iIndex + iPoker - listLink.Count]);
-                            }
-                        }
-                        Task task = Task.Factory.StartNew(() =>
-                        {
-                            if (pkSource.bWebLogedIn)
-                            {
-                                if (txtCheckCo4La.Checked) pkSource.NhanCo4La();
-                                if (txtCheckChipMayMan.Checked && listLinkForGet.Count > 0) pkSource.NhanChipMayMan(listLinkForGet);
-                            }
-                        });
-                        tasks.Add(task);
-                        task.Wait(3000);
+                        listLinkChipMayMan.Remove(item.Key);
                     }
-                    while (tasks.Any(t => !t.IsCompleted))
+                    foreach (string link in listLink)
                     {
-                        System.Threading.Thread.Sleep(1000);
+                        listLinkChipMayMan.Add(link);
                     }
+                    Utilities.SerializeObject("linkLuckyChip.obj", listLinkChipMayMan);
+
                     //Set Money After Check
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                     {
                         if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                         PokerExData exData = pkSource.GetExData();
                         exData.money = pkSource.Money;
                         pkSource.SetExData(exData);
@@ -908,53 +867,45 @@ namespace PokerTexas.App_Present
                 if ((txtCheckTuDong.Checked && txtCheckMobile.Checked) || !txtCheckTuDong.Checked)
                 {
                     List<Task> tasks = new List<Task>();
-                    if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked)
+                    if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked || txtCheckChipBiMat.Checked)
                     {
                         for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                         {
                             if (this.IsDisposed) return;
-                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                            PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                             tasks.Add(Task.Factory.StartNew(() =>
                             {
                                 if (txtCheckDangNhapLT.Checked)
                                 {
+                                    System.Threading.Thread.Sleep(2000);
                                     pkSource.NhanThuongHangNgayMobile();
                                 }
                                 if (txtCheckHangNgay.Checked)
                                 {
+                                    System.Threading.Thread.Sleep(2000);
                                     pkSource.NhanThuong2MMobile();
                                 }
+                                if (txtCheckChipBiMat.Checked)
+                                {
+                                    System.Threading.Thread.Sleep(2000);
+                                    pkSource.NhanQuaBiMat();
+                                }
+                                System.Threading.Thread.Sleep(2000);
+                                pkSource.GetInitMoney(false);
                             }));
-                            System.Threading.Thread.Sleep(1000);
+                            System.Threading.Thread.Sleep(2000);
                         }
                         while (tasks.Any(t => !t.IsCompleted))
                         {
                             Application.DoEvents();
-                            System.Threading.Thread.Sleep(1000);
-                        }
-                    }
-                    if (txtCheckChipBiMat.Checked)
-                    {
-                        System.Threading.Thread.Sleep(1000);
-                        tasks = new List<Task>();
-                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                        {
-                            if (this.IsDisposed) return;
-                            PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                            tasks.Add(Task.Factory.StartNew(pkSource.NhanQuaBiMat));
-                            System.Threading.Thread.Sleep(1000);
-                        }
-                        while (tasks.Any(t => !t.IsCompleted))
-                        {
-                            Application.DoEvents();
-                            System.Threading.Thread.Sleep(1000);
+                            System.Threading.Thread.Sleep(2000);
                         }
                     }
                     //Set Money After Check
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                     {
                         if (this.IsDisposed) return;
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                         PokerExData exData = pkSource.GetExData();
                         exData.money = pkSource.Money;
                         pkSource.SetExData(exData);
@@ -1017,7 +968,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     int iStart = iIndex;
                     tasks.Add(
                     Task.Factory.StartNew(() =>
@@ -1030,7 +981,7 @@ namespace PokerTexas.App_Present
                             for (int iSeed = iStart + 1; iSeed < gridData.Rows.Count; iSeed++)
                             {
                                 if (this.IsDisposed) return;
-                                PokerController pkDes = gridData.Rows[iSeed].DataBoundItem as PokerController;
+                                PokerController pkDes = dicPokers[selectedPackageID][iSeed];
                                 if (pkSource.ListFriend.Contains(pkDes.Models.PKID)) continue;
                                 pkSource.SendFriendRequest(pkDes.Models);
                                 System.Threading.Thread.Sleep(2000);
@@ -1051,7 +1002,7 @@ namespace PokerTexas.App_Present
                     if (this.IsDisposed) return;
                     tasks.Add(Task.Factory.StartNew(() =>
                     {
-                        PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                         pkSource.AcceptFriendRequest();
                     }));
                     System.Threading.Thread.Sleep(1000);
@@ -1075,7 +1026,7 @@ namespace PokerTexas.App_Present
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
-                    PokerController pkSource = gridData.Rows[iIndex].DataBoundItem as PokerController;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                     int iStart = iIndex;
                     tasks.Add(
                     Task.Factory.StartNew(() =>
@@ -1141,6 +1092,7 @@ namespace PokerTexas.App_Present
                 if (txtPackNo.SelectedItem is Package)
                 {
                     Package selectedPackage = txtPackNo.SelectedItem as Package;
+                    selectedPackageID = selectedPackage.ID;
                     BindingList<PokerController> listController = new BindingList<PokerController>();
                     if (dicPokers.ContainsKey(selectedPackage.ID))
                     {
@@ -1301,7 +1253,6 @@ namespace PokerTexas.App_Present
             //Global.DBContext.IPAddress.Add(new IPAddress { IP = strIP, Date = DateTime.Today.ToString("yyyy-MM-dd") });
             //Global.DBContext.SaveChanges();
         }
-
         #endregion
     }
 }

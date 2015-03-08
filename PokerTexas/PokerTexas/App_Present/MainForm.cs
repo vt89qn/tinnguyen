@@ -49,7 +49,7 @@ namespace PokerTexas.App_Present
                         {
                             dateLastRun = DateTime.Today;
                             txtPackNo.SelectedIndex = 1;
-                            dicPokers = new Dictionary<long, BindingList<PokerController>>();
+                            //dicPokers = new Dictionary<long, BindingList<PokerController>>();
                             btnCheckWeb_Click(null, null);
                         }
                     }

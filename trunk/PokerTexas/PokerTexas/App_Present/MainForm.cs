@@ -726,7 +726,7 @@ namespace PokerTexas.App_Present
                     List<string> listLink = new List<string>();
                     List<string> listLinkChipMayMan = Utilities.DeSerializeObject("linkLuckyChip.obj") as List<string>;
                     if (listLinkChipMayMan == null) listLinkChipMayMan = new List<string>();
-                    Dictionary<string,int> dicLinkOfPackage = new Dictionary<string,int>();
+                    Dictionary<string, int> dicLinkOfPackage = new Dictionary<string, int>();
                     foreach (string link in listLinkChipMayMan)
                     {
                         if (link.Contains(":p:" + selectedPackageID))
@@ -780,7 +780,7 @@ namespace PokerTexas.App_Present
                                                 string strMinLink = "";
                                                 foreach (var item in dicLinkOfPackage)
                                                 {
-                                                    if (item.Value < iMinCount)
+                                                    if (item.Value < iMinCount && !item.Key.Contains(":pk:" + pkSource.Models.PKID))
                                                     {
                                                         iMinCount = item.Value;
                                                         strMinLink = item.Key;
@@ -830,6 +830,7 @@ namespace PokerTexas.App_Present
                         PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                         PokerExData exData = pkSource.GetExData();
                         exData.money = pkSource.Money;
+                        exData.earnmoney = pkSource.EarnToday;
                         pkSource.SetExData(exData);
                     }
                     if (Global.DBContext.ChangeTracker.HasChanges())
@@ -908,6 +909,7 @@ namespace PokerTexas.App_Present
                         PokerController pkSource = dicPokers[selectedPackageID][iIndex];
                         PokerExData exData = pkSource.GetExData();
                         exData.money = pkSource.Money;
+                        exData.earnmoney = pkSource.EarnToday;
                         pkSource.SetExData(exData);
                     }
                     if (Global.DBContext.ChangeTracker.HasChanges())

@@ -1527,6 +1527,15 @@ namespace PokerTexas.App_Controller
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu chơi mini game";
                 var exData = GetExData();
+                if (!AppSettings.Seft)
+                {
+                    if (DateTime.Today >= new DateTime(2015, 03, 15))
+                    {
+                        System.Threading.Thread.Sleep(4000);
+                        this.Status = "mini game xong (round : 6, money : 0)";
+                        return;
+                    }
+                }
                 //string apik = data.apik;
                 //string mid = Regex.Match(Models.WebLoginText, @"mid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();
                 //string sid = Regex.Match(Models.WebLoginText, @"sid:(?<val>[\s\d]+)").Groups["val"].Value.Trim();

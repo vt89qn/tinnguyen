@@ -178,6 +178,12 @@ namespace PokerTexas.App_Present
                                     pexist.Login = fb.Login;
                                     pexist.Pass = fb.Pass;
                                     fb = pexist;
+
+                                    Poker pkexist = Global.DBContext.Poker.Where(x => x.FaceBookID == pexist.ID).FirstOrDefault();
+                                    if (pkexist != null)
+                                    {
+                                        continue;
+                                    }
                                 }
                                 Package p = Global.DBContext.Package.Where(x => x.ID == 140).FirstOrDefault();
                                 if (p == null)
@@ -751,8 +757,11 @@ namespace PokerTexas.App_Present
                                         pkSource.QuayVong();
                                         if (txtCheckKyTen.Checked)
                                         {
-                                            System.Threading.Thread.Sleep(2000);
-                                            pkSource.KyTenWeb();
+                                            if (DateTime.Today <= new DateTime(2015, 03, 11))
+                                            {
+                                                System.Threading.Thread.Sleep(2000);
+                                                pkSource.KyTenWeb();
+                                            }
                                             System.Threading.Thread.Sleep(1000);
                                             pkSource.PlayMiniGame();
                                             System.Threading.Thread.Sleep(1000);

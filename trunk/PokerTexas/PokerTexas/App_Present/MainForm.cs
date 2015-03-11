@@ -1234,6 +1234,11 @@ namespace PokerTexas.App_Present
                 txtPackNo.ValueMember = TablePackageConst.ID;
                 bEnableSelectedValueChange = true;
                 txtPackNo.DataSource = bindingPackage;
+                bEnableSelectedValueChange = true;
+                if (txtPackNo.SelectedValue is long && (long)txtPackNo.SelectedValue != 0)
+                {
+                    txtPackNo.SelectedValue = 1;
+                }
             }
             catch (Exception ex)
             {

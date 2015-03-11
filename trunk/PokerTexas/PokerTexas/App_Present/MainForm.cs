@@ -727,11 +727,13 @@ namespace PokerTexas.App_Present
                     List<string> listLinkChipMayMan = Utilities.DeSerializeObject("linkLuckyChip.obj") as List<string>;
                     if (listLinkChipMayMan == null) listLinkChipMayMan = new List<string>();
                     Dictionary<string, int> dicLinkOfPackage = new Dictionary<string, int>();
+                    List<string> listLinkOfPackage = new List<string>();
                     foreach (string link in listLinkChipMayMan)
                     {
-                        if (link.Contains(":p:" + selectedPackageID))
+                        if (link.Contains(":p:" + selectedPackageID+":"))
                         {
                             dicLinkOfPackage.Add(link, 0);
+                            listLinkOfPackage.Add(link);
                         }
                     }
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
@@ -778,12 +780,12 @@ namespace PokerTexas.App_Present
                                             {
                                                 int iMinCount = int.MaxValue;
                                                 string strMinLink = "";
-                                                foreach (var item in dicLinkOfPackage)
+                                                foreach (var link in listLinkOfPackage)
                                                 {
-                                                    if (item.Value < iMinCount && !item.Key.Contains(":pk:" + pkSource.Models.PKID))
+                                                    if (!link.Contains(":pk:" + pkSource.Models.PKID + ":") && dicLinkOfPackage[link] < iMinCount)
                                                     {
-                                                        iMinCount = item.Value;
-                                                        strMinLink = item.Key;
+                                                        iMinCount = dicLinkOfPackage[link];
+                                                        strMinLink = link;
                                                     }
                                                 }
                                                 if (!string.IsNullOrEmpty(strMinLink))

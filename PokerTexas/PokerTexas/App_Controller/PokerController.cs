@@ -927,7 +927,10 @@ namespace PokerTexas.App_Controller
                             //        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php");
                             //    }
                             //}
-
+                            param = new NameValueCollection();
+                            param.Add("apik", exData.apik);
+                            System.Threading.Thread.Sleep(2000);
+                            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php?cmd=signreward");
                         }
                         #endregion
                         this.Status = "Authen Facebook Thành Công";

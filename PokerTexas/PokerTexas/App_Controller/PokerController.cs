@@ -1250,7 +1250,7 @@ namespace PokerTexas.App_Controller
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                string textparam = "id=2226&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
+                string textparam = "id=2278&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
                 client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
@@ -1267,9 +1267,9 @@ namespace PokerTexas.App_Controller
                         else if (info["A"] is Dictionary<string, object>)
                         {
                             Dictionary<string, object> dicA = info["A"] as Dictionary<string, object>;
-                            if (dicA.ContainsKey("tacpro1"))
+                            if (dicA.ContainsKey("tstimes"))
                             {
-                                int.TryParse(dicA["tacpro1"].ToString(), out t);
+                                int.TryParse(dicA["tstimes"].ToString(), out t);
                                 if (t >= 1)
                                 {
                                     t++;
@@ -1284,8 +1284,8 @@ namespace PokerTexas.App_Controller
                                 for (int iIndex = t; iIndex <= 30; iIndex++)
                                 {
                                     param = new NameValueCollection();
-                                    param.Add("id", "2226");
-                                    param.Add("cmd[change][freward." + iIndex + "]", "1");
+                                    param.Add("id", "2278");
+                                    param.Add("cmd[change][sign." + iIndex + "]", "1");
                                     param.Add("apik", exData.apik);
                                     System.Threading.Thread.Sleep(2000);
                                     client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
@@ -1293,11 +1293,11 @@ namespace PokerTexas.App_Controller
                             }
                             else
                             {
-                                foreach (int iIndex in new[] { 1, 2, 4, 5, 10, 11, 13, 16, 29, 30 })
+                                foreach (int iIndex in new[] { 1, 2, 5, 11, 13, 20, 24, 25, 30 })
                                 {
                                     param = new NameValueCollection();
-                                    param.Add("id", "2226");
-                                    param.Add("cmd[change][freward." + iIndex + "]", "1");
+                                    param.Add("id", "2278");
+                                    param.Add("cmd[change][sign." + iIndex + "]", "1");
                                     param.Add("apik", exData.apik);
                                     System.Threading.Thread.Sleep(2000);
                                     client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");

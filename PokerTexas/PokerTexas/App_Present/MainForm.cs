@@ -137,6 +137,11 @@ namespace PokerTexas.App_Present
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            if (!AppSettings.Seft)
+            {
+                menuLayTinNhanHeThong.Visible = false;
+                btnDoiIP.Visible = false;
+            }
             getDataOnload();
         }
 
@@ -358,6 +363,15 @@ namespace PokerTexas.App_Present
                 {
                     Clipboard.SetText(exData.ip_address);
                 }
+            }
+        }
+
+        private void menuLayTinNhanHeThong_Click(object sender, EventArgs e)
+        {
+            if (gridData.Rows.Count > 0)
+            {
+                PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
+                pkController.GetTNHT();
             }
         }
 

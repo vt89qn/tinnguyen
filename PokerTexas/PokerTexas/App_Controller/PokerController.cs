@@ -669,6 +669,22 @@ namespace PokerTexas.App_Controller
             }
         }
 
+        public void GetTNHT()
+        {
+            var exData = GetExData();
+            #region - Misc.getUserField -
+            SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+
+            NameValueCollection param = new NameValueCollection();
+            param.Add("api", getAPIString("Members.getWin", dic_param));
+
+            WebClientEx client = new WebClientEx();
+            client.IpHeader = exData.ip_address;
+            client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            #endregion
+        }
+
         private string getAPIString(string strMethod, IDictionary<string, object> param)
         {
             var exData = GetExData();

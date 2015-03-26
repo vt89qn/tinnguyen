@@ -40,6 +40,7 @@
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
+            this.btnDoiIP = new System.Windows.Forms.Button();
             this.btnCapNhatNgaySinh = new System.Windows.Forms.Button();
             this.btnKetBan = new System.Windows.Forms.Button();
             this.btnKiemTraTaiKhoan = new System.Windows.Forms.Button();
@@ -62,7 +63,7 @@
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.btnDoiIP = new System.Windows.Forms.Button();
+            this.menuLayTinNhanHeThong = new System.Windows.Forms.ToolStripMenuItem();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -113,9 +114,10 @@
             this.menuCopyURL,
             this.menuXoaTK,
             this.menuLoginLaiFacebook,
-            this.menuCopyIP});
+            this.menuCopyIP,
+            this.menuLayTinNhanHeThong});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(177, 92);
+            this.menuGridData.Size = new System.Drawing.Size(177, 136);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
@@ -175,6 +177,17 @@
             this.btnThemPack.Text = "+";
             this.btnThemPack.UseVisualStyleBackColor = true;
             this.btnThemPack.Click += new System.EventHandler(this.btnThemPack_Click);
+            // 
+            // btnDoiIP
+            // 
+            this.btnDoiIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDoiIP.Location = new System.Drawing.Point(433, 11);
+            this.btnDoiIP.Name = "btnDoiIP";
+            this.btnDoiIP.Size = new System.Drawing.Size(60, 40);
+            this.btnDoiIP.TabIndex = 5;
+            this.btnDoiIP.Text = "Đổi IP";
+            this.btnDoiIP.UseVisualStyleBackColor = true;
+            this.btnDoiIP.Click += new System.EventHandler(this.btnDoiIP_Click);
             // 
             // btnCapNhatNgaySinh
             // 
@@ -414,16 +427,12 @@
             this.notifyIcon1.Text = "PTV Nuker - Tinnv@VNIT Solutions";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
-            // btnDoiIP
+            // menuLayTinNhanHeThong
             // 
-            this.btnDoiIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDoiIP.Location = new System.Drawing.Point(433, 11);
-            this.btnDoiIP.Name = "btnDoiIP";
-            this.btnDoiIP.Size = new System.Drawing.Size(60, 40);
-            this.btnDoiIP.TabIndex = 5;
-            this.btnDoiIP.Text = "Đổi IP";
-            this.btnDoiIP.UseVisualStyleBackColor = true;
-            this.btnDoiIP.Click += new System.EventHandler(this.btnDoiIP_Click);
+            this.menuLayTinNhanHeThong.Name = "menuLayTinNhanHeThong";
+            this.menuLayTinNhanHeThong.Size = new System.Drawing.Size(176, 22);
+            this.menuLayTinNhanHeThong.Text = "TNHT";
+            this.menuLayTinNhanHeThong.Click += new System.EventHandler(this.menuLayTinNhanHeThong_Click);
             // 
             // MainForm
             // 
@@ -499,6 +508,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuCopyIP;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Button btnDoiIP;
+        private System.Windows.Forms.ToolStripMenuItem menuLayTinNhanHeThong;
 
     }
 }

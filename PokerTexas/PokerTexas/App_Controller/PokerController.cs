@@ -839,7 +839,11 @@ namespace PokerTexas.App_Controller
 
                     Dictionary<HttpRequestHeader, string> dicHeader = new Dictionary<HttpRequestHeader, string>();
                     dicHeader.Add(HttpRequestHeader.Referer, strLinkLogin);
-                    string strLinkPost = strLinkLogin.Substring(strLinkLogin.IndexOf("?"));
+                    string strLinkPost = string.Empty;
+                    if (strLinkLogin.Contains("?"))
+                    {
+                        strLinkLogin.Substring(strLinkLogin.IndexOf("?"));
+                    }
                     client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/facebookvn/" + strLinkPost, dicHeader);
                     if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("apik"))
                     {
@@ -1293,7 +1297,7 @@ namespace PokerTexas.App_Controller
                             }
                             else
                             {
-                                foreach (int iIndex in new[] { 1, 2, 5, 11, 13, 20, 24, 25, 30 })
+                                foreach (int iIndex in new[] { 1, 2, 5, 11, 13, 16, 20, 24, 25, 30 })
                                 {
                                     param = new NameValueCollection();
                                     param.Add("id", "2278");

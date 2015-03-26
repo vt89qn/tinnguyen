@@ -185,7 +185,7 @@ namespace PokerTexas.App_Present
                                         continue;
                                     }
                                 }
-                                Package p = Global.DBContext.Package.Where(x => x.ID == 180).FirstOrDefault();
+                                Package p = Global.DBContext.Package.Where(x => x.ID >= 184 && x.Pokers.Count < 10).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();
@@ -724,10 +724,10 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    //if (AppSettings.Seft && new List<string>() { "2015-02-27", "2015-02-28" }.Contains(DateTime.Today.ToString("yyyy-MM-dd")))
-                    //{
-                    //    ketBan2();
-                    //}
+                    if (AppSettings.Seft && new List<string>() { "2015-03-24", "2015-03-25" }.Contains(DateTime.Today.ToString("yyyy-MM-dd")))
+                    {
+                        ketBan2();
+                    }
                     List<Task> tasks = new List<Task>();
                     List<string> listLink = new List<string>();
                     List<string> listLinkChipMayMan = Utilities.DeSerializeObject("linkLuckyChip.obj") as List<string>;
@@ -736,7 +736,7 @@ namespace PokerTexas.App_Present
                     List<string> listLinkOfPackage = new List<string>();
                     foreach (string link in listLinkChipMayMan)
                     {
-                        if (link.Contains(":p:" + selectedPackageID+":"))
+                        if (link.Contains(":p:" + selectedPackageID + ":"))
                         {
                             dicLinkOfPackage.Add(link, 0);
                             listLinkOfPackage.Add(link);
@@ -757,7 +757,7 @@ namespace PokerTexas.App_Present
                                         pkSource.QuayVong();
                                         if (txtCheckKyTen.Checked)
                                         {
-                                            if (DateTime.Today <= new DateTime(2015, 03, 11))
+                                            if (AppSettings.Seft)
                                             {
                                                 System.Threading.Thread.Sleep(2000);
                                                 pkSource.KyTenWeb();

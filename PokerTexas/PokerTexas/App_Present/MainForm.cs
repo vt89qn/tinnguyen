@@ -111,21 +111,21 @@ namespace PokerTexas.App_Present
                     catch { }
                     return true;
                 }
-                else if (keyData == Keys.F7)
-                {
-                    btnKiemTraTaiKhoan_Click(null, null);
-                    return true;
-                }
-                else if (keyData == Keys.F8)
-                {
-                    btnThemTaiKhoan_Click(null, null);
-                    return true;
-                }
-                else if (keyData == Keys.F9)
-                {
-                    btnKetBan_Click(null, null);
-                    return true;
-                }
+                //else if (keyData == Keys.F7)
+                //{
+                //    btnKiemTraTaiKhoan_Click(null, null);
+                //    return true;
+                //}
+                //else if (keyData == Keys.F8)
+                //{
+                //    btnThemTaiKhoan_Click(null, null);
+                //    return true;
+                //}
+                //else if (keyData == Keys.F9)
+                //{
+                //    btnKetBan_Click(null, null);
+                //    return true;
+                //}
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -146,6 +146,18 @@ namespace PokerTexas.App_Present
             isBusy = true;
             btnCapNhatNgaySinh.Enabled = false;
             Task.Factory.StartNew(getBirthdayInfo);
+        }
+
+        private void btnDoiIP_Click(object sender, EventArgs e)
+        {
+            if (Control.ModifierKeys == Keys.Shift || Control.ModifierKeys == Keys.Control)
+            {
+                MobileModermController.Disconnect();
+            }
+            else
+            {
+                changeIP();
+            }
         }
 
         private void btnThemTaiKhoan_Click(object sender, EventArgs e)
@@ -404,6 +416,13 @@ namespace PokerTexas.App_Present
                     {
                         gridData.CurrentCell = null;
                     }
+                }
+                else if (e.Button == MouseButtons.Middle)
+                {
+                    gridData.CurrentCell = gridData[e.ColumnIndex, e.RowIndex];
+                    gridData.ClearSelection();
+                    gridData.CurrentCell.Selected = true;
+                    menuCopyURL_Click(null, null);
                 }
             }
             catch (Exception ex)
@@ -679,9 +698,8 @@ namespace PokerTexas.App_Present
                 {
                     if (this.IsDisposed) return;
                     PokerController pkSource = dicPokers[selectedPackageID][iIndex];
-                    //pkSource.TangQuaBiMat();
                     tasks.Add(Task.Factory.StartNew(() => pkSource.GetInitMoney(true)));
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(200);
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {

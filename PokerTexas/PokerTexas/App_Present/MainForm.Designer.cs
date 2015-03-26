@@ -62,6 +62,7 @@
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.btnDoiIP = new System.Windows.Forms.Button();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -77,6 +78,7 @@
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
             this.groupData.Controls.Add(this.btnThemPack);
+            this.groupData.Controls.Add(this.btnDoiIP);
             this.groupData.Controls.Add(this.btnCapNhatNgaySinh);
             this.groupData.Controls.Add(this.btnKetBan);
             this.groupData.Controls.Add(this.btnKiemTraTaiKhoan);
@@ -177,9 +179,9 @@
             // btnCapNhatNgaySinh
             // 
             this.btnCapNhatNgaySinh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCapNhatNgaySinh.Location = new System.Drawing.Point(657, 23);
+            this.btnCapNhatNgaySinh.Location = new System.Drawing.Point(697, 11);
             this.btnCapNhatNgaySinh.Name = "btnCapNhatNgaySinh";
-            this.btnCapNhatNgaySinh.Size = new System.Drawing.Size(100, 30);
+            this.btnCapNhatNgaySinh.Size = new System.Drawing.Size(60, 40);
             this.btnCapNhatNgaySinh.TabIndex = 5;
             this.btnCapNhatNgaySinh.Text = "Lấy Ngày Sinh";
             this.btnCapNhatNgaySinh.UseVisualStyleBackColor = true;
@@ -188,33 +190,33 @@
             // btnKetBan
             // 
             this.btnKetBan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKetBan.Location = new System.Drawing.Point(551, 23);
+            this.btnKetBan.Location = new System.Drawing.Point(631, 11);
             this.btnKetBan.Name = "btnKetBan";
-            this.btnKetBan.Size = new System.Drawing.Size(100, 30);
+            this.btnKetBan.Size = new System.Drawing.Size(60, 40);
             this.btnKetBan.TabIndex = 5;
-            this.btnKetBan.Text = "Kết bạn(F9)";
+            this.btnKetBan.Text = "Kết bạn";
             this.btnKetBan.UseVisualStyleBackColor = true;
             this.btnKetBan.Click += new System.EventHandler(this.btnKetBan_Click);
             // 
             // btnKiemTraTaiKhoan
             // 
             this.btnKiemTraTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(339, 23);
+            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(499, 11);
             this.btnKiemTraTaiKhoan.Name = "btnKiemTraTaiKhoan";
-            this.btnKiemTraTaiKhoan.Size = new System.Drawing.Size(100, 30);
+            this.btnKiemTraTaiKhoan.Size = new System.Drawing.Size(60, 40);
             this.btnKiemTraTaiKhoan.TabIndex = 3;
-            this.btnKiemTraTaiKhoan.Text = "Check Money(F7)";
+            this.btnKiemTraTaiKhoan.Text = "Check Money";
             this.btnKiemTraTaiKhoan.UseVisualStyleBackColor = true;
             this.btnKiemTraTaiKhoan.Click += new System.EventHandler(this.btnKiemTraTaiKhoan_Click);
             // 
             // btnThemTaiKhoan
             // 
             this.btnThemTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnThemTaiKhoan.Location = new System.Drawing.Point(445, 23);
+            this.btnThemTaiKhoan.Location = new System.Drawing.Point(565, 11);
             this.btnThemTaiKhoan.Name = "btnThemTaiKhoan";
-            this.btnThemTaiKhoan.Size = new System.Drawing.Size(100, 30);
+            this.btnThemTaiKhoan.Size = new System.Drawing.Size(60, 40);
             this.btnThemTaiKhoan.TabIndex = 4;
-            this.btnThemTaiKhoan.Text = "Thêm TK(F8)";
+            this.btnThemTaiKhoan.Text = "Thêm TK";
             this.btnThemTaiKhoan.UseVisualStyleBackColor = true;
             this.btnThemTaiKhoan.Click += new System.EventHandler(this.btnThemTaiKhoan_Click);
             // 
@@ -412,6 +414,17 @@
             this.notifyIcon1.Text = "PTV Nuker - Tinnv@VNIT Solutions";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // btnDoiIP
+            // 
+            this.btnDoiIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDoiIP.Location = new System.Drawing.Point(433, 11);
+            this.btnDoiIP.Name = "btnDoiIP";
+            this.btnDoiIP.Size = new System.Drawing.Size(60, 40);
+            this.btnDoiIP.TabIndex = 5;
+            this.btnDoiIP.Text = "Đổi IP";
+            this.btnDoiIP.UseVisualStyleBackColor = true;
+            this.btnDoiIP.Click += new System.EventHandler(this.btnDoiIP_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -485,6 +498,7 @@
         private System.Windows.Forms.CheckBox txtCheckHangNgay;
         private System.Windows.Forms.ToolStripMenuItem menuCopyIP;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Button btnDoiIP;
 
     }
 }

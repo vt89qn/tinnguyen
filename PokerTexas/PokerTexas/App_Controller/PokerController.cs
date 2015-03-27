@@ -193,9 +193,9 @@ namespace PokerTexas.App_Controller
                 dic.Add("mtkey", "");
                 dic.Add("protocol", "1");
                 dic.Add("sid", "110");
-                dic.Add("time", ((int)(DateTime.Now.AddHours(-7).Subtract(new DateTime(1970, 1, 1)).TotalSeconds)).ToString());
+                dic.Add("time", Utilities.GetCurrentSecond());
                 dic.Add("unid", "193");
-                dic.Add("version", "5.4.3");
+                dic.Add("version", "5.5.0");
                 dic.Add("vkey", "");
                 dic.Add("vmid", "");
 
@@ -203,9 +203,9 @@ namespace PokerTexas.App_Controller
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 dic_param.Add("ANPSetting", "4");
                 //dic_param.Add("APNSToken", "APA91bHQCDLRqHBRC3_8L6osr_Qro7kX0HvXdt8h6kfZiqeyTDqZtia45wXGLZ6GjvNldsXhI4oXDxVWfBDm7ZdjjyDmwl2sYa3ObeKcrl1dqqtF6RZcZ4qT3yfVtLvunuChsPMFPBYxOzNHOeNbEvjcB7HFMVjr8g");
-                dic_param.Add("appid", "1");
-                dic_param.Add("appkey", "");
-
+                dic_param.Add("appid", "1000");
+                dic_param.Add("appkey", "appkey");
+                dic_param.Add("fbv", "2.2");
                 dic_param.Add("is_overseas", "1");
                 dic_param.Add("mbig", "");
                 //string name = dicInfo.ContainsKey("name") ? dicInfo["name"].ToString() : "";
@@ -238,7 +238,7 @@ namespace PokerTexas.App_Controller
                     string vkey = ret["vkey"].ToString();
                     exData.m_mtkey = mtkey;
                     exData.m_vkey = vkey;
-
+                    SetExData(exData);
                     if (ret.ContainsKey("mmoney"))
                     {
                         string money = ret["mmoney"].ToString();
@@ -253,7 +253,7 @@ namespace PokerTexas.App_Controller
                     dic_param = new SortedDictionary<string, object>();
 
                     param = new NameValueCollection();
-                    param.Add("api", getAPIString("System.loadInit", dic_param));
+                    param.Add("api", getAPIString("System.init", dic_param));
 
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
@@ -699,7 +699,7 @@ namespace PokerTexas.App_Controller
             dic.Add("sid", "110");
             dic.Add("time", Utilities.GetCurrentSecond());
             dic.Add("unid", "193");
-            dic.Add("version", "5.4.3");
+            dic.Add("version", "5.5.0");
             dic.Add("vkey", Utilities.GetMd5Hash(exData.m_vkey + "M"));
             dic.Add("vmid", Models.PKID);
             dic.Add("param", param);
@@ -716,7 +716,7 @@ namespace PokerTexas.App_Controller
             SortedDictionary<string, string> treemap = new SortedDictionary<string, string>();
             treemap.Add("api", "62");
             treemap.Add("appID", "f61DAecVdKkJQ2l4nakA");
-            treemap.Add("appVer", "5.4.3");
+            treemap.Add("appVer", "5.5.0");
             treemap.Add("zSeed", iSeed.ToString());
             treemap.Add("zUid", string.Empty);
             treemap.Add("blistHash", string.Empty);

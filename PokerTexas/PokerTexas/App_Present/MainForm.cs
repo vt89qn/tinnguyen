@@ -184,7 +184,7 @@ namespace PokerTexas.App_Present
                             }
                             iTry++;
                             if (iTry >= 3) iTry = 0;
-                            FaceBook fb = new FaceBook { Login = info.Trim(), Pass = "khong9999" };
+                            FaceBook fb = new FaceBook { Login = info.Trim(), Pass = "duc123" };
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {
@@ -202,7 +202,7 @@ namespace PokerTexas.App_Present
                                         continue;
                                     }
                                 }
-                                Package p = Global.DBContext.Package.Where(x => x.ID >= 184 && x.Pokers.Count < 10).FirstOrDefault();
+                                Package p = Global.DBContext.Package.Where(x => x.ID > 213 && x.Pokers.Count < 8).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();
@@ -756,7 +756,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && new List<string>() { "2015-03-24", "2015-03-25" }.Contains(DateTime.Today.ToString("yyyy-MM-dd")))
+                    if (AppSettings.Seft && selectedPackageID >= 204)
                     {
                         ketBan2();
                     }

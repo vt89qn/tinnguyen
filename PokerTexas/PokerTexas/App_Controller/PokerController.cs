@@ -873,7 +873,7 @@ namespace PokerTexas.App_Controller
                         string loginkey = Regex.Match(client.ResponseText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
 
                         exData.apik = apik;
-                        exData.mnick = mnick;
+                        exData.mnick = Utilities.ConvertToUsignNew(mnick);
                         exData.mtkey = mtkey;
                         exData.sid = sid;
                         exData.expLevel = expLevel;

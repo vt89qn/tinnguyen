@@ -756,7 +756,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && selectedPackageID >= 204)
+                    if (AppSettings.Seft && (selectedPackageID >= 204 || selectedPackageID == 8 || selectedPackageID == 13 || selectedPackageID == 37))
                     {
                         ketBan2();
                     }
@@ -1205,7 +1205,8 @@ namespace PokerTexas.App_Present
                     for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                     {
                         PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
-                        gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
+                        var exData = pkController.GetExData();
+                        gridData[TableFaceBookConst.Login, iIndex].Value = (string.IsNullOrEmpty(exData.mnick) ? pkController.Models.FaceBook.Login : exData.mnick);
                         gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
                     }
                 }

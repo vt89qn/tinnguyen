@@ -756,7 +756,7 @@ namespace PokerTexas.App_Present
             {
                 if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
                 {
-                    if (AppSettings.Seft && (selectedPackageID >= 204 || selectedPackageID == 8 || selectedPackageID == 13 || selectedPackageID == 37))
+                    if (AppSettings.Seft && (selectedPackageID >= 240 || (selectedPackageID >= 146 && selectedPackageID <= 152) || selectedPackageID == 162 || selectedPackageID == 163))
                     {
                         ketBan2();
                     }

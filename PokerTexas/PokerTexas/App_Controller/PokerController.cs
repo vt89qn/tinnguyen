@@ -270,6 +270,57 @@ namespace PokerTexas.App_Controller
                         }
                     }
                     #endregion
+
+                    #region - Gifts.getUserPropList -
+                    if (AppSettings.Seft)
+                    {
+                        dic_param = new SortedDictionary<string, object>();
+                        dic_param.Add("fmid", Models.PKID);
+                        dic_param.Add("pg", 1);
+                        dic_param.Add("type", 0);
+                        param = new NameValueCollection();
+                        param.Add("api", getAPIString("Gifts.getUserPropList", dic_param));
+
+                        client = new WebClientEx();
+                        client.IpHeader = exData.ip_address;
+                        client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("ret"))
+                        {
+                            dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText)["ret"] as Dictionary<string, object>;
+                            if (dicInfo.ContainsKey("list") && dicInfo["list"] is System.Collections.ArrayList)
+                            {
+                                var lists = dicInfo["list"] as System.Collections.ArrayList;
+                                bool bkc = false;
+                                foreach (var item in lists)
+                                {
+                                    if (item is System.Collections.ArrayList) 
+                                    {
+                                        var items = item as System.Collections.ArrayList;
+                                        if (items[0].ToString() == "12")
+                                        {
+                                            bkc = true;
+                                            break;
+                                        }
+                                    }
+
+                                }
+                                if (bkc)
+                                {
+                                    Dictionary<string, List<string>> dicDBDiamond = Utilities.DeSerializeObject("diamond.obj") as Dictionary<string, List<string>>;
+                                    if (dicDBDiamond == null) dicDBDiamond = new Dictionary<string, List<string>>();
+                                    string strKey = DateTime.Today.ToString("yyyyMMdd");
+                                    if (!dicDBDiamond.ContainsKey(strKey))
+                                    {
+                                        dicDBDiamond.Add(strKey, new List<string>());
+                                    }
+                                    dicDBDiamond[strKey].Add(Models.PKID);
+                                    Utilities.SerializeObject("diamond.obj", dicDBDiamond);
+                                }
+                            }
+                        }
+                    }
+                    #endregion
                     SetExData(exData);
                     bMBLogedIn = true;
                     return true;
@@ -672,7 +723,7 @@ namespace PokerTexas.App_Controller
         public void GetTNHT()
         {
             var exData = GetExData();
-            #region - Misc.getUserField -
+            #region - Members.getWin -
             SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
 
             NameValueCollection param = new NameValueCollection();

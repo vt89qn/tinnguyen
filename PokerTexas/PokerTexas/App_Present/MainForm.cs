@@ -305,7 +305,7 @@ namespace PokerTexas.App_Present
                         }
                         foreach (PokerController pk in list)
                         {
-                            changeIP();
+                            //changeIP();
                             if (!new FaceBookController().LoginMobile(pk.Models.FaceBook))
                             {
                                 listDie.Add(pk.Models);

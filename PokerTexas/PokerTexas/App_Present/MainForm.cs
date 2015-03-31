@@ -293,6 +293,11 @@ namespace PokerTexas.App_Present
             {
                 if (gridData.Rows.Count > 0)
                 {
+                    bool bChangeIP = true;
+                    if (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift)
+                    {
+                        bChangeIP = false;
+                    }
                     //if (MessageBox.Show("Bạn muốn xóa các TK được chọn ?", "Poker", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
                         List<PokerController> list = new List<PokerController>();
@@ -305,7 +310,10 @@ namespace PokerTexas.App_Present
                         }
                         foreach (PokerController pk in list)
                         {
-                            //changeIP();
+                            if (bChangeIP)
+                            {
+                                changeIP();
+                            }
                             if (!new FaceBookController().LoginMobile(pk.Models.FaceBook))
                             {
                                 listDie.Add(pk.Models);
@@ -789,7 +797,7 @@ namespace PokerTexas.App_Present
                                         pkSource.QuayVong();
                                         if (txtCheckKyTen.Checked)
                                         {
-                                            if (AppSettings.Seft)
+                                            //if (AppSettings.Seft)
                                             {
                                                 System.Threading.Thread.Sleep(2000);
                                                 pkSource.KyTenWeb();

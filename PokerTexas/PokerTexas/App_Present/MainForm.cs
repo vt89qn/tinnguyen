@@ -67,7 +67,7 @@ namespace PokerTexas.App_Present
             {
                 if (keyData == Keys.F1)
                 {
-                    btnCheckMobile_Click(null, null);
+                    btnCheckWeb_Click(null, null);
                     return true;
                 }
                 else if (keyData == Keys.F2)
@@ -503,21 +503,6 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void btnCheckMobile_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (isBusy) return;
-                isBusy = true;
-                btnCheckMobile.Enabled = false;
-                Task.Factory.StartNew(checkMobile);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         private void btnCheckWeb_Click(object sender, EventArgs e)
         {
             if (isBusy) return;
@@ -528,12 +513,12 @@ namespace PokerTexas.App_Present
                 Task.Factory.StartNew(() =>
                 {
                     changeIP();
-                    checkWeb();
+                    check();
                 });
             }
             else
             {
-                Task.Factory.StartNew(checkWeb);
+                Task.Factory.StartNew(check);
             }
         }
 
@@ -758,22 +743,23 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void checkWeb()
+        private void check()
         {
             try
             {
-                if ((txtCheckTuDong.Checked && txtCheckWeb.Checked) || !txtCheckTuDong.Checked)
+                if (txtCheckTuDong.Checked && AppSettings.Seft && (selectedPackageID >= 240 || (selectedPackageID >= 146 && selectedPackageID <= 152) || selectedPackageID == 162 || selectedPackageID == 163))
                 {
-                    if (AppSettings.Seft && (selectedPackageID >= 240 || (selectedPackageID >= 146 && selectedPackageID <= 152) || selectedPackageID == 162 || selectedPackageID == 163))
-                    {
-                        ketBan2();
-                    }
-                    List<Task> tasks = new List<Task>();
-                    List<string> listLink = new List<string>();
-                    List<string> listLinkChipMayMan = Utilities.DeSerializeObject("linkLuckyChip.obj") as List<string>;
+                    ketBan2();
+                }
+                List<Task> tasks = new List<Task>();
+                List<string> listLink = new List<string>();
+                List<string> listLinkChipMayMan = new List<string>();
+                Dictionary<string, int> dicLinkOfPackage = new Dictionary<string, int>();
+                List<string> listLinkOfPackage = new List<string>();
+                if (txtCheckWeb.Checked)
+                {
+                    listLinkChipMayMan = Utilities.DeSerializeObject("linkLuckyChip.obj") as List<string>;
                     if (listLinkChipMayMan == null) listLinkChipMayMan = new List<string>();
-                    Dictionary<string, int> dicLinkOfPackage = new Dictionary<string, int>();
-                    List<string> listLinkOfPackage = new List<string>();
                     foreach (string link in listLinkChipMayMan)
                     {
                         if (link.Contains(":p:" + selectedPackageID + ":"))
@@ -782,13 +768,17 @@ namespace PokerTexas.App_Present
                             listLinkOfPackage.Add(link);
                         }
                     }
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
-                        Task task = Task.Factory.StartNew(
-                            () =>
+                }
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
+                    Task task = Task.Factory.StartNew(
+                        () =>
+                        {
+                            if (txtCheckWeb.Checked)
                             {
+                                #region - Check Web -
                                 if (txtCheckKyTen.Checked || txtCheckCo4La.Checked || txtCheckChipMayMan.Checked)
                                 {
                                     pkSource.LoginWebApp();
@@ -856,14 +846,43 @@ namespace PokerTexas.App_Present
                                         pkSource.GetInitMoney(false);
                                     }
                                 }
-                            });
-                        tasks.Add(task);
-                        task.Wait(3000);
-                    }
-                    while (tasks.Any(t => !t.IsCompleted))
-                    {
-                        System.Threading.Thread.Sleep(1000);
-                    }
+                                #endregion
+                            }
+                            if (txtCheckMobile.Checked)
+                            {
+                                #region - Check Mobile -
+                                if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked || txtCheckChipBiMat.Checked)
+                                {
+                                    if (txtCheckDangNhapLT.Checked)
+                                    {
+                                        System.Threading.Thread.Sleep(2000);
+                                        pkSource.NhanThuongHangNgayMobile();
+                                    }
+                                    if (txtCheckHangNgay.Checked)
+                                    {
+                                        System.Threading.Thread.Sleep(2000);
+                                        pkSource.NhanThuong2MMobile();
+                                    }
+                                    if (txtCheckChipBiMat.Checked)
+                                    {
+                                        System.Threading.Thread.Sleep(2000);
+                                        pkSource.NhanQuaBiMat();
+                                    }
+                                    System.Threading.Thread.Sleep(2000);
+                                    pkSource.GetInitMoney(false);
+                                }
+                                #endregion
+                            }
+                        });
+                    tasks.Add(task);
+                    task.Wait(3000);
+                }
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    System.Threading.Thread.Sleep(1000);
+                }
+                if (txtCheckWeb.Checked)
+                {
                     foreach (var item in dicLinkOfPackage)
                     {
                         listLinkChipMayMan.Remove(item.Key);
@@ -873,21 +892,20 @@ namespace PokerTexas.App_Present
                         listLinkChipMayMan.Add(link);
                     }
                     Utilities.SerializeObject("linkLuckyChip.obj", listLinkChipMayMan);
-
-                    //Set Money After Check
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
-                        PokerExData exData = pkSource.GetExData();
-                        exData.money = pkSource.Money;
-                        exData.earnmoney = pkSource.EarnToday;
-                        pkSource.SetExData(exData);
-                    }
-                    if (Global.DBContext.ChangeTracker.HasChanges())
-                    {
-                        Global.DBContext.SaveChanges();
-                    }
+                }
+                //Set Money After Check
+                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
+                {
+                    if (this.IsDisposed) return;
+                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
+                    PokerExData exData = pkSource.GetExData();
+                    exData.money = pkSource.Money;
+                    exData.earnmoney = pkSource.EarnToday;
+                    pkSource.SetExData(exData);
+                }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
                 }
             }
             catch (Exception ex)
@@ -899,100 +917,10 @@ namespace PokerTexas.App_Present
                 isBusy = false;
                 if (!this.IsDisposed)
                 {
+                    MobileModermController.Disconnect();
                     MethodInvoker action = delegate
                     {
                         btnCheckWeb.Enabled = true;
-                        if (txtCheckTuDong.Checked)
-                        {
-                            btnCheckMobile_Click(null, null);
-                        }
-                    };
-                    this.BeginInvoke(action);
-                }
-            }
-        }
-
-        private void checkMobile()
-        {
-            try
-            {
-                if ((txtCheckTuDong.Checked && txtCheckMobile.Checked) || !txtCheckTuDong.Checked)
-                {
-                    List<Task> tasks = new List<Task>();
-                    if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked || txtCheckChipBiMat.Checked)
-                    {
-                        for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                        {
-                            if (this.IsDisposed) return;
-                            PokerController pkSource = dicPokers[selectedPackageID][iIndex];
-                            tasks.Add(Task.Factory.StartNew(() =>
-                            {
-                                if (txtCheckDangNhapLT.Checked)
-                                {
-                                    System.Threading.Thread.Sleep(2000);
-                                    pkSource.NhanThuongHangNgayMobile();
-                                }
-                                if (txtCheckHangNgay.Checked)
-                                {
-                                    System.Threading.Thread.Sleep(2000);
-                                    pkSource.NhanThuong2MMobile();
-                                }
-                                if (txtCheckChipBiMat.Checked)
-                                {
-                                    System.Threading.Thread.Sleep(2000);
-                                    pkSource.NhanQuaBiMat();
-                                }
-                                System.Threading.Thread.Sleep(2000);
-                                pkSource.GetInitMoney(false);
-                            }));
-                            System.Threading.Thread.Sleep(2000);
-                        }
-                        while (tasks.Any(t => !t.IsCompleted))
-                        {
-                            Application.DoEvents();
-                            System.Threading.Thread.Sleep(2000);
-                        }
-                    }
-                    //Set Money After Check
-                    for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                    {
-                        if (this.IsDisposed) return;
-                        PokerController pkSource = dicPokers[selectedPackageID][iIndex];
-                        PokerExData exData = pkSource.GetExData();
-                        exData.money = pkSource.Money;
-                        exData.earnmoney = pkSource.EarnToday;
-                        pkSource.SetExData(exData);
-                    }
-                    if (Global.DBContext.ChangeTracker.HasChanges())
-                    {
-                        Global.DBContext.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    {
-                        btnCheckMobile.Enabled = true;
-
-                        if (AppSettings.Seft)
-                        {
-                            //if (txtPackNo.SelectedIndex >= 50)
-                            //{
-                            //    txtCheckDangNhapLT.Checked = false;
-                            //}
-                            //if (txtPackNo.SelectedIndex >= 66)
-                            //{
-                            //    txtCheckMobile.Checked = false;
-                            //}
-                        }
                         if (txtCheckTuDong.Checked)
                         {
                             System.Threading.Thread.Sleep(2000);

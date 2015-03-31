@@ -37,6 +37,7 @@
             this.menuXoaTK = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLoginLaiFacebook = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopyIP = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuLayTinNhanHeThong = new System.Windows.Forms.ToolStripMenuItem();
             this.lblPack = new System.Windows.Forms.Label();
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
@@ -46,7 +47,6 @@
             this.btnKiemTraTaiKhoan = new System.Windows.Forms.Button();
             this.btnThemTaiKhoan = new System.Windows.Forms.Button();
             this.btnCheckWeb = new System.Windows.Forms.Button();
-            this.btnCheckMobile = new System.Windows.Forms.Button();
             this.txtCheckCo4La = new System.Windows.Forms.CheckBox();
             this.txtCheckChipMayMan = new System.Windows.Forms.CheckBox();
             this.txtCheckKyTen = new System.Windows.Forms.CheckBox();
@@ -63,7 +63,6 @@
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.menuLayTinNhanHeThong = new System.Windows.Forms.ToolStripMenuItem();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -117,7 +116,7 @@
             this.menuCopyIP,
             this.menuLayTinNhanHeThong});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(177, 136);
+            this.menuGridData.Size = new System.Drawing.Size(177, 114);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
@@ -147,6 +146,13 @@
             this.menuCopyIP.Size = new System.Drawing.Size(176, 22);
             this.menuCopyIP.Text = "Copy IP";
             this.menuCopyIP.Click += new System.EventHandler(this.menuCopyIP_Click);
+            // 
+            // menuLayTinNhanHeThong
+            // 
+            this.menuLayTinNhanHeThong.Name = "menuLayTinNhanHeThong";
+            this.menuLayTinNhanHeThong.Size = new System.Drawing.Size(176, 22);
+            this.menuLayTinNhanHeThong.Text = "TNHT";
+            this.menuLayTinNhanHeThong.Click += new System.EventHandler(this.menuLayTinNhanHeThong_Click);
             // 
             // lblPack
             // 
@@ -235,30 +241,20 @@
             // 
             // btnCheckWeb
             // 
-            this.btnCheckWeb.Location = new System.Drawing.Point(265, 11);
+            this.btnCheckWeb.Location = new System.Drawing.Point(96, 13);
             this.btnCheckWeb.Name = "btnCheckWeb";
             this.btnCheckWeb.Size = new System.Drawing.Size(65, 50);
             this.btnCheckWeb.TabIndex = 3;
-            this.btnCheckWeb.Text = "Web(F2)";
+            this.btnCheckWeb.Text = "Check";
             this.btnCheckWeb.UseVisualStyleBackColor = true;
             this.btnCheckWeb.Click += new System.EventHandler(this.btnCheckWeb_Click);
-            // 
-            // btnCheckMobile
-            // 
-            this.btnCheckMobile.Location = new System.Drawing.Point(89, 12);
-            this.btnCheckMobile.Name = "btnCheckMobile";
-            this.btnCheckMobile.Size = new System.Drawing.Size(65, 50);
-            this.btnCheckMobile.TabIndex = 0;
-            this.btnCheckMobile.Text = "Mobile(F1)";
-            this.btnCheckMobile.UseVisualStyleBackColor = true;
-            this.btnCheckMobile.Click += new System.EventHandler(this.btnCheckMobile_Click);
             // 
             // txtCheckCo4La
             // 
             this.txtCheckCo4La.AutoSize = true;
             this.txtCheckCo4La.Checked = true;
             this.txtCheckCo4La.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckCo4La.Location = new System.Drawing.Point(336, 29);
+            this.txtCheckCo4La.Location = new System.Drawing.Point(303, 29);
             this.txtCheckCo4La.Name = "txtCheckCo4La";
             this.txtCheckCo4La.Size = new System.Drawing.Size(63, 17);
             this.txtCheckCo4La.TabIndex = 4;
@@ -270,7 +266,7 @@
             this.txtCheckChipMayMan.AutoSize = true;
             this.txtCheckChipMayMan.Checked = true;
             this.txtCheckChipMayMan.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckChipMayMan.Location = new System.Drawing.Point(336, 46);
+            this.txtCheckChipMayMan.Location = new System.Drawing.Point(303, 46);
             this.txtCheckChipMayMan.Name = "txtCheckChipMayMan";
             this.txtCheckChipMayMan.Size = new System.Drawing.Size(94, 17);
             this.txtCheckChipMayMan.TabIndex = 4;
@@ -282,7 +278,7 @@
             this.txtCheckKyTen.AutoSize = true;
             this.txtCheckKyTen.Checked = true;
             this.txtCheckKyTen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckKyTen.Location = new System.Drawing.Point(336, 12);
+            this.txtCheckKyTen.Location = new System.Drawing.Point(303, 12);
             this.txtCheckKyTen.Name = "txtCheckKyTen";
             this.txtCheckKyTen.Size = new System.Drawing.Size(60, 17);
             this.txtCheckKyTen.TabIndex = 4;
@@ -393,7 +389,7 @@
             this.txtCheckDangNhapLT.AutoSize = true;
             this.txtCheckDangNhapLT.Checked = true;
             this.txtCheckDangNhapLT.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckDangNhapLT.Location = new System.Drawing.Point(160, 12);
+            this.txtCheckDangNhapLT.Location = new System.Drawing.Point(181, 12);
             this.txtCheckDangNhapLT.Name = "txtCheckDangNhapLT";
             this.txtCheckDangNhapLT.Size = new System.Drawing.Size(97, 17);
             this.txtCheckDangNhapLT.TabIndex = 4;
@@ -405,7 +401,7 @@
             this.txtCheckChipBiMat.AutoSize = true;
             this.txtCheckChipBiMat.Checked = true;
             this.txtCheckChipBiMat.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.txtCheckChipBiMat.Location = new System.Drawing.Point(160, 46);
+            this.txtCheckChipBiMat.Location = new System.Drawing.Point(181, 46);
             this.txtCheckChipBiMat.Name = "txtCheckChipBiMat";
             this.txtCheckChipBiMat.Size = new System.Drawing.Size(82, 17);
             this.txtCheckChipBiMat.TabIndex = 4;
@@ -415,7 +411,7 @@
             // txtCheckHangNgay
             // 
             this.txtCheckHangNgay.AutoSize = true;
-            this.txtCheckHangNgay.Location = new System.Drawing.Point(160, 29);
+            this.txtCheckHangNgay.Location = new System.Drawing.Point(181, 29);
             this.txtCheckHangNgay.Name = "txtCheckHangNgay";
             this.txtCheckHangNgay.Size = new System.Drawing.Size(98, 17);
             this.txtCheckHangNgay.TabIndex = 4;
@@ -426,13 +422,6 @@
             // 
             this.notifyIcon1.Text = "PTV Nuker - Tinnv@VNIT Solutions";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
-            // 
-            // menuLayTinNhanHeThong
-            // 
-            this.menuLayTinNhanHeThong.Name = "menuLayTinNhanHeThong";
-            this.menuLayTinNhanHeThong.Size = new System.Drawing.Size(176, 22);
-            this.menuLayTinNhanHeThong.Text = "TNHT";
-            this.menuLayTinNhanHeThong.Click += new System.EventHandler(this.menuLayTinNhanHeThong_Click);
             // 
             // MainForm
             // 
@@ -451,7 +440,6 @@
             this.Controls.Add(this.txtCheckCo4La);
             this.Controls.Add(this.btnCheckWeb);
             this.Controls.Add(this.btnChuanBiRutFan);
-            this.Controls.Add(this.btnCheckMobile);
             this.Controls.Add(this.groupData);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -480,7 +468,6 @@
         private System.Windows.Forms.ComboBox txtPackNo;
         private System.Windows.Forms.Button btnThemPack;
         private System.Windows.Forms.Button btnThemTaiKhoan;
-        private System.Windows.Forms.Button btnCheckMobile;
         private System.Windows.Forms.Label lblPack;
         private System.Windows.Forms.Button btnKetBan;
         private System.Windows.Forms.ContextMenuStrip menuGridData;

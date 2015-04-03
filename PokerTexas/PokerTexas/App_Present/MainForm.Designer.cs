@@ -183,34 +183,37 @@
             // btnDoiIP
             // 
             this.btnDoiIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDoiIP.Location = new System.Drawing.Point(565, 11);
+            this.btnDoiIP.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnDoiIP.Location = new System.Drawing.Point(505, 11);
             this.btnDoiIP.Name = "btnDoiIP";
-            this.btnDoiIP.Size = new System.Drawing.Size(60, 40);
+            this.btnDoiIP.Size = new System.Drawing.Size(90, 40);
             this.btnDoiIP.TabIndex = 5;
             this.btnDoiIP.Text = "Đổi IP";
-            this.btnDoiIP.UseVisualStyleBackColor = true;
+            this.btnDoiIP.UseVisualStyleBackColor = false;
             this.btnDoiIP.Click += new System.EventHandler(this.btnDoiIP_Click);
             // 
             // btnKiemTraTaiKhoan
             // 
             this.btnKiemTraTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(631, 11);
+            this.btnKiemTraTaiKhoan.BackColor = System.Drawing.Color.MistyRose;
+            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(601, 11);
             this.btnKiemTraTaiKhoan.Name = "btnKiemTraTaiKhoan";
-            this.btnKiemTraTaiKhoan.Size = new System.Drawing.Size(60, 40);
+            this.btnKiemTraTaiKhoan.Size = new System.Drawing.Size(90, 40);
             this.btnKiemTraTaiKhoan.TabIndex = 3;
             this.btnKiemTraTaiKhoan.Text = "Check Money";
-            this.btnKiemTraTaiKhoan.UseVisualStyleBackColor = true;
+            this.btnKiemTraTaiKhoan.UseVisualStyleBackColor = false;
             this.btnKiemTraTaiKhoan.Click += new System.EventHandler(this.btnKiemTraTaiKhoan_Click);
             // 
             // btnThemTaiKhoan
             // 
             this.btnThemTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnThemTaiKhoan.BackColor = System.Drawing.Color.YellowGreen;
             this.btnThemTaiKhoan.Location = new System.Drawing.Point(697, 11);
             this.btnThemTaiKhoan.Name = "btnThemTaiKhoan";
             this.btnThemTaiKhoan.Size = new System.Drawing.Size(60, 40);
             this.btnThemTaiKhoan.TabIndex = 4;
             this.btnThemTaiKhoan.Text = "Thêm TK";
-            this.btnThemTaiKhoan.UseVisualStyleBackColor = true;
+            this.btnThemTaiKhoan.UseVisualStyleBackColor = false;
             this.btnThemTaiKhoan.Click += new System.EventHandler(this.btnThemTaiKhoan_Click);
             // 
             // btnCheckWeb

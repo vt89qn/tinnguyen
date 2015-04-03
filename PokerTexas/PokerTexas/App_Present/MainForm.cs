@@ -1125,9 +1125,9 @@ namespace PokerTexas.App_Present
             try
             {
                 //Load Package
-                var listPackage = (from x in Global.DBContext.Package
-                                   where x.Pokers.Count > 0
-                                   select new { x.ID }).ToList();
+                var listPackage = (from pg in Global.DBContext.Package
+                                   join pk in Global.DBContext.Poker on pg.ID equals pk.PackageID
+                                   select new { pg.ID }).Distinct().OrderBy(x => x.ID).ToList();
                 BindingSource bindingPackage = new BindingSource { DataSource = listPackage };
                 bEnableSelectedValueChange = false;
                 txtPackNo.DisplayMember = TablePackageConst.ID;

@@ -145,14 +145,6 @@ namespace PokerTexas.App_Present
             getDataOnload();
         }
 
-        private void btnCapNhatNgaySinh_Click(object sender, EventArgs e)
-        {
-            if (isBusy) return;
-            isBusy = true;
-            btnCapNhatNgaySinh.Enabled = false;
-            Task.Factory.StartNew(getBirthdayInfo);
-        }
-
         private void btnDoiIP_Click(object sender, EventArgs e)
         {
             if (Control.ModifierKeys == Keys.Shift || Control.ModifierKeys == Keys.Control)
@@ -481,28 +473,6 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void btnKetBan_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (AppSettings.Seft)
-                {
-                    if (isBusy) return;
-                    isBusy = true;
-                    btnKetBan.Enabled = false;
-                    Task.Factory.StartNew(() =>
-                    {
-                        changeIP();
-                        ketBan();
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         private void btnCheckWeb_Click(object sender, EventArgs e)
         {
             if (isBusy) return;
@@ -656,46 +626,6 @@ namespace PokerTexas.App_Present
             }
         }
 
-        private void getBirthdayInfo()
-        {
-            try
-            {
-                List<Task> tasks = new List<Task>();
-                for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
-                {
-                    if (this.IsDisposed) return;
-                    PokerController pkSource = dicPokers[selectedPackageID][iIndex];
-                    Task t = Task.Factory.StartNew(() => pkSource.getBirthDayInfo());
-                    tasks.Add(t);
-                    t.Wait();
-                    System.Threading.Thread.Sleep(1000);
-                }
-                while (tasks.Any(t => !t.IsCompleted))
-                {
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(1000);
-                }
-                if (Global.DBContext.ChangeTracker.HasChanges())
-                {
-                    Global.DBContext.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    { btnCapNhatNgaySinh.Enabled = true; };
-                    this.BeginInvoke(action);
-                }
-            }
-        }
-
         private void getMoney()
         {
             try
@@ -747,7 +677,31 @@ namespace PokerTexas.App_Present
         {
             try
             {
-                if (txtCheckTuDong.Checked && AppSettings.Seft && (selectedPackageID >= 240 || (selectedPackageID >= 146 && selectedPackageID <= 152) || selectedPackageID == 162 || selectedPackageID == 163))
+                List<long> listKetBan = new List<long>();
+                foreach (string pack in AppSettings.PackMakeFriend.Split(','))
+                {
+                    if (pack.Contains('-'))
+                    {
+                        long num1 = 0;
+                        long num2 = 0;
+                        if (long.TryParse(pack.Split('-')[0].Trim(), out num1) && long.TryParse(pack.Split('-')[1].Trim(), out num2))
+                        {
+                            for (long number = num1; number <= num2; number++)
+                            {
+                                if (!listKetBan.Contains(number)) listKetBan.Add(number);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        long number = 0;
+                        if (long.TryParse(pack.Trim(), out number)) 
+                        {
+                            if (!listKetBan.Contains(number)) listKetBan.Add(number);
+                        }
+                    }
+                }
+                if (listKetBan.Contains(selectedPackageID))
                 {
                     ketBan2();
                 }
@@ -1030,56 +984,19 @@ namespace PokerTexas.App_Present
             catch { }
         }
 
-        private void ketBan()
-        {
-            try
-            {
-                ketBan2();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                isBusy = false;
-                if (!this.IsDisposed)
-                {
-                    MethodInvoker action = delegate
-                    {
-                        btnKetBan.Enabled = true;
-                        if (txtCheckTuDong.Checked)
-                        {
-                            try
-                            {
-                                if (txtPackNo.SelectedIndex < txtPackNo.Items.Count - 1)
-                                {
-                                    txtPackNo.SelectedIndex = txtPackNo.SelectedIndex + 1;
-                                    btnKetBan_Click(null, null);
-                                }
-                            }
-                            catch { }
-                        }
-                    };
-                    this.BeginInvoke(action);
-                }
-            }
-        }
-
         private void reloadGrid()
         {
             try
             {
-                if (txtPackNo.SelectedItem is Package)
+                if (txtPackNo.SelectedValue is long)
                 {
-                    Package selectedPackage = txtPackNo.SelectedItem as Package;
-                    selectedPackageID = selectedPackage.ID;
+                    selectedPackageID = (long)txtPackNo.SelectedValue;
                     BindingList<PokerController> listController = new BindingList<PokerController>();
-                    if (dicPokers.ContainsKey(selectedPackage.ID))
+                    if (dicPokers.ContainsKey(selectedPackageID))
                     {
-                        foreach (var pk in dicPokers[selectedPackage.ID])
+                        foreach (var pk in dicPokers[selectedPackageID])
                         {
-                            if (pk != null && pk.Models != null && pk.Models.FaceBook != null && pk.Models.PackageID == selectedPackage.ID)
+                            if (pk != null && pk.Models != null && pk.Models.FaceBook != null && pk.Models.PackageID == selectedPackageID)
                             {
                                 listController.Add(pk);
                             }
@@ -1087,19 +1004,23 @@ namespace PokerTexas.App_Present
                     }
                     else
                     {
-                        foreach (Poker poker in (txtPackNo.SelectedItem as Package).Pokers)
+                        Package package = Global.DBContext.Package.Where(x => x.ID == selectedPackageID).FirstOrDefault();
+                        if (package != null)
                         {
-                            PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
-                            PokerExData exData = newPokerController.GetExData();
-                            if (exData.money.HasValue) newPokerController.Money = exData.money.Value;
-                            newPokerController.GridContainer = gridData;
-                            if (AppSettings.GetMoneyOnLoad == "1")
+                            foreach (Poker poker in package.Pokers)
                             {
-                                newPokerController.GetInitMoney(false);
+                                PokerController newPokerController = new PokerController { Models = poker, Status = "Khởi tạo thành công" };
+                                PokerExData exData = newPokerController.GetExData();
+                                if (exData.money.HasValue) newPokerController.Money = exData.money.Value;
+                                newPokerController.GridContainer = gridData;
+                                if (AppSettings.GetMoneyOnLoad == "1")
+                                {
+                                    newPokerController.GetInitMoney(false);
+                                }
+                                listController.Add(newPokerController);
                             }
-                            listController.Add(newPokerController);
+                            dicPokers.Add(selectedPackageID, listController);
                         }
-                        dicPokers.Add(selectedPackage.ID, listController);
                     }
                     BindingSource bindingGrid = new BindingSource { DataSource = listController };
                     gridData.DataSource = bindingGrid;
@@ -1142,13 +1063,12 @@ namespace PokerTexas.App_Present
                     {
                         PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
                         var exData = pkController.GetExData();
-                        gridData[TableFaceBookConst.Login, iIndex].Value = (string.IsNullOrEmpty(exData.mnick) ? pkController.Models.FaceBook.Login : exData.mnick);
+                        gridData[TableFaceBookConst.Login, iIndex].Value = (string.IsNullOrEmpty(exData.mnick) || !AppSettings.Seft ? pkController.Models.FaceBook.Login : exData.mnick);
                         gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
                     }
                 }
                 else
                 {
-                    Package selectedPackage = txtPackNo.SelectedItem as Package;
                     BindingList<PokerController> listController = new BindingList<PokerController>();
                     foreach (Package p in Global.DBContext.Package.ToList())
                     {
@@ -1205,10 +1125,12 @@ namespace PokerTexas.App_Present
             try
             {
                 //Load Package
-                List<Package> listPackage = Global.DBContext.Package.Where(x => x.Pokers.Count > 0).ToList();
+                var listPackage = (from x in Global.DBContext.Package
+                                   where x.Pokers.Count > 0
+                                   select new { x.ID }).ToList();
                 BindingSource bindingPackage = new BindingSource { DataSource = listPackage };
                 bEnableSelectedValueChange = false;
-                txtPackNo.DisplayMember = TablePackageConst.Pack;
+                txtPackNo.DisplayMember = TablePackageConst.ID;
                 txtPackNo.ValueMember = TablePackageConst.ID;
                 bEnableSelectedValueChange = true;
                 txtPackNo.DataSource = bindingPackage;
@@ -1228,17 +1150,6 @@ namespace PokerTexas.App_Present
         {
             MobileModermController.Disconnect();
             MobileModermController.Connect();
-            //string strIP = Utilities.GetMyIpAddress();
-            //var t = Global.DBContext.IPAddress.ToList();
-            //string strDate = DateTime.Today.ToString("yyyy-MM-dd");
-            //while (Global.DBContext.IPAddress.Where(x => x.IP == strIP && x.Date == strDate).Count() > 0)
-            //{
-            //    MobileModermController.Disconnect();
-            //    MobileModermController.Connect();
-            //    strIP = Utilities.GetMyIpAddress();
-            //}
-            //Global.DBContext.IPAddress.Add(new IPAddress { IP = strIP, Date = DateTime.Today.ToString("yyyy-MM-dd") });
-            //Global.DBContext.SaveChanges();
         }
         #endregion
     }

@@ -42,8 +42,6 @@
             this.txtPackNo = new System.Windows.Forms.ComboBox();
             this.btnThemPack = new System.Windows.Forms.Button();
             this.btnDoiIP = new System.Windows.Forms.Button();
-            this.btnCapNhatNgaySinh = new System.Windows.Forms.Button();
-            this.btnKetBan = new System.Windows.Forms.Button();
             this.btnKiemTraTaiKhoan = new System.Windows.Forms.Button();
             this.btnThemTaiKhoan = new System.Windows.Forms.Button();
             this.btnCheckWeb = new System.Windows.Forms.Button();
@@ -79,8 +77,6 @@
             this.groupData.Controls.Add(this.txtPackNo);
             this.groupData.Controls.Add(this.btnThemPack);
             this.groupData.Controls.Add(this.btnDoiIP);
-            this.groupData.Controls.Add(this.btnCapNhatNgaySinh);
-            this.groupData.Controls.Add(this.btnKetBan);
             this.groupData.Controls.Add(this.btnKiemTraTaiKhoan);
             this.groupData.Controls.Add(this.btnThemTaiKhoan);
             this.groupData.Location = new System.Drawing.Point(12, 75);
@@ -187,7 +183,7 @@
             // btnDoiIP
             // 
             this.btnDoiIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDoiIP.Location = new System.Drawing.Point(433, 11);
+            this.btnDoiIP.Location = new System.Drawing.Point(565, 11);
             this.btnDoiIP.Name = "btnDoiIP";
             this.btnDoiIP.Size = new System.Drawing.Size(60, 40);
             this.btnDoiIP.TabIndex = 5;
@@ -195,32 +191,10 @@
             this.btnDoiIP.UseVisualStyleBackColor = true;
             this.btnDoiIP.Click += new System.EventHandler(this.btnDoiIP_Click);
             // 
-            // btnCapNhatNgaySinh
-            // 
-            this.btnCapNhatNgaySinh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCapNhatNgaySinh.Location = new System.Drawing.Point(697, 11);
-            this.btnCapNhatNgaySinh.Name = "btnCapNhatNgaySinh";
-            this.btnCapNhatNgaySinh.Size = new System.Drawing.Size(60, 40);
-            this.btnCapNhatNgaySinh.TabIndex = 5;
-            this.btnCapNhatNgaySinh.Text = "Lấy Ngày Sinh";
-            this.btnCapNhatNgaySinh.UseVisualStyleBackColor = true;
-            this.btnCapNhatNgaySinh.Click += new System.EventHandler(this.btnCapNhatNgaySinh_Click);
-            // 
-            // btnKetBan
-            // 
-            this.btnKetBan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKetBan.Location = new System.Drawing.Point(631, 11);
-            this.btnKetBan.Name = "btnKetBan";
-            this.btnKetBan.Size = new System.Drawing.Size(60, 40);
-            this.btnKetBan.TabIndex = 5;
-            this.btnKetBan.Text = "Kết bạn";
-            this.btnKetBan.UseVisualStyleBackColor = true;
-            this.btnKetBan.Click += new System.EventHandler(this.btnKetBan_Click);
-            // 
             // btnKiemTraTaiKhoan
             // 
             this.btnKiemTraTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(499, 11);
+            this.btnKiemTraTaiKhoan.Location = new System.Drawing.Point(631, 11);
             this.btnKiemTraTaiKhoan.Name = "btnKiemTraTaiKhoan";
             this.btnKiemTraTaiKhoan.Size = new System.Drawing.Size(60, 40);
             this.btnKiemTraTaiKhoan.TabIndex = 3;
@@ -231,7 +205,7 @@
             // btnThemTaiKhoan
             // 
             this.btnThemTaiKhoan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnThemTaiKhoan.Location = new System.Drawing.Point(565, 11);
+            this.btnThemTaiKhoan.Location = new System.Drawing.Point(697, 11);
             this.btnThemTaiKhoan.Name = "btnThemTaiKhoan";
             this.btnThemTaiKhoan.Size = new System.Drawing.Size(60, 40);
             this.btnThemTaiKhoan.TabIndex = 4;
@@ -469,13 +443,11 @@
         private System.Windows.Forms.Button btnThemPack;
         private System.Windows.Forms.Button btnThemTaiKhoan;
         private System.Windows.Forms.Label lblPack;
-        private System.Windows.Forms.Button btnKetBan;
         private System.Windows.Forms.ContextMenuStrip menuGridData;
         private System.Windows.Forms.ToolStripMenuItem menuCopyURL;
         private System.Windows.Forms.ToolStripMenuItem menuXoaTK;
         private System.Windows.Forms.Button btnKiemTraTaiKhoan;
         private System.Windows.Forms.Button btnCheckWeb;
-        private System.Windows.Forms.Button btnCapNhatNgaySinh;
         private System.Windows.Forms.CheckBox txtCheckChipMayMan;
         private System.Windows.Forms.CheckBox txtCheckKyTen;
         private System.Windows.Forms.CheckBox txtCheckCo4La;

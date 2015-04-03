@@ -69,7 +69,7 @@ namespace PokerTexas.App_Controller
         private bool bTryLogin = false;
         private bool bMBLogedIn = false;
         private bool bTryMBLogin = false;
-        private bool bTryLoginFB = false;
+        private string urlMobileApi = "http://poker2011001.boyaa.com/texas/api/api.php";
         #endregion
         #region - PROPERTY -
         public Poker Models { get; set; }
@@ -225,7 +225,7 @@ namespace PokerTexas.App_Controller
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 client.X_TUNNEL_VERIFY = string.IsNullOrEmpty(Models.X_TUNNEL_VERIFY) ? Get_X_TUNNEL_VERIFY(Models.FaceBook.FBID) : Models.X_TUNNEL_VERIFY;
                 client.SetAPIV8 = true;
-                client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                client.DoPost(param, urlMobileApi);
                 if (!string.IsNullOrEmpty(client.ResponseText)
                     && client.ResponseText.Contains("mtkey")
                     && client.ResponseText.Contains("vkey"))
@@ -258,7 +258,7 @@ namespace PokerTexas.App_Controller
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    client.DoPost(param, urlMobileApi);
                     if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
                     {
                         dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -284,7 +284,7 @@ namespace PokerTexas.App_Controller
                         client = new WebClientEx();
                         client.IpHeader = exData.ip_address;
                         client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        client.DoPost(param, urlMobileApi);
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("ret"))
                         {
                             dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText)["ret"] as Dictionary<string, object>;
@@ -294,7 +294,7 @@ namespace PokerTexas.App_Controller
                                 bool bkc = false;
                                 foreach (var item in lists)
                                 {
-                                    if (item is System.Collections.ArrayList) 
+                                    if (item is System.Collections.ArrayList)
                                     {
                                         var items = item as System.Collections.ArrayList;
                                         if (items[0].ToString() == "12")
@@ -327,7 +327,7 @@ namespace PokerTexas.App_Controller
                 }
                 #endregion
             }
-            catch (Exception ex)
+            catch
             {
                 //throw ex;
             }
@@ -338,12 +338,12 @@ namespace PokerTexas.App_Controller
         {
             try
             {
-                this.Status = "Bắt đầu nhận thưởng hàng ngày";
                 if (!bMBLogedIn && !bTryMBLogin)
                 {
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
+                this.Status = "Bắt đầu nhận thưởng hàng ngày";
                 var exData = GetExData();
                 #region - Members.phoneContinuous -
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
@@ -355,14 +355,11 @@ namespace PokerTexas.App_Controller
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                client.DoPost(param, urlMobileApi);
                 #endregion
-
-
-
                 this.Status = "Nhận thưởng hàng ngày thành công";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình nhận thưởng hàng ngày";
                 //throw ex;
@@ -392,7 +389,7 @@ namespace PokerTexas.App_Controller
             bool bTrySetMoney = false;
             int iCount = 0;
         SetMoney: ;
-            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            client.DoPost(param, urlMobileApi);
             if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
             {
                 Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -415,14 +412,13 @@ namespace PokerTexas.App_Controller
 
         public void KyTenMobile()
         {
-            return;
-            this.Status = "Bắt đầu nhận ky ten mobile";
             if (!bMBLogedIn && !bTryMBLogin)
             {
                 LoginMobile();
             }
             if (!bMBLogedIn) return;
             var exData = GetExData();
+            this.Status = "Bắt đầu nhận ky ten mobile";
             #region - Act.getAward -
             SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
             dic_param.Add("actVer", "2.1");
@@ -434,7 +430,7 @@ namespace PokerTexas.App_Controller
             WebClientEx client = new WebClientEx();
             client.IpHeader = exData.ip_address;
             client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            client.DoPost(param, urlMobileApi);
             if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
             {
                 Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -468,73 +464,23 @@ namespace PokerTexas.App_Controller
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    client.DoPost(param, urlMobileApi);
                 }
             }
             #endregion
             this.Status = "ket thuc nhận ky ten mobile";
         }
 
-        public void TangQuaBiMat_OLD()
-        {
-            try
-            {
-                this.Status = "Bắt đầu tặng quà bí mật";
-                if (!bMBLogedIn && !bTryMBLogin)
-                {
-                    LoginMobile();
-                }
-                if (!bMBLogedIn) return;
-                var exData = GetExData();
-                int iFrom = 0;
-                List<Poker> listPokers = Models.Package.Pokers.ToList();
-                for (; iFrom < listPokers.Count; iFrom++)
-                {
-                    if (listPokers[iFrom].PKID == Models.PKID) break;
-                }
-                for (int iPoker = 1; iPoker <= 6; iPoker++)
-                {
-                    #region - Presents.post -
-                    SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
-                    Poker p = new Poker();
-                    if (iFrom + iPoker < listPokers.Count)
-                    {
-                        p = listPokers[iFrom + iPoker];
-                    }
-                    else if (iFrom + iPoker - listPokers.Count < listPokers.Count)
-                    {
-                        p = listPokers[iFrom + iPoker - listPokers.Count];
-                    }
-                    dic_param.Add("to", p.PKID);
-                    NameValueCollection param = new NameValueCollection();
-                    param.Add("api", getAPIString("Presents.post", dic_param));
-
-                    WebClientEx client = new WebClientEx();
-                    client.IpHeader = exData.ip_address;
-                    client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
-                    #endregion
-                    this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
-                    System.Threading.Thread.Sleep(4000);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.Status = "Có lỗi trong quá trình Tặng quà bí mật";
-                //throw ex;
-            }
-        }
-
         public void NhanQuaBiMat()
         {
             try
             {
-                this.Status = "Bắt đầu nhận quà bí mật";
                 if (!bMBLogedIn && !bTryMBLogin)
                 {
                     LoginMobile();
                 }
                 if (!bMBLogedIn) return;
+                this.Status = "Bắt đầu nhận quà bí mật";
                 var exData = GetExData();
                 SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
                 NameValueCollection param = new NameValueCollection();
@@ -550,7 +496,7 @@ namespace PokerTexas.App_Controller
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    client.DoPost(param, urlMobileApi);
                     if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("ret"))
                     {
                         Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -608,7 +554,7 @@ namespace PokerTexas.App_Controller
                         client = new WebClientEx();
                         client.IpHeader = exData.ip_address;
                         client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        client.DoPost(param, urlMobileApi);
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
                         {
                             Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -622,7 +568,7 @@ namespace PokerTexas.App_Controller
                         #endregion
                         this.Status = "Nhận quà bí mật thành công từ " + p.FaceBook.Login;
                     }
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(2000);
                     #region - Presents.post -
                     dic_param = new SortedDictionary<string, object>();
                     dic_param.Add("to", p.PKID);
@@ -632,7 +578,7 @@ namespace PokerTexas.App_Controller
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                    client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                    client.DoPost(param, urlMobileApi);
                     #endregion
                     this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
                 }
@@ -651,7 +597,7 @@ namespace PokerTexas.App_Controller
                         client = new WebClientEx();
                         client.IpHeader = exData.ip_address;
                         client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                        client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                        client.DoPost(param, urlMobileApi);
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
                         {
                             Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -667,7 +613,7 @@ namespace PokerTexas.App_Controller
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình nhận quà bí mật";
                 //throw ex;
@@ -694,7 +640,7 @@ namespace PokerTexas.App_Controller
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-                client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+                client.DoPost(param, urlMobileApi);
                 if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("mmoney"))
                 {
                     Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -732,7 +678,7 @@ namespace PokerTexas.App_Controller
             WebClientEx client = new WebClientEx();
             client.IpHeader = exData.ip_address;
             client.RequestType = WebClientEx.RequestTypeEnum.Poker;
-            client.DoPost(param, "http://poker2011001.boyaa.com/texas/api/api.php");
+            client.DoPost(param, urlMobileApi);
             #endregion
         }
 
@@ -1027,7 +973,7 @@ namespace PokerTexas.App_Controller
                 SetExData(exData);
                 this.Status = "Kiểm tra lại tài khoản facebook này";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình Authen Facebook";
                 //throw ex;
@@ -1069,7 +1015,7 @@ namespace PokerTexas.App_Controller
 
                 this.Status = "Chia sẻ chip may mắn thành công";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình Chia sẻ chip may mắn";
                 //throw ex;
@@ -1107,7 +1053,7 @@ namespace PokerTexas.App_Controller
                 client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/api/facebook/rest.php", dicHeader);
                 this.Status = "nhận fan chip thành công";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình rút fan chip";
                 //throw ex;
@@ -1160,10 +1106,9 @@ namespace PokerTexas.App_Controller
                 }
                 this.Status = "Nhận chip may mắn thành công";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình nhận chip may mắn";
-                //throw ex;
             }
         }
 
@@ -1251,10 +1196,9 @@ namespace PokerTexas.App_Controller
                     this.Status = "Tặng Cỏ 4 Lá Thất Bại";
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình tặng cỏ 4 lá";
-                //throw ex;
             }
         }
 
@@ -1302,10 +1246,9 @@ namespace PokerTexas.App_Controller
                 }
                 this.Status = "Nhận Cỏ 4 Lá Thành Công";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình tặng cỏ 4 lá";
-                //throw ex;
             }
         }
 
@@ -1430,10 +1373,9 @@ namespace PokerTexas.App_Controller
 
                 this.Status = "Ký tên thành công";
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình Ký tên";
-                //throw ex;
             }
         }
 
@@ -1779,7 +1721,7 @@ namespace PokerTexas.App_Controller
                 this.Status = "mini game xong (round : " + iIndex + ", money : " + isShowMoney + " )";
                 System.Threading.Thread.Sleep(2000);
             }
-            catch (Exception ex)
+            catch
             {
                 this.Status = "Có lỗi trong quá trình chơi mini game";
                 //throw ex;

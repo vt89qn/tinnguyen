@@ -262,11 +262,11 @@ namespace PokerTexas.App_Present
                             if (list.Contains(pkController)) continue;
                             list.Add(pkController);
                         }
-                        Package pack = txtPackNo.SelectedItem as Package;
+                        //Package pack = txtPackNo.SelectedItem as Package;
                         foreach (PokerController pk in list)
                         {
                             Global.DBContext.Poker.Remove(pk.Models);
-                            dicPokers[pack.ID].Remove(pk);
+                            dicPokers[selectedPackageID].Remove(pk);
                         }
                         Global.DBContext.SaveChanges();
                         reloadGrid();
@@ -871,12 +871,12 @@ namespace PokerTexas.App_Present
                 isBusy = false;
                 if (!this.IsDisposed)
                 {
-                    MobileModermController.Disconnect();
                     MethodInvoker action = delegate
                     {
                         btnCheckWeb.Enabled = true;
                         if (txtCheckTuDong.Checked)
                         {
+                            MobileModermController.Disconnect();
                             System.Threading.Thread.Sleep(2000);
                             try
                             {
@@ -1063,7 +1063,7 @@ namespace PokerTexas.App_Present
                     {
                         PokerController pkController = gridData.Rows[iIndex].DataBoundItem as PokerController;
                         var exData = pkController.GetExData();
-                        gridData[TableFaceBookConst.Login, iIndex].Value = (string.IsNullOrEmpty(exData.mnick) || !AppSettings.Seft ? pkController.Models.FaceBook.Login : exData.mnick);
+                        gridData[TableFaceBookConst.Login, iIndex].Value = pkController.Models.FaceBook.Login;
                         gridData[GridMainFormConst.STT, iIndex].Value = iIndex + 1;
                     }
                 }

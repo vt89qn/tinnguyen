@@ -176,7 +176,7 @@ namespace PokerTexas.App_Present
                             }
                             iTry++;
                             if (iTry >= 3) iTry = 0;
-                            FaceBook fb = new FaceBook { Login = info.Trim(), Pass = "duc123" };
+                            FaceBook fb = new FaceBook { Login = info.Trim(), Pass = "khong9999" };
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {
@@ -194,7 +194,7 @@ namespace PokerTexas.App_Present
                                         continue;
                                     }
                                 }
-                                Package p = Global.DBContext.Package.Where(x => x.ID > 213 && x.Pokers.Count < 8).FirstOrDefault();
+                                Package p = Global.DBContext.Package.Where(x => x.ID >= 265 && x.Pokers.Count < 8).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();

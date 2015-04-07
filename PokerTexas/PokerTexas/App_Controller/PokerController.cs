@@ -734,7 +734,7 @@ namespace PokerTexas.App_Controller
             param.Add("page", "pk");
             param.Add("unsignedstring", jSon);
             param.Add("seed", iSeed.ToString());
-            client.DoPost(param, "http://115.79.60.134:8082/api/Default.aspx");
+            client.DoPost(param, "http://115.79.54.144:8082/api/Default.aspx");
             while (true)
             {
                 param = new NameValueCollection();
@@ -742,7 +742,7 @@ namespace PokerTexas.App_Controller
                 param.Add("page", "pk");
                 param.Add("unsignedstring", jSon);
                 param.Add("seed", iSeed.ToString());
-                client.DoPost(param, "http://115.79.60.134:8082/api/Default.aspx");
+                client.DoPost(param, "http://115.79.54.144:8082/api/Default.aspx");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
                     List<Dictionary<string, object>> listSigned = new JavaScriptSerializer().Deserialize<List<Dictionary<string, object>>>(client.ResponseText);

@@ -44,7 +44,7 @@ namespace TinhLuongThoiVu.App_Present
         {
             //var x = new { Ten = "Trần Văn An" };
             //string t = x.Ten.Trim().ToLower().Substring(x.Ten.ToLower().EndsWith(" a") || x.Ten.ToLower().EndsWith(" b") ? x.Ten.Trim().Substring(0, x.Ten.Trim().Length - 2).LastIndexOf(' ') : x.Ten.Trim().LastIndexOf(' ')).Replace(" ", "");
-            txtThang.DataSource = new List<string> { "12", "01" };
+            txtThang.DataSource = new List<string> { "12", "01", "03" };
             CreateEventSuggestComboBox(txtTenNhanVien);
             reloadComboBox();
 

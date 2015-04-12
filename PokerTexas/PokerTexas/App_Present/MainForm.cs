@@ -835,7 +835,7 @@ namespace PokerTexas.App_Present
                 {
                     System.Threading.Thread.Sleep(1000);
                 }
-                if (txtCheckWeb.Checked)
+                if (txtCheckWeb.Checked && txtCheckChipMayMan.Checked)
                 {
                     foreach (var item in dicLinkOfPackage)
                     {

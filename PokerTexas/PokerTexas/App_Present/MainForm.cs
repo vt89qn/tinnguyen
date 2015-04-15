@@ -371,7 +371,16 @@ namespace PokerTexas.App_Present
             if (gridData.Rows.Count > 0)
             {
                 PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
-                pkController.GetTNHT();
+                string id = Clipboard.GetText();
+                if (!string.IsNullOrEmpty(id)) id = id.Trim();
+                if (id != null && id.Length == 8 && (Control.ModifierKeys == Keys.Shift || Control.ModifierKeys == Keys.Control))
+                {
+                    pkController.GetTNHT(id);
+                }
+                else
+                {
+                    pkController.GetTNHT();
+                }
             }
         }
 

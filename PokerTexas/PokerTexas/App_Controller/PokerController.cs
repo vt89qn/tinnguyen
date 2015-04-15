@@ -666,6 +666,40 @@ namespace PokerTexas.App_Controller
             }
         }
 
+        public void GetTNHT(string id)
+        {
+            var exData = GetExData();
+            #region - Members.getWin -
+            SortedDictionary<string, object> dic_param = new SortedDictionary<string, object>();
+
+            NameValueCollection param = new NameValueCollection();
+
+            SortedDictionary<string, object> dic = new SortedDictionary<string, object>();
+            dic.Add("api", "62");
+            dic.Add("langtype", "13");
+            dic.Add("method", "Members.getWin");
+            dic.Add("mid", id);
+            dic.Add("mtkey", exData.m_mtkey);
+            dic.Add("protocol", "1");
+            dic.Add("sid", "110");
+            dic.Add("time", Utilities.GetCurrentSecond());
+            dic.Add("unid", "193");
+            dic.Add("version", "5.5.0");
+            dic.Add("vkey", Utilities.GetMd5Hash(exData.m_vkey + "M"));
+            dic.Add("vmid", id);
+            dic.Add("param", param);
+            dic.Add("sig", Utilities.GetMd5Hash(Utilities.getSigPoker(dic, exData.m_mtkey, "V")));
+
+
+            param.Add("api", new JavaScriptSerializer().Serialize(dic));
+
+            WebClientEx client = new WebClientEx();
+            client.IpHeader = exData.ip_address;
+            client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+            client.DoPost(param, urlMobileApi);
+            #endregion
+        }
+
         public void GetTNHT()
         {
             var exData = GetExData();

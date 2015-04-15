@@ -15,6 +15,7 @@ namespace PokerTexas
         [STAThread]
         static void Main()
         {
+//ccc
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (DateTime.Today >= new DateTime(2015, 05, 01))

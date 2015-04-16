@@ -1144,7 +1144,7 @@ namespace PokerTexas.App_Present
                 bEnableSelectedValueChange = true;
                 txtPackNo.DataSource = bindingPackage;
                 bEnableSelectedValueChange = true;
-                if (txtPackNo.SelectedValue is long && (long)txtPackNo.SelectedValue != 0)
+                if (txtPackNo.SelectedValue is long && (long)txtPackNo.SelectedValue != 0 && (long)txtPackNo.SelectedValue != 1)
                 {
                     txtPackNo.SelectedValue = 1;
                 }

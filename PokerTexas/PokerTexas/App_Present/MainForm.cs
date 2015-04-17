@@ -218,9 +218,7 @@ namespace PokerTexas.App_Present
                     FaceBook fb = addAccount.Model;
                     if (fb != null)
                     {
-                        //Global.DBContext.FaceBook.Add(fb);
-                        //Global.DBContext.SaveChanges();
-                        Package pack = txtPackNo.SelectedItem as Package;
+                        Package pack = Global.DBContext.Package.Where(x => x.ID == selectedPackageID).FirstOrDefault();
                         PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, Package = pack } };
                         if (pkController.LoginMobile())
                         {

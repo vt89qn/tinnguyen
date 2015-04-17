@@ -725,6 +725,7 @@ namespace PokerTexas.App_Present
                     if (listLinkChipMayMan == null) listLinkChipMayMan = new List<string>();
                     foreach (string link in listLinkChipMayMan)
                     {
+                        if (link == null) continue;
                         if (link.Contains(":p:" + selectedPackageID + ":"))
                         {
                             dicLinkOfPackage.Add(link, 0);

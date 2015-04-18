@@ -342,6 +342,11 @@ namespace PokerTexas.App_Present
                 { //Press F11
                     strURL += "?ip=" + exData.ip_address;
                     gridData.Rows[gridData.CurrentCell.RowIndex].DefaultCellStyle.BackColor = Color.DarkGray;
+                    if (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift)
+                    {
+                        int iMOney = (int)exData.money.Value / 1000000;
+                        strURL = selectedPackageID + "" + (gridData.CurrentCell.RowIndex + 1) + "," + iMOney + "\t" + strURL;
+                    }
                 }
                 if (!string.IsNullOrEmpty(strURL))
                 {
@@ -702,7 +707,7 @@ namespace PokerTexas.App_Present
                     else
                     {
                         long number = 0;
-                        if (long.TryParse(pack.Trim(), out number)) 
+                        if (long.TryParse(pack.Trim(), out number))
                         {
                             if (!listKetBan.Contains(number)) listKetBan.Add(number);
                         }

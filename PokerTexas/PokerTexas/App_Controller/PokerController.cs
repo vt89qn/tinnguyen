@@ -1342,7 +1342,7 @@ namespace PokerTexas.App_Controller
                                 }
                                 else
                                 {
-                                    foreach (int iIndex in new[] {11, 16, 20, 24, 25, 30 })
+                                    foreach (int iIndex in new[] { 11, 16, 20, 24, 25, 30 })
                                     {
                                         param = new NameValueCollection();
                                         param.Add("id", "2278");
@@ -2265,6 +2265,58 @@ namespace PokerTexas.App_Controller
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public void RutKet()
+        {
+            LoginWebApp();
+            var exData = GetExData();
+            WebClientEx client = new WebClientEx();
+            client.IpHeader = exData.ip_address;
+            client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
+            client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
+
+            NameValueCollection param = new NameValueCollection();
+            param.Add("cmd", "openBank");
+            param.Add("pwd", "ngvanTin89%2B");
+            param.Add("apik", exData.apik);
+            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ajax/newbank.php");
+            if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
+            {
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                if (dicData.ContainsKey("ret") && dicData["ret"] is Dictionary<string, object>)
+                {
+                    var ret = dicData["ret"] as Dictionary<string, object>;
+                    if (ret.ContainsKey("bkmoney"))
+                    {
+                        decimal bkmoney = Convert.ToDecimal(ret["bkmoney"]);
+                        string bkpwd = ret["bkpwd"].ToString();
+                        if (bkmoney > 0)
+                        {
+                            param = new NameValueCollection();
+                            param.Add("cmd", "moveBank");
+                            param.Add("pwd", bkpwd);
+                            param.Add("act", "1");
+                            param.Add("money", bkmoney.ToString());
+                            param.Add("apik", exData.apik);
+                            client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ajax/newbank.php");
+                            if (client.Error == null && !string.IsNullOrEmpty(client.ResponseText))
+                            {
+                                dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
+                                if (dicData.ContainsKey("ret") && dicData["ret"] is Dictionary<string, object>)
+                                {
+                                    ret = dicData["ret"] as Dictionary<string, object>;
+                                    if (ret.ContainsKey("mmoney"))
+                                    {
+                                        bkmoney = Convert.ToDecimal(ret["mmoney"]);
+                                        this.Money = bkmoney;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

@@ -61,6 +61,12 @@
             this.txtCheckChipBiMat = new System.Windows.Forms.CheckBox();
             this.txtCheckHangNgay = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.menuRutKet = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGuiKet = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGui1B = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGui2B = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGui3B = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGui4B = new System.Windows.Forms.ToolStripMenuItem();
             this.groupData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
             this.menuGridData.SuspendLayout();
@@ -69,9 +75,9 @@
             // 
             // groupData
             // 
-            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupData.Controls.Add(this.gridData);
             this.groupData.Controls.Add(this.lblPack);
             this.groupData.Controls.Add(this.txtPackNo);
@@ -90,9 +96,9 @@
             // 
             this.gridData.AllowUserToAddRows = false;
             this.gridData.AllowUserToDeleteRows = false;
-            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.gridData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridData.ContextMenuStrip = this.menuGridData;
             this.gridData.Location = new System.Drawing.Point(6, 56);
@@ -110,9 +116,11 @@
             this.menuXoaTK,
             this.menuLoginLaiFacebook,
             this.menuCopyIP,
-            this.menuLayTinNhanHeThong});
+            this.menuLayTinNhanHeThong,
+            this.menuRutKet,
+            this.menuGuiKet});
             this.menuGridData.Name = "menuGridData";
-            this.menuGridData.Size = new System.Drawing.Size(177, 114);
+            this.menuGridData.Size = new System.Drawing.Size(177, 180);
             this.menuGridData.Opening += new System.ComponentModel.CancelEventHandler(this.menuGridData_Opening);
             // 
             // menuCopyURL
@@ -285,8 +293,8 @@
             // 
             // txtRutFanLink
             // 
-            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRutFanLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRutFanLink.Location = new System.Drawing.Point(6, 27);
             this.txtRutFanLink.Name = "txtRutFanLink";
             this.txtRutFanLink.Size = new System.Drawing.Size(99, 20);
@@ -400,6 +408,53 @@
             this.notifyIcon1.Text = "PTV Nuker - Tinnv@VNIT Solutions";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
             // 
+            // menuRutKet
+            // 
+            this.menuRutKet.Name = "menuRutKet";
+            this.menuRutKet.Size = new System.Drawing.Size(176, 22);
+            this.menuRutKet.Text = "Rút Két";
+            this.menuRutKet.Click += new System.EventHandler(this.menuRutKet_Click);
+            // 
+            // menuGuiKet
+            // 
+            this.menuGuiKet.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuGui1B,
+            this.menuGui2B,
+            this.menuGui3B,
+            this.menuGui4B});
+            this.menuGuiKet.Name = "menuGuiKet";
+            this.menuGuiKet.Size = new System.Drawing.Size(176, 22);
+            this.menuGuiKet.Text = "Gửi Két";
+            // 
+            // menuGui1B
+            // 
+            this.menuGui1B.Name = "menuGui1B";
+            this.menuGui1B.Size = new System.Drawing.Size(152, 22);
+            this.menuGui1B.Tag = "1";
+            this.menuGui1B.Text = "1B";
+            this.menuGui1B.Click += new System.EventHandler(this.menuGui1B_Click);
+            // 
+            // menuGui2B
+            // 
+            this.menuGui2B.Name = "menuGui2B";
+            this.menuGui2B.Size = new System.Drawing.Size(152, 22);
+            this.menuGui2B.Tag = "2";
+            this.menuGui2B.Text = "2B";
+            // 
+            // menuGui3B
+            // 
+            this.menuGui3B.Name = "menuGui3B";
+            this.menuGui3B.Size = new System.Drawing.Size(152, 22);
+            this.menuGui3B.Tag = "3";
+            this.menuGui3B.Text = "3B";
+            // 
+            // menuGui4B
+            // 
+            this.menuGui4B.Name = "menuGui4B";
+            this.menuGui4B.Size = new System.Drawing.Size(152, 22);
+            this.menuGui4B.Tag = "4";
+            this.menuGui4B.Text = "4B";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -471,6 +526,12 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Button btnDoiIP;
         private System.Windows.Forms.ToolStripMenuItem menuLayTinNhanHeThong;
+        private System.Windows.Forms.ToolStripMenuItem menuRutKet;
+        private System.Windows.Forms.ToolStripMenuItem menuGuiKet;
+        private System.Windows.Forms.ToolStripMenuItem menuGui1B;
+        private System.Windows.Forms.ToolStripMenuItem menuGui2B;
+        private System.Windows.Forms.ToolStripMenuItem menuGui3B;
+        private System.Windows.Forms.ToolStripMenuItem menuGui4B;
 
     }
 }

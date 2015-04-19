@@ -141,6 +141,8 @@ namespace PokerTexas.App_Present
             {
                 menuLayTinNhanHeThong.Visible = false;
                 btnDoiIP.Visible = false;
+                menuRutKet.Visible = false;
+                menuGuiKet.Visible = false;
             }
             getDataOnload();
         }
@@ -344,7 +346,7 @@ namespace PokerTexas.App_Present
                     gridData.Rows[gridData.CurrentCell.RowIndex].DefaultCellStyle.BackColor = Color.DarkGray;
                     if (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift)
                     {
-                        int iMOney = (int)exData.money.Value / 1000000;
+                        int iMOney = (int)(exData.money.Value / 1000000);
                         strURL = selectedPackageID + "" + (gridData.CurrentCell.RowIndex + 1) + "," + iMOney + "\t" + strURL;
                     }
                 }
@@ -367,6 +369,41 @@ namespace PokerTexas.App_Present
                     Clipboard.SetText(exData.ip_address);
                 }
             }
+        }
+
+        private void menuRutKet_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (gridData.Rows.Count > 0)
+                {
+                    PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
+                    PokerExData exData = pkController.GetExData();
+                    pkController.RutKet();
+                    pkController.GetInitMoney(false);
+                    Global.DBContext.SaveChanges();
+                }
+            }
+            catch
+            { }
+        }
+
+        private void menuGui1B_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (gridData.Rows.Count > 0)
+                {
+                    PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
+                    PokerExData exData = pkController.GetExData();
+                    if (exData != null && !string.IsNullOrEmpty(exData.ip_address))
+                    {
+                        Clipboard.SetText(exData.ip_address);
+                    }
+                }
+            }
+            catch
+            { }
         }
 
         private void menuLayTinNhanHeThong_Click(object sender, EventArgs e)
@@ -436,6 +473,11 @@ namespace PokerTexas.App_Present
                     if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                     {
                         gridData.CurrentCell = gridData[e.ColumnIndex, e.RowIndex];
+                        if (gridData.SelectedCells.Count == 1)
+                        {
+                            gridData.ClearSelection();
+                            gridData.CurrentCell.Selected = true;
+                        }
                         bOpenByPressAppKey = false;
                     }
                     else

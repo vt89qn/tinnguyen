@@ -496,7 +496,13 @@ namespace PokerTexas.App_Controller
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                F1:;
                     client.DoPost(param, urlMobileApi);
+                    if (client.Error != null)
+                    {
+                        System.Threading.Thread.Sleep(5000);
+                        goto F1;
+                    }
                     if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("ret"))
                     {
                         Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -554,7 +560,13 @@ namespace PokerTexas.App_Controller
                         client = new WebClientEx();
                         client.IpHeader = exData.ip_address;
                         client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    F2: ; 
                         client.DoPost(param, urlMobileApi);
+                        if (client.Error != null)
+                        {
+                            System.Threading.Thread.Sleep(5000);
+                            goto F2;
+                        }
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
                         {
                             Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);
@@ -578,7 +590,13 @@ namespace PokerTexas.App_Controller
                     client = new WebClientEx();
                     client.IpHeader = exData.ip_address;
                     client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                F3: ;
                     client.DoPost(param, urlMobileApi);
+                    if (client.Error != null)
+                    {
+                        System.Threading.Thread.Sleep(5000);
+                        goto F3;
+                    }
                     #endregion
                     this.Status = "Tặng quà bí mật thành công cho " + p.FaceBook.Login;
                 }
@@ -597,7 +615,13 @@ namespace PokerTexas.App_Controller
                         client = new WebClientEx();
                         client.IpHeader = exData.ip_address;
                         client.RequestType = WebClientEx.RequestTypeEnum.Poker;
+                    F4: ;
                         client.DoPost(param, urlMobileApi);
+                        if (client.Error != null)
+                        {
+                            System.Threading.Thread.Sleep(5000);
+                            goto F4;
+                        }
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
                         {
                             Dictionary<string, object> dicInfo = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(client.ResponseText);

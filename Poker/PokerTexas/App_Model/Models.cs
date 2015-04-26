@@ -64,6 +64,7 @@ namespace PokerTexas.App_Model
         public int count_login_fail { get; set; }
         public decimal? money { get; set; }
         public decimal? earnmoney { get; set; }
+        public long? old_pack { get; set; }
     }
 
     public class IPAddress

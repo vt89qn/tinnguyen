@@ -934,6 +934,7 @@ namespace PokerTexas.App_Controller
                         exData.expLevel = expLevel;
                         exData.loginkey = loginkey;
                         exData.count_login_fail = 0;
+                        exData.old_pack = Models.PackageID;
                         SetExData(exData);
                         bWebLogedIn = true;
 

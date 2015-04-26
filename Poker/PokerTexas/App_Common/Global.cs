@@ -12,7 +12,7 @@ namespace PokerTexas.App_Common
 {
     public static class Global
     {
-        public static PokerContext DBContext = new PokerContext();
+        public static PokerContext DBContext;
         private static List<string> listCoverPhotoLink = new List<string>();
         public static List<string> LisCoverPhotoLink
         {

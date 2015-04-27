@@ -798,8 +798,8 @@ namespace PokerTexas.App_Present
                                         {
                                             //if (AppSettings.Seft)
                                             {
-                                                System.Threading.Thread.Sleep(2000);
-                                                pkSource.KyTenWeb();
+                                                //System.Threading.Thread.Sleep(2000);
+                                                //pkSource.KyTenWeb();
                                             }
                                             System.Threading.Thread.Sleep(1000);
                                             pkSource.PlayMiniGame();

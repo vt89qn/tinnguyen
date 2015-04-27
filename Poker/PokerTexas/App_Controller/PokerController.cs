@@ -564,7 +564,7 @@ namespace PokerTexas.App_Controller
                         client.DoPost(param, urlMobileApi);
                         if (client.Error != null)
                         {
-                            System.Threading.Thread.Sleep(5000);
+                            System.Threading.Thread.Sleep(10000);
                             goto F2;
                         }
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))
@@ -594,7 +594,7 @@ namespace PokerTexas.App_Controller
                     client.DoPost(param, urlMobileApi);
                     if (client.Error != null)
                     {
-                        System.Threading.Thread.Sleep(5000);
+                        System.Threading.Thread.Sleep(10000);
                         goto F3;
                     }
                     #endregion
@@ -619,7 +619,7 @@ namespace PokerTexas.App_Controller
                         client.DoPost(param, urlMobileApi);
                         if (client.Error != null)
                         {
-                            System.Threading.Thread.Sleep(5000);
+                            System.Threading.Thread.Sleep(10000);
                             goto F4;
                         }
                         if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("money"))

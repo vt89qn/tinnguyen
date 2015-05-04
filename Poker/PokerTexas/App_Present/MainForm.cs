@@ -778,6 +778,7 @@ namespace PokerTexas.App_Present
                         }
                     }
                 }
+                bool bMobileFirst = new Random().Next(1, 999) % 2 != 0;
                 for (int iIndex = 0; iIndex < gridData.Rows.Count; iIndex++)
                 {
                     if (this.IsDisposed) return;
@@ -785,106 +786,20 @@ namespace PokerTexas.App_Present
                     Task task = Task.Factory.StartNew(
                         () =>
                         {
-                            if (txtCheckWeb.Checked)
+                            if (!bMobileFirst)
                             {
-                                #region - Check Web -
-                                if (txtCheckKyTen.Checked || txtCheckCo4La.Checked || txtCheckChipMayMan.Checked)
-                                {
-                                    pkSource.LoginWebApp();
-                                    if (pkSource.bWebLogedIn)
-                                    {
-                                        pkSource.QuayVong();
-                                        if (txtCheckKyTen.Checked)
-                                        {
-                                            //if (AppSettings.Seft)
-                                            {
-                                                //System.Threading.Thread.Sleep(2000);
-                                                //pkSource.KyTenWeb();
-                                            }
-                                            System.Threading.Thread.Sleep(1000);
-                                            pkSource.PlayMiniGame();
-                                            System.Threading.Thread.Sleep(1000);
-                                            pkSource.NhanTraiTim();
-                                        }
-
-                                        if (txtCheckCo4La.Checked)
-                                        {
-                                            System.Threading.Thread.Sleep(2000);
-                                            pkSource.TangCo4La();
-                                            pkSource.NhanCo4La();
-                                        }
-
-                                        if (txtCheckChipMayMan.Checked)
-                                        {
-                                            System.Threading.Thread.Sleep(2000);
-                                            string strLink = pkSource.ChiaSeChipMayMan();
-                                            if (!string.IsNullOrEmpty(strLink))
-                                            {
-                                                listLink.Add(":p:" + selectedPackageID + ":pk:" + pkSource.Models.PKID + ":l:" + strLink);
-                                            }
-                                            //Nhan chip may man
-                                            List<string> listLinkForGet = new List<string>();
-                                            for (int iCount = 0; iCount < 3; iCount++)
-                                            {
-                                                int iMinCount = int.MaxValue;
-                                                string strMinLink = "";
-                                                foreach (var link in listLinkOfPackage)
-                                                {
-                                                    if (!link.Contains(":pk:" + pkSource.Models.PKID + ":") && dicLinkOfPackage[link] < iMinCount)
-                                                    {
-                                                        iMinCount = dicLinkOfPackage[link];
-                                                        strMinLink = link;
-                                                    }
-                                                }
-                                                if (!string.IsNullOrEmpty(strMinLink))
-                                                {
-                                                    dicLinkOfPackage[strMinLink]++;
-                                                    strMinLink = Regex.Match(strMinLink, ":l:(?<val>.+)").Groups["val"].Value;
-                                                    if (!string.IsNullOrEmpty(strMinLink))
-                                                    {
-                                                        listLinkForGet.Add(strMinLink);
-                                                    }
-                                                }
-                                            }
-                                            if (listLinkForGet.Count > 0)
-                                            {
-                                                pkSource.NhanChipMayMan(listLinkForGet);
-                                            }
-                                        }
-                                        System.Threading.Thread.Sleep(2000);
-                                        pkSource.GetInitMoney(false);
-                                    }
-                                }
-                                #endregion
+                                checkWeb(pkSource, listLinkOfPackage, listLink, dicLinkOfPackage);
+                                checkMobile(pkSource);
                             }
-                            if (txtCheckMobile.Checked)
+                            else
                             {
-                                #region - Check Mobile -
-                                if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked || txtCheckChipBiMat.Checked)
-                                {
-                                    if (txtCheckDangNhapLT.Checked)
-                                    {
-                                        System.Threading.Thread.Sleep(2000);
-                                        pkSource.NhanThuongHangNgayMobile();
-                                    }
-                                    if (txtCheckHangNgay.Checked)
-                                    {
-                                        System.Threading.Thread.Sleep(2000);
-                                        pkSource.NhanThuong2MMobile();
-                                    }
-                                    if (txtCheckChipBiMat.Checked)
-                                    {
-                                        System.Threading.Thread.Sleep(2000);
-                                        pkSource.NhanQuaBiMat();
-                                    }
-                                    System.Threading.Thread.Sleep(2000);
-                                    pkSource.GetInitMoney(false);
-                                }
-                                #endregion
+                                checkMobile(pkSource);
+                                checkWeb(pkSource, listLinkOfPackage, listLink, dicLinkOfPackage);
                             }
                         });
                     tasks.Add(task);
                     task.Wait(3000);
+                    bMobileFirst = !bMobileFirst;
                 }
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -947,6 +862,121 @@ namespace PokerTexas.App_Present
                     this.BeginInvoke(action);
                 }
             }
+        }
+
+        private void checkWeb(PokerController pkSource, List<string> listLinkOfPackage, List<string> listLink, Dictionary<string, int> dicLinkOfPackage)
+        {
+            try
+            {
+                if (txtCheckWeb.Checked)
+                {
+                    #region - Check Web -
+                    if (txtCheckKyTen.Checked || txtCheckCo4La.Checked || txtCheckChipMayMan.Checked)
+                    {
+                        pkSource.LoginWebApp();
+                        if (pkSource.bWebLogedIn)
+                        {
+                            pkSource.QuayVong();
+                            if (txtCheckKyTen.Checked)
+                            {
+                                //if (AppSettings.Seft)
+                                {
+                                    //System.Threading.Thread.Sleep(2000);
+                                    //pkSource.KyTenWeb();
+                                }
+                                System.Threading.Thread.Sleep(1000);
+                                pkSource.PlayMiniGame();
+                                System.Threading.Thread.Sleep(1000);
+                                pkSource.NhanTraiTim();
+                            }
+
+                            if (txtCheckCo4La.Checked)
+                            {
+                                System.Threading.Thread.Sleep(2000);
+                                pkSource.TangCo4La();
+                                pkSource.NhanCo4La();
+                            }
+
+                            if (txtCheckChipMayMan.Checked)
+                            {
+                                System.Threading.Thread.Sleep(2000);
+                                string strLink = pkSource.ChiaSeChipMayMan();
+                                if (!string.IsNullOrEmpty(strLink))
+                                {
+                                    listLink.Add(":p:" + selectedPackageID + ":pk:" + pkSource.Models.PKID + ":l:" + strLink);
+                                }
+                                //Nhan chip may man
+                                List<string> listLinkForGet = new List<string>();
+                                for (int iCount = 0; iCount < 3; iCount++)
+                                {
+                                    int iMinCount = int.MaxValue;
+                                    string strMinLink = "";
+                                    foreach (var link in listLinkOfPackage)
+                                    {
+                                        if (!link.Contains(":pk:" + pkSource.Models.PKID + ":") && dicLinkOfPackage[link] < iMinCount)
+                                        {
+                                            iMinCount = dicLinkOfPackage[link];
+                                            strMinLink = link;
+                                        }
+                                    }
+                                    if (!string.IsNullOrEmpty(strMinLink))
+                                    {
+                                        dicLinkOfPackage[strMinLink]++;
+                                        strMinLink = Regex.Match(strMinLink, ":l:(?<val>.+)").Groups["val"].Value;
+                                        if (!string.IsNullOrEmpty(strMinLink))
+                                        {
+                                            listLinkForGet.Add(strMinLink);
+                                        }
+                                    }
+                                }
+                                if (listLinkForGet.Count > 0)
+                                {
+                                    pkSource.NhanChipMayMan(listLinkForGet);
+                                }
+                            }
+                            System.Threading.Thread.Sleep(2000);
+                            pkSource.GetInitMoney(false);
+                        }
+                    }
+                    #endregion
+                }
+            }
+            catch { }
+            finally { }
+        }
+
+        private void checkMobile(PokerController pkSource)
+        {
+            try
+            {
+                if (txtCheckMobile.Checked)
+                {
+                    #region - Check Mobile -
+                    if (txtCheckDangNhapLT.Checked || txtCheckHangNgay.Checked || txtCheckChipBiMat.Checked)
+                    {
+                        if (txtCheckDangNhapLT.Checked)
+                        {
+                            System.Threading.Thread.Sleep(2000);
+                            pkSource.NhanThuongHangNgayMobile();
+                        }
+                        if (txtCheckHangNgay.Checked)
+                        {
+                            System.Threading.Thread.Sleep(2000);
+                            pkSource.NhanThuong2MMobile();
+                        }
+                        if (txtCheckChipBiMat.Checked)
+                        {
+                            System.Threading.Thread.Sleep(2000);
+                            pkSource.NhanQuaBiMat();
+                        }
+                        System.Threading.Thread.Sleep(2000);
+                        pkSource.GetInitMoney(false);
+                    }
+                    #endregion
+                }
+            }
+            catch { }
+            finally { }
         }
 
         private void ketBan2()

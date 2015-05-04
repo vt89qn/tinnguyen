@@ -500,7 +500,7 @@ namespace PokerTexas.App_Controller
                     client.DoPost(param, urlMobileApi);
                     if (client.Error != null)
                     {
-                        System.Threading.Thread.Sleep(5000);
+                        System.Threading.Thread.Sleep(10000);
                         goto F1;
                     }
                     if (!string.IsNullOrEmpty(client.ResponseText) && client.ResponseText.Contains("ret"))

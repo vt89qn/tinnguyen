@@ -1318,12 +1318,13 @@ namespace PokerTexas.App_Controller
                 if (!bWebLogedIn) return;
                 this.Status = "Bắt đầu ký tên";
                 var exData = GetExData();
+                string id = "2278";
                 NameValueCollection param = new NameValueCollection();
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.PokerWeb;
                 client.CookieContainer = Utilities.ConvertBlobToObject(Models.WebCookie) as CookieContainer;
-                string textparam = "id=2278&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
+                string textparam = "id=" + id + "&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
                 client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                 if (!string.IsNullOrEmpty(client.ResponseText))
                 {
@@ -1351,38 +1352,26 @@ namespace PokerTexas.App_Controller
                         }
                         if (AppSettings.Seft)
                         {
-                            if (Models.PackageID >= 7)
+                            if (t <= 30)
                             {
-                                if (t <= 30)
+                                for (int iIndex = t; iIndex <= 30; iIndex++)
                                 {
-                                    for (int iIndex = t; iIndex <= 30; iIndex++)
-                                    {
-                                        param = new NameValueCollection();
-                                        param.Add("id", "2278");
-                                        param.Add("cmd[change][sign." + iIndex + "]", "1");
-                                        param.Add("apik", exData.apik);
-                                        System.Threading.Thread.Sleep(2000);
-                                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
-                                    }
+                                    textparam = "id=" + id + "&cmd[change][sign." + iIndex + "]=1&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
+                                    System.Threading.Thread.Sleep(2000);
+                                    client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                                 }
-                                else
-                                {
-                                    foreach (int iIndex in new[] { 11, 16, 20, 24, 25, 30 })
-                                    {
-                                        param = new NameValueCollection();
-                                        param.Add("id", "2278");
-                                        param.Add("cmd[change][sign." + iIndex + "]", "1");
-                                        param.Add("apik", exData.apik);
-                                        System.Threading.Thread.Sleep(2000);
-                                        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
-                                    }
-                                }
+                            }
+                            else
+                            {
+                                textparam = "id=" + id + "&cmd[change][sign.30]=1&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
+                                System.Threading.Thread.Sleep(2000);
+                                client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                             }
                         }
                         else
                         {
                             param = new NameValueCollection();
-                            param.Add("id", "2278");
+                            param.Add("id", id);
                             param.Add("cmd[change][sign." + t + "]", "1");
                             param.Add("apik", exData.apik);
                             System.Threading.Thread.Sleep(2000);
@@ -1396,40 +1385,6 @@ namespace PokerTexas.App_Controller
 
                     }
                 }
-                if (AppSettings.Seft)
-                {//Ki ten than bai
-                    //param = new NameValueCollection();
-                    //param.Add("cmd", "init");
-                    //param.Add("apik", apik);
-                    //client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/471/ajax.php");
-                    //if (!string.IsNullOrEmpty(client.ResponseText))
-                    //{
-                    //    //if (!client.ResponseText.Contains("isSigned\":1"))
-                    //    {
-                    //        param = new NameValueCollection();
-                    //        param.Add("cmd", "sign");
-                    //        param.Add("apik", apik);
-                    //        client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/471/ajax.php");
-                    //    }
-                    //}
-                }
-                //Chia se
-                //param = new NameValueCollection();
-                //param.Add("ref", "574");
-                //param.Add("mid", Models.PKID);
-                //param.Add("sid", exData.sid);
-                //param.Add("mtkey", exData.mtkey);
-                //param.Add("sitemid", Models.FaceBook.FBID);
-                //param.Add("langtype", "13");
-                //param.Add("mnick", exData.mnick);
-                //param.Add("flag", "1");
-                //client.DoPost(param, "http://pclpvdpk01.boyaagame.com/texas/api/facebook/uis.php");
-
-                ////Quay Vong
-                //client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
-                //System.Threading.Thread.Sleep(2000);
-                //client.DoGet("http://pclpvdpk01.boyaagame.com/texas/activite/wheel/ajax.php?sid=" + exData.sid + "&mid=" + Models.PKID + "&mtkey=" + exData.mtkey + "&langtype=13&cmd=goturn");
-
                 this.Status = "Ký tên thành công";
             }
             catch

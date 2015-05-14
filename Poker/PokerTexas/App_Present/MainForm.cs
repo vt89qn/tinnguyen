@@ -428,6 +428,7 @@ namespace PokerTexas.App_Present
         private void menuGridData_Opening(object sender, CancelEventArgs e)
         {
             menuCopyURL.Enabled = menuXoaTK.Enabled = gridData.Rows.Count > 0;
+            menuSapXepDuLieu.Enabled = menuSapXepDuLieu.Visible = AppSettings.Seft && (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift);
             if (gridData.Rows.Count > 0)
             {
                 //gridData.ClearSelection();
@@ -1237,5 +1238,56 @@ namespace PokerTexas.App_Present
             MobileModermController.Connect();
         }
         #endregion
+
+        private void menuSapXepDuLieu_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Chắc chắn là muốn sắp xếp lại dữ liệu ?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+            {
+                List<string> listPackageID = new List<string>();
+                List<Package> listPackage = Global.DBContext.Package.ToList();
+                //Chuyen acc cho du pack
+                for (int iIndex = 1; iIndex < listPackage.Count(); iIndex++)
+                {
+                    int iPokerCount = listPackage[iIndex].Pokers.Count;
+                    if (iPokerCount == 0) continue;
+                    while (iPokerCount < 8)
+                    {
+                        bool iFoundData = false;
+                        for (int iData = iIndex + 1; iData < listPackage.Count; iData++)
+                        {
+                            if (listPackage[iData].Pokers.Count < 8)
+                            {
+                                iFoundData = true;
+                                foreach (Poker pk in listPackage[iData].Pokers)
+                                {
+                                    pk.PackageID = listPackage[iIndex].ID;
+                                    iPokerCount++;
+                                    if (iPokerCount >= 8) break;
+                                }
+                                if (iPokerCount >= 8) break;
+                            }
+                        }
+                        if (!iFoundData) break;
+                    }
+                }
+                //Chuyen data ve pack
+                for (int iIndex = 1; iIndex < listPackage.Count(); iIndex++)
+                {
+                    int iPokerCount = listPackage[iIndex].Pokers.Count;
+                    if (iPokerCount > 0) continue;
+                    for (int iData = iIndex + 1; iData < listPackage.Count; iData++)
+                    {
+                        if (listPackage[iData].Pokers.Count > 0)
+                        {
+                            foreach (Poker pk in listPackage[iData].Pokers)
+                            {
+                                pk.PackageID = listPackage[iIndex].ID;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

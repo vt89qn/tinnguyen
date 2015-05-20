@@ -69,7 +69,7 @@ namespace PokerTexas.App_Controller
         private bool bTryLogin = false;
         private bool bMBLogedIn = false;
         private bool bTryMBLogin = false;
-        private string urlMobileApi = "http://poker2011001.boyaa.com/texas/api/api.php";
+        private string urlMobileApi = "http://pk1111001.boyaagame.com/texas/api/api.php";
         #endregion
         #region - PROPERTY -
         public Poker Models { get; set; }
@@ -195,7 +195,7 @@ namespace PokerTexas.App_Controller
                 dic.Add("sid", "110");
                 dic.Add("time", Utilities.GetCurrentSecond());
                 dic.Add("unid", "193");
-                dic.Add("version", "5.5.0");
+                dic.Add("version", "6.1.0");
                 dic.Add("vkey", "");
                 dic.Add("vmid", "");
 
@@ -708,7 +708,7 @@ namespace PokerTexas.App_Controller
             dic.Add("sid", "110");
             dic.Add("time", Utilities.GetCurrentSecond());
             dic.Add("unid", "193");
-            dic.Add("version", "5.5.0");
+            dic.Add("version", "6.1.0");
             dic.Add("vkey", Utilities.GetMd5Hash(exData.m_vkey + "M"));
             dic.Add("vmid", id);
             dic.Add("param", param);
@@ -754,7 +754,7 @@ namespace PokerTexas.App_Controller
             dic.Add("sid", "110");
             dic.Add("time", Utilities.GetCurrentSecond());
             dic.Add("unid", "193");
-            dic.Add("version", "5.5.0");
+            dic.Add("version", "6.1.0");
             dic.Add("vkey", Utilities.GetMd5Hash(exData.m_vkey + "M"));
             dic.Add("vmid", Models.PKID);
             dic.Add("param", param);
@@ -771,7 +771,7 @@ namespace PokerTexas.App_Controller
             SortedDictionary<string, string> treemap = new SortedDictionary<string, string>();
             treemap.Add("api", "62");
             treemap.Add("appID", "f61DAecVdKkJQ2l4nakA");
-            treemap.Add("appVer", "5.5.0");
+            treemap.Add("appVer", "6.1.0");
             treemap.Add("zSeed", iSeed.ToString());
             treemap.Add("zUid", string.Empty);
             treemap.Add("blistHash", string.Empty);
@@ -873,7 +873,9 @@ namespace PokerTexas.App_Controller
                 client.AllowAutoRedirect = false;
                 client.DoGet("https://www.facebook.com/connect/ping?client_id=179106755472856&domain=pclpvdpk01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dpclpvdpk01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fpclpvdpk01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
                 client.AllowAutoRedirect = true;
-                if (client.Error == null && client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
+                if (client.Error == null && (client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized")
+                    || (client.Response.Headers["Location"] != null
+                    && client.Response.Headers["Location"].Contains("error=not_authorized"))))
                 {
                     //Not Authen
                     client.DoGet("https://apps.facebook.com/dialog/oauth?display=async&domain=pclpvdpk01.boyaagame.com&scope=email%2Cpublish_stream%2Cpublish_actions&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fpclpvdpk01.boyaagame.com%252Ftexas%252Ffacebookvn%252Floadingpage.php&state=f3993495d&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
@@ -928,13 +930,14 @@ namespace PokerTexas.App_Controller
                         string loginkey = Regex.Match(client.ResponseText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
 
                         exData.apik = apik;
-                        exData.mnick = Utilities.ConvertToUsignNew(mnick);
+                        //exData.mnick = Utilities.ConvertToUsignNew(mnick);
                         exData.mtkey = mtkey;
                         exData.sid = sid;
                         exData.expLevel = expLevel;
                         exData.loginkey = loginkey;
                         exData.count_login_fail = 0;
                         exData.old_pack = Models.PackageID;
+                        Models.PKID = mid;
                         SetExData(exData);
                         bWebLogedIn = true;
 
@@ -973,6 +976,7 @@ namespace PokerTexas.App_Controller
                                         if (ret.ContainsKey("aUser") && ret["aUser"] is Dictionary<string, object>)
                                         {
                                             Dictionary<string, object> aUser = ret["aUser"] as Dictionary<string, object>;
+                                            exData.mnick = aUser["mnick"].ToString();
                                             if (aUser.ContainsKey("mmoney") && aUser["mmoney"] is int)
                                             {
                                                 this.Money = Convert.ToDecimal(aUser["mmoney"]);
@@ -1350,25 +1354,25 @@ namespace PokerTexas.App_Controller
                                 }
                             }
                         }
-                        if (AppSettings.Seft)
-                        {
-                            if (t <= 30)
-                            {
-                                for (int iIndex = t; iIndex <= 30; iIndex++)
-                                {
-                                    textparam = "id=" + id + "&cmd[change][sign." + iIndex + "]=1&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
-                                    System.Threading.Thread.Sleep(2000);
-                                    client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
-                                }
-                            }
-                            else
-                            {
-                                textparam = "id=" + id + "&cmd[change][sign.30]=1&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
-                                System.Threading.Thread.Sleep(2000);
-                                client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
-                            }
-                        }
-                        else
+                        //if (AppSettings.Seft)
+                        //{
+                        //    if (t <= 30)
+                        //    {
+                        //        for (int iIndex = t; iIndex <= 30; iIndex++)
+                        //        {
+                        //            textparam = "id=" + id + "&cmd[change][sign." + iIndex + "]=1&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
+                        //            System.Threading.Thread.Sleep(2000);
+                        //            client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        textparam = "id=" + id + "&cmd[change][sign.30]=1&cmd[info][]=A&cmd[info][]=day&apik=" + exData.apik;
+                        //        System.Threading.Thread.Sleep(2000);
+                        //        client.DoPost(textparam, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
+                        //    }
+                        //}
+                        //else
                         {
                             param = new NameValueCollection();
                             param.Add("id", id);
@@ -1378,9 +1382,9 @@ namespace PokerTexas.App_Controller
                             client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/ac/api.php");
                         }
 
-                        param = new NameValueCollection();
-                        param.Add("apik", exData.apik);
-                        System.Threading.Thread.Sleep(2000);
+                        //param = new NameValueCollection();
+                        //param.Add("apik", exData.apik);
+                        //System.Threading.Thread.Sleep(2000);
                         //client.DoPost(param, "https://pclpvdpk01.boyaagame.com/texas/act/767/ajax.php?cmd=signreward");
 
                     }

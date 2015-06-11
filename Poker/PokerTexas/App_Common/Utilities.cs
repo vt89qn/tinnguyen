@@ -22,6 +22,18 @@ namespace PokerTexas.App_Common
         #region - CONTRUCTOR -
         #endregion
         #region - METHOD -
+        public static string EncodeString(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return string.Empty;
+            return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input));
+        }
+
+        public static string DecodeString(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return string.Empty;
+            return System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(input));
+        }
+
         public static string GetMd5Hash(string input)
         {
             MD5 md5Hash = MD5.Create();

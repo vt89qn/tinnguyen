@@ -65,6 +65,8 @@ namespace PokerTexas.App_Model
         public decimal? money { get; set; }
         public decimal? earnmoney { get; set; }
         public long? old_pack { get; set; }
+        public string scoped_user_id { get; set; }
+        public string bytkn { get; set; }
     }
 
     public class IPAddress

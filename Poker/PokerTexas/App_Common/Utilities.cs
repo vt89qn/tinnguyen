@@ -24,14 +24,28 @@ namespace PokerTexas.App_Common
         #region - METHOD -
         public static string EncodeString(string input)
         {
-            if (string.IsNullOrEmpty(input)) return string.Empty;
-            return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input));
+            try
+            {
+                if (string.IsNullOrEmpty(input)) return string.Empty;
+                return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input));
+            }
+            catch
+            {
+                return input;
+            }
         }
 
         public static string DecodeString(string input)
         {
-            if (string.IsNullOrEmpty(input)) return string.Empty;
-            return System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(input));
+            try
+            {
+                if (string.IsNullOrEmpty(input)) return string.Empty;
+                return System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(input));
+            }
+            catch
+            {
+                return input;
+            }
         }
 
         public static string GetMd5Hash(string input)

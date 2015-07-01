@@ -167,18 +167,18 @@ namespace PokerTexas.App_Present
                 {
                     int iTry = 0;
                     string t = @"";
-                    for (int iIndex = 0; iIndex < t.Split('\n').Length; iIndex++)
+                    foreach (string info in t.Split('\n'))
                     {
-                        string info = t.Split('\n')[iIndex].ToString();
-                        if (!string.IsNullOrEmpty(info))
+                        if (info.Contains("-"))
                         {
+
                             //if (iTry == 0)
                             {
                                 changeIP();
                             }
                             iTry++;
                             if (iTry >= 3) iTry = 0;
-                            FaceBook fb = new FaceBook { Login = info.Trim(), Pass = "khong9999" };
+                            FaceBook fb = new FaceBook { Login = info.Split('-')[0].Trim(), Pass = info.Split('-')[1].Trim() };
                             FaceBookController fbController = new FaceBookController();
                             if (fbController.LoginMobile(fb))
                             {
@@ -196,14 +196,15 @@ namespace PokerTexas.App_Present
                                         continue;
                                     }
                                 }
-                                Package p = Global.DBContext.Package.Where(x => x.ID >= 265 && x.Pokers.Count < 8).FirstOrDefault();
+                                Package p = Global.DBContext.Package.Where(x => x.ID >= 80 && x.Pokers.Count < 8).FirstOrDefault();
                                 if (p == null)
                                 {
                                     p = new Package();
                                     Global.DBContext.Package.Add(p);
                                 }
                                 PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, Package = p } };
-                                if (pkController.LoginMobile())
+                                pkController.LoginWebApp();
+                                if (pkController.bWebLogedIn && pkController.LoginMobile())
                                 {
                                     Global.DBContext.Poker.Add(pkController.Models);
                                     Global.DBContext.SaveChanges();
@@ -222,8 +223,9 @@ namespace PokerTexas.App_Present
                     {
                         Package pack = Global.DBContext.Package.Where(x => x.ID == selectedPackageID).FirstOrDefault();
                         PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, Package = pack } };
-                        if (pkController.LoginMobile())
-                        {
+                                pkController.LoginWebApp();
+                                if (pkController.bWebLogedIn && pkController.LoginMobile())
+                                {
                             Global.DBContext.Poker.Add(pkController.Models);
                             Global.DBContext.SaveChanges();
                             dicPokers[pack.ID].Add(pkController);
@@ -756,7 +758,7 @@ namespace PokerTexas.App_Present
                         }
                     }
                 }
-                if (listKetBan.Contains(selectedPackageID))
+                if (listKetBan.Contains(selectedPackageID) && txtCheckWeb.Checked)
                 {
                     ketBan2();
                 }
@@ -882,8 +884,8 @@ namespace PokerTexas.App_Present
                             {
                                 //if (AppSettings.Seft)
                                 {
-                                    //System.Threading.Thread.Sleep(2000);
-                                    //pkSource.KyTenWeb();
+                                    System.Threading.Thread.Sleep(2000);
+                                    pkSource.KyTenWeb();
                                 }
                                 System.Threading.Thread.Sleep(1000);
                                 pkSource.PlayMiniGame();
@@ -1210,6 +1212,32 @@ namespace PokerTexas.App_Present
         {
             try
             {
+                /*
+                foreach (Poker pk in Global.DBContext.Package.Where(x => x.ID == 0).First().Pokers)
+                {
+                    PokerController pokcon = new PokerController { Models = pk };
+                    var dxdata = pokcon.GetExData();
+                    if (dxdata.old_pack.HasValue && dxdata.old_pack.Value != 0)
+                    {
+                        pk.PackageID = dxdata.old_pack.Value;
+                    }
+                }
+
+                         if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
+                */
+                /*
+                foreach (Poker pk in Global.DBContext.Poker.Where(x => string.IsNullOrEmpty(x.X_TUNNEL_VERIFY)).ToList())
+                {
+                    pk.X_TUNNEL_VERIFY = PokerController.Get_X_TUNNEL_VERIFY(pk.FaceBook.FBID);
+                }
+                if (Global.DBContext.ChangeTracker.HasChanges())
+                {
+                    Global.DBContext.SaveChanges();
+                }
+                */
                 //Load Package
                 var listPackage = (from pg in Global.DBContext.Package
                                    join pk in Global.DBContext.Poker on pg.ID equals pk.PackageID

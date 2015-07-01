@@ -767,7 +767,7 @@ namespace PokerTexas.App_Controller
             return new JavaScriptSerializer().Serialize(dic);
         }
 
-        private string Get_X_TUNNEL_VERIFY(string sigKey)
+        public static string Get_X_TUNNEL_VERIFY(string sigKey)
         {
             int iSeed = new Random().Next(10, 1000);
 
@@ -878,7 +878,10 @@ namespace PokerTexas.App_Controller
                 client.AllowAutoRedirect = false;
                 client.DoGet("https://www.facebook.com/connect/ping?client_id=179106755472856&domain=pclpvdpk01.boyaagame.com&origin=1&redirect_uri=https%3A%2F%2Fs-static.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F2_ZudbRXWRs.js%3Fversion%3D41%23cb%3Df1fcbf37e4%26domain%3Dpclpvdpk01.boyaagame.com%26origin%3Dhttps%253A%252F%252Fpclpvdpk01.boyaagame.com%252Ff2e72221b%26relation%3Dparent&response_type=token%2Csigned_request%2Ccode&sdk=joey");
                 client.AllowAutoRedirect = true;
-                if (client.Error == null && client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized"))
+                if (client.Error == null 
+                    && (client.Response.ResponseUri.AbsoluteUri.Contains("error=not_authorized")
+                    || (client.Response.Headers["Location"] != null
+                    && client.Response.Headers["Location"].Contains("error=not_authorized"))))
                 {
                     //Not Authen
                     client.DoGet("https://apps.facebook.com/v2.2/dialog/oauth?display=async&domain=pclpvdpk01.boyaagame.com&scope=public_profile%2Cemail%2Cuser_friends&return_scopes=true&auth_type=rerequest&e2e=%7B%7D&app_id=179106755472856&sdk=joey&client_id=179106755472856&origin=5&response_type=token%2Csigned_request&redirect_uri=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Farbiter%23origin%3Dhttps%253A%252F%252Fpclpvdpk01.boyaagame.com%252Ftexas%252Ffacebookvn%252Fphp%252Floadingpage.php&state=f6fe88b04&__asyncDialog=1&__user=" + Models.FaceBook.FBID + "&__a=1");
@@ -934,7 +937,10 @@ namespace PokerTexas.App_Controller
                         string loginkey = Regex.Match(client.ResponseText, @"loginkey:[\s']+(?<val>[^']+)").Groups["val"].Value.Trim();
 
                         exData.apik = apik;
-                        //exData.mnick = Utilities.ConvertToUsignNew(mnick);
+                        if (string.IsNullOrEmpty(exData.mnick))
+                        {
+                            exData.mnick = Utilities.EncodeString(mnick);
+                        }
                         exData.mtkey = mtkey;
                         exData.sid = sid;
                         exData.expLevel = expLevel;
@@ -980,7 +986,7 @@ namespace PokerTexas.App_Controller
                                         if (ret.ContainsKey("aUser") && ret["aUser"] is Dictionary<string, object>)
                                         {
                                             Dictionary<string, object> aUser = ret["aUser"] as Dictionary<string, object>;
-                                            if (ret.ContainsKey("mnick"))
+                                            if (aUser.ContainsKey("mnick"))
                                             {
                                                 exData.mnick = Utilities.EncodeString(aUser["mnick"].ToString());
                                             }
@@ -1063,7 +1069,7 @@ namespace PokerTexas.App_Controller
                 param.Add("mid", Models.PKID);
                 param.Add("sid", exData.sid);
                 param.Add("mtkey", exData.mtkey);
-                param.Add("sitemid", Models.FaceBook.FBID);
+                param.Add("sitemid", exData.scoped_user_id == null ? Models.FaceBook.FBID : exData.scoped_user_id);
                 param.Add("langtype", "13");
                 param.Add("mnick", Utilities.DecodeString(exData.mnick));
                 param.Add("expLevel", exData.expLevel);
@@ -1115,7 +1121,7 @@ namespace PokerTexas.App_Controller
                 param.Add("mid", Models.PKID);
                 param.Add("sid", exData.sid);
                 param.Add("mtkey", exData.mtkey);
-                param.Add("sitemid", Models.FaceBook.FBID);
+                param.Add("sitemid", exData.scoped_user_id == null ? Models.FaceBook.FBID : exData.scoped_user_id);
                 param.Add("langtype", "13");
 
                 dicHeader = new Dictionary<HttpRequestHeader, string>();
@@ -1165,7 +1171,7 @@ namespace PokerTexas.App_Controller
                     param.Add("mid", Models.PKID);
                     param.Add("sid", exData.sid);
                     param.Add("mtkey", exData.mtkey);
-                    param.Add("sitemid", Models.FaceBook.FBID);
+                    param.Add("sitemid", exData.scoped_user_id == null ? Models.FaceBook.FBID : exData.scoped_user_id);
                     param.Add("langtype", "13");
 
                     dicHeader = new Dictionary<HttpRequestHeader, string>();
@@ -1198,7 +1204,7 @@ namespace PokerTexas.App_Controller
                 param.Add("mid", Models.PKID);
                 param.Add("sid", exData.sid);
                 param.Add("mtkey", exData.mtkey);
-                param.Add("sitemid", Models.FaceBook.FBID);
+                param.Add("sitemid", exData.scoped_user_id == null ? Models.FaceBook.FBID : exData.scoped_user_id);
                 param.Add("langtype", "13");
                 WebClientEx client = new WebClientEx();
                 client.IpHeader = exData.ip_address;
@@ -1232,31 +1238,40 @@ namespace PokerTexas.App_Controller
                             if (listPokers[iFrom].PKID == Models.PKID) break;
                         }
                         int iNoOfGift = listPokers.Count >= 6 ? 5 : listPokers.Count - 1;
+                        PokerController pkT = new PokerController();
+                        
                         for (int iPoker = 1; iPoker <= iNoOfGift; iPoker++)
                         {
                             if (iFrom + iPoker < listPokers.Count)
                             {
-                                strParams += "&to[]=" + listPokers[iFrom + iPoker].FaceBook.FBID;
+                                pkT.Models = listPokers[iFrom + iPoker];
+                                var eD = pkT.GetExData();
+                                strParams += "&to[]=" + (eD.scoped_user_id == null ? listPokers[iFrom + iPoker].FaceBook.FBID : eD.scoped_user_id);
                             }
                             else if (iFrom + iPoker - listPokers.Count < listPokers.Count)
                             {
-                                strParams += "&to[]=" + listPokers[iFrom + iPoker - listPokers.Count].FaceBook.FBID;
+                                pkT.Models = listPokers[iFrom + iPoker - listPokers.Count];
+                                var eD = pkT.GetExData();
+                                strParams += "&to[]=" + (eD.scoped_user_id == null ? listPokers[iFrom + iPoker - listPokers.Count].FaceBook.FBID : eD.scoped_user_id);
                             }
                         }
                     }
                     else
                     {
+                        PokerController pkT = new PokerController();
                         List<Poker> listPokers = Models.Package.Pokers.ToList();
                         for (int iFrom = 0; iFrom < listPokers.Count; iFrom++)
                         {
                             if (listPokers[iFrom].PKID == Models.PKID) continue;
-                            strParams += "&to[]=" + listPokers[iFrom].FaceBook.FBID;
+                            pkT.Models = listPokers[iFrom];
+                            var eD = pkT.GetExData();
+                            strParams += "&to[]=" + (eD.scoped_user_id == null ? listPokers[iFrom].FaceBook.FBID : eD.scoped_user_id);
                         }
                     }
                     strParams += "&mid=" + Models.PKID;
                     strParams += "&sid=" + exData.sid;
                     strParams += "&mtkey=" + exData.mtkey;
-                    strParams += "&sitemid=" + Models.FaceBook.FBID;
+                    strParams += "&sitemid=" + (exData.scoped_user_id == null ? Models.FaceBook.FBID : exData.scoped_user_id);
                     strParams += "&langtype=13";
                     client.DoPost(strParams, "https://pclpvdpk01.boyaagame.com/texas/api/facebook/rest.php", dicHeader, "POST");
                     this.Status = "Tặng Cỏ 4 Lá Thành Công";
@@ -1421,7 +1436,7 @@ namespace PokerTexas.App_Controller
                 param.Add("mid", Models.PKID);
                 param.Add("sid", exData.sid);
                 param.Add("mtkey", exData.mtkey);
-                param.Add("sitemid", Models.FaceBook.FBID);
+                param.Add("sitemid", exData.scoped_user_id == null ? Models.FaceBook.FBID : exData.scoped_user_id);
                 param.Add("langtype", "13");
                 param.Add("mnick", Utilities.DecodeString(exData.mnick));
                 param.Add("flag", "1");

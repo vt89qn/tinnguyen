@@ -223,9 +223,9 @@ namespace PokerTexas.App_Present
                     {
                         Package pack = Global.DBContext.Package.Where(x => x.ID == selectedPackageID).FirstOrDefault();
                         PokerController pkController = new PokerController { Models = new Poker { FaceBook = fb, Package = pack } };
-                                pkController.LoginWebApp();
-                                if (pkController.bWebLogedIn && pkController.LoginMobile())
-                                {
+                        pkController.LoginWebApp();
+                        if (pkController.bWebLogedIn && pkController.LoginMobile())
+                        {
                             Global.DBContext.Poker.Add(pkController.Models);
                             Global.DBContext.SaveChanges();
                             dicPokers[pack.ID].Add(pkController);
@@ -354,6 +354,10 @@ namespace PokerTexas.App_Present
                 }
                 if (!string.IsNullOrEmpty(strURL))
                 {
+                    if (AppSettings.Seft)
+                    {
+                        strURL = Utilities.EncodeString(strURL);
+                    }
                     Clipboard.SetText(strURL);
                     //MessageBox.Show("Đã copy URL vào clipboad");
                 }

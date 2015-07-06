@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using FB.App_Common;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace PokerTexas.App_Present
 {
@@ -339,27 +340,24 @@ namespace PokerTexas.App_Present
             if (gridData.Rows.Count > 0)
             {
                 PokerController pkController = dicPokers[selectedPackageID][gridData.CurrentCell.RowIndex];
-                FaceBookController fbController = new FaceBookController();
                 PokerExData exData = pkController.GetExData();
-                string strURL = fbController.GetFaceBookLoginURL(pkController.Models.FaceBook, AppSettings.URLToCopy);
+                Dictionary<string, object> dicData = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(pkController.Models.FaceBook.MBLoginText);
+
+                dynamic objData = new { url = AppSettings.URLToCopy, cookies = dicData["session_cookies"], ip = exData.ip_address, ex = (int)DateTime.UtcNow.AddDays(2).Subtract(new DateTime(1970, 1, 1)).TotalSeconds };
+                string strURL = new JavaScriptSerializer().Serialize(objData);
                 if (sender == null)
-                { //Press F11
-                    strURL += "?ip=" + exData.ip_address;
+                {
                     gridData.Rows[gridData.CurrentCell.RowIndex].DefaultCellStyle.BackColor = Color.DarkGray;
+                }
+                if (!string.IsNullOrEmpty(strURL))
+                {
+                    strURL = Utilities.EncodeString(strURL);
                     if (Control.ModifierKeys == Keys.Control || Control.ModifierKeys == Keys.Shift)
                     {
                         int iMOney = (int)(exData.money.Value / 1000000);
                         strURL = selectedPackageID + "" + (gridData.CurrentCell.RowIndex + 1) + "," + iMOney + "\t" + strURL;
                     }
-                }
-                if (!string.IsNullOrEmpty(strURL))
-                {
-                    if (AppSettings.Seft)
-                    {
-                        strURL = Utilities.EncodeString(strURL);
-                    }
                     Clipboard.SetText(strURL);
-                    //MessageBox.Show("Đã copy URL vào clipboad");
                 }
             }
         }

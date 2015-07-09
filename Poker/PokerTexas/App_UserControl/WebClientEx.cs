@@ -197,10 +197,9 @@ namespace PokerTexas.App_UserControl
                 {
                     this.Headers.Add("X-TUNNEL-VERIFY", X_TUNNEL_VERIFY);
                 }
-                if (SetAPIV8)
-                {
-                    this.Headers.Add("X-API-VER", "8");
-                }
+
+                this.Headers.Add("X-API-VER", "8");
+                this.Headers.Add("x-param:", "2#0");
             }
             else if (RequestType == RequestTypeEnum.FaceBook)
             {

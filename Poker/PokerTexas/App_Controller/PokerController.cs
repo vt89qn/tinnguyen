@@ -225,7 +225,7 @@ namespace PokerTexas.App_Controller
                 client.IpHeader = exData.ip_address;
                 client.RequestType = WebClientEx.RequestTypeEnum.Poker;
                 client.X_TUNNEL_VERIFY = string.IsNullOrEmpty(Models.X_TUNNEL_VERIFY) ? Get_X_TUNNEL_VERIFY(Models.FaceBook.FBID) : Models.X_TUNNEL_VERIFY;
-                client.SetAPIV8 = true;
+                //client.SetAPIV8 = true;
                 client.DoPost(param, urlMobileApi);
                 if (!string.IsNullOrEmpty(client.ResponseText)
                     && client.ResponseText.Contains("mtkey")
